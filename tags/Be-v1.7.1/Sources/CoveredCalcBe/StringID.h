@@ -1,0 +1,90 @@
+/*
+ * CoveredCalc
+ *
+ * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+/*!
+	@file		StringID.h
+	@brief		Definition of string ID
+	@author		ICHIMIYA Hironori (Hiron)
+	@date		2007.01.07 Created
+*/
+
+#ifndef _STRINGID_H_
+#define _STRINGID_H_
+
+enum
+{
+	IDS_APPNAME                     		= 10000,
+	IDS_COVER_BROWSER_COLUMN_NAME			= 10001,
+	IDS_COVER_BROWSER_COLUMN_DESCRIPTION	= 10002,
+	IDS_EMSG_INVALID_LANGUAGE				= 10992,
+	IDS_EMSG_GET_LANGUAGE					= 10993,
+	IDS_EMSG_CREATE_COVER_BROWSER			= 10994,
+	IDS_EMSG_LOAD_SETTING					= 10995,
+	IDS_EMSG_READY_DEFAULT_SETTING_FILE		= 10996,
+	IDS_EMSG_CREATE_MAIN_WINDOW				= 10997,
+	IDS_EMSG_SAVE_SETTING           		= 10998,
+	IDS_EMSG_GENERIC                		= 10999,
+	IDS_EMSG_XML_LINE_COLUMN        		= 11000,
+	IDS_EMSG_XML_PARSE              		= 11001,
+	IDS_EMSG_NO_MATCH_START_TAG     		= 11002,
+	IDS_EMSG_INVALID_PARENT_ENTITY  		= 11003,
+	IDS_EMSG_MISSING_ATTRIBUTE      		= 11004,
+	IDS_EMSG_UNKNOWN_TAG            		= 11005,
+	IDS_EMSG_COVERDEF_PARSE         		= 11100,
+	IDS_EMSG_UNKNOWN_ID             		= 11101,
+	IDS_EMSG_UNKNOWN_CLASS          		= 11102,
+	IDS_EMSG_UNKNOWN_TYPE           		= 11103,
+	IDS_EMSG_VALIDATION_FAILED      		= 11104,
+	IDS_EMSG_COLOR_STRING_NOT_UNDERSTOOD	= 11105,
+	IDS_EMSG_UNSUPPORTED_COVERDEF_VERSION	= 11106,
+	IDS_EMSG_INVALID_COVERDEF				= 11107,
+	IDS_EMSG_COLOR_CODED_SKIN				= 11200,
+	IDS_EMSG_INIT_SKIN						= 11201,
+	IDS_EMSG_FILE_OPERATION         		= 11300,
+	IDS_EMSG_FILE_FILENAME          		= 11301,
+	IDS_EMSG_FILE_ACCESS_DENIED     		= 11302,
+	IDS_EMSG_FILE_DEVICE_FULL       		= 11303,
+	IDS_EMSG_FILE_ALREADY_EXISTS    		= 11304,
+	IDS_EMSG_FILE_NOT_FOUND         		= 11305,
+	IDS_EMSG_FILE_IO_ERROR          		= 11306,
+	IDS_EMSG_FILE_SHARING_VIOLATION 		= 11307,
+	IDS_EMSG_DIBFILE_LOAD           		= 11400,
+	IDS_EMSG_DIBFILE_BROKEN_FILE    		= 11401,
+	IDS_EMSG_DIBFILE_UNKNOWN_FORMAT 		= 11402,
+	IDS_EMSG_MEMORY                 		= 11500,
+	IDS_EMSG_PATH_OPERATION         		= 11600,
+	IDS_EMSG_PATH_MAKE_RELATIVE     		= 11601,
+	IDS_EMSG_UI_CONTROL             		= 11700,
+	IDS_EMSG_UI_SHOW_MENU           		= 11701,
+	IDS_EMSG_UI_SHOW_DIALOG         		= 11702,
+	IDS_EMSG_LANG_VALIDATION_FAILED			= 11800,
+	IDS_EMSG_LANG_STRING_NOT_DEFINED		= 11801,
+	
+	IDS_EMSG_LOAD_COMMANDLINE_LANGFILE		= 19000,
+	IDS_EMSG_LOAD_SETTING_LANGFILE			= 19001,
+	IDS_EMSG_LOAD_DEFAULT_LANGFILE			= 19002,
+};
+
+#endif // _STRINGID_H_
