@@ -1,0 +1,348 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 日本語 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+#ifdef _WIN32
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(932)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_COVER_BROWSER DIALOGEX 0, 0, 226, 196
+STYLE DS_SETFONT | DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "カバーブラウザ - CoveredCalc"
+FONT 9, "MS UI Gothic", 400, 0, 0x80
+BEGIN
+    LTEXT           "登録されているカバーの一覧(&L):",IDC_STATIC,7,7,101,8
+    CONTROL         "",IDC_COVER_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,7,18,212,152,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "一覧更新(&R)",IDC_RELOAD,7,175,50,14,WS_GROUP
+    PUSHBUTTON      "適用(&A)",IDC_APPLY,115,175,50,14,WS_GROUP
+    PUSHBUTTON      "閉じる(&C)",IDCLOSE,169,175,50,14
+END
+
+IDD_ABOUT DIALOGEX 0, 0, 270, 82
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About CoveredCalc"
+FONT 9, "MS UI Gothic", 400, 0, 0x80
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,213,61,50,14
+    CONTROL         129,IDC_ICON64,"Static",SS_BITMAP | SS_CENTERIMAGE | SS_REALSIZEIMAGE,7,7,48,48
+    LTEXT           "CoveredCalc for Windows",IDC_STC_APPNAME,60,12,203,8
+    LTEXT           "Version ",IDC_STC_VERSION,60,23,203,8
+    LTEXT           "Copyright (C)",IDC_STC_COPYRIGHT1,60,42,203,8,SS_NOPREFIX
+END
+
+IDD_ABOUT_COVER DIALOGEX 0, 0, 187, 128
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "カバーの情報"
+FONT 9, "MS UI Gothic", 400, 0, 0x80
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,130,107,50,14
+    LTEXT           "名前:",IDC_STATIC,7,7,22,8
+    EDITTEXT        IDC_EDIT_NAME,36,7,144,12,ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER
+    LTEXT           "説明:",IDC_STATIC,7,21,20,8
+    EDITTEXT        IDC_EDIT_DESCRIPTION,36,21,144,12,ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER
+    LTEXT           "カバーの著作権情報:",IDC_STATIC,7,35,68,8
+    EDITTEXT        IDC_EDIT_ABOUT,7,45,173,56,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL | WS_HSCROLL
+END
+
+IDD_PREFERENCES DIALOGEX 0, 0, 169, 72
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "設定"
+FONT 9, "MS UI Gothic", 400, 0, 0x80
+BEGIN
+    LTEXT           "言語(&L):",IDC_STATIC,7,9,32,8
+    COMBOBOX        IDC_CMB_LANGUAGE,42,7,120,110,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "言語の設定は、CoveredCalc を再起動後に有効になります。",IDC_STATIC,15,27,147,16,NOT WS_GROUP
+    DEFPUSHBUTTON   "OK",IDOK,58,51,50,14,WS_GROUP
+    PUSHBUTTON      "キャンセル",IDCANCEL,112,51,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_COVER_BROWSER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 219
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 189
+    END
+
+    IDD_ABOUT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 263
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 75
+    END
+
+    IDD_ABOUT_COVER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 121
+    END
+
+    IDD_PREFERENCES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 162
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 65
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDM_MAIN_CONTEXT MENU 
+BEGIN
+    POPUP "Main Context Menu"
+    BEGIN
+        MENUITEM "カバーブラウザ(&B)",                 ID_COVER_BROWSER
+        MENUITEM SEPARATOR
+        POPUP "基数(&R)"
+        BEGIN
+            MENUITEM "16 進(&H)",                    ID_RADIX_HEX
+            MENUITEM "10 進(&D)",                    ID_RADIX_DECIMAL
+            MENUITEM "8 進(&O)",                     ID_RADIX_OCTAL
+            MENUITEM "2 進(&B)",                     ID_RADIX_BINARY
+        END
+        MENUITEM "常に手前に表示(&O)",                 ID_MAIN_ALWAYS_ON_TOP
+        MENUITEM "位置を固定(&L)",                   ID_MAIN_LOCK_POS
+        MENUITEM SEPARATOR
+        MENUITEM "設定(&P)...",                   ID_PREFERENCES
+        MENUITEM "このカバーの情報(&T)",                ID_MAIN_ABOUT_COVER
+        MENUITEM "バージョン情報(&A)",                 ID_ABOUT
+        MENUITEM SEPARATOR
+        MENUITEM "最小化(&M)",                     ID_MAIN_MINIMIZE
+        MENUITEM "閉じる(&C)",                     ID_MAIN_CLOSE
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,6,1,0
+ PRODUCTVERSION 1,6,1,0
+ FILEFLAGSMASK 0x17L
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041104b0"
+        BEGIN
+            VALUE "FileDescription", "CoveredCalc"
+            VALUE "FileVersion", "1.6.1"
+            VALUE "InternalName", "CoveredCalc"
+            VALUE "LegalCopyright", "Copyright (C) 2004-2007 CoveredCalc Project Contributors."
+            VALUE "OriginalFilename", "CoveredCalc.exe"
+            VALUE "ProductName", "CoveredCalc"
+            VALUE "ProductVersion", "1.6.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x411, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_APPICON             ICON                    "CoveredCalc.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_APPICON64           BITMAP                  "CoveredCalc64Pix.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_EMSG_INVALID_LANGUAGE "言語の値が不正です。\n有効な言語を選択してください。"
+    IDS_EMSG_GET_LANGUAGE   "言語の値を取得することができませんでした。"
+    IDS_EMSG_CREATE_COVER_BROWSER "カバーブラウザの生成に失敗しました。"
+    IDS_EMSG_LOAD_SETTING   "設定の読み込みに失敗しました。"
+    IDS_EMSG_READY_DEFAULT_SETTING_FILE "設定ファイル保存フォルダが準備できませんでした。"
+    IDS_EMSG_CREATE_MAIN_WINDOW "メインウィンドウの生成に失敗しました。"
+    IDS_EMSG_SAVE_SETTING   "設定の保存に失敗しました。"
+    IDS_EMSG_GENERIC        "処理中にエラーが発生しました。"
+    IDS_EMSG_XML_LINE_COLUMN " [行：%0:d%, 列：%1:d%]"
+    IDS_EMSG_XML_PARSE      "XMLファイルの解析中にエラーが発生しました。\n"
+    IDS_EMSG_NO_MATCH_START_TAG "タグ ""%0:s%"" に対応する開始タグが見つかりません。"
+    IDS_EMSG_INVALID_PARENT_ENTITY 
+                            "タグ ""%0:s%"" は タグ ""%1:s%"" の子要素になることはできません。"
+    IDS_EMSG_MISSING_ATTRIBUTE "タグ ""%0:s%"" の属性 ""%1:s%"" が指定されていません。"
+    IDS_EMSG_UNKNOWN_TAG    "サポートしていないタグ ""%0:s%"" が使われています。"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_EMSG_COVERDEF_PARSE "カバー定義ファイルの解析中にエラーが発生しました。\n"
+    IDS_EMSG_UNKNOWN_ID     "id ""%0:s%"" は定義されていません。"
+    IDS_EMSG_UNKNOWN_CLASS  "サポートしていないクラス ""%0:s%"" が指定されています。"
+    IDS_EMSG_UNKNOWN_TYPE   "サポートしていないタイプ ""%0:s%"" が指定されています。"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_EMSG_VALIDATION_FAILED "有効なカバー定義ファイルではありません。\n（%0:s%）"
+    IDS_EMSG_COLOR_STRING_NOT_UNDERSTOOD "色指定 ""%0:s%"" の解釈ができませんでした。"
+    IDS_EMSG_UNSUPPORTED_COVERDEF_VERSION 
+                            "カバー定義ファイルのバージョン ""%0:s%"" は未対応です。\nこのカバーを使うには、そのバージョンに対応した最新の CoveredCalc をお使いください。"
+    IDS_EMSG_INVALID_COVERDEF "カバー定義ファイルではありません。"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_APPNAME             "CoveredCalc"
+    IDS_COVER_BROWSER_COLUMN_NAME "名前"
+    IDS_COVER_BROWSER_COLUMN_DESCRIPTION "説明"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_EMSG_COLOR_CODED_SKIN "カバー関係の処理でエラーが発生しました。"
+    IDS_EMSG_INIT_SKIN      "カバーの初期化に失敗しました。"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_EMSG_FILE_OPERATION "ファイル操作に失敗しました。"
+    IDS_EMSG_FILE_FILENAME  "\nファイル名: %0:s%"
+    IDS_EMSG_FILE_ACCESS_DENIED "ファイルにアクセスできません。"
+    IDS_EMSG_FILE_DEVICE_FULL "ディスク容量が足りないため書き込みできませんでした。"
+    IDS_EMSG_FILE_ALREADY_EXISTS "ファイルが既に存在するため、処理を完了できませんでした。"
+    IDS_EMSG_FILE_NOT_FOUND "ファイルが見つかりません。"
+    IDS_EMSG_FILE_IO_ERROR  "ディスクエラーが発生しました。"
+    IDS_EMSG_FILE_SHARING_VIOLATION "他のプログラムがこのファイルを使用中です。"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_EMSG_DIBFILE_LOAD   "ビットマップファイルの読み込みに失敗しました。"
+    IDS_EMSG_DIBFILE_BROKEN_FILE "ビットマップファイルが壊れています。"
+    IDS_EMSG_DIBFILE_UNKNOWN_FORMAT "対応していない形式のビットマップファイルです。"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_EMSG_MEMORY         "メモリが不足しています。"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_EMSG_PATH_OPERATION "パス操作に失敗しました。"
+    IDS_EMSG_PATH_MAKE_RELATIVE 
+                            "パス ""%0:s%"" を\nパス ""%1:s%"" からの\n相対パスで表すことができません。"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_EMSG_UI_CONTROL     "操作を行うことができませんでした。"
+    IDS_EMSG_UI_SHOW_MENU   "メニューを表示できませんでした。\nメニューID: %0:d%"
+    IDS_EMSG_UI_SHOW_DIALOG "ダイアログを表示できませんでした。\nダイアログID: %0:d%"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_EMSG_LOAD_COMMANDLINE_LANGFILE 
+                            "Failed to load a language file which is specified\nin the command-line parameter.\nThis parameter is ignored.\n\nコマンドラインパラメータで指定された言語ファイルが\n読み込めませんでした。\nこのパラメータは無視します。"
+    IDS_EMSG_LOAD_SETTING_LANGFILE 
+                            "Failed to load a language file which is specified in your settings.\n\n設定に保存された言語ファイルが読み込めませんでした。"
+END
+
+#endif    // 日本語 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
