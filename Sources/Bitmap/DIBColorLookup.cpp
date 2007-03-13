@@ -54,25 +54,25 @@ DIBColorLookup::DIBColorLookup(
 			const UInt32* mask = reinterpret_cast<const UInt32*>(colorTable);
 			for (index = 0; index < 3; index++)
 			{
-				bitMask[index] = mask[2 - index];
+				bitMask[index] = mask[index];
 			}
 		}
 		else if (16 == bitCount)	// mask is not specified. use 16bpp default mask
 		{
-			bitMask[0] = 0x0000001F;
+			bitMask[0] = 0x00007C00;
 			bitMask[1] = 0x000003E0;
-			bitMask[2] = 0x00007C00;
+			bitMask[2] = 0x0000001F;
 		}
 		else						// mask is not specified. use 32bpp default mask
 		{
-			bitMask[0] = 0x000000FF;
+			bitMask[0] = 0x00FF0000;
 			bitMask[1] = 0x0000FF00;
-			bitMask[2] = 0x00FF0000;
+			bitMask[2] = 0x000000FF;
 		}
 
 		// calculate each number of shifts
 		SInt32 index;
-		for (index = 0; index > 3; index++)
+		for (index = 0; index < 3; index++)
 		{
 			UInt32 aMask = bitMask[index];
 			bitMaskShift[index] = 0;

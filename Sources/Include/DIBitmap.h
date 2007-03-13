@@ -54,12 +54,12 @@ public:
 	BITMAPINFO*			GetInfoAddress() { return bitmapInfo; }
 	Byte*				GetBitsAddress() { return bits; }
 	Byte*				GetBitsLineAddress(SInt32 line) { return bits + ( GetHeight() - line - 1 ) * getStorageWidth(); }
-	RGBQUAD*			GetClrTabAddress() { return (RGBQUAD*)( ((Byte*)bitmapInfo) + sizeof( BITMAPINFOHEADER ) ); }
+	RGBQUAD*			GetClrTabAddress() { return (RGBQUAD*)( ((Byte*)bitmapInfo) + bitmapInfo->bmiHeader.biSize ); }
 
 	const BITMAPINFO*	GetInfoAddress() const { return bitmapInfo; }
 	const Byte*			GetBitsAddress() const { return bits; }
 	const Byte*			GetBitsLineAddress(SInt32 line) const { return bits + ( GetHeight() - line - 1 ) * getStorageWidth(); }
-	const RGBQUAD*		GetClrTabAddress() const { return (RGBQUAD*)( ((Byte*)bitmapInfo) + sizeof( BITMAPINFOHEADER ) ); }
+	const RGBQUAD*		GetClrTabAddress() const { return (RGBQUAD*)( ((Byte*)bitmapInfo) + bitmapInfo->bmiHeader.biSize ); }
 
 	SInt32				GetWidth() const { return getRealWidth(); }
 	SInt32				GetHeight() const { SInt32 ret = getRealHeight(); return (ret < 0 ) ? ( -ret ) : ( ret ); }
