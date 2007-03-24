@@ -95,7 +95,7 @@ void BMPFileLoader::Load(
 		{
 			throw new DIBFileLoaderExceptions::UnknownFileFormat(fileName);		
 		}
-		if (sizeof(BITMAPINFOHEADER) != info->bmiHeader.biSize)
+		if (sizeof(BITMAPINFOHEADER) > info->bmiHeader.biSize)
 		{
 			throw new DIBFileLoaderExceptions::UnknownFileFormat(fileName);		
 		}
