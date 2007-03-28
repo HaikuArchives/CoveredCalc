@@ -81,7 +81,7 @@ DIBColorLookup::DIBColorLookup(
 				bitMaskShift[index]++;
 				aMask >>= 1;
 			}
-			bitMaskLevel[index] = aMask + 1;
+			bitMaskLevel[index] = aMask;
 		}
 	}
 	else	// mask not needed
@@ -160,7 +160,7 @@ ColorValue DIBColorLookup::LookupNextColor()
 			UInt16 data = *reinterpret_cast<const UInt16*>(nextAddress);
 			for (colorIndex = 0; colorIndex < 3; colorIndex++)
 			{
-				rgb[colorIndex] = static_cast<UInt8>(((data & bitMask[colorIndex]) >> bitMaskShift[colorIndex]) * 256 / bitMaskLevel[colorIndex]);
+				rgb[colorIndex] = static_cast<UInt8>(((data & bitMask[colorIndex]) >> bitMaskShift[colorIndex]) * 255 / bitMaskLevel[colorIndex]);
 			}
 			color = ColorValue(rgb[0], rgb[1], rgb[2]);
 		}
@@ -178,7 +178,7 @@ ColorValue DIBColorLookup::LookupNextColor()
 			UInt32 data = *reinterpret_cast<const UInt32*>(nextAddress);
 			for (colorIndex = 0; colorIndex < 3; colorIndex++)
 			{
-				rgb[colorIndex] = static_cast<UInt8>(((data & bitMask[colorIndex]) >> bitMaskShift[colorIndex]) * 256 / bitMaskLevel[colorIndex]);
+				rgb[colorIndex] = static_cast<UInt8>(((data & bitMask[colorIndex]) >> bitMaskShift[colorIndex]) * 255 / bitMaskLevel[colorIndex]);
 			}
 			color = ColorValue(rgb[0], rgb[1], rgb[2]);
 		}
