@@ -113,7 +113,7 @@ UIManager* BeMainView::createUIManager()
 	try
 	{
 		uiManager->Init(this);
-		uiManager->Create(GetAppearance());
+		uiManager->Create();
 	}
 	catch (...)
 	{

@@ -54,6 +54,43 @@ typedef struct tagBITMAPINFOHEADER{
 	UInt32	biClrImportant;
 } BITMAPINFOHEADER;
 
+typedef SInt32            FXPT2DOT30;
+typedef struct tagCIEXYZ
+{
+	FXPT2DOT30	ciexyzX;
+	FXPT2DOT30	ciexyzY;
+	FXPT2DOT30	ciexyzZ;
+} CIEXYZ;
+typedef struct tagICEXYZTRIPLE
+{
+	CIEXYZ	ciexyzRed;
+	CIEXYZ	ciexyzGreen;
+	CIEXYZ	ciexyzBlue;
+} CIEXYZTRIPLE;
+
+typedef struct {
+	UInt32			bV4Size;
+	SInt32			bV4Width;
+	SInt32			bV4Height;
+	UInt16			bV4Planes;
+	UInt16			bV4BitCount;
+	UInt32			bV4V4Compression;
+	UInt32			bV4SizeImage;
+	SInt32			bV4XPelsPerMeter;
+	SInt32			bV4YPelsPerMeter;
+	UInt32			bV4ClrUsed;
+	UInt32			bV4ClrImportant;
+	UInt32			bV4RedMask;
+	UInt32			bV4GreenMask;
+	UInt32			bV4BlueMask;
+	UInt32			bV4AlphaMask;
+	UInt32			bV4CSType;
+	CIEXYZTRIPLE	bV4Endpoints;
+	UInt32			bV4GammaRed;
+	UInt32			bV4GammaGreen;
+	UInt32			bV4GammaBlue;
+} BITMAPV4HEADER;
+
 /* constants for the biCompression field */
 #define BI_RGB        0L
 #define BI_RLE8       1L

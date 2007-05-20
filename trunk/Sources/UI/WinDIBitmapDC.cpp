@@ -82,27 +82,9 @@ void WinDIBitmapDC::Create(
 	try
 	{
 		// 指定されたDCと互換のあるDIBを作成
-		info = static_cast<BITMAPINFO*>(malloc(sizeof(BITMAPINFO)));
-		if (NULL == info)
-		{
-			MemoryException::Throw();
-		}
-
+		info = createBitmapInfo(width, height);
 		try
 		{
-			::ZeroMemory(info, sizeof(BITMAPINFO));
-			info->bmiHeader.biSize = sizeof( BITMAPINFOHEADER );
-			info->bmiHeader.biWidth = width;
-			info->bmiHeader.biHeight = height;
-			info->bmiHeader.biPlanes = 1;
-			info->bmiHeader.biBitCount = 24;	// 24bpp固定
-			info->bmiHeader.biCompression = BI_RGB;
-			info->bmiHeader.biSizeImage = 0;
-			info->bmiHeader.biXPelsPerMeter = 0;
-			info->bmiHeader.biYPelsPerMeter = 0;
-			info->bmiHeader.biClrUsed = 0;
-			info->bmiHeader.biClrImportant = 0;		
-		
 			bitmap = ::CreateDIBSection(dc, info, DIB_RGB_COLORS, reinterpret_cast<LPVOID*>(&bits), NULL, 0);
 			if (NULL == bitmap)
 			{
@@ -146,6 +128,37 @@ void WinDIBitmapDC::Create(
 
 	this->memDC = memDC;
 	this->bitmap = bitmap;	
+}
+
+/**
+ *	@brief	BITMAPINFO を生成します。必ず malloc() でメモリ確保を行います。
+ *	@return	生成した BITMAPINFO。
+ */
+BITMAPINFO* WinDIBitmapDC::createBitmapInfo(
+	SInt32 width,		//!< ビットマップの幅
+	SInt32 height		//!< ビットマップの高さ
+)
+{
+	BITMAPINFO*	info = static_cast<BITMAPINFO*>(malloc(sizeof(BITMAPINFO)));
+	if (NULL == info)
+	{
+		MemoryException::Throw();
+	}
+
+	::ZeroMemory(info, sizeof(BITMAPINFO));
+	info->bmiHeader.biSize = sizeof( BITMAPINFOHEADER );
+	info->bmiHeader.biWidth = width;
+	info->bmiHeader.biHeight = height;
+	info->bmiHeader.biPlanes = 1;
+	info->bmiHeader.biBitCount = 24;	// 24bpp固定
+	info->bmiHeader.biCompression = BI_RGB;
+	info->bmiHeader.biSizeImage = 0;
+	info->bmiHeader.biXPelsPerMeter = 0;
+	info->bmiHeader.biYPelsPerMeter = 0;
+	info->bmiHeader.biClrUsed = 0;
+	info->bmiHeader.biClrImportant = 0;		
+
+	return info;
 }
 
 // ---------------------------------------------------------------------

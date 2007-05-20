@@ -445,10 +445,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Ui\WinCCSAppearance.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\Ui\WinCoverBrowser.cpp"
 					>
 				</File>
@@ -457,11 +453,19 @@
 					>
 				</File>
 				<File
+					RelativePath="..\UI\WinDIBitmap32DC.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\Ui\WinDIBitmapDC.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\Ui\WinKeyMappingManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\UI\WinLayeredAppearance.cpp"
 					>
 				</File>
 				<File
@@ -474,6 +478,10 @@
 				</File>
 				<File
 					RelativePath="..\Ui\WinMonitorInfo.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\UI\WinNormalAppearance.cpp"
 					>
 				</File>
 				<File
@@ -515,6 +523,26 @@
 				<File
 					RelativePath="..\Utility\UTF8ConvWin.cpp"
 					>
+				</File>
+				<File
+					RelativePath="..\Utility\WinLayeredWindowAPI.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -967,6 +995,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Include\WinDIBitmap32DC.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Include\WinDIBitmapDC.h"
 					>
 				</File>
@@ -979,6 +1011,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Include\WinLayeredAppearance.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Include\WinMainWindow.h"
 					>
 				</File>
@@ -988,6 +1024,10 @@
 				</File>
 				<File
 					RelativePath="..\Include\WinMonitorInfo.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\WinNormalAppearance.h"
 					>
 				</File>
 				<File
@@ -1044,6 +1084,10 @@
 				</File>
 				<File
 					RelativePath="..\Include\UTF8Utils.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\WinLayeredWindowAPI.h"
 					>
 				</File>
 			</Filter>

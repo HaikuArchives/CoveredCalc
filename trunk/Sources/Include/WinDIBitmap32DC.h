@@ -23,20 +23,29 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/*!
+	@file		WinDIBitmap32DC.h
+	@brief		Definition of WinDIBitmap32DC class.
+	@author		ICHIMIYA Hironori (Hiron)
+	@date		2007.4.12 created
+*/
 
-resource app_signature "application/x-vnd.Hironytic-CoveredCalc";
+#ifndef _WINDIBITMAP32DC_H_
+#define _WINDIBITMAP32DC_H_
 
-resource app_version
+#include "WinDIBitmapDC.h"
+
+// ---------------------------------------------------------------------
+//! DIBとしてもアクセスできる WinBitmapDC クラス (32bpp版)
+// ---------------------------------------------------------------------
+class WinDIBitmap32DC : public WinDIBitmapDC
 {
-	major		= 1,
-	middle		= 7,
-	minor		= 2,
-	variety		= B_APPV_FINAL,
-	internal	= 1,
-	short_info	= "1.7.2+",
-	long_info	= "CoveredCalc for BeOS 1.7.2+"
+public:
+						WinDIBitmap32DC();
+	virtual				~WinDIBitmap32DC();
+	
+protected:
+	virtual BITMAPINFO*	createBitmapInfo(SInt32 width, SInt32 height);
 };
 
-resource app_flags B_SINGLE_LAUNCH;
-
-resource file_types message;
+#endif // _WINDIBITMAP32DC_H_

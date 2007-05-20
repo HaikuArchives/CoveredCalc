@@ -56,11 +56,12 @@ private:
 	const DIBitmap*		bitmap;				///< target bitmap
 	SInt32				bitCount;			///< bitmap's bit count
 	const RGBQUAD*		colorTable;			///< pointer to color table
-	UInt32				bitMask[3];			///< R-G-B color masks
-	SInt32				bitMaskShift[3];	///< number of shifts to right, after AND operation to bitMask
-	UInt32				bitMaskLevel[3];	
+	UInt32				bitMask[4];			///< R-G-B-A color masks
+	SInt32				bitMaskShift[4];	///< number of shifts to right, after AND operation to bitMask
+	UInt32				bitMaskLevel[4];	
 	const Byte*			nextAddress;		///< pointer to next pixel information
 	SInt32				nextBitOffset;		///< next offset of the bits in a pixel information
+	bool				isAlphaAvailable;	///< whether alpha channel of the bitmap is available
 };
 
 // ---------------------------------------------------------------------

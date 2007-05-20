@@ -90,7 +90,6 @@ enum OtherImageIndex
 // ---------------------------------------------------------------------
 MainUIManager::MainUIManager()
 {
-	appearance = NULL;
 	currentDigitForm = CalcCore::DigitForm_10;
 }
 
@@ -113,13 +112,9 @@ void MainUIManager::clearMembers()
 // ---------------------------------------------------------------------
 //! Readies user interface.
 // ---------------------------------------------------------------------
-void MainUIManager::Create(
-	ColorCodedSkinAppearance* appearance		//!< appearance of user interface
-)
+void MainUIManager::Create()
 {
 	clearMembers();
-
-	this->appearance = appearance;
 
 	// read current skin
 	readSkin();
@@ -200,6 +195,7 @@ void MainUIManager::readSkin()
 
 		// create skin object
 		ColorCodedSkin* skin = NULL;
+		ColorCodedSkinAppearance* appearance = NULL;
 		const Path& coverFilePath = manager->GetCoverDefFilePath();
 		const Path coverFileParent = coverFilePath.GetParent();
 
@@ -258,7 +254,7 @@ void MainUIManager::readSkin()
 			skin = new ColorCodedSkin();
 			try
 			{
-				skin->Init(bmpFileStore, mapBitmap, stateSkins, otherImages, colorAreas, appearance);
+				skin->Init(bmpFileStore, mapBitmap, stateSkins, otherImages, colorAreas);
 			}
 			catch (...)
 			{
@@ -278,6 +274,10 @@ void MainUIManager::readSkin()
 			throw;
 		}
 
+		setSkinAppearance(NULL);
+		appearance = uiController->InitSkinAppearance();
+		skin->AttachAppearance(appearance);
+		setSkinAppearance(appearance);
 		setSkin(skin);
 
 		// set base point and move user interface

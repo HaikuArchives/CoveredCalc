@@ -24,21 +24,21 @@
  */
 
 /*!
-	@file		WinCCSAppearance.cpp
-	@brief		Implementation of WinCCSAppearance class.
+	@file		WinNormalAppearance.cpp
+	@brief		Implementation of WinNormalAppearance class.
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2003.10.13 created
+	@date		2007.4.7 created
 */
 
 #include "Prefix.h"
-#include "WinCCSAppearance.h"
+#include "WinNormalAppearance.h"
 #include "DIBColorLookup.h"
 #include "ColorCodedSkin.h"
 
 // ---------------------------------------------------------------------
 //! コンストラクタ
 // ---------------------------------------------------------------------
-WinCCSAppearance::WinCCSAppearance()
+WinNormalAppearance::WinNormalAppearance()
 {
 	hWnd = NULL;
 	hWndRgn = NULL;
@@ -47,7 +47,7 @@ WinCCSAppearance::WinCCSAppearance()
 // ---------------------------------------------------------------------
 //! デストラクタ
 // ---------------------------------------------------------------------
-WinCCSAppearance::~WinCCSAppearance()
+WinNormalAppearance::~WinNormalAppearance()
 {
 	Exit();
 }
@@ -55,7 +55,7 @@ WinCCSAppearance::~WinCCSAppearance()
 // ---------------------------------------------------------------------
 //! 初期化します。
 // ---------------------------------------------------------------------
-void WinCCSAppearance::Init(
+void WinNormalAppearance::Init(
 	HWND hWnd			//!< スキンが描画されるウィンドウ
 )
 {
@@ -66,7 +66,7 @@ void WinCCSAppearance::Init(
 // ---------------------------------------------------------------------
 //! 終了処理を行います。
 // ---------------------------------------------------------------------
-void WinCCSAppearance::Exit()
+void WinNormalAppearance::Exit()
 {
 	// ウィンドウの切り取りを元に戻す
 	if (NULL != hWndRgn)
@@ -85,10 +85,52 @@ void WinCCSAppearance::Exit()
 	hWnd = NULL;
 }
 
+/**
+ *	@brief	ウィンドウプロシージャの処理をアピアランスクラスへ渡します。
+ *	@return	処理したら true.
+ */
+bool WinNormalAppearance::RelayWndProc(
+	HWND hWnd,				///< ウィンドウハンドル
+	UINT uMsg,				///< メッセージ
+	WPARAM /* wParam */,	///< メッセージの WPARAM
+	LPARAM /* lParam */,	///< メッセージの LPARAM
+	LRESULT* ret			///< 処理した場合、ウィンドウプロシージャの戻り値を格納します
+)
+{
+	if (WM_PAINT == uMsg)
+	{
+		PAINTSTRUCT ps;
+		HDC dc = NULL;
+
+		RECT rect;
+		::GetClientRect(hWnd, &rect);
+		
+		dc = ::BeginPaint(hWnd, &ps);
+		if (NULL != dc)
+		{
+			try
+			{	
+				::BitBlt(dc, 0, 0, rect.right - rect.left, rect.bottom - rect.top, dibitmapDC, 0, 0, SRCCOPY);
+			}
+			catch (...)
+			{
+				::EndPaint(hWnd, &ps);
+				throw;
+			}
+			::EndPaint(hWnd, &ps);
+		}
+		
+		*ret = 0;
+		return true;
+	}
+
+	return false;
+}
+
 // ---------------------------------------------------------------------
 //! スキンのサイズを変更されたときに呼ばれます。
 // ---------------------------------------------------------------------
-void WinCCSAppearance::ChangeSkinSize(
+void WinNormalAppearance::ChangeSkinSize(
 	SInt32 width,		//!< 新しい幅
 	SInt32 height		//!< 新しい高さ
 )
@@ -120,7 +162,7 @@ void WinCCSAppearance::ChangeSkinSize(
 // ---------------------------------------------------------------------
 //! スキンの透明領域をウィンドウから切り取ります。
 // ---------------------------------------------------------------------
-void WinCCSAppearance::ClipSkinRegion(
+void WinNormalAppearance::ClipSkinRegion(
 	const DIBitmap* mapBitmap,		//!< 色マップ用ビットマップ
 	ColorValue transparentColor		//!< 透明色
 )
@@ -178,7 +220,7 @@ void WinCCSAppearance::ClipSkinRegion(
 // ---------------------------------------------------------------------
 //! スキンの切り取りをなくします。
 // ---------------------------------------------------------------------
-void WinCCSAppearance::UnclipSkinRegion()
+void WinNormalAppearance::UnclipSkinRegion()
 {
 	// すでに切り取っていれば切り取りを元に戻す
 	if (NULL != hWndRgn)
@@ -192,7 +234,7 @@ void WinCCSAppearance::UnclipSkinRegion()
 // ---------------------------------------------------------------------
 //! 色マップ上の指定された色に対応する部分を描画します。
 // ---------------------------------------------------------------------
-void WinCCSAppearance::DrawSkinByColor(
+void WinNormalAppearance::DrawSkinByColor(
 	const Point32& drawPoint,		//!< 描画先の左上座標
 	const DIBitmap* mapBitmap,		//!< 色マップ用ビットマップ
 	const DIBitmap* skinBitmap,		//!< 描画元スキン用ビットマップ
@@ -245,7 +287,7 @@ void WinCCSAppearance::DrawSkinByColor(
  *	@param	skinRect	描画元の描画する領域
  *	@para,	ratio		混合率 (0～ColorCodedSkin::BlendRatio_Max)
  */
-void WinCCSAppearance::DrawBlendSkinByColor(
+void WinNormalAppearance::DrawBlendSkinByColor(
 	const Point32& drawPoint,
 	const DIBitmap* mapBitmap,
 	const DIBitmap* skinBitmap1,
@@ -296,7 +338,7 @@ void WinCCSAppearance::DrawBlendSkinByColor(
 // ---------------------------------------------------------------------
 //! 指定された矩形のスキンを描画します。
 // ---------------------------------------------------------------------
-void WinCCSAppearance::CopySkin(
+void WinNormalAppearance::CopySkin(
 	const Point32& drawPoint,		//!< 描画先の左上座標
 	const DIBitmap* skinBitmap,		//!< 描画元スキン用ビットマップ
 	const Rect32& skinRect			//!< 描画元の描画する領域
@@ -334,7 +376,7 @@ void WinCCSAppearance::CopySkin(
 // ---------------------------------------------------------------------
 //! 指定された矩形のスキンを描画します。ただし透明色に指定された色のピクセルはコピーしません。
 // ---------------------------------------------------------------------
-void WinCCSAppearance::CopySkin(
+void WinNormalAppearance::CopySkin(
 	const Point32& drawPoint,		//!< 描画先の左上座標
 	const DIBitmap* skinBitmap,		//!< 描画元スキン用ビットマップ
 	const Rect32& skinRect,			//!< 描画元の描画する領域
@@ -376,7 +418,7 @@ void WinCCSAppearance::CopySkin(
 // ---------------------------------------------------------------------
 //! 指定された矩形を無効化します。
 // ---------------------------------------------------------------------
-void WinCCSAppearance::invalidateRect(
+void WinNormalAppearance::invalidateRect(
 	const Point32& drawPoint,		//!< 描画先の左上座標
 	const Rect32& skinRect			//!< 描画元の描画する領域
 )

@@ -32,9 +32,9 @@ resource app_version
 	middle		= 7,
 	minor		= 2,
 	variety		= B_APPV_FINAL,
-	internal	= 10,
-	short_info	= "1.7.2",
-	long_info	= "CoveredCalc for ZETA 1.7.2"
+	internal	= 11,
+	short_info	= "1.7.2+",
+	long_info	= "CoveredCalc for ZETA 1.7.2+"
 };
 
 resource app_flags B_SINGLE_LAUNCH;

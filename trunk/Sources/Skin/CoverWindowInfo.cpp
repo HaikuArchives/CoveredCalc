@@ -44,6 +44,8 @@ CoverWindowInfo::CoverWindowInfo()
 	basePoint.x = 0;
 	basePoint.y = 0;
 	transparentRegionIndex = -1;
+	isTransparentRegionUsedAgainstAlpha = true;
+	edgeSmoothingLevel = -1;
 	hottingSteps = 1;
 }
 

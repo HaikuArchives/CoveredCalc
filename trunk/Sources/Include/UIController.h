@@ -35,6 +35,8 @@
 
 class MenuInfo;
 class DialogInfo;
+class ColorCodedSkin;
+class ColorCodedSkinAppearance;
 
 // ---------------------------------------------------------------------
 //! The interface which controls UI
@@ -51,6 +53,9 @@ public:
 public:
 						UIController() { }
 	virtual				~UIController() { }
+
+	virtual ColorCodedSkinAppearance*	InitSkinAppearance() = 0;
+	virtual void		DisposeSkinAppearance(ColorCodedSkinAppearance* appearance) = 0;
 
 	virtual Point32		GetMousePosition() const = 0;
 	virtual Point32		GetMouseScreenPosition() const = 0;

@@ -108,13 +108,12 @@ void ColorCodedSkin::Init(
 	const DIBitmap* mapBitmap,				//!< a color-coded bitmap which has information about the location of parts in the skin. 
 	const ConstDIBitmapVector* stateSkins,	//!< a vector which has appearances bitmap.
 	const ConstDIBitmapVector* otherImages,	//!< a vector which has other bitmap.
-	const ColorAreaMap* colorAreas,			//!< a map object which maps color value to area ID.
+	const ColorAreaMap* colorAreas			//!< a map object which maps color value to area ID.
 											/*!< note that the negative area ID is reserved so ID in the map
 													should be zero or positive value */
-	ColorCodedSkinAppearance* appearance	//!< an object which implements ColorCodedSkinAppearance interface.
 )
 {
-	checkInitParams(dibStore, mapBitmap, stateSkins, otherImages, colorAreas, appearance);
+	checkInitParams(dibStore, mapBitmap, stateSkins, otherImages, colorAreas);
 	destructAllMembers();
 
 	this->dibStore = dibStore;	
@@ -122,11 +121,8 @@ void ColorCodedSkin::Init(
 	this->stateSkins = stateSkins;
 	this->otherImages = otherImages;
 	this->colorAreas = colorAreas;	
-	this->appearance = appearance;
 	
 	makeAreaInfos();
-	
-	appearance->ChangeSkinSize(mapBitmap->GetWidth(), mapBitmap->GetHeight());
 }
 
 // ---------------------------------------------------------------------
@@ -140,10 +136,9 @@ void ColorCodedSkin::checkInitParams(
 	const DIBitmap* mapBitmap,					//!< the color-coded bitmap which has information about the location of parts in the skin. 
 	const ConstDIBitmapVector* stateSkins,		//!< the vector which has appearances bitmap.
 	const ConstDIBitmapVector* /*otherImages*/,	//!< a vector which has other bitmap.
-	const ColorAreaMap* colorAreas,				//!< the map object which maps color value to area ID.
+	const ColorAreaMap* colorAreas				//!< the map object which maps color value to area ID.
 												/*!< note that the negative area ID is reserved so ID in the map
 													should be zero or positive value */
-	ColorCodedSkinAppearance* /*appearance*/	//!< the object which implements ColorCodedSkinAppearance interface.
 )
 {
 	SInt32 width  = mapBitmap->GetWidth();
@@ -233,6 +228,16 @@ void ColorCodedSkin::makeAreaInfos()
 			}
 		}		
 	}
+}
+
+/**
+ *	@brief	Attaches an appearance.
+ *	@param[in]	appearance	an object which implements ColorCodedSkinAppearance interface.
+ */
+void ColorCodedSkin::AttachAppearance(ColorCodedSkinAppearance *appearance)
+{
+	this->appearance = appearance;
+	appearance->ChangeSkinSize(mapBitmap->GetWidth(), mapBitmap->GetHeight());
 }
 
 // ---------------------------------------------------------------------

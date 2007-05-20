@@ -42,6 +42,7 @@ UIManager::UIManager()
 {
 	uiController = NULL;
 	skin = NULL;
+	appearance = NULL;
 	basePoint.x = basePoint.y = 0;
 	lastCursorSkinArea = ColorCodedSkin::Area_None;
 }
@@ -75,6 +76,11 @@ void UIManager::clearMembers()
 	{
 		delete skin;
 		skin = NULL;
+	}
+	if (NULL != appearance)
+	{
+		uiController->DisposeSkinAppearance(appearance);
+		appearance = NULL;
 	}
 }
 
@@ -117,6 +123,20 @@ void UIManager::setSkin(
 		delete this->skin;
 	}
 	this->skin = skin;
+}
+
+/**
+ *	@brief	Sets an appearance of ui.
+ */
+void UIManager::setSkinAppearance(
+	ColorCodedSkinAppearance* appearance	///< skin appearance
+)
+{
+	if (NULL != this->appearance)
+	{
+		uiController->DisposeSkinAppearance(this->appearance);
+	}
+	this->appearance = appearance;
 }
 
 // ---------------------------------------------------------------------

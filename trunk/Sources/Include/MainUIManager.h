@@ -43,7 +43,6 @@
 #include "CoverMainWindowInfo.h"
 
 class ColorCodedSkin;
-class ColorCodedSkinAppearance;
 
 // ---------------------------------------------------------------------
 //! This class manages user interface of a main window
@@ -54,7 +53,7 @@ public:
 								MainUIManager();
 	virtual						~MainUIManager();
 	
-	virtual void				Create(ColorCodedSkinAppearance* appearance);
+	virtual void				Create();
 	virtual void				Destroy();
 
 	virtual void				MouseMove();
@@ -108,7 +107,6 @@ private:
 private:
 	CalcCore					calcCore;					//!< calc engine.
 	CalcCore::DigitForm			currentDigitForm;			///< current digit form of engine.
-	ColorCodedSkinAppearance*	appearance;					//!< skin appearance
 	MBCString					numberStringOnDisplay;		//!< string on display
 	MainWindowKeyMappingManager	keyMappingManager;			//!< key-mapping manager of this window.
 };
