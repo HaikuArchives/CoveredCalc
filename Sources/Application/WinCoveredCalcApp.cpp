@@ -545,6 +545,9 @@ BOOL WinCoveredCalcApp::initInstance()
 	// コモンコントロール初期化
 	::InitCommonControls();
 
+	// レイヤードウィンドウ関連の API
+	apiLayeredWindow.Initialize();
+
 	// ウェイトカーソルを取得しておく
 	waitCursor = ::LoadCursor(NULL, IDC_WAIT);
 
@@ -761,6 +764,9 @@ void WinCoveredCalcApp::exitInstance()
 {
 	// 言語ファイルを読み込んでいたら解放する。
 	langFile.Unload();
+
+	// レイヤードウィンドウ関連の API
+	apiLayeredWindow.Terminate();
 
 	base::exitInstance();
 }

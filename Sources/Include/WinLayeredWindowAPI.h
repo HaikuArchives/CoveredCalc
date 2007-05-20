@@ -23,20 +23,38 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/*!
+	@file		WinLayeredWindowAPI.h
+	@brief		Definition of WinLayeredWindowAPI class.
+	@author		ICHIMIYA Hironori (Hiron)
+	@date		2007.4.15 created
+*/
 
-resource app_signature "application/x-vnd.Hironytic-CoveredCalc";
+#ifndef _WINLAYEREDWINDOWAPI_H_
+#define _WINLAYEREDWINDOWAPI_H_
 
-resource app_version
+/**
+ *	@brief	レイヤードウィンドウ API のラッパークラス
+ */
+class WinLayeredWindowAPI
 {
-	major		= 1,
-	middle		= 7,
-	minor		= 2,
-	variety		= B_APPV_FINAL,
-	internal	= 1,
-	short_info	= "1.7.2+",
-	long_info	= "CoveredCalc for BeOS 1.7.2+"
+public:
+								WinLayeredWindowAPI();
+	virtual						~WinLayeredWindowAPI();
+	
+	void						Initialize();
+	void						Terminate();
+	
+	bool						IsSupported_UpdateLayeredWindow() const;
+	BOOL						UpdateLayeredWindow(HWND hWnd, HDC hdcDst, POINT* pptDst, SIZE* psize, HDC hdcSrc, POINT* ppcSrc, COLORREF crKey, BLENDFUNCTION* pblend, DWORD dwFlags) const;
+
+	static DWORD				cWS_EX_LAYERED;
+	static DWORD				cULW_ALPHA;
+
+private:
+	typedef	BOOL (WINAPI *PFN_UpdateLayeredWindow)(HWND, HDC, POINT*, SIZE*, HDC, POINT*, COLORREF, BLENDFUNCTION*, DWORD);
+	HMODULE						hDLLUser32;				///< User32.dll のモジュールハンドル
+	PFN_UpdateLayeredWindow		pfnUpdateLayeredWindow;	///< UpdateLayeredWindow API のアドレス
 };
 
-resource app_flags B_SINGLE_LAUNCH;
-
-resource file_types message;
+#endif // _WINLAYEREDWINDOWAPI_H_

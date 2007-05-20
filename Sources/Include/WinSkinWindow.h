@@ -53,9 +53,9 @@ public:
 							WinSkinWindow();
 	virtual					~WinSkinWindow();
 
-	WinCCSAppearance*		GetAppearance() { return &appearance; }
-
 	// UIController インタフェースの実装
+	virtual ColorCodedSkinAppearance*	InitSkinAppearance();
+	virtual void			DisposeSkinAppearance(ColorCodedSkinAppearance* appearance);
 	virtual Point32			GetMousePosition() const { readyMousePosition(); return mousePosition; }
 	virtual Point32			GetMouseScreenPosition() const;
 	virtual void			GetUIRect(Rect32& rect) const;
@@ -96,7 +96,6 @@ private:
 
 	LRESULT					onCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT					onDestroy(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	LRESULT					onPaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT					onMouseMove(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT					onLButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT					onLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -109,7 +108,6 @@ private:
 	LRESULT					onTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	WinCCSAppearance		appearance;						//!< このウィンドウ用のスキンアピアランス
 	Point32					mousePosition;					//!< イベント発生時のマウス位置を記憶する
 	bool					mousePositionAvailable;			///< mousePosition が有効かどうか
 	UIManager*				uiManager;						//!< このウィンドウ用のUIマネージャ

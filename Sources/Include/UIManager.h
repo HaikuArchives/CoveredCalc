@@ -61,10 +61,11 @@ public:
 
 	virtual void				Init(UIController* uiController);
 
-	virtual void				Create(ColorCodedSkinAppearance* appearance) = 0;
+	virtual void				Create() = 0;
 	virtual void				Destroy();
 
 	virtual ColorCodedSkin*		GetSkin() { return getSkin(); }
+	virtual ColorCodedSkinAppearance*	GetSkinAppearance() { return getSkinAppearance(); }
 
 	virtual void				StartTask(UITask* task);
 	virtual void				EndTask(UITask* task);
@@ -89,12 +90,14 @@ public:
 protected:
 	virtual void				clearMembers();
 	void						setSkin(ColorCodedSkin* skin);
+	void						setSkinAppearance(ColorCodedSkinAppearance* appearance);
 	void						setBasePoint(const Point32& basePoint);
 	void						setLastCursorSkinArea(SInt32 area);
 	virtual void				changeLastCursorSkinArea(SInt32 area);
 
 	UIController*				getUIController() { return uiController; }
 	ColorCodedSkin*				getSkin() { return skin; }
+	ColorCodedSkinAppearance*	getSkinAppearance() { return appearance; }
 	UITaskManager*				getTaskManager() { return &taskManager; }
 
 	virtual void				readSkin() = 0;
@@ -102,6 +105,7 @@ protected:
 private:
 	UIController*				uiController;
 	ColorCodedSkin*				skin;
+	ColorCodedSkinAppearance*	appearance;			///< skin appearance.
 	UITaskManager				taskManager;
 	Point32						basePoint;
 	SInt32						lastCursorSkinArea;	///< skin area at cursor pos.

@@ -25,7 +25,7 @@
 
 /*!
 	@file		WinCCSAppearance.h
-	@brief		Definition of WinCCSAppearance class.
+	@brief		Definition of WinCCSAppearance interface.
 	@author		ICHIMIYA Hironori (Hiron)
 	@date		2003.10.13 created
 */
@@ -37,34 +37,15 @@
 #include "WinDIBitmapDC.h"
 
 // ---------------------------------------------------------------------
-//! Windows 用の ColorCodedSkinApperance 実装クラス
+//! Windows 用の ColorCodedSkinApperance インタフェース
 // ---------------------------------------------------------------------
 class WinCCSAppearance : public ColorCodedSkinAppearance
 {
 public:
-							WinCCSAppearance();
-	virtual					~WinCCSAppearance();
+							WinCCSAppearance() { }
+	virtual					~WinCCSAppearance() { }
 
-	void					Init(HWND hWnd);
-	void					Exit();
-	
-	const WinDIBitmapDC*	GetDIBitmapDC() const { return &dibitmapDC; }
-
-	virtual void			ChangeSkinSize(SInt32 width, SInt32 height);
-	virtual void			ClipSkinRegion(const DIBitmap* mapBitmap, ColorValue transparentColor);
-	virtual void			UnclipSkinRegion();
-	virtual	void			DrawSkinByColor(const Point32& drawPoint, const DIBitmap* mapBitmap, const DIBitmap* skinBitmap, ColorValue color, const Rect32& skinRect);
-	virtual void			DrawBlendSkinByColor(const Point32& drawPoint, const DIBitmap* mapBitmap, const DIBitmap* skinBitmap1, const DIBitmap* skinBitmap2, ColorValue color, const Rect32& skinRect, UInt32 ratio);
-	virtual	void			CopySkin(const Point32& drawPoint, const DIBitmap* skinBitmap, const Rect32& skinRect);
-	virtual	void			CopySkin(const Point32& drawPoint, const DIBitmap* skinBitmap, const Rect32& skinRect, ColorValue transparentColor);
-
-private:
-	void					invalidateRect(const Point32& drawPoint, const Rect32& skinRect);
-
-private:
-	HWND					hWnd;
-	WinDIBitmapDC			dibitmapDC;
-	HRGN					hWndRgn;
+	virtual bool			RelayWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT* ret) = 0;
 };
 
 #endif // _WINCCSAPPEARANCE_H_

@@ -42,6 +42,7 @@ public:
 	ColorValue()
 	{
 		redValue = greenValue = blueValue = 0;
+		alphaValue = 255;
 	}
 
 	ColorValue(UInt8 red, UInt8 green, UInt8 blue)
@@ -49,6 +50,15 @@ public:
 		redValue = red;
 		greenValue = green;
 		blueValue = blue;
+		alphaValue = 255;
+	}
+
+	ColorValue(UInt8 red, UInt8 green, UInt8 blue, UInt8 alpha)
+	{
+		redValue = red;
+		greenValue = green;
+		blueValue = blue;
+		alphaValue = alpha;
 	}
 
 	ColorValue& operator=(const ColorValue& other)
@@ -58,6 +68,7 @@ public:
 			redValue = other.redValue;
 			greenValue = other.greenValue;
 			blueValue = other.blueValue;
+			alphaValue = other.alphaValue;
 		}
 		return *this;
 	}
@@ -66,7 +77,8 @@ public:
 	{
 		return (this->redValue == other.redValue
 				&& this->greenValue == other.greenValue
-				&& this->blueValue == other.blueValue)		? true : false;
+				&& this->blueValue == other.blueValue
+				&& this->alphaValue == other.alphaValue)		? true : false;
 	}
 
 	bool operator!=(const ColorValue& other) const
@@ -78,6 +90,7 @@ public:
 	UInt8	redValue;
 	UInt8	greenValue;
 	UInt8	blueValue;
+	UInt8	alphaValue;
 };
 
 // ---------------------------------------------------------------------
@@ -96,7 +109,7 @@ public:
 private:
 	UInt32 asUInt32(const ColorValue& value) const
 	{
-		return (static_cast<UInt32>(value.redValue) | (static_cast<UInt32>(value.blueValue) << 8) | (static_cast<UInt32>(value.greenValue) << 16));
+		return (static_cast<UInt32>(value.redValue) | (static_cast<UInt32>(value.blueValue) << 8) | (static_cast<UInt32>(value.greenValue) << 16) | (static_cast<UInt32>(value.alphaValue) << 24));
 	}
 };
 

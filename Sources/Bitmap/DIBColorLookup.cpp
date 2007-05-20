@@ -50,11 +50,31 @@ DIBColorLookup::DIBColorLookup(
 	{
 		if (BI_BITFIELDS == bitmap->GetInfoAddress()->bmiHeader.biCompression)	// mask is specified
 		{
-			SInt32 index;
-			const UInt32* mask = reinterpret_cast<const UInt32*>(colorTable);
-			for (index = 0; index < 3; index++)
+			if (bitmap->GetInfoAddress()->bmiHeader.biSize >= 52)
 			{
-				bitMask[index] = mask[index];
+				// get color masks from BITMAPV4HEADER
+				const BITMAPV4HEADER* v4Header = reinterpret_cast<const BITMAPV4HEADER*>(&bitmap->GetInfoAddress()->bmiHeader);
+				bitMask[0] = v4Header->bV4RedMask;
+				bitMask[1] = v4Header->bV4GreenMask;
+				bitMask[2] = v4Header->bV4BlueMask;
+				if (v4Header->bV4Size >= 56)
+				{
+					bitMask[3] = v4Header->bV4AlphaMask;
+				}
+				else
+				{
+					bitMask[3] = 0xFF000000;
+				}
+			}
+			else
+			{
+				SInt32 index;
+				const UInt32* mask = reinterpret_cast<const UInt32*>(colorTable);
+				for (index = 0; index < 3; index++)
+				{
+					bitMask[index] = mask[index];
+				}
+				bitMask[3] = 0xFF000000;
 			}
 		}
 		else if (16 == bitCount)	// mask is not specified. use 16bpp default mask
@@ -62,17 +82,19 @@ DIBColorLookup::DIBColorLookup(
 			bitMask[0] = 0x00007C00;
 			bitMask[1] = 0x000003E0;
 			bitMask[2] = 0x0000001F;
+			bitMask[3] = 0;
 		}
 		else						// mask is not specified. use 32bpp default mask
 		{
 			bitMask[0] = 0x00FF0000;
 			bitMask[1] = 0x0000FF00;
 			bitMask[2] = 0x000000FF;
+			bitMask[3] = 0xFF000000;
 		}
 
 		// calculate each number of shifts
 		SInt32 index;
-		for (index = 0; index < 3; index++)
+		for (index = 0; index < 4; index++)
 		{
 			UInt32 aMask = bitMask[index];
 			bitMaskShift[index] = 0;
@@ -86,9 +108,9 @@ DIBColorLookup::DIBColorLookup(
 	}
 	else	// mask not needed
 	{
-		bitMask[0] = bitMask[1] = bitMask[2] = 0;
-		bitMaskShift[0] = bitMaskShift[1] = bitMaskShift[2] = 0;
-		bitMaskLevel[0] = bitMaskLevel[1] = bitMaskLevel[2] = 0;
+		bitMask[0] = bitMask[1] = bitMask[2] = bitMask[3] = 0;
+		bitMaskShift[0] = bitMaskShift[1] = bitMaskShift[2] = bitMaskShift[3] = 0;
+		bitMaskLevel[0] = bitMaskLevel[1] = bitMaskLevel[2] = bitMaskLevel[3] = 0;
 	}
 }
 
@@ -156,13 +178,16 @@ ColorValue DIBColorLookup::LookupNextColor()
 		break;
 	case 16:	// tests masks
 		{
-			UInt8 rgb[3];	// in R, G, B order
+			UInt8 rgb[4];	// in R, G, B order
 			UInt16 data = *reinterpret_cast<const UInt16*>(nextAddress);
-			for (colorIndex = 0; colorIndex < 3; colorIndex++)
+			for (colorIndex = 0; colorIndex < 4; colorIndex++)
 			{
 				rgb[colorIndex] = static_cast<UInt8>(((data & bitMask[colorIndex]) >> bitMaskShift[colorIndex]) * 255 / bitMaskLevel[colorIndex]);
 			}
-			color = ColorValue(rgb[0], rgb[1], rgb[2]);
+			color.redValue = rgb[0];
+			color.greenValue = rgb[1];
+			color.blueValue = rgb[2];
+			color.alphaValue = (isAlphaAvailable) ? rgb[3] : 255;
 		}
 		nextAddress += 2;
 		break;
@@ -174,13 +199,16 @@ ColorValue DIBColorLookup::LookupNextColor()
 		break;
 	case 32:
 		{
-			UInt8 rgb[3];	// in R, G, B order
+			UInt8 rgb[4];	// in R, G, B order
 			UInt32 data = *reinterpret_cast<const UInt32*>(nextAddress);
-			for (colorIndex = 0; colorIndex < 3; colorIndex++)
+			for (colorIndex = 0; colorIndex < 4; colorIndex++)
 			{
 				rgb[colorIndex] = static_cast<UInt8>(((data & bitMask[colorIndex]) >> bitMaskShift[colorIndex]) * 255 / bitMaskLevel[colorIndex]);
 			}
-			color = ColorValue(rgb[0], rgb[1], rgb[2]);
+			color.redValue = rgb[0];
+			color.greenValue = rgb[1];
+			color.blueValue = rgb[2];
+			color.alphaValue = (isAlphaAvailable) ? rgb[3] : 255;
 		}
 		nextAddress += 4;
 		break;
@@ -192,6 +220,7 @@ ColorValue DIBColorLookup::LookupNextColor()
 		color.blueValue = colorP.rgbBlue;
 		color.greenValue = colorP.rgbGreen;
 		color.redValue = colorP.rgbRed;
+		color.alphaValue = 255;
 	}
 	
 	if (8 == nextBitOffset)

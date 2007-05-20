@@ -54,6 +54,10 @@ static UTF8Char	Tag_CoveredCalcSettings[]		= "coveredcalcSettings";
 	static UTF8Char	Key_CoverBrowserVisible[]		= "coverBrowserVisible";
 	static UTF8Char Key_MainWindowAlwaysOnTop[]		= "mainWindowAlwaysOnTop";
 	static UTF8Char Key_MainWindowLocked[]			= "mainWindowLocked";
+#if defined(WIN32)
+	static UTF8Char Key_MainWindowOpacity[]			= "mainWindowOpacity";
+	static UTF8Char Key_MainWindowEdgeSmoothing[]	= "mainWindowEdgeSmoothing";
+#endif
 	static UTF8Char	Key_LangFilePath[]				= "languageFile";
 #if defined(ZETA)
 	static UTF8Char	Key_UseLocaleKit[]				= "useLocaleKit";
@@ -76,6 +80,8 @@ AppSettings::AppSettings()
 	isCoverBrowserVisible = false;
 	isMainWindowAlwaysOnTop = false;
 	isMainWindowLocked = false;
+	mainWindowOpacity = 255;
+	mainWindowEdgeSmoothing = 0;
 	domDocument = NULL;
 	langFilePath.Empty();
 #if defined (ZETA)
@@ -119,6 +125,10 @@ void AppSettings::syncMembersWithDOM(
 		setSettingValueToDOM(Key_CoverBrowserVisible,	SettingValue(isCoverBrowserVisible));
 		setSettingValueToDOM(Key_MainWindowAlwaysOnTop,	SettingValue(isMainWindowAlwaysOnTop));
 		setSettingValueToDOM(Key_MainWindowLocked,		SettingValue(isMainWindowLocked));
+#if defined (WIN32)
+		setSettingValueToDOM(Key_MainWindowOpacity,		SettingValue(mainWindowOpacity));
+		setSettingValueToDOM(Key_MainWindowEdgeSmoothing, SettingValue(mainWindowEdgeSmoothing));
+#endif // defined (WIN32)
 		setSettingValueToDOM(Key_LangFilePath,			SettingValue(langFilePath));
 #if defined (ZETA)
 		setSettingValueToDOM(Key_UseLocaleKit,			SettingValue(isLocaleKitAvailable));
@@ -163,6 +173,16 @@ void AppSettings::syncMembersWithDOM(
 		{
 			isMainWindowLocked = settingValue.AsBool();
 		}
+#if defined (WIN32)
+		if (getSettingValueFromDOM(Key_MainWindowOpacity, settingValue))
+		{
+			mainWindowOpacity = settingValue.AsSInt32();
+		}
+		if (getSettingValueFromDOM(Key_MainWindowEdgeSmoothing, settingValue))
+		{
+			mainWindowEdgeSmoothing = settingValue.AsSInt32();
+		}
+#endif // defined (WIN32)
 		if (getSettingValueFromDOM(Key_LangFilePath, settingValue))
 		{
 			settingValue.AsPath(langFilePath);
@@ -229,6 +249,8 @@ void AppSettings::loadDefaultToMember()
 	isCoverBrowserVisible = false;
 	isMainWindowAlwaysOnTop = false;
 	isMainWindowLocked = false;
+	mainWindowOpacity = 255;
+	mainWindowEdgeSmoothing = 0;
 	langFilePath.Empty();
 #if defined (ZETA)
 	isLocaleKitAvailable = true;

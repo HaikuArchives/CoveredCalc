@@ -39,6 +39,7 @@
 #include "WinCoverBrowser.h"
 #include "WinMonitorInfo.h"
 #include "WinLangFile.h"
+#include "WinLayeredWindowAPI.h"
 
 // ---------------------------------------------------------------------
 //! CoveredCalc Windows 版 アプリケーションクラス
@@ -67,6 +68,8 @@ public:
 	const WinMonitorInfo*			GetMonitorInformation() const	{ return &monitorInfo; }
 
 	HINSTANCE						GetLangResHandle() const;
+
+	const WinLayeredWindowAPI*		GetLayeredWindowAPI() const		{ return &apiLayeredWindow; }
 
 	// MessageBoxProvider インタフェースの実装
 	virtual Button					DoMessageBox(ConstAStr message, ButtonType buttonType, AlertType alertType, Button defaultButton = Button_None);
@@ -105,6 +108,7 @@ private:
 	bool							isInEnableCoveredCalcWindows;	//!< EnableCoveredCalcWindows の処理中かどうか
 	WinMonitorInfo					monitorInfo;		//!< モニタ情報
 	WinLangFile						langFile;			///< 言語ファイル
+	WinLayeredWindowAPI				apiLayeredWindow;	///< レイヤードウィンドウ関連の API ラッパー
 };
 
 #endif // _COVEREDCALCWINAPP_H_

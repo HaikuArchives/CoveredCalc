@@ -40,6 +40,13 @@
 #include "WinSkinWindow.h"
 #include "UIControllerException.h"
 #include "MenuInfo.h"
+#include "WinNormalAppearance.h"
+#include "WinLayeredAppearance.h"
+#include "MemoryException.h"
+#include "CoverManager.h"
+#include "CoverDef.h"
+#include "CoverInfo.h"
+#include "CoverMainWindowInfo.h"
 
 ////////////////////////////////////////
 #define base	CHrnWnd
@@ -50,7 +57,7 @@
 #define TIMERID_MOUSEHOVER			100		///< TimerID_MouseHover に対応するタイマID
 
 // ---------------------------------------------------------------------
-//! ユーザ定義メッセージ
+// ユーザ定義メッセージ
 // ---------------------------------------------------------------------
 #define UM_ACTIVATED		(WM_USER + 100)		//!< ウィンドウがアクティブ/非アクティブ化された
 
@@ -90,6 +97,61 @@ WinSkinWindow::~WinSkinWindow()
 		ASSERT(0 == timerNestCount[index]);
 	}
 #endif
+}
+
+/**
+ *	@brief	ColorCodedSkinAppearance を初期化して返します。
+ *	@return	初期化した ColorCodedSkinAppearance オブジェクト。
+ */
+ColorCodedSkinAppearance* WinSkinWindow::InitSkinAppearance()
+{
+	const WinLayeredWindowAPI* layeredWindowAPI = WinCoveredCalcApp::GetInstance()->GetLayeredWindowAPI();
+	WinCCSAppearance* appearance = NULL;
+	if (layeredWindowAPI->IsSupported_UpdateLayeredWindow())
+	{
+		WinLayeredAppearance* layeredAppearance = new WinLayeredAppearance();
+		if (NULL == layeredAppearance)
+		{
+			MemoryException::Throw();
+		}
+		appearance = layeredAppearance;
+		
+		const AppSettings* appSettings = CoveredCalcApp::GetInstance()->GetAppSettings();
+		
+		const CoverManager* manager = CoveredCalcApp::GetInstance()->GetCoverManager();
+		const CoverMainWindowInfo* mainWindowInfo = manager->GetCoverDef()->GetCoverInfo(manager->GetCurrentCover())->GetMainWindowInfo();
+		
+		bool ignoreClipping = !mainWindowInfo->IsTransparentRegionUsedAgainstAlpha();
+		SInt32 opacity = appSettings->GetMainWindowOpacity();
+		SInt32 edgeSmoothingLevel = mainWindowInfo->GetEdgeSmoothingLevel();
+		if (edgeSmoothingLevel < 0)
+		{
+			// auto が指定された場合はアプリケーションのプリファレンスから取得
+			edgeSmoothingLevel = appSettings->GetMainWindowEdgeSmoothing();
+		}
+		layeredAppearance->Init(m_hWnd, ignoreClipping, edgeSmoothingLevel, opacity);
+	}
+	else
+	{
+		WinNormalAppearance* normalAppearance = new WinNormalAppearance();
+		if (NULL == normalAppearance)
+		{
+			MemoryException::Throw();
+		}
+		appearance = normalAppearance;
+		
+		normalAppearance->Init(m_hWnd);
+	}
+	return appearance;
+}
+
+/**
+ *	@brief	不要になった ColorCodedSkinAppearance を捨てます。
+ *	@param[in]	appearance	不要になった ColorCodedSkinAppearance オブジェクト。
+ */
+void WinSkinWindow::DisposeSkinAppearance(ColorCodedSkinAppearance* appearance)
+{
+	delete appearance;
 }
 
 /**
@@ -587,6 +649,17 @@ LRESULT WinSkinWindow::wndProc(
 	LPARAM lParam		// メッセージの LPARAM
 )
 {
+	LRESULT ret = 0;
+	bool isProcessed = false;
+	if (uiManager != NULL)
+	{
+		WinCCSAppearance* appearance = static_cast<WinCCSAppearance*>(uiManager->GetSkinAppearance());
+		if (appearance != NULL)
+		{
+			isProcessed = appearance->RelayWndProc(hWnd, uMsg, wParam, lParam, &ret);
+		}
+	}
+
 	mousePositionAvailable = false;
 
 	try
@@ -626,9 +699,6 @@ LRESULT WinSkinWindow::wndProc(
 		case WM_DESTROY:
 			return onDestroy(hWnd, uMsg, wParam, lParam);
 			break;
-		case WM_PAINT:
-			return onPaint(hWnd, uMsg, wParam, lParam);
-			break;
 		case WM_MOUSEMOVE:
 			return onMouseMove(hWnd, uMsg, wParam, lParam);
 			break;
@@ -660,7 +730,14 @@ LRESULT WinSkinWindow::wndProc(
 			return onTimer(hWnd, uMsg, wParam, lParam);
 			break;
 		default:
-			return base::wndProc(hWnd, uMsg, wParam, lParam);
+			if (isProcessed)
+			{
+				return ret;
+			}
+			else
+			{
+				return base::wndProc(hWnd, uMsg, wParam, lParam);
+			}
 		}
 	}
 	catch (Exception* ex)
@@ -700,9 +777,6 @@ LRESULT WinSkinWindow::onCreate(
 						NULL);
 	::SendMessage(hToolTipWnd, TTM_ACTIVATE, static_cast<WPARAM>(TRUE), 0);
 	
-	// アピアランスを初期化
-	appearance.Init(hWnd);
-
 	// UI マネージャを作成
 	if (NULL != uiManager)
 	{
@@ -763,53 +837,9 @@ LRESULT WinSkinWindow::onDestroy(
 		deleteUIManager(uiManager);
 		uiManager = NULL;
 	}
-
-	appearance.Exit();
 	
 	::DestroyWindow(hToolTipWnd);
 	hToolTipWnd = NULL;
-	
-	return 0;
-}
-
-// ---------------------------------------------------------------------
-//! WM_PAINT ハンドラ
-/*!
-	スキンを描画します。
-	@retval 0 処理したとき
-*/
-// ---------------------------------------------------------------------
-LRESULT WinSkinWindow::onPaint(
-	HWND hWnd,			// ウィンドウハンドル
-	UINT /*uMsg*/,		// WM_PAINT
-	WPARAM /*wParam*/,	// 利用しないパラメータ
-	LPARAM /*lParam*/	// 利用しないパラメータ
-)
-{
-	PAINTSTRUCT ps;
-	HDC dc = NULL;
-
-	RECT rect;
-	::GetClientRect( m_hWnd, &rect );
-	
-	dc = ::BeginPaint(hWnd, &ps);
-	if (NULL != dc)
-	{
-		try
-		{	
-			const WinDIBitmapDC* bitmapDC = appearance.GetDIBitmapDC();
-			if (NULL != bitmapDC)
-			{
-				::BitBlt(dc, 0, 0, rect.right - rect.left, rect.bottom - rect.top, *bitmapDC, 0, 0, SRCCOPY);
-			}
-		}
-		catch (...)
-		{
-			::EndPaint(hWnd, &ps);
-			throw;
-		}
-		::EndPaint(hWnd, &ps);
-	}
 	
 	return 0;
 }

@@ -35,7 +35,6 @@
 
 #include <interface/View.h>
 #include "UIController.h"
-#include "BeCCSAppearance.h"
 #include "BeToolTipWindow.h"
 
 class UIManager;
@@ -60,10 +59,11 @@ public:
 	virtual void			Init();
 	virtual void			Quit();
 
-	BeCCSAppearance*		GetAppearance() { return &appearance; }
 	UIManager*				GetUIManager() { return getUIManager(); }
 
 	// implementation of UIController interface
+	virtual ColorCodedSkinAppearance*	InitSkinAppearance();
+	virtual void			DisposeSkinAppearance(ColorCodedSkinAppearance* appearance);
 	virtual Point32 		GetMousePosition() const { readyMousePosition(); return mousePosition; }
 	virtual Point32 		GetMouseScreenPosition() const;
 	virtual void			GetUIRect(Rect32& rect) const;
@@ -116,7 +116,6 @@ private:
 	void					readyMousePosition() const;
 
 private:
-	BeCCSAppearance			appearance;		//!< skin appearance for this view
 	Point32 				mousePosition;	//!< mouse location when some event has occured
 	bool					mousePositionAvailable;
 	UIManager*				uiManager;		//!< ui manager for this view

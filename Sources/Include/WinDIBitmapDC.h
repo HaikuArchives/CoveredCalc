@@ -52,6 +52,9 @@ public:
 	DIBitmap*			GetDIB()		{ return &dib; }
 
 protected:
+	virtual BITMAPINFO*	createBitmapInfo(SInt32 width, SInt32 height);
+
+protected:
 	DIBitmap			dib;
 };
 

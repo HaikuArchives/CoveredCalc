@@ -75,6 +75,8 @@ public:
 	void						AppendMapItems(const MapItemPtrVector& mapItems);
 	void						AddToolTipInfo(CoverToolTipInfo* info);
 	void						SetTransparentRegionID(ConstUTF8Str id);
+	void						SetTransparentRegionUsedAgainstAlpha(bool isUsed) { this->isTransparentRegionUsedAgainstAlpha = isUsed; }
+	void						SetEdgeSmoothingLevel(SInt32 level) { this->edgeSmoothingLevel = level; }
 	void						SetHottingSteps(SInt32 hottingSteps) { this->hottingSteps = hottingSteps; }
 
 	virtual void				ResolveMapId();
@@ -84,6 +86,8 @@ public:
 	SInt32						GetNumMapItems() const	{ return static_cast<SInt32>(mapItems.size()); }
 	const ColorValue&			GetMapItem(SInt32 index) const { return mapItems[index]->GetColor(); }
 	SInt32						GetTransparentRegionIndex() const { return transparentRegionIndex; }
+	bool						IsTransparentRegionUsedAgainstAlpha() const { return isTransparentRegionUsedAgainstAlpha; }
+	SInt32						GetEdgeSmoothingLevel() const { return edgeSmoothingLevel; }
 	const CoverToolTipInfo*		FindToolTipInfo(SInt32 mapIndex) const;
 	SInt32						GetHottingSteps() const { return hottingSteps; }
 
@@ -99,6 +103,8 @@ private:
 	CoverToolTipInfoPtrVector	toolTipInfos;			//!< tool tip
 	UTF8String					transparentRegionID;	//!< id of mapItems for transparent region
 	SInt32						transparentRegionIndex;	//!< index of mapItems for transparent region	
+	bool						isTransparentRegionUsedAgainstAlpha;	///< whether transmarent region is used against alpha channel.
+	SInt32						edgeSmoothingLevel;		///< edge smoothing level. negative value means "auto".
 	SInt32						hottingSteps;			///< how many steps a button becomes completely "hot" state.
 };
 

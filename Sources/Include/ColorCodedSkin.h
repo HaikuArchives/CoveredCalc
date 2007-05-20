@@ -62,7 +62,8 @@ public:
 						ColorCodedSkin();
 	virtual				~ColorCodedSkin();
 
-	void				Init(DIBitmapStore* dibStore, const DIBitmap* mapBitmap, const ConstDIBitmapVector* stateSkins, const ConstDIBitmapVector* otherImages, const ColorAreaMap* colorAreas, ColorCodedSkinAppearance* appearance);
+	void				Init(DIBitmapStore* dibStore, const DIBitmap* mapBitmap, const ConstDIBitmapVector* stateSkins, const ConstDIBitmapVector* otherImages, const ColorAreaMap* colorAreas);
+	void				AttachAppearance(ColorCodedSkinAppearance* appearance);
 
 	SInt32				GetArea(const Point32& pt) const;
 	SInt32				GetWidth() const { return mapBitmap->GetWidth(); }
@@ -89,7 +90,7 @@ private:
 
 	void				destructAllMembers();
 	void				makeAreaInfos();
-	void				checkInitParams(DIBitmapStore* dibStore, const DIBitmap* mapBitmap, const ConstDIBitmapVector* stateSkins, const ConstDIBitmapVector* otherImages, const ColorAreaMap* colorAreas, ColorCodedSkinAppearance* appearance);
+	void				checkInitParams(DIBitmapStore* dibStore, const DIBitmap* mapBitmap, const ConstDIBitmapVector* stateSkins, const ConstDIBitmapVector* otherImages, const ColorAreaMap* colorAreas);
 
 private:
 	ColorCodedSkinAppearance*	appearance;

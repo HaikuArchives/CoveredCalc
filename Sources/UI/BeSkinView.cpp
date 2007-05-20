@@ -43,6 +43,8 @@
 #include "DialogInfo.h"
 #include "BeDialog.h"
 #include "BeCoveredCalcApp.h"
+#include "BeCCSAppearance.h"
+#include "MemoryException.h"
 
 #define MSG_TIMER_MOUSEHOVER	'tmmh'
 
@@ -103,8 +105,6 @@ void BeSkinView::Init()
 	toolTipWindow->Init(this, "");
 	toolTipMessenger = new BMessenger(toolTipWindow);
 
-	appearance.Init(this);
-	
 	if (NULL != uiManager)
 	{
 		deleteUIManager(uiManager);
@@ -123,8 +123,30 @@ void BeSkinView::Quit()
 		deleteUIManager(uiManager);
 		uiManager = NULL;
 	}
-	
-	appearance.Exit();
+}
+
+/**
+ *	@brief	Initializes ColorCodedSkinAppearance and then return it.
+ *	@return	initialized ColorCodedSkinAppearance object.
+ */
+ColorCodedSkinAppearance* BeSkinView::InitSkinAppearance()
+{
+	BeCCSAppearance* appearance = new BeCCSAppearance();
+	if (NULL == appearance)
+	{
+		MemoryException::Throw();
+	}
+	appearance->Init(this);
+	return appearance;
+}
+
+/**
+ *	@brief	Disposes unused ColorCodedSkinAppearance.
+ *	@param[in]	appearance	ColorCodedSkinAppearance object to dispose.
+ */
+void BeSkinView::DisposeSkinAppearance(ColorCodedSkinAppearance *appearance)
+{
+	delete appearance;
 }
 
 /**
@@ -623,7 +645,8 @@ void BeSkinView::Draw(
 	BRect updateRect	//!< update rectangle
 )
 {
-	const BBitmap* bitmap = appearance.GetBitmap();
+	BeCCSAppearance* appearance = static_cast<BeCCSAppearance*>(uiManager->GetSkinAppearance());
+	const BBitmap* bitmap = appearance->GetBitmap();
 
 	ColorCodedSkin* skin = uiManager->GetSkin();
 	BRect skinRect( 0, 0, skin->GetWidth() - 1, skin->GetHeight() - 1);

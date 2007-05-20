@@ -89,6 +89,14 @@ public:
 							{ return isMainWindowLocked; }
 	void				SetMainWindowLocked(bool isLocked)
 							{ this->isMainWindowLocked = isLocked; }
+	SInt32				GetMainWindowOpacity() const
+							{ return mainWindowOpacity; }
+	void				SetMainWindowOpacity(SInt32 opacity)
+							{ this->mainWindowOpacity = opacity; }
+	SInt32				GetMainWindowEdgeSmoothing() const
+							{ return mainWindowEdgeSmoothing; }
+	void				SetMainWindowEdgeSmoothing(SInt32 edgeSmoothing)
+							{ this->mainWindowEdgeSmoothing = edgeSmoothing; }
 	const Path&			GetLanguageFilePath() const
 							{ return langFilePath; }
 	void				SetLanguageFilePath(const Path& langFilePath)
@@ -121,6 +129,8 @@ private:
 	bool				isCoverBrowserVisible;		//!< whether cover browser is visible
 	bool				isMainWindowAlwaysOnTop;	///< whether main window is always on top
 	bool				isMainWindowLocked;			///< whether main window is locked
+	SInt32				mainWindowOpacity;			///< opacity of main window. from 1 to 255. available with layered window.
+	SInt32				mainWindowEdgeSmoothing;	///< level of edge smoothing. from 0 to 10. 0 means no smoothing. available with layered window.
 	Path				langFilePath;				///< language file path.
 #if defined(ZETA)
 	bool				isLocaleKitAvailable;		///< whether uses ZETA's Locale Kit.

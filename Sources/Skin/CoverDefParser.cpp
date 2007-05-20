@@ -358,6 +358,34 @@ bool CoverDefParser::getPathValue(
 }
 
 /**
+ *	@brief	Retrives boolean value from string.
+ *	@param[in]	value	the value.
+ *	@param[in]	defaultValue	if value parameter is not understood, then return this value.
+ */
+static bool getBoolValue(ConstUTF8Str value, bool defaultValue)
+{
+	if (0 == UTF8Utils::UTF8StrCmpI(value, TypeConv::AsUTF8("true")))
+	{
+		return true;
+	}
+	else if (0 == UTF8Utils::UTF8StrCmpI(value, TypeConv::AsUTF8("false")))
+	{
+		return false;
+	}
+	else
+	{
+		return defaultValue;
+	}
+}
+
+static const UTF8Char SUPPORTED_VERSION_1_0[] = "1.0";
+static const UTF8Char SUPPORTED_VERSION_1_1[] = "1.1";
+static const UTF8Char SUPPORTED_VERSION_1_2[] = "1.2";
+static const UTF8Char SUPPORTED_VERSION_1_3[] = "1.3";
+static const UTF8Char SUPPORTED_VERSION_1_4[] = "1.4";
+static const UTF8Char SUPPORTED_VERSION_1_5[] = "1.5";
+
+/**
  *	@brief	Parses element node "coverDef" and its descendant node.
  *	@return	CoverDef object which has informations in this "coverDef" node.
  */
@@ -366,13 +394,8 @@ CoverDef* CoverDefParser::parseTagCoverDef(
 )
 {
 	// check "version" attribute
-	const UTF8Char supportedVersion1_0[] = "1.0";
-	const UTF8Char supportedVersion1_1[] = "1.1";
-	const UTF8Char supportedVersion1_2[] = "1.2";
-	const UTF8Char supportedVersion1_3[] = "1.3";
-	const UTF8Char supportedVersion1_4[] = "1.4";
-	ConstUTF8Str supportedVersions[] = { supportedVersion1_0, supportedVersion1_1, supportedVersion1_2, supportedVersion1_3,
-											supportedVersion1_4 };
+	ConstUTF8Str supportedVersions[] = { SUPPORTED_VERSION_1_0, SUPPORTED_VERSION_1_1, SUPPORTED_VERSION_1_2, SUPPORTED_VERSION_1_3,
+											SUPPORTED_VERSION_1_4, SUPPORTED_VERSION_1_5 };
 
 	UTF8String versionString;
 	getAttrValue(coverDefElement, TypeConv::AsUTF8("version"), versionString, true);
@@ -586,10 +609,38 @@ void CoverDefParser::parseTagWindow(
 	childNode = DOMUtils::GetFirstMatchNode(windowElement, TypeConv::AsUTF8("transparentRegion"), true);
 	if (NULL != childNode && NCDNode::ELEMENT_NODE == childNode->getNodeType())
 	{
+		UTF8String strValue;
 		UTF8String mapIdValue;
+		bool usedAgainstAlpha = true;
+		SInt32 edgeSmoothing = -1;
 		getAttrValue(childNode, TypeConv::AsUTF8("mapId"), mapIdValue, true);
+		if (getAttrValue(childNode, TypeConv::AsUTF8("usedAgainstAlpha"), strValue, false))
+		{
+			usedAgainstAlpha = getBoolValue(strValue, true);
+		}
+		if (getAttrValue(childNode, TypeConv::AsUTF8("edgeSmoothing"), strValue, false))
+		{
+			if (0 == UTF8Utils::UTF8StrCmpI(strValue, TypeConv::AsUTF8("auto")))
+			{
+				edgeSmoothing = -1;
+			}
+			else if (0 == UTF8Utils::UTF8StrCmpI(strValue, TypeConv::AsUTF8("no")))
+			{
+				edgeSmoothing = 0;
+			}
+			else
+			{
+				edgeSmoothing = atoi(TypeConv::AsASCII(strValue));
+				if (0 == edgeSmoothing)
+				{
+					edgeSmoothing = -1;		// regard as "auto"
+				}
+			}
+		}
 
 		newWindowInfo->SetTransparentRegionID(mapIdValue);
+		newWindowInfo->SetTransparentRegionUsedAgainstAlpha(usedAgainstAlpha);
+		newWindowInfo->SetEdgeSmoothingLevel(edgeSmoothing);
 	}	
 }
 
