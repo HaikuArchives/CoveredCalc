@@ -67,6 +67,8 @@ public:
 	virtual ColorCodedSkin*		GetSkin() { return getSkin(); }
 	virtual ColorCodedSkinAppearance*	GetSkinAppearance() { return getSkinAppearance(); }
 
+	void						RereadSkin() { readSkin(); }
+
 	virtual void				StartTask(UITask* task);
 	virtual void				EndTask(UITask* task);
 

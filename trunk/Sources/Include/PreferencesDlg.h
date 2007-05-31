@@ -46,8 +46,8 @@ public:
 	virtual						~PreferencesDlg();
 	
 protected:
-	void				loadToDialog();
-	bool				saveFromDialog();
+	void						loadToDialog();
+	bool						saveFromDialog();
 
 protected:
 	
@@ -77,6 +77,44 @@ protected:
 										, bool& isLocaleKitAvailable
 #endif
 								) = 0;
+
+#if defined (WIN32)
+	/**
+	 *	@brief	Set window opacity.
+	 *	@param	opacity	opacity value (from 0 to 255)
+	 */
+	virtual void				setOpacity(SInt32 opacity) = 0;
+	
+	/**
+	 *	@brief	Get window opacity.
+	 *	@return	opacity value (from 0 to 255)
+	 */
+	virtual SInt32				getOpacity() = 0;
+	
+	/**
+	 *	@brief	Enables or disables opacity control.
+	 *	@param	isEnabled	enables the control when true.
+	 */
+	virtual void				enableOpacity(bool isEnabled) = 0;
+	
+	/**
+	 *	@brief	Set edge smoothing level.
+	 *	@param	edgeSmoothing	the level (from 0 to 10. 0 means no smoothing).
+	 */
+	virtual void				setEdgeSmoothing(SInt32 edgeSmoothing) = 0;
+	
+	/**
+	 *	@brief	Get edge smoothing level.
+	 *	@return	the level (from 0 to 10. 0 means no smoothing).
+	 */
+	virtual SInt32				getEdgeSmoothing() = 0;
+	
+	/**
+	 *	@brief	Enables or disables edge-smoothing control.
+	 *	@param	isEnabled	enables the control when true.
+	 */
+	virtual void				enableEdgeSmoothing(bool isEnabled) = 0;
+#endif	// defined (WIN32)
 };
 
 #endif // _PREFERENCESDLG_H_

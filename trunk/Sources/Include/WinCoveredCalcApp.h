@@ -71,6 +71,8 @@ public:
 
 	const WinLayeredWindowAPI*		GetLayeredWindowAPI() const		{ return &apiLayeredWindow; }
 
+	const WinMainWindow*			GetMainWindow() const			{ return &mainWindow; }
+
 	// MessageBoxProvider インタフェースの実装
 	virtual Button					DoMessageBox(ConstAStr message, ButtonType buttonType, AlertType alertType, Button defaultButton = Button_None);
 	virtual Button					DoMessageBox(SInt32 messageId, ButtonType buttonType, AlertType alertType, Button defaultButton = Button_None);

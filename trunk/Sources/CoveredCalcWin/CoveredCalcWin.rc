@@ -90,16 +90,25 @@ BEGIN
     EDITTEXT        IDC_EDIT_ABOUT,7,45,173,56,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL | WS_HSCROLL
 END
 
-IDD_PREFERENCES DIALOGEX 0, 0, 169, 72
+IDD_PREFERENCES DIALOGEX 0, 0, 207, 145
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "設定"
 FONT 9, "MS UI Gothic", 400, 0, 0x80
 BEGIN
-    LTEXT           "言語(&L):",IDC_STATIC,7,9,32,8
-    COMBOBOX        IDC_CMB_LANGUAGE,42,7,120,110,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "言語の設定は、CoveredCalc を再起動後に有効になります。",IDC_STATIC,15,27,147,16,NOT WS_GROUP
-    DEFPUSHBUTTON   "OK",IDOK,58,51,50,14,WS_GROUP
-    PUSHBUTTON      "キャンセル",IDCANCEL,112,51,50,14
+    LTEXT           "外観の透明度(&O):",IDC_STC_OPACITY,7,11,58,8
+    RTEXT           "透明",IDC_STC_TRANSPARENT,72,12,22,8
+    CONTROL         "",IDC_SLDR_OPACITY,"msctls_trackbar32",TBS_AUTOTICKS | WS_TABSTOP,97,7,70,24
+    LTEXT           "不透明",IDC_STC_OPAQUE,171,12,29,8
+    LTEXT           "カバー境界のなめらかさ(&E):",IDC_STC_EDGE_SMOOTHING,7,37,76,8
+    RTEXT           "弱",IDC_STC_LOW,83,38,11,8
+    CONTROL         "",IDC_SLDR_EDGE_SMOOTHING,"msctls_trackbar32",TBS_AUTOTICKS | WS_TABSTOP,97,33,70,24
+    LTEXT           "強",IDC_STC_HIGH,171,38,15,8
+    LTEXT           "外観の透明度、カバー端のなめらかさは Windows 2000、Windows XP、Windows Vista でのみ利用可能です。",IDC_STATIC,16,59,184,16
+    LTEXT           "言語(&L):",IDC_STATIC,7,89,32,8
+    COMBOBOX        IDC_CMB_LANGUAGE,47,87,120,110,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "言語の設定は、CoveredCalc を再起動後に有効になります。",IDC_STATIC,16,107,184,8,NOT WS_GROUP
+    DEFPUSHBUTTON   "OK",IDOK,94,124,50,14,WS_GROUP
+    PUSHBUTTON      "キャンセル",IDCANCEL,150,124,50,14
 END
 
 
@@ -138,9 +147,9 @@ BEGIN
     IDD_PREFERENCES, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 162
+        RIGHTMARGIN, 200
         TOPMARGIN, 7
-        BOTTOMMARGIN, 65
+        BOTTOMMARGIN, 138
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -183,8 +192,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,6,2,1
- PRODUCTVERSION 1,6,2,1
+ FILEVERSION 1,8,0,0
+ PRODUCTVERSION 1,8,0,0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -200,12 +209,12 @@ BEGIN
         BLOCK "041104b0"
         BEGIN
             VALUE "FileDescription", "CoveredCalc"
-            VALUE "FileVersion", "1.6.2+"
+            VALUE "FileVersion", "1.8.0"
             VALUE "InternalName", "CoveredCalc"
             VALUE "LegalCopyright", "Copyright (C) 2004-2007 CoveredCalc Project Contributors."
             VALUE "OriginalFilename", "CoveredCalc.exe"
             VALUE "ProductName", "CoveredCalc"
-            VALUE "ProductVersion", "1.6.2+"
+            VALUE "ProductVersion", "1.8.0"
         END
     END
     BLOCK "VarFileInfo"

@@ -50,6 +50,12 @@ protected:
 
 	virtual void					setLanguage(const LangFileInfoCollection& langFileInfos, const Path& currentLangFilePath);
 	virtual	bool					getLanguage(Path& langFilePath);
+	virtual void					setOpacity(SInt32 opacity);
+	virtual SInt32					getOpacity();
+	virtual void					enableOpacity(bool isEnabled);
+	virtual void					setEdgeSmoothing(SInt32 edgeSmoothing);
+	virtual SInt32					getEdgeSmoothing();
+	virtual void					enableEdgeSmoothing(bool isEnabled);
 
 private:
 	LRESULT							onInitDialog(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

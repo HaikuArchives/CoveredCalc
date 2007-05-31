@@ -18,6 +18,14 @@
 #define IDC_ICON64                      1011
 #define IDC_STC_APPNAME                 1012
 #define IDC_CMB_LANGUAGE                1013
+#define IDC_STC_OPACITY                 1014
+#define IDC_SLDR_OPACITY                1015
+#define IDC_SLDR_EDGE_SMOOTHING         1016
+#define IDC_STC_TRANSPARENT             1017
+#define IDC_STC_OPAQUE                  1018
+#define IDC_STC_EDGE_SMOOTHING          1019
+#define IDC_STC_LOW                     1020
+#define IDC_STC_HIGH                    1021
 #define IDD_ABOUT                       5000
 #define IDD_COVER_BROWSER               5001
 #define IDD_ABOUT_COVER                 5002
@@ -90,7 +98,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        111
 #define _APS_NEXT_COMMAND_VALUE         40012
-#define _APS_NEXT_CONTROL_VALUE         1014
+#define _APS_NEXT_CONTROL_VALUE         1022
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

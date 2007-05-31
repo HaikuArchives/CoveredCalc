@@ -35,6 +35,10 @@
 #include "CoveredCalcApp.h"
 #include "AppSettings.h"
 
+#if defined (WIN32)
+#include "WinCoveredCalcApp.h"
+#endif	// defined (WIN32)
+
 /**
  *	@brief	Constructor
  */
@@ -59,6 +63,24 @@ void PreferencesDlg::loadToDialog()
 	AppSettings* appSettings = app->GetAppSettings();
 	ASSERT(NULL != appSettings);
 
+	// opacity and edge-smoothing
+#if defined(WIN32)
+	setOpacity(appSettings->GetMainWindowOpacity());
+	setEdgeSmoothing(appSettings->GetMainWindowEdgeSmoothing());
+	WinCoveredCalcApp* winApp = static_cast<WinCoveredCalcApp*>(app);
+	const WinLayeredWindowAPI* lwApi = winApp->GetLayeredWindowAPI();
+	if (NULL != lwApi && lwApi->IsSupported_UpdateLayeredWindow())
+	{
+		enableOpacity(true);
+		enableEdgeSmoothing(true);
+	}
+	else
+	{
+		enableOpacity(false);
+		enableEdgeSmoothing(false);
+	}
+#endif
+
 	// language
 	const LangFileInfoCollection* langFileInfos = app->GetLangFileInfos();
 	ASSERT(NULL != langFileInfos);
@@ -82,6 +104,12 @@ bool PreferencesDlg::saveFromDialog()
 	ASSERT(NULL != app);
 	AppSettings* appSettings = app->GetAppSettings();
 	ASSERT(NULL != appSettings);
+
+	// opacity and edge-smoothing
+#if defined(WIN32)
+	appSettings->SetMainWindowOpacity(getOpacity());
+	appSettings->SetMainWindowEdgeSmoothing(getEdgeSmoothing());
+#endif // defined(WIN32)	
 
 	// language
 	Path langFilePath;

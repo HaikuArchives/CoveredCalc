@@ -37,11 +37,17 @@
 #include "ExceptionMessageUtils.h"
 #include "CoveredCalcApp.h"
 #include "LangFileInfo.h"
+#include "WinCoveredCalcApp.h"
 
 ////////////////////////////////////////
 #define baseDialog	WinDialog
 #define base		PreferencesDlg
 ////////////////////////////////////////
+
+#define MIN_OPACITY				25
+#define MAX_OPACITY				255
+#define MIN_EDGE_SMOOTHING		0
+#define MAX_EDGE_SMOOTHING		10
 
 /**
  *	@brief	コンストラクタ
@@ -106,6 +112,27 @@ LRESULT WinPreferencesDlg::onInitDialog(
 )
 {
 	baseDialog::wndProc(hWnd, uMsg, wParam, lParam);
+
+	HWND hControl;
+	HWND hBuddy;
+	
+	// 透明度
+	hControl = GetDlgItem(hWnd, IDC_SLDR_OPACITY);
+	SendMessage(hControl, TBM_SETRANGE, FALSE, MAKELONG(MIN_OPACITY, MAX_OPACITY));
+	SendMessage(hControl, TBM_SETTICFREQ, (MAX_OPACITY - MIN_OPACITY) / 10, 0);
+	hBuddy = GetDlgItem(hWnd, IDC_STC_TRANSPARENT);
+	SendMessage(hControl, TBM_SETBUDDY, TRUE, reinterpret_cast<LPARAM>(hBuddy));
+	hBuddy = GetDlgItem(hWnd, IDC_STC_OPAQUE);
+	SendMessage(hControl, TBM_SETBUDDY, FALSE, reinterpret_cast<LPARAM>(hBuddy));
+	
+	// カバー境界のなめらかさ
+	hControl = GetDlgItem(hWnd, IDC_SLDR_EDGE_SMOOTHING);
+	SendMessage(hControl, TBM_SETRANGE, FALSE, MAKELONG(MIN_EDGE_SMOOTHING, MAX_EDGE_SMOOTHING));
+	SendMessage(hControl, TBM_SETTICFREQ, 1, 0);
+	hBuddy = GetDlgItem(hWnd, IDC_STC_LOW);
+	SendMessage(hControl, TBM_SETBUDDY, TRUE, reinterpret_cast<LPARAM>(hBuddy));
+	hBuddy = GetDlgItem(hWnd, IDC_STC_HIGH);
+	SendMessage(hControl, TBM_SETBUDDY, FALSE, reinterpret_cast<LPARAM>(hBuddy));
 	
 	loadToDialog();
 	return TRUE;
@@ -128,6 +155,7 @@ LRESULT WinPreferencesDlg::onCommand(
 		if (saveFromDialog())
 		{
 			EndDialog(hWnd, IDOK);
+			PostMessage(WinCoveredCalcApp::GetInstance()->GetMainWindow()->m_hWnd, WinSkinWindow::UM_REREAD_SKIN, 0, 0);
 		}
 		return 0;
 		break;
@@ -242,4 +270,104 @@ bool WinPreferencesDlg::getLanguage(
 	
 	langFilePath = langComboInfos->GetAt(itemIndex).GetPath();
 	return true;
+}
+
+/**
+ *	@brief	外観の透明度をセットします。
+ *	@param	opacity	不透明度
+ */
+void WinPreferencesDlg::setOpacity(SInt32 opacity)
+{
+	if (opacity < MIN_OPACITY)
+	{
+		opacity = MIN_OPACITY;
+	}
+	else if (opacity > MAX_OPACITY)
+	{
+		opacity = MAX_OPACITY;
+	}
+	
+	HWND hSlider = GetDlgItem(m_hWnd, IDC_SLDR_OPACITY);
+	SendMessage(hSlider, TBM_SETPOS, TRUE, opacity);
+}
+
+/**
+ *	@brief	外観の透明度を取得します。
+ *	@return	不透明度
+ */
+SInt32 WinPreferencesDlg::getOpacity()
+{
+	HWND hSlider = GetDlgItem(m_hWnd, IDC_SLDR_OPACITY);
+	return SendMessage(hSlider, TBM_GETPOS, 0, 0);
+}
+
+/**
+ *	@brief	透明度の設定の有効/無効を設定します。
+ *	@param	isEnabled	有効にするなら true、無効にするなら false。
+ */
+void WinPreferencesDlg::enableOpacity(bool isEnabled)
+{
+	HWND hControl;
+	
+	hControl = GetDlgItem(m_hWnd, IDC_STC_OPACITY);
+	EnableWindow(hControl, isEnabled);
+	
+	hControl = GetDlgItem(m_hWnd, IDC_STC_TRANSPARENT);
+	EnableWindow(hControl, isEnabled);
+	
+	hControl = GetDlgItem(m_hWnd, IDC_SLDR_OPACITY);
+	EnableWindow(hControl, isEnabled);
+	
+	hControl = GetDlgItem(m_hWnd, IDC_STC_OPAQUE);
+	EnableWindow(hControl, isEnabled);
+}
+
+/**
+ *	@brief	カバー境界のなめらかさを設定します。
+ *	@param	edgeSmoothing	スムージングレベル
+ */
+void WinPreferencesDlg::setEdgeSmoothing(SInt32 edgeSmoothing)
+{
+	if (edgeSmoothing < MIN_EDGE_SMOOTHING)
+	{
+		edgeSmoothing = MIN_EDGE_SMOOTHING;
+	}
+	else if (edgeSmoothing > MAX_EDGE_SMOOTHING)
+	{
+		edgeSmoothing = MAX_EDGE_SMOOTHING;
+	}
+	
+	HWND hSlider = GetDlgItem(m_hWnd, IDC_SLDR_EDGE_SMOOTHING);
+	SendMessage(hSlider, TBM_SETPOS, TRUE, edgeSmoothing);
+}
+
+/**
+ *	@brief	カバー境界のなめらかさを取得します。
+ *	@return	スムージングレベル
+ */
+SInt32 WinPreferencesDlg::getEdgeSmoothing()
+{
+	HWND hSlider = GetDlgItem(m_hWnd, IDC_SLDR_EDGE_SMOOTHING);
+	return SendMessage(hSlider, TBM_GETPOS, 0, 0);
+}
+
+/**
+ *	@brief	カバー境界のなめらかさの設定の有効/無効を設定します。
+ *	@param	isEnabled	有効にするなら true、無効にするなら false。
+ */
+void WinPreferencesDlg::enableEdgeSmoothing(bool isEnabled)
+{
+	HWND hControl;
+	
+	hControl = GetDlgItem(m_hWnd, IDC_STC_EDGE_SMOOTHING);
+	EnableWindow(hControl, isEnabled);
+	
+	hControl = GetDlgItem(m_hWnd, IDC_STC_LOW);
+	EnableWindow(hControl, isEnabled);
+	
+	hControl = GetDlgItem(m_hWnd, IDC_SLDR_EDGE_SMOOTHING);
+	EnableWindow(hControl, isEnabled);
+	
+	hControl = GetDlgItem(m_hWnd, IDC_STC_HIGH);
+	EnableWindow(hControl, isEnabled);
 }
