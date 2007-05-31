@@ -41,7 +41,7 @@ typedef DWORD (APIENTRY *PFNCCNLGETLANGUAGECODE)(char* szLangCode);
 typedef DWORD (APIENTRY *PFNCCNLGETLANGUAGENAME)(char* szLangName);
 typedef LANGID (APIENTRY *PFNCCNLGETLANGID)();
 
-#define SPEC_VERSION	(3)		// 言語ファイル仕様のバージョン
+#define SPEC_VERSION	(4)		// 言語ファイル仕様のバージョン
 
 /**
  *	@brief	コンストラクタ

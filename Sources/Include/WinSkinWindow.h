@@ -50,6 +50,14 @@ class WinDialog;
 class WinSkinWindow : public CHrnWnd, public UIController
 {
 public:
+	/// ユーザ定義メッセージ
+	enum
+	{
+		UM_ACTIVATED			= WM_USER + 100,	///< ウィンドウがアクティブ/非アクティブ化された
+		UM_REREAD_SKIN			= WM_USER + 101,	///< スキンの再読込
+	};
+
+public:
 							WinSkinWindow();
 	virtual					~WinSkinWindow();
 
@@ -106,6 +114,7 @@ private:
 	LRESULT					onKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT					onKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT					onTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT					onRereadSkin(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	Point32					mousePosition;					//!< イベント発生時のマウス位置を記憶する

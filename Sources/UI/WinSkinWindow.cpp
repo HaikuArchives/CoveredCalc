@@ -57,11 +57,6 @@
 #define TIMERID_MOUSEHOVER			100		///< TimerID_MouseHover に対応するタイマID
 
 // ---------------------------------------------------------------------
-// ユーザ定義メッセージ
-// ---------------------------------------------------------------------
-#define UM_ACTIVATED		(WM_USER + 100)		//!< ウィンドウがアクティブ/非アクティブ化された
-
-// ---------------------------------------------------------------------
 //! コンストラクタ
 // ---------------------------------------------------------------------
 WinSkinWindow::WinSkinWindow()
@@ -729,6 +724,9 @@ LRESULT WinSkinWindow::wndProc(
 		case WM_TIMER:
 			return onTimer(hWnd, uMsg, wParam, lParam);
 			break;
+		case UM_REREAD_SKIN:
+			return onRereadSkin(hWnd, uMsg, wParam, lParam);
+			break;
 		default:
 			if (isProcessed)
 			{
@@ -1163,5 +1161,20 @@ LRESULT WinSkinWindow::onTimer(
 		uiManager->TimerEvent(winTimerIdToTimerId(static_cast<UINT_PTR>(wParam)));
 	}
 
+	return 0;
+}
+
+/**
+ *	@brief	UM_REREAD_SKIN ハンドラ
+ *	@retval	0 処理したとき
+ */
+LRESULT WinSkinWindow::onRereadSkin(
+   	HWND /*hWnd*/,		///< ウィンドウハンドル
+	UINT /*uMsg*/,		///< UM_REREAD_SKIN
+	WPARAM /*wParam*/,	///< 利用しないパラメータ
+	LPARAM /*lParam*/	///< 利用しないパラメータ
+)
+{
+	getUIManager()->RereadSkin();
 	return 0;
 }
