@@ -109,9 +109,9 @@ SRCS= \
 	../XML/NanchatteDOM/NCDTreeNode.cpp \
 	../XML/NanchatteDOM/NCDTextImpl.cpp \
 	../XML/NanchatteDOM/NCDDocumentFactory.cpp \
-	../ColumnListViewBe/ColumnTypes.cpp \
-	../ColumnListViewBe/ColumnListView.cpp \
-	../ColumnListViewBe/ColorTools.cpp \
+	../../Libs/ColumnListViewBe/ColumnTypes.cpp \
+	../../Libs/ColumnListViewBe/ColumnListView.cpp \
+	../../Libs/ColumnListViewBe/ColorTools.cpp \
 
 
 #	.rdef resource script files
@@ -168,7 +168,7 @@ endif
 #	be recursive, so include all of the paths where libraries can
 #	be found.  Directories where source files are found are
 #	automatically included.
-LIBPATHS= ../libexpatBe
+LIBPATHS= ../../Libs/libexpatBe
 
 #	additional paths to look for system headers
 #	thes use the form: #include <header>
@@ -178,7 +178,7 @@ SYSTEM_INCLUDE_PATHS =
 #	additional paths to look for local headers
 #	thes use the form: #include "header"
 #	source file directories are automatically included
-LOCAL_INCLUDE_PATHS = . ../Include ../libexpatBe ../ColumnListViewBe
+LOCAL_INCLUDE_PATHS = . ../Include ../../Libs/libexpatBe ../../Libs/ColumnListViewBe
 
 #	specify the level of optimization that you desire
 #	NONE, SOME, FULL
