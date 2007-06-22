@@ -41,6 +41,7 @@ DIBColorLookup::DIBColorLookup(
 	const DIBitmap* bitmap		//!< bitmap which is looked up.
 )
 {
+	isAlphaAvailable = false;
 	this->bitmap = bitmap;
 	nextAddress = NULL;
 	nextBitOffset = 0;
@@ -60,10 +61,11 @@ DIBColorLookup::DIBColorLookup(
 				if (v4Header->bV4Size >= 56)
 				{
 					bitMask[3] = v4Header->bV4AlphaMask;
+					isAlphaAvailable = true;
 				}
 				else
 				{
-					bitMask[3] = 0xFF000000;
+					bitMask[3] = 0;
 				}
 			}
 			else
@@ -74,7 +76,7 @@ DIBColorLookup::DIBColorLookup(
 				{
 					bitMask[index] = mask[index];
 				}
-				bitMask[3] = 0xFF000000;
+				bitMask[3] = 0;
 			}
 		}
 		else if (16 == bitCount)	// mask is not specified. use 16bpp default mask
@@ -90,6 +92,7 @@ DIBColorLookup::DIBColorLookup(
 			bitMask[1] = 0x0000FF00;
 			bitMask[2] = 0x000000FF;
 			bitMask[3] = 0xFF000000;
+			isAlphaAvailable = true;
 		}
 
 		// calculate each number of shifts
