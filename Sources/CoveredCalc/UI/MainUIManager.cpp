@@ -134,9 +134,10 @@ void MainUIManager::Destroy()
 	// save current location
 	Rect32 uiRect;
 	GetUIController()->GetUIRect(uiRect);
+	const Point32& basePoint = getBasePoint();
 	Point32 windowPos;
-	windowPos.x = uiRect.left;
-	windowPos.y = uiRect.top;
+	windowPos.x = uiRect.left + basePoint.x;
+	windowPos.y = uiRect.top + basePoint.y;
 	AppSettings* appSettings = app->GetAppSettings();
 	appSettings->SetLastMainWindowPos(windowPos);
 	try

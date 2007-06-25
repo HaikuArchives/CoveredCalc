@@ -101,6 +101,7 @@ protected:
 	ColorCodedSkin*				getSkin() { return skin; }
 	ColorCodedSkinAppearance*	getSkinAppearance() { return appearance; }
 	UITaskManager*				getTaskManager() { return &taskManager; }
+	const Point32&				getBasePoint() { return basePoint; }
 
 	virtual void				readSkin() = 0;
 
