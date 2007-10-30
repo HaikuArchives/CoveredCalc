@@ -192,8 +192,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,8,0,1
- PRODUCTVERSION 1,8,0,1
+ FILEVERSION 1,8,1,0
+ PRODUCTVERSION 1,8,1,0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -209,12 +209,12 @@ BEGIN
         BLOCK "041104b0"
         BEGIN
             VALUE "FileDescription", "CoveredCalc"
-            VALUE "FileVersion", "1.8.0+"
+            VALUE "FileVersion", "1.8.1"
             VALUE "InternalName", "CoveredCalc"
             VALUE "LegalCopyright", "Copyright (C) 2004-2007 CoveredCalc Project Contributors."
             VALUE "OriginalFilename", "CoveredCalc.exe"
             VALUE "ProductName", "CoveredCalc"
-            VALUE "ProductVersion", "1.8.0+"
+            VALUE "ProductVersion", "1.8.1"
         END
     END
     BLOCK "VarFileInfo"
