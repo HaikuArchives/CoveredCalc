@@ -25,7 +25,7 @@
 
 /*!
 	@file		MainWindowKeyFunc.h
-	@brief		Definition of functions used in main window.
+	@brief		Definition of MainWindowKeyFunc class.
 	@author		ICHIMIYA Hironori (Hiron)
 	@date		2004.3.25 created
 */
@@ -33,11 +33,16 @@
 #ifndef _MAINWINDOWKEYFUNC_H_
 #define _MAINWINDOWKEYFUNC_H_
 
-namespace MainWindowKeyFunc
+#include "KeyFuncOperation.h"
+
+/**
+ *	@brief	key-function definition and methods for main window.
+ */
+class MainWindowKeyFunc : public KeyFuncOperation
 {
+public:
 	enum KeyFunc
 	{
-		KeyFunc_None		= -1,
 		KeyFunc_0			= 0,
 		KeyFunc_1,
 		KeyFunc_2,
@@ -70,6 +75,12 @@ namespace MainWindowKeyFunc
 		KeyFunc_Minimize,
 		KeyFunc_Close,
 	};
+
+						MainWindowKeyFunc() { }
+	virtual				~MainWindowKeyFunc() { }
+
+	virtual	SInt32		FuncNameToKeyFunc(ConstUTF8Str funcName) const;
+	virtual void		KeyFuncToFuncName(SInt32 keyFunc, UTF8String& funcName) const;
 };
 
 #endif // _MAINWINDOWKEYFUNC_H_

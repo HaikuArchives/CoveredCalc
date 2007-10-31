@@ -881,7 +881,7 @@ void MainUIManager::KeyDown(const KeyEventParameter& parameter)
 {
 	base::KeyDown(parameter);
 
-	CoverMainWindowInfo::ButtonClass command = getButtonFromKeyFunc(static_cast<MainWindowKeyFunc::KeyFunc>(keyMappingManager.GetFunction(parameter)));
+	CoverMainWindowInfo::ButtonClass command = getButtonFromKeyFunc(static_cast<MainWindowKeyFunc::KeyFunc>(getKeyMappingManager()->GetFunction(parameter)));
 	if (CoverMainWindowInfo::ButtonClass_None != command)
 	{
 		UInt32 commandState = GetCommandState(command);

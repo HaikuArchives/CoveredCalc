@@ -133,7 +133,7 @@ void WinLayeredAppearance::Exit()
  *	@return	処理したら true.
  */
 bool WinLayeredAppearance::RelayWndProc(
-	HWND hWnd,				///< ウィンドウハンドル
+	HWND /*hWnd*/,				///< ウィンドウハンドル
 	UINT uMsg,				///< メッセージ
 	WPARAM /* wParam */,	///< メッセージの WPARAM
 	LPARAM /* lParam */,	///< メッセージの LPARAM
@@ -142,36 +142,47 @@ bool WinLayeredAppearance::RelayWndProc(
 {
 	if (UM_UPDATE_LAYERED == uMsg)
 	{
-		isUpdateMessagePosted = false;
-
-		RECT rcWindow;
-		::GetWindowRect(hWnd, &rcWindow);
+		if (isUpdateMessagePosted)
+		{
+			WinLayeredAppearance::UpdateAppearance();
+		}
 		
-		POINT windowTopLeft;
-		windowTopLeft.x = rcWindow.left;
-		windowTopLeft.y = rcWindow.top;
-		
-		SIZE windowSize;
-		windowSize.cx = rcWindow.right - rcWindow.left;
-		windowSize.cy = rcWindow.bottom - rcWindow.top;
-		
-		POINT surfaceTopLeft;
-		surfaceTopLeft.x = surfaceTopLeft.y = 0;
-
-		BLENDFUNCTION bf;
-		bf.BlendOp = AC_SRC_OVER;
-		bf.BlendFlags = 0;
-		bf.SourceConstantAlpha = totalOpacity;
-		bf.AlphaFormat = AC_SRC_ALPHA;
-
-		const WinLayeredWindowAPI* api = WinCoveredCalcApp::GetInstance()->GetLayeredWindowAPI();
-		api->UpdateLayeredWindow(hWnd, NULL, &windowTopLeft, &windowSize, dibitmapDC, &surfaceTopLeft, 0, &bf, WinLayeredWindowAPI::cULW_ALPHA);
-
 		*ret = 0;
 		return true;
 	}
 
 	return false;
+}
+
+/**
+ *	@brief	外観を更新します。（無効領域をなくします）
+ */
+void WinLayeredAppearance::UpdateAppearance()
+{
+	isUpdateMessagePosted = false;
+
+	RECT rcWindow;
+	::GetWindowRect(hWnd, &rcWindow);
+	
+	POINT windowTopLeft;
+	windowTopLeft.x = rcWindow.left;
+	windowTopLeft.y = rcWindow.top;
+	
+	SIZE windowSize;
+	windowSize.cx = rcWindow.right - rcWindow.left;
+	windowSize.cy = rcWindow.bottom - rcWindow.top;
+	
+	POINT surfaceTopLeft;
+	surfaceTopLeft.x = surfaceTopLeft.y = 0;
+
+	BLENDFUNCTION bf;
+	bf.BlendOp = AC_SRC_OVER;
+	bf.BlendFlags = 0;
+	bf.SourceConstantAlpha = totalOpacity;
+	bf.AlphaFormat = AC_SRC_ALPHA;
+
+	const WinLayeredWindowAPI* api = WinCoveredCalcApp::GetInstance()->GetLayeredWindowAPI();
+	api->UpdateLayeredWindow(hWnd, NULL, &windowTopLeft, &windowSize, dibitmapDC, &surfaceTopLeft, 0, &bf, WinLayeredWindowAPI::cULW_ALPHA);
 }
 
 // ---------------------------------------------------------------------

@@ -32,8 +32,10 @@
 
 #include "Prefix.h"
 #include "BeKeyMappingManager.h"
-#include <be/interface/InterfaceDefs.h>	// TODO: キーカスタマイズが実現したときは、ここでは必要なくなるはず。
-#include "MainWindowKeyFunc.h"		// TODO: キーカスタマイズが実現したときは、ここでは必要なくなるはず。
+#include <InterfaceDefs.h>
+#include "KeyMappings.h"
+#include "KeyFuncOperation.h"
+#include "UTF8String.h"
 
 // ---------------------------------------------------------------------
 //! コンストラクタ
@@ -49,68 +51,124 @@ BeKeyMappingManager::~BeKeyMappingManager()
 {
 }
 
-// ---------------------------------------------------------------------
-//! 指定したキーボードパラメータに対応する機能を取得します。
-/*!
-	@return 対応する機能番号
-	@note
-		今はまだ決めうちのキーしか使えない。
-		キーカスタマイズが実現したらこのメソッドはなくなる。（このクラスがなくなる）
-*/
-// ---------------------------------------------------------------------
-SInt32 BeMainWindowKeyMappingManager::GetFunction(
-	const KeyEventParameter& parameter		//!< キーボードパラメータ
-)
+/**
+ *	@brief	オブジェクトの構築を行います。
+ *	@param[in] keyMapping	キーマッピング定義
+ *	@param[in] category		カテゴリー名
+ *	@param[in] keyFuncOperation		key-function 定義操作オブジェクト
+ */
+void BeKeyMappingManager::Create(const KeyMappings* keyMappings, ConstUTF8Str category, const KeyFuncOperation* keyFuncOperation)
 {
-#define	HANDLE_1BYTE_KEY(_code, _keyFunc)			\
-		case _code:									\
-			return _keyFunc;						\
-			break;
-
-	const char* bytes = parameter.GetBytes();
-	int32 numBytes = parameter.GetNumBytes();
+	Clear();
 	
-	if (1 == numBytes)
+	KeyMappings::KeyMappingItemEnumerator* enumerator = keyMappings->NewItemEnumeratorFor(category);
+	while (enumerator->MoveNext())
 	{
-		switch (bytes[0])
+		KeyMappingItem* item = enumerator->GetCurrent();
+		
+		KMRecord record;
+		UTF8String value;
+		if (!item->GetKeyCode(value))
 		{
-		HANDLE_1BYTE_KEY('0',			MainWindowKeyFunc::KeyFunc_0)
-		HANDLE_1BYTE_KEY('1',			MainWindowKeyFunc::KeyFunc_1)
-		HANDLE_1BYTE_KEY('2',			MainWindowKeyFunc::KeyFunc_2)
-		HANDLE_1BYTE_KEY('3',			MainWindowKeyFunc::KeyFunc_3)
-		HANDLE_1BYTE_KEY('4',			MainWindowKeyFunc::KeyFunc_4)
-		HANDLE_1BYTE_KEY('5',			MainWindowKeyFunc::KeyFunc_5)
-		HANDLE_1BYTE_KEY('6',			MainWindowKeyFunc::KeyFunc_6)
-		HANDLE_1BYTE_KEY('7',			MainWindowKeyFunc::KeyFunc_7)
-		HANDLE_1BYTE_KEY('8',			MainWindowKeyFunc::KeyFunc_8)
-		HANDLE_1BYTE_KEY('9',			MainWindowKeyFunc::KeyFunc_9)
-		HANDLE_1BYTE_KEY('A',			MainWindowKeyFunc::KeyFunc_A)
-		HANDLE_1BYTE_KEY('a',			MainWindowKeyFunc::KeyFunc_A)
-		HANDLE_1BYTE_KEY('B',			MainWindowKeyFunc::KeyFunc_B)
-		HANDLE_1BYTE_KEY('b',			MainWindowKeyFunc::KeyFunc_B)
-		HANDLE_1BYTE_KEY('C',			MainWindowKeyFunc::KeyFunc_C)
-		HANDLE_1BYTE_KEY('c',			MainWindowKeyFunc::KeyFunc_C)
-		HANDLE_1BYTE_KEY('D',			MainWindowKeyFunc::KeyFunc_D)
-		HANDLE_1BYTE_KEY('d',			MainWindowKeyFunc::KeyFunc_D)
-		HANDLE_1BYTE_KEY('E',			MainWindowKeyFunc::KeyFunc_E)
-		HANDLE_1BYTE_KEY('e',			MainWindowKeyFunc::KeyFunc_E)
-		HANDLE_1BYTE_KEY('F',			MainWindowKeyFunc::KeyFunc_F)
-		HANDLE_1BYTE_KEY('f',			MainWindowKeyFunc::KeyFunc_F)
-		HANDLE_1BYTE_KEY('.', 			MainWindowKeyFunc::KeyFunc_Point)
-		HANDLE_1BYTE_KEY(B_ESCAPE,		MainWindowKeyFunc::KeyFunc_Clear)
-		HANDLE_1BYTE_KEY(B_BACKSPACE,	MainWindowKeyFunc::KeyFunc_BS)
-		HANDLE_1BYTE_KEY('=',			MainWindowKeyFunc::KeyFunc_Equal)
-		HANDLE_1BYTE_KEY(B_ENTER,		MainWindowKeyFunc::KeyFunc_Equal)
-		HANDLE_1BYTE_KEY('+',			MainWindowKeyFunc::KeyFunc_Plus)
-		HANDLE_1BYTE_KEY('-',			MainWindowKeyFunc::KeyFunc_Minus)
-		HANDLE_1BYTE_KEY('*',			MainWindowKeyFunc::KeyFunc_Times)
-		HANDLE_1BYTE_KEY('/',			MainWindowKeyFunc::KeyFunc_Div)
-		HANDLE_1BYTE_KEY('N',			MainWindowKeyFunc::KeyFunc_Negate)
-		HANDLE_1BYTE_KEY('n',			MainWindowKeyFunc::KeyFunc_Negate)
+			continue;
+		}
+		record.KeyCode = strtoul(TypeConv::AsASCII(value), NULL, 16);
+		if (!item->GetModifiers(value))
+		{
+			continue;
+		}
+		record.ModifierMask = analyzeModifierMask(value);
+		if (!item->GetFunction(value))
+		{
+			continue;
+		}
+		record.Function = keyFuncOperation->FuncNameToKeyFunc(value);
+
+		mapping.push_back(record);
+	}
+	delete enumerator;
+}
+
+/**
+ *	@brief	マッピングをクリアします。
+ */
+void BeKeyMappingManager::Clear()
+{
+	mapping.clear();
+}
+
+/**
+ *	@brief	修飾キーのマスク文字列を解析します。
+ *	@param[in]	modifierMaskStr	修飾キーマスク文字列
+ *	@return 修飾キーマスク
+ */
+int32 BeKeyMappingManager::analyzeModifierMask(ConstUTF8Str modifierMaskStr)
+{
+	ConstAStr maskStr = TypeConv::AsASCII(modifierMaskStr);
+	int32	mask = 0;
+	
+	while ('\0' != maskStr[0])
+	{
+		SInt32 length;
+		ConstAStr separator = strchr(maskStr, '+');
+		if (NULL == separator)
+		{
+			length = strlen(maskStr);
+		}
+		else
+		{
+			length = separator - maskStr;
+		}
+		if (5 == length && 0 == memcmp(maskStr, "shift", 5))
+		{
+			mask |= B_SHIFT_KEY;
+		}
+		else if (7 == length && 0 == memcmp(maskStr, "command", 7))
+		{
+			mask |= B_COMMAND_KEY;
+		}
+		else if (7 == length && 0 == memcmp(maskStr, "control", 7))
+		{
+			mask |= B_CONTROL_KEY;
+		}
+		else if (6 == length && 0 == memcmp(maskStr, "option", 6))
+		{
+			mask |= B_OPTION_KEY;
+		}
+		
+		if (NULL == separator)
+		{
+			maskStr += length;
+		}
+		else
+		{
+			maskStr += length + 1;
 		}
 	}
+	
+	return mask;
+}
 
-	return MainWindowKeyFunc::KeyFunc_None;
+/**
+ * @brief	指定したキーボードパラメータに対応する機能を取得します。
+ * @return 対応する機能番号
+ */
+SInt32 BeKeyMappingManager::GetFunction(
+	const KeyEventParameter& parameter		//!< キーボードパラメータ
+) const
+{
+	int32 keyCode = parameter.GetKeyCode();
+	int32 modifierMask = parameter.GetModifiers() & (B_SHIFT_KEY | B_COMMAND_KEY | B_CONTROL_KEY | B_OPTION_KEY);
 
-#undef	HANDLE_1BYTE_KEY
+	SInt32 length = mapping.size();
+	SInt32 index;
+	for (index = 0; index < length; index++)
+	{
+		if (mapping[index].KeyCode == keyCode &&
+			mapping[index].ModifierMask == modifierMask)
+		{
+			return mapping[index].Function;
+		}
+	}
+	return KeyFuncOperation::KeyFunc_None;
 }

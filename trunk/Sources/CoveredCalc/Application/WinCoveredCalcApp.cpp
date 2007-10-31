@@ -39,10 +39,16 @@
 #include "WinMainWindow.h"
 #include "WinMessageBoxProvider.h"
 #include "WinCoveredCalcApp.h"
-
 #include "MBCString.h"
 #include "PathUtils.h"
 #include "XMLParseException.h"
+#include "KeyMappings.h"
+#include "KeyMappingsException.h"
+#include "UTF8Utils.h"
+
+static const char LANG_CODE_JAJP[] = "jaJP";		///< language code for Japanese.
+
+static const UTF8Char STR_PLATFORM_WINDOWS[] = "Windows";			///< keymap platform for Windows.
 
 ////////////////////////////////////////
 #define base	CHrnApp
@@ -526,6 +532,63 @@ SInt32 WinCoveredCalcApp::autoSelectLangFile()
 	}
 }
 
+/**
+ *	@brief	Checks the key-mapping platform is suitable for this app.
+ *	@throw	KeyMappingExceptions::LoadFailed	when the platform is not suitable for this app.
+ */
+void WinCoveredCalcApp::checkKeymappingsPlatform(const KeyMappings* keyMappings)
+{
+	UTF8String platform;
+	if (!keyMappings->GetPlatform(platform) || 0 != UTF8Utils::UTF8StrCmp(STR_PLATFORM_WINDOWS, platform))
+	{
+		throw new KeyMappingsExceptions::LoadFailed("The key-mapping definition is not for Windows platform.");
+	}
+}
+
+/**
+ *	@brief	キーマップ定義を読み込みます。initInstance の処理で呼ばれます。
+ */
+void WinCoveredCalcApp::loadKeyMappingsOnInit()
+{
+	Path keymapFile;
+	AppSettings* appSettings = GetAppSettings();
+	keymapFile = appSettings->GetKeymapFilePath();
+	if (keymapFile.IsEmpty())
+	{
+		// 設定になければデフォルト
+		
+		// トリック：
+		// 1.8.x まではカスタマイズがなくて日本語 JIS キーボードしかなかった。
+		// デフォルト設定としては US QWERTY（標準的な 101/104 拡張キーボード）がよいが、
+		// 言語が日本語の場合は以前のまま日本語 JIS キーボードの方が好ましい。
+		// それ以外の場合に US QWERTY キーボードにする。
+		MBCString langCode;
+		GetCurrentLanguageCode(langCode);
+		if (0 == langCode.Compare(LANG_CODE_JAJP))
+		{
+			keymapFile.AssignFromSlashSeparated("${AppKeymaps}/JapaneseJIS.cckxw");
+		}
+		else
+		{
+			keymapFile.AssignFromSlashSeparated("${AppKeymaps}/UsQWERTY.cckxw");
+		}
+		appSettings->SetKeymapFilePath(keymapFile);
+	}
+	
+	Path absolutePath = ExpandVirtualKeymapFilePath(keymapFile);
+	try
+	{
+		LoadKeyMappings(absolutePath);
+	}
+	catch (Exception* ex)
+	{
+		// キーマッピング定義が読み込めませんでした。
+		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_LOAD_KEYMAPPINGS,
+																MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+		ex->Delete();
+	}	
+}
+
 // ---------------------------------------------------------------------
 //! アプリケーションの初期化
 /*!
@@ -556,7 +619,7 @@ BOOL WinCoveredCalcApp::initInstance()
 
 	// ベースクラス初期化
 	init();
-	setCurrentLanguageCode("jaJP");
+	setCurrentLanguageCode(LANG_CODE_JAJP);
 
 	// アプリケーションがあるフォルダのパスを取得
 	makeAppFolderPath();	
@@ -687,6 +750,9 @@ BOOL WinCoveredCalcApp::initInstance()
 	{
 		GetAppSettings()->SetLanguageFilePath(AppSettings::Value_LangFileBuiltIn);
 	}
+	
+	// キーマッピング読み込み
+	loadKeyMappingsOnInit();
 	
 	// カバー読み込み
 	try

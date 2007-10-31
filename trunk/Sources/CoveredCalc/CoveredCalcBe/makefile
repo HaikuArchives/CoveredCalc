@@ -37,6 +37,7 @@ SRCS= \
 	../Application/CommandLineParam.cpp \
 	../Application/Copyright.cpp \
 	../Application/CoveredCalcAppBase.cpp \
+	../Application/KeyMappings.cpp \
 	../Application/LangFileInfo.cpp \
 	../Application/SettingValue.cpp \
 	../Application/XMLLangFile.cpp \
@@ -82,6 +83,7 @@ SRCS= \
 	../UI/ButtonUITask.cpp \
 	../UI/CoverBrowser.cpp \
 	../UI/MainUIManager.cpp \
+	../UI/MainWindowKeyFunc.cpp \
 	../UI/MouseHoverUITask.cpp \
 	../UI/MovingUITask.cpp \
 	../UI/PreferencesDlg.cpp \

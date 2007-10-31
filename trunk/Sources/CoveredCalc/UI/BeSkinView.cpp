@@ -780,16 +780,23 @@ void BeSkinView::WindowActivated(
 //! Called when key is down.
 // ---------------------------------------------------------------------
 void BeSkinView::KeyDown(
-	const char* bytes,	//!< character which mapped to the key.
-	int32 numBytes		//!< length of parameter bytes.
+	const char* /* bytes */,	//!< character which mapped to the key.
+	int32 /* numBytes */		//!< length of parameter bytes.
 )
 {
 	UIManager* uiManager = getUIManager();
 	ASSERT(NULL != uiManager);
 	if (NULL != uiManager)
 	{
+		BMessage* message = Window()->CurrentMessage();
+		int32 keyCode = 0;
+		int32 modifiers = 0;
+		message->FindInt32("key", &keyCode);
+		message->FindInt32("modifiers", &modifiers);
+		
 		KeyEventParameter parameter;
-		parameter.SetBytes(bytes, numBytes);
+		parameter.SetKeyCode(keyCode);
+		parameter.SetModifiers(modifiers);
 		uiManager->KeyDown(parameter);
 	}
 }
@@ -806,8 +813,15 @@ void BeSkinView::KeyUp(
 	ASSERT(NULL != uiManager);
 	if (NULL != uiManager)
 	{
+		BMessage* message = Window()->CurrentMessage();
+		int32 keyCode = 0;
+		int32 modifiers = 0;
+		message->FindInt32("key", &keyCode);
+		message->FindInt32("modifiers", &modifiers);
+		
 		KeyEventParameter parameter;
-		parameter.SetBytes(bytes, numBytes);
+		parameter.SetKeyCode(keyCode);
+		parameter.SetModifiers(modifiers);
 		uiManager->KeyUp(parameter);
 	}
 }

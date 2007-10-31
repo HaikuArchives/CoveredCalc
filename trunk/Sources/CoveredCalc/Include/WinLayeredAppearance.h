@@ -49,6 +49,7 @@ public:
 	void					Exit();
 	
 	virtual bool			RelayWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT* ret);
+	virtual void			UpdateAppearance();
 
 	virtual void			ChangeSkinSize(SInt32 width, SInt32 height);
 	virtual void			ClipSkinRegion(const DIBitmap* mapBitmap, ColorValue transparentColor);

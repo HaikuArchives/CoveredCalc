@@ -229,6 +229,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Application\KeyMappings.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\Application\LangFileInfo.cpp"
 					>
 				</File>
@@ -410,6 +414,10 @@
 				</File>
 				<File
 					RelativePath="..\Ui\MainUIManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\UI\MainWindowKeyFunc.cpp"
 					>
 				</File>
 				<File
@@ -639,6 +647,18 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Include\KeyMappings.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\KeyMappingsException.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\LangFileException.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Include\LangFileInfo.h"
 					>
 				</File>
@@ -652,10 +672,6 @@
 				</File>
 				<File
 					RelativePath="..\Include\WinLangFile.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\WinLangFileException.h"
 					>
 				</File>
 			</Filter>
@@ -895,6 +911,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Include\KeyFuncOperation.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Include\KeyMappingManager.h"
 					>
 				</File>
@@ -1058,6 +1078,10 @@
 			<Filter
 				Name="Utility"
 				>
+				<File
+					RelativePath="..\Include\Enumerator.h"
+					>
+				</File>
 				<File
 					RelativePath="..\Include\ExceptionMessageUtils.h"
 					>

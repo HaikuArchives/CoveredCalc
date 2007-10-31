@@ -37,6 +37,7 @@
 #include "WaitingUI.h"
 #include "UIMessageProvider.h"
 #include "Path.h"
+#include "KeyMappingManager.h"
 
 class CoverManager;
 class AppSettings;
@@ -65,7 +66,10 @@ public:
 	virtual const LangFileInfoCollection*	GetLangFileInfos() = 0;	
 	virtual Path							MakeRelativeLangFilePath(const Path& absolutePath) = 0;
 	virtual Path							MakeAbsoluteLangFilePath(const Path& relativePath) = 0;
-
+	virtual Path							ExpandVirtualKeymapFilePath(const Path& virtualPath) = 0;
+	virtual void							LoadKeyMappings(const Path& keymapFile) = 0;
+	
+	virtual KeyMappingManager*				GetKeyMappingManagerForMainWindow() = 0;
 
 	virtual void							ShowCoverBrowser(bool isShow) = 0;
 	virtual bool							IsCoverBrowserVisible() = 0;

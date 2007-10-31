@@ -1,0 +1,109 @@
+# Japanese Locale file for CoveredCalc 
+# In truth, these Japanese messages are original.
+# They were translated into English later. (Thanks Koki)
+
+##       ##
+# dialogs #
+##       ##
+
+# -- General --
+#"OK"
+"Cancel"						"キャンセル"
+"Close"							"閉じる"
+
+# -- About --
+#"About CoveredCalc"
+
+# -- Cover Browser --
+"Cover Browser - CoveredCalc"	"カバーブラウザ - CoveredCalc"
+"Select Cover:"					"登録されているカバーの一覧:"
+"Refresh"						"一覧更新"
+"Apply"							"適用"
+
+# -- Cover Info --
+"Cover Info"					"カバーの情報"
+"Name:"							"名前:"
+"Description:"					"説明:"
+"Cover Author Info:"			"カバーの著作権情報:"
+
+# -- Preferences --
+"Preferences"					"設定"
+"Language:"						"言語:"
+"Use ZETA's Locale Kit"			"ZETA の Locale Kit を利用"
+"Change of language will take effect after you restart CoveredCalc application."	"言語の設定は、CoveredCalc を再起動後に有効になります。"
+
+
+##     ##
+# menus #
+##     ##
+
+"Cover ~Browser"				"~B: カバーブラウザ"
+"~Radix"						"~R: 基数"
+"~Hex"							"~H: 16 進"
+"~Decimal"						"~D: 10 進"
+"~Octal"						"~O: 8 進"
+"~Binary"						"~B: 2 進"
+"Always ~On Top"				"~O: 常に手前に表示"
+"~Lock Window Position"			"~L: 位置を固定"
+"~Preferences..."				"~P: 設定..."
+"~About CoveredCalc"			"~A: バージョン情報"
+"Abou~t this Cover"				"~T: このカバーの情報"
+"~Hide (Minimize)"				"~H: 隠す(最小化)"
+"~Close"						"~C: 閉じる"
+
+
+##        ##
+# messages #
+##        ##
+
+#"CoveredCalc"
+"Name"															"名前"
+"Description"													"説明"
+"Failed to load key mappings."									"キーマッピング定義を読み込めませんでした。"
+"Invalid language selection. Please, choose a valid language."	"言語の値が不正です。\n有効な言語を選択してください。"
+"Error obtaining the language selection."						"言語の値を取得することができませんでした。"
+"Could not create the Cover Browser window."					"カバーブラウザの生成に失敗しました。"
+"Failed to load settings."										"設定の読み込みに失敗しました。"
+"Failed to prepare the settings file folder."					"設定ファイル保存フォルダが準備できませんでした。"
+"Failed to create the main application window."					"メインウィンドウの生成に失敗しました。"
+"An error ocurred. The settings were not saved."				"設定の保存に失敗しました。"
+"An error ocurred."												"処理中にエラーが発生しました。"
+" [Line:%0:d%, Column:%1:d%]"									" [行：%0:d%, 列：%1:d%]"
+"Error during analysis of XML file.\n"							"XMLファイルの解析中にエラーが発生しました。\n"
+"Tag \"%0:s%\" is not opened."									"タグ \"%0:s%\" に対応する開始タグが見つかりません。"
+"Tag \"%0:s%\" cannot be a child element of tag \"%1:s%\"."		"タグ \"%0:s%\" は タグ \"%1:s%\" の子要素になることはできません。"
+"Attribute \"%1:s%\" not specified for tag \"%0:s%\"."			"タグ \"%0:s%\" の属性 \"%1:s%\" が指定されていません。"
+"An unsupported tag \"%0:s%\" is being used."					"サポートしていないタグ \"%0:s%\" が使われています。"
+"An error ocurred during analysis of cover definition file.\n"	"カバー定義ファイルの解析中にエラーが発生しました。\n"
+"The id \"%0:s%\" is not defined."								"id \"%0:s%\" は定義されていません。"
+"Unsupported class \"%0:s%\" has been specified."				"サポートしていないクラス \"%0:s%\" が指定されています。"
+"Unsupported type \"%0:s%\" has been specified."				"サポートしていないタイプ \"%0:s%\" が指定されています。"
+"A valid cover definition file cannot be found.\n(%0:s%)"		"有効なカバー定義ファイルではありません。"
+"Color specification \"%0:s%\" could not be interpreted."		"色指定 \"%0:s%\" の解釈ができませんでした。"
+"Cover definition file version \"%0:s%\" not supported. \nTo use this cover, please use the latest CoveredCalc release with support for this version."	"カバー定義ファイルのバージョン \"%0:s%\" は未対応です。\nこのカバーを使うには、そのバージョンに対応した最新の CoveredCalc をお使いください。"
+"This does not seem to be a cover definition file."				"カバー定義ファイルではありません。"
+"An unspecified error has ocurred during processing of cover information."	"カバー関係の処理でエラーが発生しました。"
+"Failed to initialize the cover."								"カバーの初期化に失敗しました。"
+"Failed file operation."										"ファイル操作に失敗しました。"
+"\nFilename: %0:s%"												"\nファイル名: %0:s%"
+"Cannot access file."											"ファイルにアクセスできません。"
+"Unable to write file: there is not enough space on the disk."	"ディスク容量が足りないため書き込みできませんでした。"
+"This file already exists. Unable to execute operation."		"ファイルが既に存在するため、処理を完了できませんでした。"
+"Could not find file."											"ファイルが見つかりません。"
+"A disk error ocurred."											"ディスクエラーが発生しました。"
+"File busy. This files is being used by another program."		"他のプログラムがこのファイルを使用中です。"
+"Failed to load the bitmap file."								"ビットマップファイルの読み込みに失敗しました。"
+"The bitmap file appears to be corrupt."						"ビットマップファイルが壊れています。"
+"Bitmap file type not supported."								"対応していない形式のビットマップファイルです。"
+"Unsufficient memory."											"メモリが不足しています。"
+"Failed path operation."										"パス操作に失敗しました。"
+"Cannot express\npath \"%0:s%\"\nas a relative path from \npath \"%1:s%\"."	"パス \"%0:s%\" を\nパス \"%1:s%\" からの\n相対パスで表すことができません。"
+"Unable to execute operation."									"操作を行うことができませんでした。"
+"Unable to display menu. \nMenu ID: %0:d%"						"メニューを表示できませんでした。\nメニューID: %0:d%"
+"Unable to display dialog box. \nDialog ID: %0:d%"				"ダイアログを表示できませんでした。\nダイアログID: %0:d%"
+"Invalid language file.\n(%0:s%)"								"有効な言語ファイルではありません。\n(%0:s%)"
+"[[The string \"%0:s%\" is not defined in the language file.]]"	"[[文字列 \"%0:s%\" が言語ファイルに定義されていません。]]"
+
+"Failed to load the language file specified as a command line parameter.\nThe parameter is ignored."	"コマンドラインパラメータで指定された言語ファイルが¥n読み込めませんでした。¥nこのパラメータは無視します。"
+"Failed to load the language file specified in your settings."	"設定に保存された言語ファイルが読み込めませんでした。"
+"Failed to load the default language file."						"標準の言語ファイルが読み込めませんでした。"

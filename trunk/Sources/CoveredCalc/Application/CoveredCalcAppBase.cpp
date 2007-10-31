@@ -35,8 +35,15 @@
 #include "UIMessageProvider.h"
 #include "ExceptionMessageUtils.h"
 #include "CoveredCalcAppBase.h"
+#include "KeyMappings.h"
+#include "KeyMappingManager.h"
+#include "KeyMappingsException.h"
+#include "MainWindowKeyFunc.h"
 
-static const AChar	LangFileFolderName[] = "NLS";	///< the folder which contains language files
+static const AChar	LangFileFolderName[] = "NLS";		///< the folder which contains language files
+static const AChar	KeymapsFolderName[] = "Keymaps";	///< the folder which contains key-mapping files
+
+static const UTF8Char STR_CATEGORY_MAIN_WINDOW[] = "MainWindow";	///< keymap category of main window.
 
 // ---------------------------------------------------------------------
 //! Constructor
@@ -155,6 +162,63 @@ void CoveredCalcAppBase::GetCurrentLanguageCode(
 )
 {
 	outLanguage = currentLangCode;
+}
+
+/**
+ *	@brief	Converts virtual kay-mapping file path to absolute path.
+ *	@param[in]	virtrualPath	virtual path.
+ *	@return	result absolute path.
+ */
+Path CoveredCalcAppBase::ExpandVirtualKeymapFilePath(const Path& virtualPath)
+{
+	if (virtualPath.IsEmpty())
+	{
+		return virtualPath;
+	}
+	if (virtualPath.IsRoot())
+	{
+		return virtualPath;
+	}
+
+	MBCString fileName;
+	virtualPath.GetFileName(fileName);
+	if (0 == fileName.CompareNoCase("${AppKeymaps}"))
+	{
+		return getAppFolderPath().Append(KeymapsFolderName);
+	}
+//	else if (0 == fileName.CompareNoCase("${UserKeymaps}"))
+//	{
+//		return Path();	// TODO:
+//	}
+	else
+	{
+		return ExpandVirtualKeymapFilePath(virtualPath.GetParent()).Append(fileName);
+	}
+}
+
+/**
+ *	@brief	Loads key-mapping definition.
+ *	@param[in]	keymapFile keymap file. (absolute path)
+ */
+void CoveredCalcAppBase::LoadKeyMappings(const Path& keymapFile)
+{
+	// clear managers
+	KeyMappingManager*	mainWindowKMM = GetKeyMappingManagerForMainWindow();
+	mainWindowKMM->Clear();
+
+	// load keymap file.	
+	KeyMappings keyMappings;
+	keyMappings.Load(keymapFile);
+	
+	// check platform
+	checkKeymappingsPlatform(&keyMappings);
+
+	// initialize managers.
+	// --- main window.
+	{
+		MainWindowKeyFunc keyFunc;
+		mainWindowKMM->Create(&keyMappings, STR_CATEGORY_MAIN_WINDOW, &keyFunc);
+	}		
 }
 
 // ---------------------------------------------------------------------

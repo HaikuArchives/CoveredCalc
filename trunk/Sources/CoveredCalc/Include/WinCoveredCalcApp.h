@@ -92,12 +92,14 @@ private:
 protected:
 	virtual const Path&				getAppFolderPath() { return appFolderPath; }
 	virtual void					readyDefaultSettingFilePath(Path& settingFilePath);
+	virtual void					checkKeymappingsPlatform(const KeyMappings* keyMappings);
 
 private:
 	void							makeAppFolderPath();
 	void							createFolder(const Path& path);
 	void							loadLangFile(const Path& path);
 	SInt32							autoSelectLangFile();
+	void							loadKeyMappingsOnInit();
 	
 private:
 	static WinCoveredCalcApp*		theInstance;		//!< 唯一のインスタンス

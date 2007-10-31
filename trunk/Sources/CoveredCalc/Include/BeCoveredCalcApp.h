@@ -81,10 +81,12 @@ private:
 protected:
 	virtual const Path&			getAppFolderPath() { return appFolderPath; }
 	virtual void				readyDefaultSettingFilePath(Path& settingFilePath);
+	virtual void				checkKeymappingsPlatform(const KeyMappings* keyMappings);
 
 private:
 	void						createFolder(const Path& path);
 	void						loadLangFile(const Path& path);
+	void						loadKeyMappingsOnInit();
 
 private:
 	Path						appFolderPath;
