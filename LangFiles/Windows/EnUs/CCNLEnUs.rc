@@ -1,0 +1,325 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_COVER_BROWSER DIALOGEX 0, 0, 226, 196
+STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Cover Browser - CoveredCalc"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    LTEXT           "&Select Cover:",IDC_STATIC,7,7,101,8
+    CONTROL         "",IDC_COVER_LIST,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | 
+                    LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,7,18,212,152,
+                    WS_EX_CLIENTEDGE
+    PUSHBUTTON      "&Refresh",IDC_RELOAD,7,175,50,14,WS_GROUP
+    PUSHBUTTON      "&Apply",IDC_APPLY,115,175,50,14,WS_GROUP
+    PUSHBUTTON      "&Close",IDCLOSE,169,175,50,14
+END
+
+IDD_ABOUT DIALOG DISCARDABLE  0, 0, 270, 82
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About CoveredCalc"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,213,61,50,14
+    CONTROL         "",IDC_ICON64,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+                    SS_REALSIZEIMAGE,7,7,48,48
+    LTEXT           "CoveredCalc for Windows",IDC_STC_APPNAME,60,12,203,8
+    LTEXT           "Version ",IDC_STC_VERSION,60,23,203,8
+    LTEXT           "Copyright (C) ",IDC_STC_COPYRIGHT1,60,42,203,8,
+                    SS_NOPREFIX
+END
+
+IDD_ABOUT_COVER DIALOG DISCARDABLE  0, 0, 187, 128
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Cover Info"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,130,107,50,14
+    LTEXT           "Name:",IDC_STATIC,7,7,43,8
+    EDITTEXT        IDC_EDIT_NAME,56,7,124,12,ES_AUTOHSCROLL | ES_READONLY | 
+                    NOT WS_BORDER
+    LTEXT           "Description:",IDC_STATIC,7,21,44,8
+    EDITTEXT        IDC_EDIT_DESCRIPTION,56,21,124,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER
+    LTEXT           "Cover Author Info:",IDC_STATIC,7,35,60,8
+    EDITTEXT        IDC_EDIT_ABOUT,7,45,173,56,ES_MULTILINE | ES_AUTOVSCROLL | 
+                    ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL | WS_HSCROLL
+END
+
+IDD_PREFERENCES DIALOG DISCARDABLE  0, 0, 207, 153
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Preferences"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "&Opacity:",IDC_STC_OPACITY,7,10,33,8
+    RTEXT           "Transparent",IDC_STC_TRANSPARENT,52,12,42,8
+    CONTROL         "",IDC_SLDR_OPACITY,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    WS_TABSTOP,101,7,70,20
+    LTEXT           "Opaque",IDC_STC_OPAQUE,171,12,29,8
+    LTEXT           "Cover &Edge Smoothing:",IDC_STC_EDGE_SMOOTHING,7,36,78,
+                    8
+    RTEXT           "Low",IDC_STC_LOW,77,38,17,8
+    CONTROL         "",IDC_SLDR_EDGE_SMOOTHING,"msctls_trackbar32",
+                    TBS_AUTOTICKS | WS_TABSTOP,101,33,70,20
+    LTEXT           "High",IDC_STC_HIGH,171,38,20,8
+    LTEXT           "You can set Opacity and Cover Edge Smoothing only on Windows 2000, Windows XP or Windows Vista.",
+                    IDC_STATIC,16,59,184,16
+    LTEXT           "&Language:",IDC_STATIC,7,89,32,8
+    COMBOBOX        IDC_CMB_LANGUAGE,47,87,120,110,CBS_DROPDOWNLIST | 
+                    CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Change of language will take effect after you restart CoveredCalc application.",
+                    IDC_STATIC,16,107,184,16,NOT WS_GROUP
+    DEFPUSHBUTTON   "OK",IDOK,94,132,50,14,WS_GROUP
+    PUSHBUTTON      "Cancel",IDCANCEL,150,132,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO MOVEABLE PURE 
+BEGIN
+    IDD_COVER_BROWSER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 219
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 189
+    END
+
+    IDD_ABOUT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 263
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 75
+    END
+
+    IDD_ABOUT_COVER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 121
+    END
+
+    IDD_PREFERENCES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 200
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 146
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDM_MAIN_CONTEXT MENU DISCARDABLE 
+BEGIN
+    POPUP "Main Context Menu"
+    BEGIN
+        MENUITEM "Cover &Browser",              ID_COVER_BROWSER
+        MENUITEM SEPARATOR
+        POPUP "&Radix"
+        BEGIN
+            MENUITEM "&Hex",                        ID_RADIX_HEX
+            MENUITEM "&Decimal",                    ID_RADIX_DECIMAL
+            MENUITEM "&Octal",                      ID_RADIX_OCTAL
+            MENUITEM "&Binary",                     ID_RADIX_BINARY
+        END
+        MENUITEM "Always &On Top",              ID_MAIN_ALWAYS_ON_TOP
+        MENUITEM "&Lock Window Position",       ID_MAIN_LOCK_POS
+        MENUITEM SEPARATOR
+        MENUITEM "&Preferences...",             ID_PREFERENCES
+        MENUITEM "Abou&t this Cover",           ID_MAIN_ABOUT_COVER
+        MENUITEM "&About CoveredCalc",          ID_ABOUT
+        MENUITEM SEPARATOR
+        MENUITEM "&Minimize",                   ID_MAIN_MINIMIZE
+        MENUITEM "&Close",                      ID_MAIN_CLOSE
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_EMSG_INVALID_LANGUAGE 
+                            "Invalid language selection. Please, choose a valid language."
+    IDS_EMSG_GET_LANGUAGE   "Error obtaining the language selection."
+    IDS_EMSG_CREATE_COVER_BROWSER "Could not create the Cover Browser window."
+    IDS_EMSG_LOAD_SETTING   "Failed to load settings."
+    IDS_EMSG_READY_DEFAULT_SETTING_FILE 
+                            "Failed to prepare the settings file folder."
+    IDS_EMSG_CREATE_MAIN_WINDOW 
+                            "Failed to create the main application window."
+    IDS_EMSG_SAVE_SETTING   "An error ocurred. The settings were not saved."
+    IDS_EMSG_GENERIC        "An error ocurred."
+    IDS_EMSG_XML_LINE_COLUMN " [Line:%0:d%, Column:%1:d%]"
+    IDS_EMSG_XML_PARSE      "Error during analysis of XML file.\n"
+    IDS_EMSG_NO_MATCH_START_TAG "Tag ""%0:s%"" is not opened."
+    IDS_EMSG_INVALID_PARENT_ENTITY 
+                            "Tag ""%0:s%"" cannot be a child element of tag ""%1:s%""."
+    IDS_EMSG_MISSING_ATTRIBUTE 
+                            "Attribute ""%1:s%"" not specified for tag ""%0:s%""."
+    IDS_EMSG_UNKNOWN_TAG    "An unsupported tag ""%0:s%"" is being used."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_EMSG_COVERDEF_PARSE "An error ocurred during analysis of cover definition file.\n"
+    IDS_EMSG_UNKNOWN_ID     "The id ""%0:s%"" is not defined."
+    IDS_EMSG_UNKNOWN_CLASS  "Unsupported class ""%0:s%"" has been specified."
+    IDS_EMSG_UNKNOWN_TYPE   "Unsupported type ""%0:s%"" has been specified."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_EMSG_VALIDATION_FAILED 
+                            "A valid cover definition file cannot be found.\n(%0:s%)"
+    IDS_EMSG_COLOR_STRING_NOT_UNDERSTOOD 
+                            "Color specification ""%0:s%"" could not be interpreted."
+    IDS_EMSG_UNSUPPORTED_COVERDEF_VERSION 
+                            "Cover definition file version ""%0:s%"" not supported. \nTo use this cover, please use the latest CoveredCalc release with support for this version."
+    IDS_EMSG_INVALID_COVERDEF 
+                            "This does not seem to be a cover definition file."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_APPNAME             "CoveredCalc"
+    IDS_COVER_BROWSER_COLUMN_NAME "Name"
+    IDS_COVER_BROWSER_COLUMN_DESCRIPTION "Description"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_EMSG_COLOR_CODED_SKIN 
+                            "An unspecified error has ocurred during processing of cover information."
+    IDS_EMSG_INIT_SKIN      "Failed to initialize the cover."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_EMSG_FILE_OPERATION "Failed file operation."
+    IDS_EMSG_FILE_FILENAME  "\nFilename: %0:s%"
+    IDS_EMSG_FILE_ACCESS_DENIED "Cannot access file."
+    IDS_EMSG_FILE_DEVICE_FULL 
+                            "Unable to write file: there is not enough space on the disk."
+    IDS_EMSG_FILE_ALREADY_EXISTS 
+                            "This file already exists. Unable to execute operation."
+    IDS_EMSG_FILE_NOT_FOUND "Could not find file."
+    IDS_EMSG_FILE_IO_ERROR  "A disk error ocurred."
+    IDS_EMSG_FILE_SHARING_VIOLATION 
+                            "File busy. This files is being used by another program."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_EMSG_DIBFILE_LOAD   "Failed to load the bitmap file."
+    IDS_EMSG_DIBFILE_BROKEN_FILE "The bitmap file appears to be corrupt."
+    IDS_EMSG_DIBFILE_UNKNOWN_FORMAT "Bitmap file type not supported."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_EMSG_MEMORY         "Unsufficient memory."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_EMSG_PATH_OPERATION "Failed path operation."
+    IDS_EMSG_PATH_MAKE_RELATIVE 
+                            "Cannot express\npath ""%0:s%""\nas a relative path from \npath ""%1:s%""."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_EMSG_UI_CONTROL     "Unable to execute operation."
+    IDS_EMSG_UI_SHOW_MENU   "Unable to display menu. \nMenu ID: %0:d%"
+    IDS_EMSG_UI_SHOW_DIALOG "Unable to display dialog box. \nDialog ID: %0:d%"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_EMSG_LOAD_KEYMAPPINGS "Failed to load key mappings."
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

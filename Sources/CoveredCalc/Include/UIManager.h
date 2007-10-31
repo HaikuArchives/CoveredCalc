@@ -59,7 +59,7 @@ public:
 								UIManager();
 	virtual						~UIManager();
 
-	virtual void				Init(UIController* uiController);
+	virtual void				Init(UIController* uiController, const KeyMappingManager* keyMappingManager);
 
 	virtual void				Create() = 0;
 	virtual void				Destroy();
@@ -98,6 +98,7 @@ protected:
 	virtual void				changeLastCursorSkinArea(SInt32 area);
 
 	UIController*				getUIController() { return uiController; }
+	const KeyMappingManager*	getKeyMappingManager() { return keyMappingManager; }
 	ColorCodedSkin*				getSkin() { return skin; }
 	ColorCodedSkinAppearance*	getSkinAppearance() { return appearance; }
 	UITaskManager*				getTaskManager() { return &taskManager; }
@@ -107,6 +108,7 @@ protected:
 
 private:
 	UIController*				uiController;
+	const KeyMappingManager*	keyMappingManager;
 	ColorCodedSkin*				skin;
 	ColorCodedSkinAppearance*	appearance;			///< skin appearance.
 	UITaskManager				taskManager;

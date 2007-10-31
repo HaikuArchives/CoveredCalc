@@ -127,6 +127,14 @@ bool WinNormalAppearance::RelayWndProc(
 	return false;
 }
 
+/**
+ *	@brief	外観を更新します。（無効領域をなくします）
+ */
+void WinNormalAppearance::UpdateAppearance()
+{
+	::UpdateWindow(hWnd);
+}
+
 // ---------------------------------------------------------------------
 //! スキンのサイズを変更されたときに呼ばれます。
 // ---------------------------------------------------------------------

@@ -32,7 +32,9 @@
 
 #include "Prefix.h"
 #include "WinKeyMappingManager.h"
-#include "MainWindowKeyFunc.h"		// TODO: キーカスタマイズが実現したときには、ここでは必要なくなるはず。
+#include "KeyMappings.h"
+#include "KeyFuncOperation.h"
+#include "UTF8String.h"
 
 // ---------------------------------------------------------------------
 //! コンストラクタ
@@ -48,77 +50,121 @@ WinKeyMappingManager::~WinKeyMappingManager()
 {
 }
 
-// ---------------------------------------------------------------------
-//! 指定したキーボードパラメータに対応する機能を取得します。
-/*!
-	@return 対応する機能番号
-	@note
-		今はまだ決めうちのキーしか使えない。
-		キーカスタマイズが実現したらこのメソッドはなくなる。（このクラスがなくなる）
-*/
-// ---------------------------------------------------------------------
-SInt32 WinMainWindowKeyMappingManager::GetFunction(
-	const KeyEventParameter& parameter		//!< キーボードパラメータ
-)
+/**
+ *	@brief	オブジェクトの構築を行います。
+ *	@param[in] keyMapping	キーマッピング定義
+ *	@param[in] category		カテゴリー名
+ *	@param[in] keyFuncOperation		key-function 定義操作オブジェクト
+ */
+void WinKeyMappingManager::Create(const KeyMappings* keyMappings, ConstUTF8Str category, const KeyFuncOperation* keyFuncOperation)
 {
-#define	HANDLE_KEY(_virtKeyCode, _modifierMask, _keyFunc)								\
-	if (_virtKeyCode == virtualKeyCode && parameter.GetModifierMask() == _modifierMask)	\
-	{																					\
-		return _keyFunc;																\
+	Clear();
+	
+	KeyMappings::KeyMappingItemEnumerator* enumerator = keyMappings->NewItemEnumeratorFor(category);
+	while (enumerator->MoveNext())
+	{
+		KeyMappingItem* item = enumerator->GetCurrent();
+		
+		KMRecord record;
+		UTF8String value;
+		if (!item->GetKeyCode(value))
+		{
+			continue;
+		}
+		record.VirtualKeyCode = strtoul(TypeConv::AsASCII(value), NULL, 16);
+		if (!item->GetModifiers(value))
+		{
+			continue;
+		}
+		record.ModifierMask = analyzeModifierMask(value);
+		if (!item->GetFunction(value))
+		{
+			continue;
+		}
+		record.Function = keyFuncOperation->FuncNameToKeyFunc(value);
+
+		mapping.push_back(record);
 	}
-
-	DWORD virtualKeyCode = parameter.GetVirtualKeyCode();
-
-	HANDLE_KEY(0x30 /* 0 */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_0)
-	HANDLE_KEY(VK_NUMPAD0,		WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_0)
-	HANDLE_KEY(0x31 /* 1 */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_1)
-	HANDLE_KEY(VK_NUMPAD1,		WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_1)
-	HANDLE_KEY(0x32 /* 2 */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_2)
-	HANDLE_KEY(VK_NUMPAD2,		WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_2)
-	HANDLE_KEY(0x33 /* 3 */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_3)
-	HANDLE_KEY(VK_NUMPAD3,		WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_3)
-	HANDLE_KEY(0x34 /* 4 */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_4)
-	HANDLE_KEY(VK_NUMPAD4,		WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_4)
-	HANDLE_KEY(0x35 /* 5 */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_5)
-	HANDLE_KEY(VK_NUMPAD5,		WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_5)
-	HANDLE_KEY(0x36 /* 6 */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_6)
-	HANDLE_KEY(VK_NUMPAD6,		WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_6)
-	HANDLE_KEY(0x37 /* 7 */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_7)
-	HANDLE_KEY(VK_NUMPAD7,		WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_7)
-	HANDLE_KEY(0x38 /* 8 */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_8)
-	HANDLE_KEY(VK_NUMPAD8,		WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_8)
-	HANDLE_KEY(0x39 /* 9 */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_9)
-	HANDLE_KEY(VK_NUMPAD9,		WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_9)
-	HANDLE_KEY(0x41 /* A */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_A)
-	HANDLE_KEY(0x42 /* B */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_B)
-	HANDLE_KEY(0x43 /* C */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_C)
-	HANDLE_KEY(0x44 /* D */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_D)
-	HANDLE_KEY(0x45 /* E */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_E)
-	HANDLE_KEY(0x46 /* F */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_F)
-	HANDLE_KEY(0xBE /* . */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_Point)
-	HANDLE_KEY(VK_DECIMAL,		WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_Point)
-	HANDLE_KEY(VK_ESCAPE,		WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_Clear)
-	HANDLE_KEY(VK_BACK,			WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_BS)
-	HANDLE_KEY(0xBD /* - */,	WinKeyEventParameter::ModifierMask_Shift,	MainWindowKeyFunc::KeyFunc_Equal)
-	HANDLE_KEY(VK_RETURN,		WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_Equal)
-	HANDLE_KEY(0xBB /* ; */,	WinKeyEventParameter::ModifierMask_Shift,	MainWindowKeyFunc::KeyFunc_Plus)
-	HANDLE_KEY(VK_ADD,			WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_Plus)
-	HANDLE_KEY(0xBD /* - */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_Minus)
-	HANDLE_KEY(VK_SUBTRACT,		WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_Minus)
-	HANDLE_KEY(0xBA /* : */,	WinKeyEventParameter::ModifierMask_Shift,	MainWindowKeyFunc::KeyFunc_Times)
-	HANDLE_KEY(VK_MULTIPLY,		WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_Times)
-	HANDLE_KEY(0xBF /* / */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_Div)
-	HANDLE_KEY(VK_DIVIDE,		WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_Div)
-	HANDLE_KEY(0x4E /* N */,	WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_Negate)
-	HANDLE_KEY(VK_F9,			WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_Negate)	// windows standard calc compatible
-	HANDLE_KEY(VK_SUBTRACT,		WinKeyEventParameter::ModifierMask_Shift,	MainWindowKeyFunc::KeyFunc_Negate)
-	HANDLE_KEY(VK_F5,			WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_Hex)
-	HANDLE_KEY(VK_F6,			WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_Dec)
-	HANDLE_KEY(VK_F7,			WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_Oct)
-	HANDLE_KEY(VK_F8,			WinKeyEventParameter::ModifierMask_None,	MainWindowKeyFunc::KeyFunc_Bin)
-
-	return MainWindowKeyFunc::KeyFunc_None;
-
-#undef HANDKE_KEY
+	delete enumerator;
 }
 
+/**
+ *	@brief	マッピングをクリアします。
+ */
+void WinKeyMappingManager::Clear()
+{
+	mapping.clear();
+}
+
+/**
+ *	@brief	修飾キーのマスク文字列を解析します。
+ *	@param[in]	modifierMaskStr	修飾キーマスク文字列
+ *	@return 修飾キーマスク
+ */
+UInt32 WinKeyMappingManager::analyzeModifierMask(ConstUTF8Str modifierMaskStr)
+{
+	ConstAStr maskStr = TypeConv::AsASCII(modifierMaskStr);
+	UInt32	mask = WinKeyEventParameter::ModifierMask_None;
+	
+	while ('\0' != maskStr[0])
+	{
+		SInt32 length;
+		ConstAStr separator = strchr(maskStr, '+');
+		if (NULL == separator)
+		{
+			length = strlen(maskStr);
+		}
+		else
+		{
+			length = separator - maskStr;
+		}
+		if (5 == length && 0 == memcmp(maskStr, "shift", 5))
+		{
+			mask |= WinKeyEventParameter::ModifierMask_Shift;
+		}
+		else if (4 == length && 0 == memcmp(maskStr, "ctrl", 4))
+		{
+			mask |= WinKeyEventParameter::ModifierMask_Ctrl;
+		}
+		else if (3 == length && 0 == memcmp(maskStr, "alt", 4))
+		{
+			mask |= WinKeyEventParameter::ModifierMask_Alt;
+		}
+		
+		if (NULL == separator)
+		{
+			maskStr += length;
+		}
+		else
+		{
+			maskStr += length + 1;
+		}
+	}
+	
+	return mask;
+}
+
+
+/**
+ * @brief	指定したキーボードパラメータに対応する機能を取得します。
+ * @return 対応する機能番号
+ */
+SInt32 WinKeyMappingManager::GetFunction(
+	const KeyEventParameter& parameter		//!< キーボードパラメータ
+) const
+{
+	DWORD virtualKeyCode = parameter.GetVirtualKeyCode();
+	UInt32 modifierMask = parameter.GetModifierMask();
+
+	SInt32 length = mapping.size();
+	SInt32 index;
+	for (index = 0; index < length; index++)
+	{
+		if (mapping[index].VirtualKeyCode == virtualKeyCode &&
+			mapping[index].ModifierMask == modifierMask)
+		{
+			return mapping[index].Function;
+		}
+	}
+	return KeyFuncOperation::KeyFunc_None;
+}

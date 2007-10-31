@@ -33,36 +33,34 @@
 #ifndef _BEKEYEVENTPARAMETER_H_
 #define _BEKEYEVENTPARAMETER_H_
 
-// ---------------------------------------------------------------------
-//! キーボードイベントパラメータ for BeOS
-/*!
-	@note	このクラスは渡されたポインタの内容をコピーせず、
-			そのまま保持します。
-*/
-// ---------------------------------------------------------------------
+/**
+ *	@brief	Keyboard event parameter class for BeOS.
+ */
 class BeKeyEventParameter
 {
 public:
 					BeKeyEventParameter();
 	virtual			~BeKeyEventParameter() { }
 	
-	const char*		GetBytes() const
-						{ return bytes; }
-	int32			GetNumBytes() const
-						{ return numBytes; }
+	int32			GetKeyCode() const
+						{ return keyCode; }
+	int32			GetModifiers() const
+						{ return modifiers; }
 	
-	void			SetBytes(const char* bytes, int32 numBytes)
-						{ this->bytes = bytes; this->numBytes = numBytes; }
-
+	void			SetKeyCode(int32 keyCode)
+						{ this->keyCode = keyCode; }
+	void			SetModifiers(int32 modifiers)
+						{ this->modifiers = modifiers; }
+	
 private:
-	const char*		bytes;				//!< ユーザが押したキーにマップされる文字
-	int32			numBytes;			//!< bytes のバイト数
+	int32			keyCode;			///< key code
+	int32			modifiers;			///< modifiers
 };
 
 inline BeKeyEventParameter::BeKeyEventParameter()
 {
-	bytes = NULL;
-	numBytes = 0;
+	keyCode = 0;
+	modifiers = 0;
 }
 
 #endif // _BEKEYEVENTPARAMETER_H_

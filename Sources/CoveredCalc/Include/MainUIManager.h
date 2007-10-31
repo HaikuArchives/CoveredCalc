@@ -108,7 +108,6 @@ private:
 	CalcCore					calcCore;					//!< calc engine.
 	CalcCore::DigitForm			currentDigitForm;			///< current digit form of engine.
 	MBCString					numberStringOnDisplay;		//!< string on display
-	MainWindowKeyMappingManager	keyMappingManager;			//!< key-mapping manager of this window.
 };
 
 #endif // _MAINUIMANAGER_H_

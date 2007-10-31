@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<localeDef version="5" xmlns="http://hironytic.1st-shrine.net/schema/CoveredCalc-LocaleDefinition">
+	<platform target="BeOS"/>
+	
+	<langName>English (US)</langName>
+	<langCode>enUS</langCode>
+	
+	<!-- About dialog -->
+	<dialog name="IDD_ABOUT">
+		<!--
+			View Hierarchy:
+				+- BaseView					BView
+				    +- LogoIcon				BeBitmapView
+				    +- AppNameLabel			BStringView
+				    +- VersionLabel			BStringView
+				    +- CopyrightLabel		BStringView
+				    +- DescriptionLabel		BTextView
+				    +- OKButton				BButton
+		-->
+		
+		<!-- design time font: Swis721 BT Roman 10 -->
+		<designFontInfo width="137.000000" height="11.987305"/>
+		
+		<dialogItem name="">
+			<rect left="0.0" top="0.0" right="392.0" bottom="111.0"/>
+			<label>About CoveredCalc</label>
+		</dialogItem>
+		
+		<dialogItem name="LogoIcon">
+			<rect left="12.0" top="12.0" right="76.0" bottom="76.0"/>
+		</dialogItem>
+		
+		<dialogItem name="AppNameLabel">
+			<rect left="88.0" top="12.0" right="380.0" bottom="24.0"/>
+		</dialogItem>
+		
+		<dialogItem name="VersionLabel">
+			<rect left="88.0" top="30.0" right="380.0" bottom="42.0"/>
+		</dialogItem>
+		
+		<dialogItem name="CopyrightLabel">
+			<rect left="88.0" top="48.0" right="380.0" bottom="60.0"/>
+		</dialogItem>
+		
+		<dialogItem name="OKButton">
+			<rect left="300.0" top="75.0" right="380.0" bottom="99.0"/>
+			<label>OK</label>
+		</dialogItem>
+	</dialog>
+	
+	<!-- Cover Browser -->
+	<dialog name="IDD_COVER_BROWSER">
+		<!--
+			View Hierarchy:
+				+- BaseView					BView
+				    +- CoverListLabel		BStringView
+				    +- CoverList			BeCCColumnListView
+				    +- Reload				BButton
+				    +- Apply				BButton
+				    +- Close				BButton
+		-->
+
+		<!-- design time font: Swis721 BT Roman 10 -->
+		<designFontInfo width="137.000000" height="11.987305"/>
+		
+		<dialogItem name="">
+			<rect left="100.0" top="100.0" right="486.0" bottom="384.0"/>
+			<label>Cover Browser - CoveredCalc</label>
+		</dialogItem>
+		
+		<dialogItem name="CoverListLabel">
+			<rect left="12.0" top="12.0" right="374.0" bottom="24.0"/>
+			<label>Select Cover:</label>
+		</dialogItem>
+		
+		<dialogItem name="CoverList">
+			<rect left="12.0" top="27.0" right="374.0" bottom="236.0"/>
+		</dialogItem>
+		
+		<dialogItem name="Reload">
+			<rect left="12.0" top="248.0" right="92.0" bottom="272.0"/>
+			<label>Refresh</label>
+		</dialogItem>
+		
+		<dialogItem name="Apply">
+			<rect left="208.0" top="248.0" right="288.0" bottom="272.0"/>
+			<label>Apply</label>
+		</dialogItem>
+		
+		<dialogItem name="Close">
+			<rect left="294.0" top="248.0" right="374.0" bottom="272.0"/>
+			<label>Close</label>
+		</dialogItem>
+	</dialog>
+	
+	<!-- About Cover dialog -->
+	<dialog name="IDD_ABOUT_COVER">
+		<!--
+			View Hierarchy:
+				+- BaseView					BView
+				    +- NameLabel			BStringView
+				    +- NameText				BTextView
+				    +- DescLabel			BStringView
+				    +- DescText				BTextView
+				    +- AboutCoverLabel		BStringView
+				    +- AboutCoverText		BTextView (+BScrollView)
+				    +- OKButton				BButton
+		-->
+		
+		<!-- design time font: Swis721 BT Roman 10 -->
+		<designFontInfo width="137.000000" height="11.987305"/>
+		
+		<dialogItem name="">
+			<rect left="0.0" top="0.0" right="312.0" bottom="230.0"/>
+			<label>Cover Info</label>
+		</dialogItem>
+
+		<dialogItem name="NameLabel">
+			<rect left="12.0" top="12.0" right="74.0" bottom="24.0"/>
+			<label>Name:</label>
+		</dialogItem>
+		
+		<dialogItem name="NameText">
+			<rect left="77.0" top="11.0" right="300.0" bottom="24.0"/>
+		</dialogItem>
+		
+		<dialogItem name="DescLabel">
+			<rect left="12.0" top="30.0" right="74.0" bottom="42.0"/>
+			<label>Description:</label>
+		</dialogItem>
+		
+		<dialogItem name="DescText">
+			<rect left="77.0" top="29.0" right="300.0" bottom="42.0"/>
+		</dialogItem>
+		
+		<dialogItem name="AboutCoverLabel">
+			<rect left="12.0" top="54.0" right="100.0" bottom="66.0"/>
+			<label>Cover Author Info:</label>
+		</dialogItem>
+		
+		<dialogItem name="AboutCoverText">
+			<rect left="12.0" top="69.0" right="300.0" bottom="182.0"/>
+		</dialogItem>
+		
+		<dialogItem name="OKButton">
+			<rect left="220.0" top="194.0" right="300.0" bottom="218.0"/>
+			<label>OK</label>
+		</dialogItem>
+	</dialog>
+	
+	<!-- Preferences dialog -->
+	<dialog name="IDD_PREFERENCES">
+		<!--
+			View Hierarchy:
+				+- BaseView					BView
+				    +- LangPopup			BMenuField
+				    +- LangNotice			BTextView
+				    +- OKButton				BButton
+				    +- CancelButton			BButton
+		-->
+		
+		<!-- design time font: Swis721 BT Roman 10 -->
+		<designFontInfo width="137.000000" height="11.987305"/>
+		
+		<dialogItem name="">
+			<rect left="0.0" top="0.0" right="272.0" bottom="124.0"/>
+			<label>Preferences</label>
+		</dialogItem>
+		
+		<dialogItem name="LangPopup">
+			<rect left="12.0" top="12.0" right="260.0" bottom="34.0"/>
+			<label>Language:</label>
+			<divider position="64.0"/>
+		</dialogItem>
+		
+		<dialogItem name="LangNotice">
+			<rect left="12.0" top="46.0" right="260.0" bottom="72.0"/>
+			<label>Change of language will take effect after you restart CoveredCalc application.</label>
+		</dialogItem>
+		
+		<dialogItem name="CancelButton">
+			<rect left="90.0" top="88.0" right="170.0" bottom="112.0"/>
+			<label>Cancel</label>
+		</dialogItem>
+		
+		<dialogItem name="OKButton">
+			<rect left="180.0" top="88.0" right="260.0" bottom="112.0"/>
+			<label>OK</label>
+		</dialogItem>
+	</dialog>
+	
+	<!-- menu item -->
+	<!-- IDM_MAIN_CONTEXT -->
+	<string name="ID_COVER_BROWSER">Cover ~Browser</string>
+	<string name="ID_RADIX">~Radix</string>
+	<string name="ID_RADIX_HEX">~Hex</string>
+	<string name="ID_RADIX_DECIMAL">~Decimal</string>
+	<string name="ID_RADIX_OCTAL">~Octal</string>
+	<string name="ID_RADIX_BINARY">~Binary</string>
+	<string name="ID_MAIN_ALWAYS_ON_TOP">Always ~On Top</string>
+	<string name="ID_MAIN_LOCK_POS">~Lock Window Position</string>
+	<string name="ID_PREFERENCES">~Preferences...</string>
+	<string name="ID_MAIN_ABOUT_COVER">Abou~t this Cover</string>
+	<string name="ID_ABOUT">~About CoveredCalc</string>
+	<string name="ID_MAIN_MINIMIZE">~Hide (Minimize)</string>
+	<string name="ID_MAIN_CLOSE">~Close</string>
+
+	<!-- Messages -->
+	<string name="IDS_APPNAME">CoveredCalc</string>
+	<string name="IDS_COVER_BROWSER_COLUMN_NAME">Name</string>
+	<string name="IDS_COVER_BROWSER_COLUMN_DESCRIPTION">Description</string>
+	<string name="IDS_EMSG_LOAD_KEYMAPPINGS">Failed to load key mappings.</string>
+	<string name="IDS_EMSG_INVALID_LANGUAGE">Invalid language selection. Please, choose a valid language.</string>
+	<string name="IDS_EMSG_GET_LANGUAGE">Error obtaining the language selection.</string>
+	<string name="IDS_EMSG_CREATE_COVER_BROWSER">Could not create the Cover Browser window.</string>
+	<string name="IDS_EMSG_LOAD_SETTING">Failed to load settings.</string>
+	<string name="IDS_EMSG_READY_DEFAULT_SETTING_FILE">Failed to prepare the settings file folder.</string>
+	<string name="IDS_EMSG_CREATE_MAIN_WINDOW">Failed to create the main application window.</string>
+	<string name="IDS_EMSG_SAVE_SETTING">An error ocurred. The settings were not saved.</string>
+	<string name="IDS_EMSG_GENERIC">An error ocurred.</string>
+	<string name="IDS_EMSG_XML_LINE_COLUMN"> [Line:%0:d%, Column:%1:d%]</string>
+	<string name="IDS_EMSG_XML_PARSE">Error during analysis of XML file.&#10;</string>
+	<string name="IDS_EMSG_NO_MATCH_START_TAG">Tag "%0:s%" is not opened.</string>
+	<string name="IDS_EMSG_INVALID_PARENT_ENTITY">Tag "%0:s%" cannot be a child element of tag "%1:s%".</string>
+	<string name="IDS_EMSG_MISSING_ATTRIBUTE">Attribute "%1:s%" not specified for tag "%0:s%".</string>
+	<string name="IDS_EMSG_UNKNOWN_TAG">An unsupported tag "%0:s%" is being used.</string>
+	<string name="IDS_EMSG_COVERDEF_PARSE">An error ocurred during analysis of cover definition file.&#10;</string>
+	<string name="IDS_EMSG_UNKNOWN_ID">The id "%0:s%" is not defined.</string>
+	<string name="IDS_EMSG_UNKNOWN_CLASS">Unsupported class "%0:s%" has been specified.</string>
+	<string name="IDS_EMSG_UNKNOWN_TYPE">Unsupported type "%0:s%" has been specified.</string>
+	<string name="IDS_EMSG_VALIDATION_FAILED">A valid cover definition file cannot be found.&#10;(%0:s%)</string>
+	<string name="IDS_EMSG_COLOR_STRING_NOT_UNDERSTOOD">Color specification "%0:s%" could not be interpreted.</string>
+	<string name="IDS_EMSG_UNSUPPORTED_COVERDEF_VERSION">Cover definition file version "%0:s%" not supported. &#10;To use this cover, please use the latest CoveredCalc release with support for this version.</string>
+	<string name="IDS_EMSG_INVALID_COVERDEF">This does not seem to be a cover definition file.</string>
+	<string name="IDS_EMSG_COLOR_CODED_SKIN">An unspecified error has ocurred during processing of cover information.</string>
+	<string name="IDS_EMSG_INIT_SKIN">Failed to initialize the cover.</string>
+	<string name="IDS_EMSG_FILE_OPERATION">Failed file operation.</string>
+	<string name="IDS_EMSG_FILE_FILENAME">&#10;Filename: %0:s%</string>
+	<string name="IDS_EMSG_FILE_ACCESS_DENIED">Cannot access file.</string>
+	<string name="IDS_EMSG_FILE_DEVICE_FULL">Unable to write file: there is not enough space on the disk.</string>
+	<string name="IDS_EMSG_FILE_ALREADY_EXISTS">This file already exists. Unable to execute operation.</string>
+	<string name="IDS_EMSG_FILE_NOT_FOUND">Could not find file.</string>
+	<string name="IDS_EMSG_FILE_IO_ERROR">A disk error ocurred.</string>
+	<string name="IDS_EMSG_FILE_SHARING_VIOLATION">File busy. This files is being used by another program.</string>
+	<string name="IDS_EMSG_DIBFILE_LOAD">Failed to load the bitmap file.</string>
+	<string name="IDS_EMSG_DIBFILE_BROKEN_FILE">The bitmap file appears to be corrupt.</string>
+	<string name="IDS_EMSG_DIBFILE_UNKNOWN_FORMAT">Bitmap file type not supported.</string>
+	<string name="IDS_EMSG_MEMORY">Unsufficient memory.</string>
+	<string name="IDS_EMSG_PATH_OPERATION">Failed path operation.</string>
+	<string name="IDS_EMSG_PATH_MAKE_RELATIVE">Cannot express&#10;path "%0:s%"&#10;as a relative path from &#10;path "%1:s%".</string>
+	<string name="IDS_EMSG_UI_CONTROL">Unable to execute operation.</string>
+	<string name="IDS_EMSG_UI_SHOW_MENU">Unable to display menu. &#10;Menu ID: %0:d%</string>
+	<string name="IDS_EMSG_UI_SHOW_DIALOG">Unable to display dialog box. &#10;Dialog ID: %0:d%</string>
+	<string name="IDS_EMSG_LANG_VALIDATION_FAILED">Invalid language file.&#10;(%0:s%)</string>
+	<string name="IDS_EMSG_LANG_STRING_NOT_DEFINED">[[The string "%0:s%" is not defined in the language file.]]</string>
+</localeDef>

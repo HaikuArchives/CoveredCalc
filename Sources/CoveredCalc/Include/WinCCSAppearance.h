@@ -46,6 +46,7 @@ public:
 	virtual					~WinCCSAppearance() { }
 
 	virtual bool			RelayWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT* ret) = 0;
+	virtual void			UpdateAppearance() = 0;
 };
 
 #endif // _WINCCSAPPEARANCE_H_

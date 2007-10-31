@@ -33,7 +33,11 @@
 #ifndef _BEKEYMAPPINGMANAGER_H_
 #define _BEKEYMAPPINGMANAGER_H_
 
+#include <vector>
 #include "KeyEventParameter.h"
+
+class KeyMappings;
+class KeyFuncOperation;
 
 // ---------------------------------------------------------------------
 //! キーマッピング管理クラス for BeOS
@@ -43,34 +47,25 @@ class BeKeyMappingManager
 public:
 						BeKeyMappingManager();
 	virtual				~BeKeyMappingManager();
+
+	void				Create(const KeyMappings* keyMappings, ConstUTF8Str category, const KeyFuncOperation* keyFuncOperation);
+	void				Clear();
 	
-	virtual SInt32		GetFunction(const KeyEventParameter& parameter) = 0;
-};
+	virtual SInt32		GetFunction(const KeyEventParameter& parameter) const;
 
-// TODO: 下に書いてあるとおり。キーカスタマイズを実現するときにはこのクラスをなくす。
-// ---------------------------------------------------------------------
-//! メインウィンドウ用キーマッピング管理クラス for BeOS
-/*!
-	@note
-	将来のキーマッピングのカスタマイズ対応ができるようになれば、
-	BeKeyMappingManager がキーと機能の動的な対応関係を管理するはず。
-	そうなると、GetFunction は virtual の必要もなくなり、
-	メインウィンドウに関わらず、各ウィンドウ用の対応関係の管理を
-	BeKeyMappingManager が行えるようになる。（ウィンドウ 1 つに対し、
-	BeKeyMappingManager のインスタンスを 1 つ作るが、それらは BeKeyMappingManager
-	の派生クラスではなく、BeKeyMappingManager そのものでよいはず）
-	そのとき、このクラスは必要なくなるだろう。
-	現在は動的な対応関係の管理を実装していないので
-	それまでのつなぎとして作ってあるクラス。
-*/
-// ---------------------------------------------------------------------
-class BeMainWindowKeyMappingManager : public BeKeyMappingManager
-{
-public:
-						BeMainWindowKeyMappingManager() { }
-	virtual				~BeMainWindowKeyMappingManager() { }
-
-	virtual SInt32		GetFunction(const KeyEventParameter& parameter);
+private:
+	int32				analyzeModifierMask(ConstUTF8Str modifierMaskStr);
+	
+private:
+	struct KMRecord
+	{
+		int32	KeyCode;
+		int32	ModifierMask;
+		SInt32	Function;
+	};
+	typedef std::vector<KMRecord>	KMVector;
+	
+	KMVector			mapping;
 };
 
 #endif // _BEKEYMAPPINGMANAGER_H_

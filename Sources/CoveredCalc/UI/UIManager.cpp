@@ -51,10 +51,12 @@ UIManager::UIManager()
 //! Initialize the object
 // ---------------------------------------------------------------------
 void UIManager::Init(
-	UIController* uiController		// controller object
+	UIController* uiController,		// controller object
+	const KeyMappingManager* keyMappingManager	///< key-mapping manager.
 )
 {
 	this->uiController = uiController;
+	this->keyMappingManager = keyMappingManager;
 }
 
 // ---------------------------------------------------------------------

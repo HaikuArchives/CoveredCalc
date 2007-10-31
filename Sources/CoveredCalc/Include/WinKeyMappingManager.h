@@ -33,7 +33,11 @@
 #ifndef _WINKEYMAPPINGMANAGER_H_
 #define _WINKEYMAPPINGMANAGER_H_
 
+#include <vector>
 #include "KeyEventParameter.h"
+
+class KeyMappings;
+class KeyFuncOperation;
 
 // ---------------------------------------------------------------------
 //! キーマッピング管理クラス for Windows
@@ -44,33 +48,23 @@ public:
 						WinKeyMappingManager();
 	virtual				~WinKeyMappingManager();
 	
-	virtual SInt32		GetFunction(const KeyEventParameter& parameter) = 0;
+	void				Create(const KeyMappings* keyMappings, ConstUTF8Str category, const KeyFuncOperation* keyFuncOperation);
+	void				Clear();
+	
+	SInt32				GetFunction(const KeyEventParameter& parameter) const;
+
+private:
+	UInt32				analyzeModifierMask(ConstUTF8Str modifierMaskStr);
+	
+private:
+	struct KMRecord
+	{
+		DWORD	VirtualKeyCode;
+		UInt32	ModifierMask;
+		SInt32	Function;
+	};
+	typedef std::vector<KMRecord>	KMVector;
+	
+	KMVector			mapping;
 };
-
-// TODO: 下に書いてあるとおり。キーカスタマイズを実現するときにはこのクラスをなくす。
-// ---------------------------------------------------------------------
-//! メインウィンドウ用キーマッピング管理クラス for Windows
-/*!
-	@note
-	将来のキーマッピングのカスタマイズ対応ができるようになれば、
-	WinKeyMappingManager がキーと機能の動的な対応関係を管理するはず。
-	そうなると、GetFunction は virtual の必要もなくなり、
-	メインウィンドウに関わらず、各ウィンドウ用の対応関係の管理を
-	WinKeyMappingManager が行えるようになる。（ウィンドウ 1 つに対し、
-	WinKeyMappingManager のインスタンスを 1 つ作るが、それらは WinKeyMappingManager
-	の派生クラスではなく、WinKeyMappingManager そのものでよいはず）
-	そのとき、このクラスは必要なくなるだろう。
-	現在は動的な対応関係の管理を実装していないので
-	それまでのつなぎとして作ってあるクラス。
-*/
-// ---------------------------------------------------------------------
-class WinMainWindowKeyMappingManager : public WinKeyMappingManager
-{
-public:
-						WinMainWindowKeyMappingManager() { }
-	virtual				~WinMainWindowKeyMappingManager() { }
-
-	virtual SInt32		GetFunction(const KeyEventParameter& parameter);
-};
-
 #endif // _WINKEYMAPPINGMANAGER_H_

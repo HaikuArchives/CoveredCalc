@@ -41,6 +41,7 @@
 #include "ExceptionMessageGenerator.h"
 #include "CommandLineParam.h"
 #include "LangFileInfo.h"
+#include "KeyMappingManager.h"
 
 // ---------------------------------------------------------------------
 //! The base class of application class in each OS.
@@ -63,10 +64,14 @@ public:
 	virtual UIMessageProvider*				GetMessageProvider() { return &uiMessageProvider; }
 	virtual ExceptionMessageGenerator*		GetExceptionMessageGenerator() { return &exMessageGenerator; }
 	virtual CommandLineParam*				GetCommandLineParam() { return &commandLineParam; }
+	virtual void							GetCurrentLanguageCode(MBCString& outLanguage);
 	virtual const LangFileInfoCollection*	GetLangFileInfos();
 	virtual Path							MakeRelativeLangFilePath(const Path& absolutePath);
 	virtual Path							MakeAbsoluteLangFilePath(const Path& relativePath);
-	virtual void							GetCurrentLanguageCode(MBCString& outLanguage);
+	virtual Path							ExpandVirtualKeymapFilePath(const Path& virtualPath);
+	virtual void							LoadKeyMappings(const Path& keymapFile);
+	
+	virtual KeyMappingManager*				GetKeyMappingManagerForMainWindow() { return &mainWindowKeyMappingManager; }
 
 	// implementations of CoverChangeEventHandler interface
 	virtual void							CoverDefChanged();
@@ -99,16 +104,23 @@ protected:
 												Path& settingFilePath		//!< OUTPUT. default setting file path is returned.
 											) = 0;
 
+	/**
+	 *	@brief	Checks the key-mapping platform is suitable for this app.
+	 *	@throw	KeyMappingExceptions::LoadFailed	when the platform is not suitable for this app.
+	 */
+	virtual void							checkKeymappingsPlatform(const KeyMappings* keyMappings) = 0;
+
 private:
-	AppSettings								appSettings;				//!< current application settings
-	CoverManager							coverManager;				//!< object which manages current cover
-	bool									isIgnoreCoverChangeEvent;	//!< whether ignores CoverChangeEvent
-	UIMessageProvider						uiMessageProvider;			//!< message provider for user interface
-	ExceptionMessageGenerator				exMessageGenerator;			//!< message generator for an exception.
-	CommandLineParam						commandLineParam;			///< command line parameters
-	LangFileInfoCollection					langFileInfos;				///< informations about installed language files.
-	bool									isReadyLangFileInfos;		///< is langFileInfos is loaded?
-	MBCString								currentLangCode;			///< current language code.
+	AppSettings								appSettings;					//!< current application settings
+	CoverManager							coverManager;					//!< object which manages current cover
+	bool									isIgnoreCoverChangeEvent;		//!< whether ignores CoverChangeEvent
+	UIMessageProvider						uiMessageProvider;				//!< message provider for user interface
+	ExceptionMessageGenerator				exMessageGenerator;				//!< message generator for an exception.
+	CommandLineParam						commandLineParam;				///< command line parameters
+	LangFileInfoCollection					langFileInfos;					///< informations about installed language files.
+	bool									isReadyLangFileInfos;			///< is langFileInfos is loaded?
+	MBCString								currentLangCode;				///< current language code.
+	KeyMappingManager						mainWindowKeyMappingManager;	///< key-mapping manager for main window.
 };
 
 #endif // _COVEREDCALCAPPBASE_H_

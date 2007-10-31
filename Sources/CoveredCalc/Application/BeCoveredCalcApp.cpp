@@ -46,6 +46,14 @@
 #include "DialogDef.h"
 #include "BeCoveredCalcApp.h"
 #include "BeDialogDesign.h"
+#include "KeyMappings.h"
+#include "KeyMappingManager.h"
+#include "KeyMappingsException.h"
+#include "MainWindowKeyFunc.h"
+#include "UTF8Utils.h"
+
+static const UTF8Char STR_PLATFORM_BEOS[] = "BeOS";			///< keymap platform for BeOS.
+static const UTF8Char STR_CATEGORY_MAIN_WINDOW[] = "MainWindow";	///< keymap category of main window.
 
 #if defined(ZETA)
 /**
@@ -297,6 +305,49 @@ void BeCoveredCalcApp::GetCurrentLanguageCode(
 }
 #endif // defined(ZETA)
 
+/**
+ *	@brief	Checks the key-mapping platform is suitable for this app.
+ *	@throw	KeyMappingExceptions::LoadFailed	when the platform is not suitable for this app.
+ */
+void BeCoveredCalcApp::checkKeymappingsPlatform(const KeyMappings* keyMappings)
+{
+	UTF8String platform;
+	if (!keyMappings->GetPlatform(platform) || 0 != UTF8Utils::UTF8StrCmp(STR_PLATFORM_BEOS, platform))
+	{
+		throw new KeyMappingsExceptions::LoadFailed("The key-mapping definition is not for BeOS/ZETA platform.");
+	}
+}
+
+/**
+ *	@brief	Loads keymap.
+ *	This function is called by ReadyToRun().
+ */
+void BeCoveredCalcApp::loadKeyMappingsOnInit()
+{
+	Path keymapFile;
+	AppSettings* appSettings = GetAppSettings();
+	keymapFile = appSettings->GetKeymapFilePath();
+	if (keymapFile.IsEmpty())
+	{
+		// the default keymap is applied.
+		keymapFile.AssignFromSlashSeparated("${AppKeymaps}/UsQWERTY.cckxb");
+		appSettings->SetKeymapFilePath(keymapFile);
+	}
+	
+	Path absolutePath = ExpandVirtualKeymapFilePath(keymapFile);
+	try
+	{
+		LoadKeyMappings(absolutePath);
+	}
+	catch (Exception* ex)
+	{
+		// Failed to load keymapping file.
+		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_LOAD_KEYMAPPINGS,
+																MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+		ex->Delete();
+	}	
+}
+
 // ---------------------------------------------------------------------
 //! Called to ready application before running.
 // ---------------------------------------------------------------------
@@ -444,6 +495,9 @@ void BeCoveredCalcApp::ReadyToRun()
 	
 		GetAppSettings()->SetLanguageFilePath(AppSettings::Value_LangFileBuiltIn);
 	}
+
+	// キーマッピング読み込み
+	loadKeyMappingsOnInit();
 
 	// カバー読み込み
 	try

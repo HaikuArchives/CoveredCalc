@@ -112,7 +112,7 @@ UIManager* BeMainView::createUIManager()
 	MainUIManager* uiManager = new MainUIManager();
 	try
 	{
-		uiManager->Init(this);
+		uiManager->Init(this, CoveredCalcApp::GetInstance()->GetKeyMappingManagerForMainWindow());
 		uiManager->Create();
 	}
 	catch (...)

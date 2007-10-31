@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<localeDef version="5" xmlns="http://hironytic.1st-shrine.net/schema/CoveredCalc-LocaleDefinition">
+	<platform target="BeOS"/>
+	
+	<langName>Japanese</langName>
+	<langCode>jaJP</langCode>
+	
+	<!-- About dialog -->
+	<dialog name="IDD_ABOUT">
+		<!--
+			View Hierarchy:
+				+- BaseView					BView
+				    +- LogoIcon				BeBitmapView
+				    +- AppNameLabel			BStringView
+				    +- VersionLabel			BStringView
+				    +- CopyrightLabel		BStringView
+				    +- DescriptionLabel		BTextView
+				    +- OKButton				BButton
+		-->
+		
+		<!-- design time font: Haru 11 -->
+		<designFontInfo width="147.000000" height="13.186035"/>
+		
+		<dialogItem name="">
+			<rect left="0.0" top="0.0" right="408.0" bottom="126.0"/>
+			<label>About CoveredCalc</label>
+		</dialogItem>
+		
+		<dialogItem name="LogoIcon">
+			<rect left="12.0" top="12.0" right="76.0" bottom="76.0"/>
+		</dialogItem>
+		
+		<dialogItem name="AppNameLabel">
+			<rect left="88.0" top="12.0" right="396.0" bottom="26.0"/>
+		</dialogItem>
+		
+		<dialogItem name="VersionLabel">
+			<rect left="88.0" top="34.0" right="396.0" bottom="48.0"/>
+		</dialogItem>
+		
+		<dialogItem name="CopyrightLabel">
+			<rect left="88.0" top="56.0" right="396.0" bottom="70.0"/>
+		</dialogItem>
+		
+		<dialogItem name="OKButton">
+			<rect left="310.0" top="88.0" right="396.0" bottom="114.0"/>
+			<label>OK</label>
+		</dialogItem>
+	</dialog>
+	
+	<!-- Cover Browser -->
+	<dialog name="IDD_COVER_BROWSER">
+		<!--
+			View Hierarchy:
+				+- BaseView					BView
+				    +- CoverListLabel		BStringView
+				    +- CoverList			BeCCColumnListView
+				    +- Reload				BButton
+				    +- Apply				BButton
+				    +- Close				BButton
+		-->
+		
+		<!-- design time font: Haru 11 -->
+		<designFontInfo width="147.000000" height="13.186035"/>
+		
+		<dialogItem name="">
+			<rect left="100.0" top="100.0" right="514.0" bottom="400.0"/>
+			<label>カバーブラウザ - CoveredCalc</label>
+		</dialogItem>
+		
+		<dialogItem name="CoverListLabel">
+			<rect left="12.0" top="12.0" right="402.0" bottom="26.0"/>
+			<label>登録されているカバーの一覧:</label>
+		</dialogItem>
+		
+		<dialogItem name="CoverList">
+			<rect left="12.0" top="30.0" right="402.0" bottom="254.0"/>
+		</dialogItem>
+		
+		<dialogItem name="Reload">
+			<rect left="12.0" top="262.0" right="98.0" bottom="288.0"/>
+			<label>一覧更新</label>
+		</dialogItem>
+		
+		<dialogItem name="Apply">
+			<rect left="222.0" top="262.0" right="308.0" bottom="288.0"/>
+			<label>適用</label>
+		</dialogItem>
+		
+		<dialogItem name="Close">
+			<rect left="316.0" top="262.0" right="402.0" bottom="288.0"/>
+			<label>閉じる</label>
+		</dialogItem>
+	</dialog>
+	
+	<!-- About Cover dialog -->
+	<dialog name="IDD_ABOUT_COVER">
+		<!--
+			View Hierarchy:
+				+- BaseView					BView
+				    +- NameLabel			BStringView
+				    +- NameText				BTextView
+				    +- DescLabel			BStringView
+				    +- DescText				BTextView
+				    +- AboutCoverLabel		BStringView
+				    +- AboutCoverText		BTextView (+BScrollView)
+				    +- OKButton				BButton
+		-->
+		
+		<!-- design time font: Haru 11 -->
+		<designFontInfo width="147.000000" height="13.186035"/>
+		
+		<dialogItem name="">
+			<rect left="0.0" top="0.0" right="312.0" bottom="256.0"/>
+			<label>カバーの情報</label>
+		</dialogItem>
+		
+		<dialogItem name="NameLabel">
+			<rect left="12.0" top="12.0" right="50.0" bottom="26.0"/>
+			<label>名前:</label>
+		</dialogItem>
+		
+		<dialogItem name="NameText">
+			<rect left="54.0" top="11.0" right="300.0" bottom="26.0"/>
+		</dialogItem>
+		
+		<dialogItem name="DescLabel">
+			<rect left="12.0" top="34.0" right="50.0" bottom="48.0"/>
+			<label>説明:</label>
+		</dialogItem>
+		
+		<dialogItem name="DescText">
+			<rect left="54.0" top="34.0" right="300.0" bottom="48.0"/>
+		</dialogItem>
+		
+		<dialogItem name="AboutCoverLabel">
+			<rect left="12.0" top="62.0" right="300.0" bottom="76.0"/>
+			<label>カバーの著作権情報:</label>
+		</dialogItem>
+		
+		<dialogItem name="AboutCoverText">
+			<rect left="12.0" top="80.0" right="300.0" bottom="204.0"/>
+		</dialogItem>
+		
+		<dialogItem name="OKButton">
+			<rect left="214.0" top="218.0" right="300.0" bottom="244.0"/>
+			<label>OK</label>
+		</dialogItem>
+	</dialog>
+	
+	<!-- Preferences dialog -->
+	<dialog name="IDD_PREFERENCES">
+		<!--
+			View Hierarchy:
+				+- BaseView					BView
+				    +- LangPopup			BMenuField
+				    +- LangNotice			BTextView
+				    +- OKButton				BButton
+				    +- CancelButton			BButton
+		-->
+		
+		<!-- design time font: Haru 11 -->
+		<designFontInfo width="147.000000" height="13.186035"/>
+		
+		<dialogItem name="">
+			<rect left="0.0" top="0.0" right="290.0" bottom="134.0"/>
+			<label>設定</label>
+		</dialogItem>
+		
+		<dialogItem name="LangPopup">
+			<rect left="12.0" top="12.0" right="278.0" bottom="36.0"/>
+			<label>言語:</label>
+			<divider position="40.0"/>
+		</dialogItem>
+		
+		<dialogItem name="LangNotice">
+			<rect left="12.0" top="50.0" right="278.0" bottom="79.0"/>
+			<label>言語の設定は、CoveredCalc を再起動後に有効になります。</label>
+		</dialogItem>
+		
+		<dialogItem name="CancelButton">
+			<rect left="94.0" top="96.0" right="180.0" bottom="122.0"/>
+			<label>キャンセル</label>
+		</dialogItem>
+		
+		<dialogItem name="OKButton">
+			<rect left="192.0" top="96.0" right="278.0" bottom="122.0"/>
+			<label>OK</label>
+		</dialogItem>
+	</dialog>
+	
+	<!-- menu item -->
+	<!-- IDM_MAIN_CONTEXT -->
+	<string name="ID_COVER_BROWSER">~B: カバーブラウザ</string>
+	<string name="ID_RADIX">~R: 基数</string>
+	<string name="ID_RADIX_HEX">~H: 16 進</string>
+	<string name="ID_RADIX_DECIMAL">~D: 10 進</string>
+	<string name="ID_RADIX_OCTAL">~O: 8 進</string>
+	<string name="ID_RADIX_BINARY">~B: 2 進</string>
+	<string name="ID_MAIN_ALWAYS_ON_TOP">~O: 常に手前に表示</string>
+	<string name="ID_MAIN_LOCK_POS">~L: 位置を固定</string>
+	<string name="ID_PREFERENCES">~P: 設定...</string>
+	<string name="ID_MAIN_ABOUT_COVER">~T: このカバーの情報</string>
+	<string name="ID_ABOUT">~A: バージョン情報</string>
+	<string name="ID_MAIN_MINIMIZE">~H: 隠す(最小化)</string>
+	<string name="ID_MAIN_CLOSE">~C: 閉じる</string>
+
+	<!-- Messages -->
+	<string name="IDS_APPNAME">CoveredCalc</string>
+	<string name="IDS_COVER_BROWSER_COLUMN_NAME">名前</string>
+	<string name="IDS_COVER_BROWSER_COLUMN_DESCRIPTION">説明</string>
+	<string name="IDS_EMSG_LOAD_KEYMAPPINGS">キーマッピング定義を読み込めませんでした。</string>
+	<string name="IDS_EMSG_INVALID_LANGUAGE">言語の値が不正です。&#10;有効な言語を選択してください。</string>
+	<string name="IDS_EMSG_GET_LANGUAGE">言語の値を取得することができませんでした。</string>
+	<string name="IDS_EMSG_CREATE_COVER_BROWSER">カバーブラウザの生成に失敗しました。</string>
+	<string name="IDS_EMSG_LOAD_SETTING">設定の読み込みに失敗しました。</string>
+	<string name="IDS_EMSG_READY_DEFAULT_SETTING_FILE">設定ファイル保存フォルダが準備できませんでした。</string>
+	<string name="IDS_EMSG_CREATE_MAIN_WINDOW">メインウィンドウの生成に失敗しました。</string>
+	<string name="IDS_EMSG_SAVE_SETTING">設定の保存に失敗しました。</string>
+	<string name="IDS_EMSG_GENERIC">処理中にエラーが発生しました。</string>
+	<string name="IDS_EMSG_XML_LINE_COLUMN"> [行：%0:d%, 列：%1:d%]</string>
+	<string name="IDS_EMSG_XML_PARSE">XMLファイルの解析中にエラーが発生しました。&#10;</string>
+	<string name="IDS_EMSG_NO_MATCH_START_TAG">タグ "%0:s%" に対応する開始タグが見つかりません。</string>
+	<string name="IDS_EMSG_INVALID_PARENT_ENTITY">タグ "%0:s%" は タグ "%1:s%" の子要素になることはできません。</string>
+	<string name="IDS_EMSG_MISSING_ATTRIBUTE">タグ "%0:s%" の属性 "%1:s%" が指定されていません。</string>
+	<string name="IDS_EMSG_UNKNOWN_TAG">サポートしていないタグ "%0:s%" が使われています。</string>
+	<string name="IDS_EMSG_COVERDEF_PARSE">カバー定義ファイルの解析中にエラーが発生しました。&#10;</string>
+	<string name="IDS_EMSG_UNKNOWN_ID">id "%0:s%" は定義されていません。</string>
+	<string name="IDS_EMSG_UNKNOWN_CLASS">サポートしていないクラス "%0:s%" が指定されています。</string>
+	<string name="IDS_EMSG_UNKNOWN_TYPE">サポートしていないタイプ "%0:s%" が指定されています。</string>
+	<string name="IDS_EMSG_VALIDATION_FAILED">有効なカバー定義ファイルではありません。&#10;(%0:s%)</string>
+	<string name="IDS_EMSG_COLOR_STRING_NOT_UNDERSTOOD">色指定 "%0:s%" の解釈ができませんでした。</string>
+	<string name="IDS_EMSG_UNSUPPORTED_COVERDEF_VERSION">カバー定義ファイルのバージョン "%0:s%" は未対応です。&#10;このカバーを使うには、そのバージョンに対応した最新の CoveredCalc をお使いください。</string>
+	<string name="IDS_EMSG_INVALID_COVERDEF">カバー定義ファイルではありません。</string>
+	<string name="IDS_EMSG_COLOR_CODED_SKIN">カバー関係の処理でエラーが発生しました。</string>
+	<string name="IDS_EMSG_INIT_SKIN">カバーの初期化に失敗しました。</string>
+	<string name="IDS_EMSG_FILE_OPERATION">ファイル操作に失敗しました。</string>
+	<string name="IDS_EMSG_FILE_FILENAME">&#10;ファイル名: %0:s%</string>
+	<string name="IDS_EMSG_FILE_ACCESS_DENIED">ファイルにアクセスできません。</string>
+	<string name="IDS_EMSG_FILE_DEVICE_FULL">ディスク容量が足りないため書き込みできませんでした。</string>
+	<string name="IDS_EMSG_FILE_ALREADY_EXISTS">ファイルが既に存在するため、処理を完了できませんでした。</string>
+	<string name="IDS_EMSG_FILE_NOT_FOUND">ファイルが見つかりません。</string>
+	<string name="IDS_EMSG_FILE_IO_ERROR">ディスクエラーが発生しました。</string>
+	<string name="IDS_EMSG_FILE_SHARING_VIOLATION">他のプログラムがこのファイルを使用中です。</string>
+	<string name="IDS_EMSG_DIBFILE_LOAD">ビットマップファイルの読み込みに失敗しました。</string>
+	<string name="IDS_EMSG_DIBFILE_BROKEN_FILE">ビットマップファイルが壊れています。</string>
+	<string name="IDS_EMSG_DIBFILE_UNKNOWN_FORMAT">対応していない形式のビットマップファイルです。</string>
+	<string name="IDS_EMSG_MEMORY">メモリが不足しています。</string>
+	<string name="IDS_EMSG_PATH_OPERATION">パス操作に失敗しました。</string>
+	<string name="IDS_EMSG_PATH_MAKE_RELATIVE">パス "%0:s%" を&#10;パス "%1:s%" からの&#10;相対パスで表すことができません。</string>
+	<string name="IDS_EMSG_UI_CONTROL">操作を行うことができませんでした。</string>
+	<string name="IDS_EMSG_UI_SHOW_MENU">メニューを表示できませんでした。&#10;メニューID: %0:d%</string>
+	<string name="IDS_EMSG_UI_SHOW_DIALOG">ダイアログを表示できませんでした。&#10;ダイアログID: %0:d%</string>
+	<string name="IDS_EMSG_LANG_VALIDATION_FAILED">有効な言語ファイルではありません。&#10;(%0:s%)</string>
+	<string name="IDS_EMSG_LANG_STRING_NOT_DEFINED">[[文字列 "%0:s%" が言語ファイルに定義されていません。]]</string>
+</localeDef>

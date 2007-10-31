@@ -62,6 +62,7 @@ static UTF8Char	Tag_CoveredCalcSettings[]		= "coveredcalcSettings";
 #if defined(ZETA)
 	static UTF8Char	Key_UseLocaleKit[]				= "useLocaleKit";
 #endif	// defined(ZETA)
+	static UTF8Char	Key_KeymapPath[]				= "keymapFile";
 
 const Path AppSettings::Value_LangFileBuiltIn("#Built-In#");
 
@@ -87,6 +88,7 @@ AppSettings::AppSettings()
 #if defined (ZETA)
 	isLocaleKitAvailable = true;
 #endif	// defined (ZETA)
+	keymapFilePath.Empty();
 }
 
 // ---------------------------------------------------------------------
@@ -133,6 +135,7 @@ void AppSettings::syncMembersWithDOM(
 #if defined (ZETA)
 		setSettingValueToDOM(Key_UseLocaleKit,			SettingValue(isLocaleKitAvailable));
 #endif // defined (ZETA)
+		setSettingValueToDOM(Key_KeymapPath,			SettingValue(keymapFilePath));
 	}
 	else
 	{
@@ -193,6 +196,10 @@ void AppSettings::syncMembersWithDOM(
 			isLocaleKitAvailable = settingValue.AsBool();
 		}
 #endif // defined (ZETA)
+		if (getSettingValueFromDOM(Key_KeymapPath, settingValue))
+		{
+			settingValue.AsPath(keymapFilePath);
+		}
 	}
 }
 
@@ -255,6 +262,7 @@ void AppSettings::loadDefaultToMember()
 #if defined (ZETA)
 	isLocaleKitAvailable = true;
 #endif	// defined (ZETA)
+	keymapFilePath.Empty();
 }
 
 // ---------------------------------------------------------------------

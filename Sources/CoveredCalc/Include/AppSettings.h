@@ -107,6 +107,10 @@ public:
 	void				SetLocaleKitAvailable(bool isLocaleKitAvailable)
 							{ this->isLocaleKitAvailable = isLocaleKitAvailable; }
 #endif	// defined(ZETA)
+	const Path&			GetKeymapFilePath() const
+							{ return keymapFilePath; }
+	void				SetKeymapFilePath(const Path& keymapFilePath)
+							{ this->keymapFilePath = keymapFilePath; }
 
 public:
 	static const Path	Value_LangFileBuiltIn;		///< this value is for built-in language file.
@@ -135,6 +139,7 @@ private:
 #if defined(ZETA)
 	bool				isLocaleKitAvailable;		///< whether uses ZETA's Locale Kit.
 #endif	// defined(ZETA)
+	Path				keymapFilePath;				///< keymap file path.
 };
 
 #endif // _APPSETTINGS_H_

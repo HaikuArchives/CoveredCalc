@@ -32,9 +32,9 @@ resource app_version
 	middle		= 8,
 	minor		= 1,
 	variety		= B_APPV_FINAL,
-	internal	= 0,
-	short_info	= "1.8.1",
-	long_info	= "CoveredCalc for BeOS 1.8.1"
+	internal	= 1,
+	short_info	= "1.8.1+",
+	long_info	= "CoveredCalc for BeOS 1.8.1+"
 };
 
 resource app_flags B_SINGLE_LAUNCH;

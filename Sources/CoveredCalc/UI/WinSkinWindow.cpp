@@ -508,7 +508,11 @@ void WinSkinWindow::deleteDialogObject(
 // ---------------------------------------------------------------------
 void WinSkinWindow::UpdateUI()
 {
-	::UpdateWindow(m_hWnd);
+	WinCCSAppearance* appearance = static_cast<WinCCSAppearance*>(uiManager->GetSkinAppearance());
+	if (appearance != NULL)
+	{
+		appearance->UpdateAppearance();
+	}
 }
 
 // ---------------------------------------------------------------------
