@@ -28,9 +28,12 @@
 
 # -- Preferences --
 "Preferences"					"設定"
+"Language"						"言語"
 "Language:"						"言語:"
 "Use ZETA's Locale Kit"			"ZETA の Locale Kit を利用"
 "Change of language will take effect after you restart CoveredCalc application."	"言語の設定は、CoveredCalc を再起動後に有効になります。"
+"Keyboard"						"キーボード"
+"Keyboard:"						"キーボード:"
 
 
 ##     ##
@@ -59,6 +62,8 @@
 #"CoveredCalc"
 "Name"															"名前"
 "Description"													"説明"
+"Invalid keyboard selection. Please, choose a valid keyboard."	"キーボードの値が不正です。\n有効なキーボードを選択してください。"
+"Error obtaining the keyboard selection."						"キーボードの値を取得できませんでした。"
 "Failed to load key mappings."									"キーマッピング定義を読み込めませんでした。"
 "Invalid language selection. Please, choose a valid language."	"言語の値が不正です。\n有効な言語を選択してください。"
 "Error obtaining the language selection."						"言語の値を取得することができませんでした。"

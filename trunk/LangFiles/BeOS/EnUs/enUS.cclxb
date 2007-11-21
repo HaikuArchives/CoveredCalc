@@ -153,8 +153,11 @@
 		<!--
 			View Hierarchy:
 				+- BaseView					BView
-				    +- LangPopup			BMenuField
-				    +- LangNotice			BTextView
+				    +- LangBox				BBox
+				        +- LangPopup		BMenuField
+				        +- LangNotice		BTextView
+				    +- KeyMappingBox		BBox
+				        +- KeyMappingPopup	BMenuField
 				    +- OKButton				BButton
 				    +- CancelButton			BButton
 		-->
@@ -163,28 +166,44 @@
 		<designFontInfo width="137.000000" height="11.987305"/>
 		
 		<dialogItem name="">
-			<rect left="0.0" top="0.0" right="272.0" bottom="124.0"/>
+			<rect left="0.0" top="0.0" right="296.0" bottom="210.0"/>
 			<label>Preferences</label>
 		</dialogItem>
 		
+		<dialogItem name="LangBox">
+			<rect left="12.0" top="12.0" right="284.0" bottom="100.0"/>
+			<label>Language</label>
+		</dialogItem>
+		
 		<dialogItem name="LangPopup">
-			<rect left="12.0" top="12.0" right="260.0" bottom="34.0"/>
+			<rect left="12.0" top="16.0" right="260.0" bottom="38.0"/>
 			<label>Language:</label>
 			<divider position="64.0"/>
 		</dialogItem>
 		
 		<dialogItem name="LangNotice">
-			<rect left="12.0" top="46.0" right="260.0" bottom="72.0"/>
+			<rect left="12.0" top="50.0" right="260.0" bottom="76.0"/>
 			<label>Change of language will take effect after you restart CoveredCalc application.</label>
+		</dialogItem>
+
+		<dialogItem name="KeyMappingBox">
+			<rect left="12.0" top="112.0" right="284.0" bottom="162.0"/>
+			<label>Keyboard</label>
+		</dialogItem>
+		
+		<dialogItem name="KeyMappingPopup">
+			<rect left="12.0" top="16.0" right="260.0" bottom="38.0"/>
+			<label>Keyboard:</label>
+			<divider position="64.0"/>
 		</dialogItem>
 		
 		<dialogItem name="CancelButton">
-			<rect left="90.0" top="88.0" right="170.0" bottom="112.0"/>
+			<rect left="118.0" top="174.0" right="198.0" bottom="198.0"/>
 			<label>Cancel</label>
 		</dialogItem>
 		
 		<dialogItem name="OKButton">
-			<rect left="180.0" top="88.0" right="260.0" bottom="112.0"/>
+			<rect left="204.0" top="174.0" right="284.0" bottom="198.0"/>
 			<label>OK</label>
 		</dialogItem>
 	</dialog>
@@ -209,6 +228,8 @@
 	<string name="IDS_APPNAME">CoveredCalc</string>
 	<string name="IDS_COVER_BROWSER_COLUMN_NAME">Name</string>
 	<string name="IDS_COVER_BROWSER_COLUMN_DESCRIPTION">Description</string>
+	<string name="IDS_EMSG_INVALID_KEYMAPPINGS">Invalid keyboard selection. Please, choose a valid keyboard.</string>
+	<string name="IDS_EMSG_GET_KEYMAPPINGS">Error obtaining the keyboard selection.</string>
 	<string name="IDS_EMSG_LOAD_KEYMAPPINGS">Failed to load key mappings.</string>
 	<string name="IDS_EMSG_INVALID_LANGUAGE">Invalid language selection. Please, choose a valid language.</string>
 	<string name="IDS_EMSG_GET_LANGUAGE">Error obtaining the language selection.</string>

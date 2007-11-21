@@ -64,6 +64,8 @@ public:
 	virtual void					ShowCoverBrowser(bool isShow);
 	virtual bool					IsCoverBrowserVisible();
 
+	virtual void					CheckKeyMappingsPlatform(const KeyMappings* keyMappings);
+
 	WinMonitorInfo*					GetMonitorInformation()			{ return &monitorInfo; }
 	const WinMonitorInfo*			GetMonitorInformation() const	{ return &monitorInfo; }
 
@@ -72,6 +74,7 @@ public:
 	const WinLayeredWindowAPI*		GetLayeredWindowAPI() const		{ return &apiLayeredWindow; }
 
 	const WinMainWindow*			GetMainWindow() const			{ return &mainWindow; }
+
 
 	// MessageBoxProvider インタフェースの実装
 	virtual Button					DoMessageBox(ConstAStr message, ButtonType buttonType, AlertType alertType, Button defaultButton = Button_None);
@@ -92,8 +95,7 @@ private:
 protected:
 	virtual const Path&				getAppFolderPath() { return appFolderPath; }
 	virtual void					readyDefaultSettingFilePath(Path& settingFilePath);
-	virtual void					checkKeymappingsPlatform(const KeyMappings* keyMappings);
-
+	
 private:
 	void							makeAppFolderPath();
 	void							createFolder(const Path& path);

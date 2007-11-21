@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <keyMappings version="1" xmlns="http://hironytic.1st-shrine.net/schema/CoveredCalc-KeyMappings">
 	<platform target="BeOS"/>
-	<title>U.S. QWERTY 101/104</title>
+	<title>US QWERTY 101/104</title>
 	<category name="MainWindow">
 		<key code="1B" modifiers="none" function="0"/>
 		<key code="64" modifiers="none" function="0"/>

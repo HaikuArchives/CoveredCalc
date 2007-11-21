@@ -39,6 +39,7 @@
 #include "CoveredCalcApp.h"
 #include "Exception.h"
 #include "ExceptionMessageUtils.h"
+#include "BeDataMenuItem.h"
 #if defined(ZETA)
 #include <locale/Locale.h>
 #endif // defined(ZETA)
@@ -48,19 +49,25 @@
 #define base		PreferencesDlg
 ////////////////////////////////////////
 
-static const char PREFERENCES_DIALOG_VIEW_BASE_VIEW[]		= "BaseView";
-static const char PREFERENCES_DIALOG_VIEW_LANG_POPUP[]		= "LangPopup";
-static const char PREFERENCES_DIALOG_VIEW_LANG_NOTICE[]		= "LangNotice";
-static const char PREFERENCES_DIALOG_VIEW_OK[]				= "OKButton";
-static const char PREFERENCES_DIALOG_VIEW_CANCEL[]			= "CancelButton";
+static const char PREFERENCES_DIALOG_VIEW_BASE_VIEW[]			= "BaseView";
+static const char PREFERENCES_DIALOG_VIEW_LANG_BOX[]			= "LangBox";
+static const char PREFERENCES_DIALOG_VIEW_LANG_POPUP[]			= "LangPopup";
+static const char PREFERENCES_DIALOG_VIEW_LANG_NOTICE[]			= "LangNotice";
+static const char PREFERENCES_DIALOG_VIEW_KEYMAPPING_BOX[]		= "KeyMappingBox";
+static const char PREFERENCES_DIALOG_VIEW_KEYMAPPING_POPUP[]	= "KeyMappingPopup";
+static const char PREFERENCES_DIALOG_VIEW_OK[]					= "OKButton";
+static const char PREFERENCES_DIALOG_VIEW_CANCEL[]				= "CancelButton";
 
 #if defined(ZETA)
 static const char PREFERENCES_DIALOG_LANGMENU_LOCALEKIT[]	= "Use ZETA's Locale Kit";
 #endif // defined(ZETA)
 
 static const char STR_PREFERENCES[]		= "Preferences";
+static const char STR_LANGUAGE_BOX[]	= "Language";
 static const char STR_LANGUAGE[]		= "Language:";
 static const char STR_LANG_NOTICE[]		= "Change of language will take effect after you restart CoveredCalc application.";
+static const char STR_KEYMAPPING_BOX[]	= "Keyboard";
+static const char STR_KEYMAPPING[]		= "Keyboard:";
 static const char STR_CANCEL[]			= "Cancel";
 static const char STR_OK[]				= "OK";
 
@@ -70,13 +77,14 @@ static const char STR_OK[]				= "OK";
 BePreferencesDlg::BePreferencesDlg(
 	BeDialogDesign* dialogDesign	///< dialog design information
 )
-	: BeDialog(dialogDesign->GetFrame(BRect(0.0, 0.0, 272.0, 124.0)),
+	: BeDialog(dialogDesign->GetFrame(BRect(0.0, 0.0, 296.0, 210.0)),
 				LT(dialogDesign->GetTitle(STR_PREFERENCES)),
 				B_TITLED_WINDOW,
 				B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_MINIMIZABLE)
 {
 	this->dialogDesign = dialogDesign;
 	langMenu = NULL;
+	keyMappingMenu = NULL;
 }
 
 /**
@@ -103,25 +111,32 @@ void BePreferencesDlg::createViews()
 	
 	baseView->SetViewColor(viewColor);
 	
+	// LangBox
+	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_LANG_BOX);
+	BBox* langBox = new BBox(item->GetFrame(BRect(12.0, 12.0, 284.0, 100.0)), PREFERENCES_DIALOG_VIEW_LANG_BOX);
+	baseView->AddChild(langBox);
+	
+	langBox->SetLabel(LT(item->GetLabel(STR_LANGUAGE_BOX)));
+	
 	// LangPopup
 	langMenu = new BMenu("");
 	langMenu->SetLabelFromMarked(true);
 	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_LANG_POPUP);
-	BMenuField* langPopup = new BMenuField(item->GetFrame(BRect(12.0, 12.0, 260.0, 34.0)), PREFERENCES_DIALOG_VIEW_LANG_POPUP,
+	BMenuField* langPopup = new BMenuField(item->GetFrame(BRect(12.0, 12.0, 260.0, 38.0)), PREFERENCES_DIALOG_VIEW_LANG_POPUP,
 									LT(item->GetLabel(STR_LANGUAGE)), langMenu);
-	baseView->AddChild(langPopup);
+	langBox->AddChild(langPopup);
 	
 	langPopup->SetDivider(item->GetDivider(64.0));
 	langPopup->SetAlignment(B_ALIGN_LEFT);
 	
 	// LangNotice
 	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_LANG_NOTICE);
-	BRect frameRect = item->GetFrame(BRect(12.0, 46.0, 260.0, 72.0));
+	BRect frameRect = item->GetFrame(BRect(12.0, 50.0, 260.0, 76.0));
 	BRect textRect = frameRect;
 	textRect.OffsetTo(0, 0);
 	BTextView* langNotice = new BTextView(frameRect, PREFERENCES_DIALOG_VIEW_LANG_NOTICE,
 									textRect, B_FOLLOW_LEFT | B_FOLLOW_TOP);
-	baseView->AddChild(langNotice);
+	langBox->AddChild(langNotice);
 	
 	const char* text = LT(item->GetLabel(STR_LANG_NOTICE));
 	langNotice->SetText(text);
@@ -129,15 +144,33 @@ void BePreferencesDlg::createViews()
 	langNotice->SetViewColor(viewColor);
 	langNotice->MakeEditable(false);
 
+	// KeyMappingBox
+	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_KEYMAPPING_BOX);
+	BBox* keyMappingBox = new BBox(item->GetFrame(BRect(12.0, 112.0, 284.0, 162.0)), PREFERENCES_DIALOG_VIEW_KEYMAPPING_BOX);
+	baseView->AddChild(keyMappingBox);
+
+	keyMappingBox->SetLabel(LT(item->GetLabel(STR_KEYMAPPING_BOX)));
+
+	// KeyMappingPopup
+	keyMappingMenu = new BMenu("");
+	keyMappingMenu->SetLabelFromMarked(true);
+	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_KEYMAPPING_POPUP);
+	BMenuField* keyMappingPopup = new BMenuField(item->GetFrame(BRect(12.0, 16.0, 260.0, 38.0)), PREFERENCES_DIALOG_VIEW_KEYMAPPING_POPUP,
+										LT(item->GetLabel(STR_KEYMAPPING)), keyMappingMenu);
+	keyMappingBox->AddChild(keyMappingPopup);
+	
+	keyMappingPopup->SetDivider(item->GetDivider(64.0));
+	keyMappingPopup->SetAlignment(B_ALIGN_LEFT);
+
 	// CancelButton
 	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_CANCEL);
-	BButton* cancelButton = new BButton(item->GetFrame(BRect(90.0, 88.0, 170.0, 112.0)), PREFERENCES_DIALOG_VIEW_CANCEL,
+	BButton* cancelButton = new BButton(item->GetFrame(BRect(118.0, 174.0, 198.0, 198.0)), PREFERENCES_DIALOG_VIEW_CANCEL,
 								LT(item->GetLabel(STR_CANCEL)), new BMessage(ID_DIALOG_CANCEL));
 	baseView->AddChild(cancelButton);
 
 	// OKButton
 	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_OK);
-	BButton* okButton = new BButton(item->GetFrame(BRect(180.0, 88.0, 260.0, 112.0)), PREFERENCES_DIALOG_VIEW_OK,
+	BButton* okButton = new BButton(item->GetFrame(BRect(204.0, 174.0, 284.0, 198.0)), PREFERENCES_DIALOG_VIEW_OK,
 								LT(item->GetLabel(STR_OK)), new BMessage(ID_DIALOG_OK));
 	baseView->AddChild(okButton);
 	
@@ -154,6 +187,14 @@ void BePreferencesDlg::languageChanged()
 	
 	// dialog title
 	SetTitle(LT(dialogDesign->GetTitle(STR_PREFERENCES)));
+
+	// LangBox	
+	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_LANG_BOX);
+	BBox* langBox = dynamic_cast<BBox*>(FindView(PREFERENCES_DIALOG_VIEW_LANG_BOX));
+	if (NULL != langBox)
+	{
+		langBox->SetLabel(LT(item->GetLabel(STR_LANGUAGE_BOX)));
+	}
 	
 	// LangPopup
 	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_LANG_POPUP);
@@ -169,6 +210,22 @@ void BePreferencesDlg::languageChanged()
 	if (NULL != langNotice)
 	{
 		langNotice->SetText(LT(item->GetLabel(STR_LANG_NOTICE)));
+	}
+	
+	// KeyMappingBox
+	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_KEYMAPPING_BOX);
+	BBox* keyMappingBox = dynamic_cast<BBox*>(FindView(PREFERENCES_DIALOG_VIEW_KEYMAPPING_BOX));
+	if (NULL != keyMappingBox)
+	{
+		keyMappingBox->SetLabel(LT(item->GetLabel(STR_KEYMAPPING_BOX)));
+	}
+	
+	// KeyMappingPopup
+	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_KEYMAPPING_POPUP);
+	BMenuField* keyMappingPopup = dynamic_cast<BMenuField*>(FindView(PREFERENCES_DIALOG_VIEW_KEYMAPPING_POPUP));
+	if (NULL != keyMappingPopup)
+	{
+		keyMappingPopup->SetLabel(LT(item->GetLabel(STR_KEYMAPPING)));
 	}
 	
 	// CancelButton
@@ -313,6 +370,91 @@ bool BePreferencesDlg::getLanguage(
 	return true;
 }
 
+typedef BeDataMenuItem<const PreferencesDlg::KeyMappingsInfo*> BeKMIMenuItem;
+
+/**
+ *	@brief	compare function for sorting key-mapping item.
+ */
+static int keyMappingInfoCompareFunc(const void* item1, const void* item2)
+{
+	const PreferencesDlg::KeyMappingsInfo* info1 = *static_cast<const PreferencesDlg::KeyMappingsInfo* const *>(item1);
+	const PreferencesDlg::KeyMappingsInfo* info2 = *static_cast<const PreferencesDlg::KeyMappingsInfo* const *>(item2);
+	
+	const MBCString& name1 = info1->title;
+	const MBCString& name2 = info2->title;
+	
+	return name1.Compare(name2);
+}
+
+/**
+ *	@brief	Sets key-mapping menu and current item.
+ *	@param	keyMappingInfos			This collection contains informations about all key-mapping menu items.
+ *	@param	currentKeyMappingPath	Current selection.
+ *	@note	The keyMappingInfos object is valid until the next call of setKeyMapping, or until the dialog is closed.
+ */
+void BePreferencesDlg::setKeyMapping(const KeyMappingsInfoPtrVector& keyMappingsInfos, const Path& currentKeyMappingPath)
+{
+	// sort key-mappings
+	BList keyMappingsList;
+	const KeyMappingsInfo* selectedInfo = NULL;
+	SInt32 count = keyMappingsInfos.size();
+	SInt32 index;
+	for (index = 0; index < count; index++)
+	{
+		const KeyMappingsInfo* info = keyMappingsInfos[index];
+		keyMappingsList.AddItem(const_cast<KeyMappingsInfo*>(info));
+		if (0 == info->keyMapFilePath.Compare(currentKeyMappingPath))
+		{
+			selectedInfo = info;
+		}
+	}
+	keyMappingsList.SortItems(keyMappingInfoCompareFunc);
+	
+	// add to menu
+	for (index = 0; index < count; index++)
+	{
+		const KeyMappingsInfo* info = static_cast<KeyMappingsInfo*>(keyMappingsList.ItemAt(index));
+		BeKMIMenuItem* menuItem = new BeKMIMenuItem(info->title.CString(), NULL);
+		menuItem->SetItemData(info);
+		menuItem->SetMarked(0 == info->keyMapFilePath.Compare(currentKeyMappingPath));
+		keyMappingMenu->AddItem(menuItem);
+	}
+}
+
+/**
+ *	@brief	Retrieves current item of key-mapping menu.
+ *	@param[out]	keyMappingPath			a path of the key-mapping file selected on key-mapping menu.
+ *	@return true if succeeded, otherwise false.
+ *	@note	If error occured, the error message is shown in this function before it returns false.
+ */
+bool BePreferencesDlg::getKeyMapping(Path& keyMappingPath)
+{
+	BMenuItem* markedItem = keyMappingMenu->FindMarked();
+	if (NULL == markedItem)
+	{
+		CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_INVALID_KEYMAPPINGS,
+				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+		return false;
+	}
+	
+	const KeyMappingsInfo* info = NULL;
+	BeKMIMenuItem* markedKMIItem = dynamic_cast<BeKMIMenuItem*>(markedItem);
+	if (NULL != markedKMIItem)
+	{
+		info = markedKMIItem->GetItemData();
+	}
+	
+	if (NULL == info)
+	{
+		CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_GET_KEYMAPPINGS,
+				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);	
+		return false;
+	}
+	
+	keyMappingPath = info->keyMapFilePath;
+	return true;
+}
+
 /**
  *	@brief	Message handler.
  */
@@ -346,13 +488,6 @@ void BePreferencesDlg::MessageReceived(
 					menuItem->SetMarked(false);
 					menuItem->SetMarked(true);
 				}
-				
-//				item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_LANG_POPUP);
-//				if (NULL != item)
-//				{
-//					item->
-//				}
-				
 			}
 			baseWindow::MessageReceived(message);
 			break;

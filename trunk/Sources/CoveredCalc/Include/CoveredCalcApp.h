@@ -70,6 +70,11 @@ public:
 	virtual void							LoadKeyMappings(const Path& keymapFile) = 0;
 	
 	virtual KeyMappingManager*				GetKeyMappingManagerForMainWindow() = 0;
+	/**
+	 *	@brief	Checks the key-mapping platform is suitable for this app.
+	 *	@throw	KeyMappingExceptions::LoadFailed	when the platform is not suitable for this app.
+	 */
+	virtual void							CheckKeyMappingsPlatform(const KeyMappings* keyMappings) = 0;
 
 	virtual void							ShowCoverBrowser(bool isShow) = 0;
 	virtual bool							IsCoverBrowserVisible() = 0;

@@ -104,12 +104,6 @@ protected:
 												Path& settingFilePath		//!< OUTPUT. default setting file path is returned.
 											) = 0;
 
-	/**
-	 *	@brief	Checks the key-mapping platform is suitable for this app.
-	 *	@throw	KeyMappingExceptions::LoadFailed	when the platform is not suitable for this app.
-	 */
-	virtual void							checkKeymappingsPlatform(const KeyMappings* keyMappings) = 0;
-
 private:
 	AppSettings								appSettings;					//!< current application settings
 	CoverManager							coverManager;					//!< object which manages current cover

@@ -309,7 +309,7 @@ void BeCoveredCalcApp::GetCurrentLanguageCode(
  *	@brief	Checks the key-mapping platform is suitable for this app.
  *	@throw	KeyMappingExceptions::LoadFailed	when the platform is not suitable for this app.
  */
-void BeCoveredCalcApp::checkKeymappingsPlatform(const KeyMappings* keyMappings)
+void BeCoveredCalcApp::CheckKeyMappingsPlatform(const KeyMappings* keyMappings)
 {
 	UTF8String platform;
 	if (!keyMappings->GetPlatform(platform) || 0 != UTF8Utils::UTF8StrCmp(STR_PLATFORM_BEOS, platform))

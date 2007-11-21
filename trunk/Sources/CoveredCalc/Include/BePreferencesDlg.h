@@ -68,6 +68,9 @@ protected:
 #endif
 								);
 
+	virtual void				setKeyMapping(const KeyMappingsInfoPtrVector& keyMappingsInfos, const Path& currentKeyMappingPath);
+	virtual bool				getKeyMapping(Path& keyMappingPath);
+
 private:
 	void						createViews();
 
@@ -75,6 +78,7 @@ private:
 	BeDialogDesign*				dialogDesign;		///< dialog design
 	BMenu*						langMenu;			///< language popup menu
 	BList						langMenuItemInfo;	///< informations of each language popup menu item
+	BMenu*						keyMappingMenu;		///< key-mapping popup menu
 };
 
 #endif // _BEPREFERENCESDLG_H_

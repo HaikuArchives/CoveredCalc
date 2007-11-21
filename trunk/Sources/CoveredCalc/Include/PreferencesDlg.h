@@ -33,8 +33,10 @@
 #ifndef _PREFERENCESDLG_H_
 #define _PREFERENCESDLG_H_
 
+#include <vector>
+#include "Path.h"
+
 class LangFileInfoCollection;
-class Path;
 
 /**
  *	@brief	This is a base class of preferences dialog class.
@@ -49,8 +51,21 @@ protected:
 	void						loadToDialog();
 	bool						saveFromDialog();
 
+private:
+	void						loadKeyMappingsInfos();
+	void						loadKeyMappingsInfosInFolder(const Path& virtualFolderPath);
+	void						loadOneKeyMappingsInfo(const Path& realKeymapFilePath, const Path& virtualKeymapFilePath);
+	void						unloadKeyMappingsInfos();
+
 protected:
-	
+	struct KeyMappingsInfo
+	{
+		MBCString	title;				///< title.
+		Path		keyMapFilePath;		///< key-mapping file path. (virtual path)
+	};
+	typedef std::vector<KeyMappingsInfo*>	KeyMappingsInfoPtrVector;
+
+protected:
 	/**
 	 *	@brief	Sets language menu and current item.
 	 *	@param	langFileInfos			This collection contains informations about all language menu items.
@@ -77,6 +92,22 @@ protected:
 										, bool& isLocaleKitAvailable
 #endif
 								) = 0;
+
+	/**
+	 *	@brief	Sets key-mapping menu and current item.
+	 *	@param	keyMappingInfos			This collection contains informations about all key-mapping menu items.
+	 *	@param	currentKeyMappingPath	Current selection.
+	 *	@note	The keyMappingInfos object is valid until the next call of setKeyMapping, or until the dialog is closed.
+	 */
+	virtual void				setKeyMapping(const KeyMappingsInfoPtrVector& keyMappingsInfos, const Path& currentKeyMappingPath) = 0;
+	
+	/**
+	 *	@brief	Retrieves current item of key-mapping menu.
+	 *	@param[out]	keyMappingPath			a path of the key-mapping file selected on key-mapping menu.
+	 *	@return true if succeeded, otherwise false.
+	 *	@note	If error occured, the error message is shown in this function before it returns false.
+	 */
+	virtual bool				getKeyMapping(Path& keyMappingPath) = 0;
 
 #if defined (WIN32)
 	/**
@@ -115,6 +146,9 @@ protected:
 	 */
 	virtual void				enableEdgeSmoothing(bool isEnabled) = 0;
 #endif	// defined (WIN32)
+
+private:
+	KeyMappingsInfoPtrVector	keyMappingsInfos;		///< installed key-mappings.
 };
 
 #endif // _PREFERENCESDLG_H_

@@ -26,6 +26,7 @@
 #define IDC_STC_EDGE_SMOOTHING          1019
 #define IDC_STC_LOW                     1020
 #define IDC_STC_HIGH                    1021
+#define IDC_CMB_KEYMAPPINGS             1022
 #define IDD_ABOUT                       5000
 #define IDD_COVER_BROWSER               5001
 #define IDD_ABOUT_COVER                 5002
@@ -34,6 +35,8 @@
 #define IDS_APPNAME                     10000
 #define IDS_COVER_BROWSER_COLUMN_NAME   10001
 #define IDS_COVER_BROWSER_COLUMN_DESCRIPTION 10002
+#define IDS_EMSG_INVALID_KEYMAPPINGS    10989
+#define IDS_EMSG_GET_KEYMAPPINGS        10990
 #define IDS_EMSG_LOAD_KEYMAPPINGS       10991
 #define IDS_EMSG_INVALID_LANGUAGE       10992
 #define IDS_EMSG_GET_LANGUAGE           10993
