@@ -50,6 +50,8 @@ protected:
 
 	virtual void					setLanguage(const LangFileInfoCollection& langFileInfos, const Path& currentLangFilePath);
 	virtual	bool					getLanguage(Path& langFilePath);
+	virtual void					setKeyMapping(const KeyMappingsInfoPtrVector& keyMappingsInfos, const Path& currentKeyMappingPath);
+	virtual bool					getKeyMapping(Path& keyMappingPath);
 	virtual void					setOpacity(SInt32 opacity);
 	virtual SInt32					getOpacity();
 	virtual void					enableOpacity(bool isEnabled);

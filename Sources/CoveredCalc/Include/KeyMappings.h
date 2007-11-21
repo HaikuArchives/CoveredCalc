@@ -102,6 +102,9 @@ public:
 	bool				GetPlatform(UTF8String& platform) const;
 	void				SetPlatform(ConstUTF8Str platform);
 	
+	bool				GetTitle(UTF8String& title) const;
+	void				SetTitle(ConstUTF8Str title);
+	
 	void				AddItem(ConstUTF8Str category, KeyMappingItem* item);
 	void				RemoveItem(ConstUTF8Str category, KeyMappingItem* item);
 	void				RemoveAllItem(ConstUTF8Str category);

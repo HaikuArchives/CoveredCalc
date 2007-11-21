@@ -273,6 +273,109 @@ bool WinPreferencesDlg::getLanguage(
 }
 
 /**
+ *	@brief	Sets key-mapping menu and current item.
+ *	@param	keyMappingInfos			This collection contains informations about all key-mapping menu items.
+ *	@param	currentKeyMappingPath	Current selection.
+ *	@note	The keyMappingInfos object is valid until the next call of setKeyMapping, or until the dialog is closed.
+ */
+void WinPreferencesDlg::setKeyMapping(const KeyMappingsInfoPtrVector& keyMappingsInfos, const Path& currentKeyMappingPath)
+{
+	HWND hWndKeyMappingCombo = GetDlgItem(m_hWnd, IDC_CMB_KEYMAPPINGS);
+	ASSERT(NULL != hWndKeyMappingCombo);
+	if (NULL == hWndKeyMappingCombo)
+		return;
+	
+	// コンボボックスの中身をセット
+	ComboBox_ResetContent(hWndKeyMappingCombo);
+	const KeyMappingsInfo* selectedInfo = NULL;
+	SInt32 count = keyMappingsInfos.size();
+	SInt32 index;
+	for (index = 0; index < count; index++)
+	{
+		const KeyMappingsInfo* info = keyMappingsInfos[index];
+		int addedComboIndex = ComboBox_AddString(hWndKeyMappingCombo, info->title);
+		if (CB_ERR != addedComboIndex)
+		{
+			ComboBox_SetItemData(hWndKeyMappingCombo, addedComboIndex, info);
+		}
+		
+		if (0 == info->keyMapFilePath.Compare(currentKeyMappingPath))
+		{
+			selectedInfo = info;
+		}
+	}
+	
+	// 現在の選択値を選択
+	int comboIndex = CB_ERR;
+	if (NULL != selectedInfo)
+	{
+		int cmbCount = ComboBox_GetCount(hWndKeyMappingCombo);
+		int cmbIndex;
+		for (cmbIndex=0; cmbIndex<cmbCount; cmbIndex++)
+		{
+			const KeyMappingsInfo* itemInfo = reinterpret_cast<const KeyMappingsInfo*>(ComboBox_GetItemData(hWndKeyMappingCombo, cmbIndex));
+			if (itemInfo == selectedInfo)
+			{
+				comboIndex = cmbIndex;
+				break;
+			}
+		}
+		ASSERT(CB_ERR != comboIndex);
+	}
+	else
+	{
+		comboIndex = ComboBox_AddString(hWndKeyMappingCombo, "# invalid key-mapping #");
+		if (CB_ERR != comboIndex)
+		{
+			ComboBox_SetItemData(hWndKeyMappingCombo, comboIndex, NULL);
+		}
+	}
+	
+	if (CB_ERR != comboIndex)
+	{
+		ComboBox_SetCurSel(hWndKeyMappingCombo, comboIndex);
+	}	
+}
+
+/**
+ *	@brief	Retrieves current item of key-mapping menu.
+ *	@param[out]	keyMappingPath			a path of the key-mapping file selected on key-mapping menu.
+ *	@return true if succeeded, otherwise false.
+ *	@note	If error occured, the error message is shown in this function before it returns false.
+ */
+bool WinPreferencesDlg::getKeyMapping(Path& keyMappingPath)
+{
+	HWND hWndKeyMappingCombo = GetDlgItem(m_hWnd, IDC_CMB_KEYMAPPINGS);
+	ASSERT(NULL != hWndKeyMappingCombo);
+	if (NULL == hWndKeyMappingCombo)
+	{
+		CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_GET_KEYMAPPINGS,
+				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);	
+		return false;
+	}
+
+	int comboIndex = ComboBox_GetCurSel(hWndKeyMappingCombo);
+	if (CB_ERR == comboIndex)
+	{
+		CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_GET_KEYMAPPINGS,
+				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+		SetFocus(hWndKeyMappingCombo);	
+		return false;
+	}
+	const KeyMappingsInfo* itemInfo = reinterpret_cast<const KeyMappingsInfo*>(ComboBox_GetItemData(hWndKeyMappingCombo, comboIndex));
+	if (NULL == itemInfo)
+	{
+		CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_INVALID_KEYMAPPINGS,
+				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+		SetFocus(hWndKeyMappingCombo);	
+		return false;
+	}
+	
+	keyMappingPath = itemInfo->keyMapFilePath;
+	return true;
+}
+
+/**
  *	@brief	外観の透明度をセットします。
  *	@param	opacity	不透明度
  */

@@ -39,10 +39,12 @@
 #include "UTF8String.h"
 #include "NCDDocument.h"
 #include "NCDElement.h"
+#include "NCDText.h"
 #include "XMLParser.h"
 
 static const UTF8Char STR_ELEMENT_KEY_MAPPINGS[]	= "keyMappings";
 static const UTF8Char STR_ELEMENT_PLATFORM[]		= "platform";
+static const UTF8Char STR_ELEMENT_TITLE[]			= "title";
 static const UTF8Char STR_ELEMENT_CATEGORY[]		= "category";
 static const UTF8Char STR_ELEMENT_KEY[]				= "key";
 static const UTF8Char STR_ATTR_VERSION[]			= "version";
@@ -220,7 +222,7 @@ void KeyMappings::SetVersion(SInt32 version)
 	NCDElement* apexElem = getApexElement();
 
 	UTF8Char versionStr[32];
-	snprintf(TypeConv::AsASCII(versionStr), sizeof(versionStr)/sizeof(UTF8Char), "%d", version);
+	snprintf(TypeConv::AsASCII(versionStr), sizeof(versionStr)/sizeof(UTF8Char), "%d", static_cast<int>(version));
 	apexElem->setAttribute(STR_ATTR_VERSION, versionStr);
 }	
 
@@ -274,6 +276,69 @@ void KeyMappings::SetPlatform(ConstUTF8Str platform)
 			apexElem->insertBefore(platformElem, apexElem->getFirstChild());
 		}
 		platformElem->setAttribute(STR_ATTR_TARGET, platform);
+	}
+}
+
+/**
+ *	@brief	Returns title of this key-mappings.
+ *	@param[out]	title	the title is returned.
+ *	@return true if the title is set.
+ */
+bool KeyMappings::GetTitle(UTF8String& title) const
+{
+	NCDElement* apexElem = getApexElement();
+
+	NCDNode* titleNode = DOMUtils::GetFirstMatchNode(apexElem, STR_ELEMENT_TITLE, false);
+	if (NULL == titleNode || titleNode->getNodeType() != NCDNode::ELEMENT_NODE)
+	{
+		return false;
+	}
+	
+	DOMUtils::ReadTextNode(titleNode, false, title);
+	return true;
+}
+
+/**
+ *	@brief	Sets a title of this key-mappings.
+ *	@param[in]	title	a title of a key-mapping file.
+ */
+void KeyMappings::SetTitle(ConstUTF8Str title)
+{
+	NCDElement* apexElem = getApexElement();
+
+	NCDElement* titleElem = NULL;
+	NCDNode* titleNode = DOMUtils::GetFirstMatchNode(apexElem, STR_ELEMENT_TITLE, false);
+	if (NULL != titleNode && titleNode->getNodeType() == NCDNode::ELEMENT_NODE)
+	{
+		titleElem = static_cast<NCDElement*>(titleNode);
+	}
+
+	if (NULL == title)
+	{
+		if (NULL != titleElem)
+		{
+			titleElem->getParentNode()->removeChild(titleElem);
+			titleElem->release();
+		}
+	}
+	else
+	{
+		if (NULL == titleElem)
+		{
+			titleElem = apexElem->getOwnerDocument()->createElement(STR_ELEMENT_TITLE);
+			apexElem->insertBefore(titleElem, apexElem->getFirstChild());
+		}
+		NCDNode* childNode = titleElem->getFirstChild();
+		while (NULL != childNode)
+		{
+			NCDNode* nextChild = childNode->getNextSibling();
+			titleElem->removeChild(childNode);
+			childNode->release();
+			
+			childNode = nextChild;
+		}
+		NCDNode* textNode = titleElem->getOwnerDocument()->createTextNode(title);
+		titleElem->appendChild(textNode);
 	}
 }
 

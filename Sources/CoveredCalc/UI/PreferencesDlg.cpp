@@ -34,10 +34,19 @@
 #include "PreferencesDlg.h"
 #include "CoveredCalcApp.h"
 #include "AppSettings.h"
+#include "KeyMappings.h"
+#include "UTF8Conv.h"
+#include "Exception.h"
 
 #if defined (WIN32)
 #include "WinCoveredCalcApp.h"
 #endif	// defined (WIN32)
+
+#if defined (BEOS)
+#include <Directory.h>
+#include <Entry.h>
+#include <Path.h>
+#endif	// defined (BEOS)
 
 /**
  *	@brief	Constructor
@@ -51,6 +60,7 @@ PreferencesDlg::PreferencesDlg()
  */
 PreferencesDlg::~PreferencesDlg()
 {
+	unloadKeyMappingsInfos();
 }
 
 /**
@@ -92,6 +102,10 @@ void PreferencesDlg::loadToDialog()
 #endif // defined(ZETA)
 		);
 	}
+	
+	// key-mapping
+	loadKeyMappingsInfos();
+	setKeyMapping(keyMappingsInfos, appSettings->GetKeymapFilePath());
 }
 
 /**
@@ -107,8 +121,8 @@ bool PreferencesDlg::saveFromDialog()
 
 	// opacity and edge-smoothing
 #if defined(WIN32)
-	appSettings->SetMainWindowOpacity(getOpacity());
-	appSettings->SetMainWindowEdgeSmoothing(getEdgeSmoothing());
+	SInt32 opacity = getOpacity();
+	SInt32 edgeSmoothing = getEdgeSmoothing();
 #endif // defined(WIN32)	
 
 	// language
@@ -125,11 +139,135 @@ bool PreferencesDlg::saveFromDialog()
 		return false;
 	}
 	
+	// key-mapping
+	Path keyMappingFilePath;
+	if (!getKeyMapping(keyMappingFilePath))
+	{
+		return false;
+	}
+	
 	// set values to appSettings
+#if defined(WIN32)
+	appSettings->SetMainWindowOpacity(opacity);
+	appSettings->SetMainWindowEdgeSmoothing(edgeSmoothing);
+#endif // defined(WIN32)	
 	appSettings->SetLanguageFilePath(app->MakeRelativeLangFilePath(langFilePath));
 #if defined(ZETA)
 	appSettings->SetLocaleKitAvailable(isLocaleKitAvailable);
 #endif // defined(ZETA)
+	appSettings->SetKeymapFilePath(keyMappingFilePath);
+
 	appSettings->Save();
+
+	// load key-mapping again.
+	app->LoadKeyMappings(app->ExpandVirtualKeymapFilePath(keyMappingFilePath));
+
 	return true;
 }
+
+/**
+ *	@brief	Loads informations about installed key-mapping files.
+ */
+void PreferencesDlg::loadKeyMappingsInfos()
+{
+	unloadKeyMappingsInfos();
+	
+	// load files in ${AppKeymaps} folder.
+	Path virtualAppKeymaps("${AppKeymaps}");
+	loadKeyMappingsInfosInFolder(virtualAppKeymaps);
+}
+
+/**
+ *	@breif	Loads informations about installed key-mapping files in specified folder.
+ *	@param[in]	virtualFolderPath	folder (in virtual path)
+ */
+void PreferencesDlg::loadKeyMappingsInfosInFolder(const Path& virtualFolderPath)
+{
+	Path folder = CoveredCalcApp::GetInstance()->ExpandVirtualKeymapFilePath(virtualFolderPath);
+
+#if defined (WIN32)
+	Path findPath = folder.Append("*.cckxw");
+	WIN32_FIND_DATA findData;
+	HANDLE hFind = ::FindFirstFile(findPath.GetPathString(), &findData);
+	if (NULL != hFind)
+	{
+		do
+		{
+			if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+			{
+				continue;
+			}
+			loadOneKeyMappingsInfo(folder.Append(findData.cFileName), virtualFolderPath.Append(findData.cFileName));
+		}
+		while (::FindNextFile(hFind, &findData));
+		::FindClose(hFind);
+	}
+#elif defined (BEOS)
+	BDirectory findDir(folder.GetPathString());
+	if (B_OK == findDir.InitCheck())
+	{
+		BEntry entry;
+		char filename[B_FILE_NAME_LENGTH];
+
+		findDir.Rewind();
+		while (B_NO_ERROR == findDir.GetNextEntry(&entry))
+		{
+			if (!entry.IsDirectory())
+			{
+				entry.GetName(filename);
+				SInt32 length = strlen(filename);
+				if (6 < length && 0 == strcmp(filename + length - 6, ".cckxb"))
+				{
+					BPath bpath;
+					entry.GetPath(&bpath);
+					Path keymapFilePath(bpath.Path());
+					loadOneKeyMappingsInfo(keymapFilePath, virtualFolderPath.Append(filename));
+				}
+			}
+		}
+	}
+#endif	
+}
+
+/**
+ *	@brief	Loads and validates specified key-mapping file, and append it to keyMappingsInfos if it is valid.
+ *	@param[in]	realKeymapFilePath		path of a key-mapping file (in real path)
+ *	@param[in]	virtualKeymapFilePath	path of a key-mapping file (in virtual path)
+ */
+void PreferencesDlg::loadOneKeyMappingsInfo(const Path& realKeymapFilePath, const Path& virtualKeymapFilePath)
+{
+	try
+	{
+		KeyMappings keyMappings;
+		keyMappings.Load(realKeymapFilePath);
+		CoveredCalcApp::GetInstance()->CheckKeyMappingsPlatform(&keyMappings);
+		
+		UTF8String utf8Title;
+		keyMappings.GetTitle(utf8Title);
+		
+		KeyMappingsInfo* info = new KeyMappingsInfo;
+		UTF8Conv::ToMultiByte(info->title, utf8Title);
+		info->keyMapFilePath = virtualKeymapFilePath;
+		keyMappingsInfos.push_back(info);
+	}
+	catch (Exception* ex)
+	{
+		// ignore
+		ex->Delete();
+	}			
+}
+
+/**
+ *	@brief	Unload informations about installed key-mapping files.
+ */
+void PreferencesDlg::unloadKeyMappingsInfos()
+{
+	KeyMappingsInfoPtrVector::iterator ite;
+	for (ite = keyMappingsInfos.begin(); ite != keyMappingsInfos.end(); ite++)
+	{
+		KeyMappingsInfo* info = *ite;
+		delete info;
+	}
+	keyMappingsInfos.clear();
+}
+

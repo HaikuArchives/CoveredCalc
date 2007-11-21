@@ -211,7 +211,7 @@ void CoveredCalcAppBase::LoadKeyMappings(const Path& keymapFile)
 	keyMappings.Load(keymapFile);
 	
 	// check platform
-	checkKeymappingsPlatform(&keyMappings);
+	CheckKeyMappingsPlatform(&keyMappings);
 
 	// initialize managers.
 	// --- main window.

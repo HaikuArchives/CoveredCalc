@@ -60,11 +60,11 @@ BEGIN
     LTEXT           "&Select Cover:",IDC_STATIC,7,7,101,8
     CONTROL         "",IDC_COVER_LIST,"SysListView32",LVS_REPORT | 
                     LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | 
-                    LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,7,18,212,152,
+                    LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,7,17,212,153,
                     WS_EX_CLIENTEDGE
-    PUSHBUTTON      "&Refresh",IDC_RELOAD,7,175,50,14,WS_GROUP
-    PUSHBUTTON      "&Apply",IDC_APPLY,115,175,50,14,WS_GROUP
-    PUSHBUTTON      "&Close",IDCLOSE,169,175,50,14
+    PUSHBUTTON      "&Refresh",IDC_RELOAD,7,174,50,14,WS_GROUP
+    PUSHBUTTON      "&Apply",IDC_APPLY,115,174,50,14,WS_GROUP
+    PUSHBUTTON      "&Close",IDCLOSE,169,174,50,14
 END
 
 IDD_ABOUT DIALOG DISCARDABLE  0, 0, 270, 82
@@ -76,17 +76,17 @@ BEGIN
     CONTROL         "",IDC_ICON64,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_REALSIZEIMAGE,7,7,48,48
     LTEXT           "CoveredCalc for Windows",IDC_STC_APPNAME,60,12,203,8
-    LTEXT           "Version ",IDC_STC_VERSION,60,23,203,8
+    LTEXT           "Version ",IDC_STC_VERSION,60,24,203,8
     LTEXT           "Copyright (C) ",IDC_STC_COPYRIGHT1,60,42,203,8,
                     SS_NOPREFIX
 END
 
-IDD_ABOUT_COVER DIALOG DISCARDABLE  0, 0, 187, 128
+IDD_ABOUT_COVER DIALOG DISCARDABLE  0, 0, 187, 126
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Cover Info"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,130,107,50,14
+    DEFPUSHBUTTON   "OK",IDOK,130,105,50,14
     LTEXT           "Name:",IDC_STATIC,7,7,43,8
     EDITTEXT        IDC_EDIT_NAME,56,7,124,12,ES_AUTOHSCROLL | ES_READONLY | 
                     NOT WS_BORDER
@@ -98,31 +98,37 @@ BEGIN
                     ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL | WS_HSCROLL
 END
 
-IDD_PREFERENCES DIALOG DISCARDABLE  0, 0, 207, 153
+IDD_PREFERENCES DIALOG DISCARDABLE  0, 0, 223, 216
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Preferences"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    LTEXT           "&Opacity:",IDC_STC_OPACITY,7,10,33,8
-    RTEXT           "Transparent",IDC_STC_TRANSPARENT,52,12,42,8
+    GROUPBOX        "Transparency",IDC_STATIC,7,7,209,88
+    LTEXT           "&Opacity:",IDC_STC_OPACITY,15,22,33,8
+    RTEXT           "Transparent",IDC_STC_TRANSPARENT,80,24,42,8
     CONTROL         "",IDC_SLDR_OPACITY,"msctls_trackbar32",TBS_AUTOTICKS | 
-                    WS_TABSTOP,101,7,70,20
-    LTEXT           "Opaque",IDC_STC_OPAQUE,171,12,29,8
-    LTEXT           "Cover &Edge Smoothing:",IDC_STC_EDGE_SMOOTHING,7,36,78,
+                    WS_TABSTOP,109,19,70,24
+    LTEXT           "Opaque",IDC_STC_OPAQUE,179,24,29,8
+    LTEXT           "Cover &Edge Smoothing:",IDC_STC_EDGE_SMOOTHING,15,48,78,
                     8
-    RTEXT           "Low",IDC_STC_LOW,77,38,17,8
+    RTEXT           "Low",IDC_STC_LOW,91,50,17,8
     CONTROL         "",IDC_SLDR_EDGE_SMOOTHING,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_TABSTOP,101,33,70,20
-    LTEXT           "High",IDC_STC_HIGH,171,38,20,8
+                    TBS_AUTOTICKS | WS_TABSTOP,109,45,70,24
+    LTEXT           "High",IDC_STC_HIGH,179,50,20,8
     LTEXT           "You can set Opacity and Cover Edge Smoothing only on Windows 2000, Windows XP or Windows Vista.",
-                    IDC_STATIC,16,59,184,16
-    LTEXT           "&Language:",IDC_STATIC,7,89,32,8
-    COMBOBOX        IDC_CMB_LANGUAGE,47,87,120,110,CBS_DROPDOWNLIST | 
+                    IDC_STATIC,23,71,185,16
+    GROUPBOX        "Language",IDC_STATIC,7,99,209,56
+    LTEXT           "&Language:",IDC_STATIC,15,113,49,8
+    COMBOBOX        IDC_CMB_LANGUAGE,66,111,142,110,CBS_DROPDOWNLIST | 
                     CBS_SORT | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Change of language will take effect after you restart CoveredCalc application.",
-                    IDC_STATIC,16,107,184,16,NOT WS_GROUP
-    DEFPUSHBUTTON   "OK",IDOK,94,132,50,14,WS_GROUP
-    PUSHBUTTON      "Cancel",IDCANCEL,150,132,50,14
+                    IDC_STATIC,24,131,184,16,NOT WS_GROUP
+    GROUPBOX        "Keyboard",IDC_STATIC,7,159,209,32
+    LTEXT           "&Keyboard:",IDC_STATIC,15,173,49,8
+    COMBOBOX        IDC_CMB_KEYMAPPINGS,66,171,142,110,CBS_DROPDOWNLIST | 
+                    CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "OK",IDOK,112,195,50,14,WS_GROUP
+    PUSHBUTTON      "Cancel",IDCANCEL,166,195,50,14
 END
 
 
@@ -139,7 +145,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 219
         TOPMARGIN, 7
-        BOTTOMMARGIN, 189
+        BOTTOMMARGIN, 188
     END
 
     IDD_ABOUT, DIALOG
@@ -155,15 +161,15 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 180
         TOPMARGIN, 7
-        BOTTOMMARGIN, 121
+        BOTTOMMARGIN, 119
     END
 
     IDD_PREFERENCES, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 200
+        RIGHTMARGIN, 216
         TOPMARGIN, 7
-        BOTTOMMARGIN, 146
+        BOTTOMMARGIN, 209
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -305,6 +311,9 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    IDS_EMSG_INVALID_KEYMAPPINGS 
+                            "Invalid keyboard selection. Please, choose a valid keyboard."
+    IDS_EMSG_GET_KEYMAPPINGS "Error obtaining the keyboard selection."
     IDS_EMSG_LOAD_KEYMAPPINGS "Failed to load key mappings."
 END
 

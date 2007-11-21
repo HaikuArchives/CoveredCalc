@@ -55,6 +55,8 @@ public:
 	virtual void				GetCurrentLanguageCode(MBCString& outLanguage);
 #endif // degined(ZETA)
 
+	virtual void				CheckKeyMappingsPlatform(const KeyMappings* keyMappings);
+
 	// implementation of MessageBoxProvider
 	virtual Button				DoMessageBox(ConstAStr message, ButtonType buttonType, AlertType alertType, Button defaultButton = Button_None);
 	virtual Button				DoMessageBox(SInt32 messageId, ButtonType buttonType, AlertType alertType, Button defaultButton = Button_None);
@@ -81,7 +83,6 @@ private:
 protected:
 	virtual const Path&			getAppFolderPath() { return appFolderPath; }
 	virtual void				readyDefaultSettingFilePath(Path& settingFilePath);
-	virtual void				checkKeymappingsPlatform(const KeyMappings* keyMappings);
 
 private:
 	void						createFolder(const Path& path);

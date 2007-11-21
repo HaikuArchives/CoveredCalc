@@ -23,20 +23,32 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/*!
+	@file		BeDataMenuItem.h
+	@brief		Definition of BeDataMenuItem class
+	@author		ICHIMIYA Hironori (Hiron)
+	@date		2007.11.17 created
+*/
 
-resource app_signature "application/x-vnd.Hironytic-CoveredCalc";
+#ifndef _BEDATAMENUITEM_H_
+#define _BEDATAMENUITEM_H_
 
-resource app_version
+/**
+ * @brief	BMenuItem with an item data.
+ * @note	The type DATATYPE must be a pointer type.
+ */
+template<class DATATYPE>
+class BeDataMenuItem : public BMenuItem
 {
-	major		= 1,
-	middle		= 9,
-	minor		= 0,
-	variety		= B_APPV_FINAL,
-	internal	= 0,
-	short_info	= "1.9.0",
-	long_info	= "CoveredCalc for BeOS 1.9.0"
+public:
+						BeDataMenuItem(const char* label, BMessage* message, char shortcut = 0, uint32 modifiers = 0)
+							:	BMenuItem(label, message, shortcut, modifiers), data(NULL) {}
+
+	void				SetItemData(DATATYPE data) { this->data = data; }
+	DATATYPE			GetItemData() const { return this->data; }
+
+private:
+	DATATYPE			data;		///< item data
 };
 
-resource app_flags B_SINGLE_LAUNCH;
-
-resource file_types message;
+#endif // _BEDATAMENUITEM_H_
