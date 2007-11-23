@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<keyMappings version="1" xmlns="http://hironytic.1st-shrine.net/schema/CoveredCalc-KeyMappings">
+	<platform target="Windows"/>
+	<title>Japanese JIS 106/109</title>
+	<category name="MainWindow">
+		<key code="30" modifiers="none" function="0"/>
+		<key code="60" modifiers="none" function="0"/>
+		<key code="31" modifiers="none" function="1"/>
+		<key code="61" modifiers="none" function="1"/>
+		<key code="32" modifiers="none" function="2"/>
+		<key code="62" modifiers="none" function="2"/>
+		<key code="33" modifiers="none" function="3"/>
+		<key code="63" modifiers="none" function="3"/>
+		<key code="34" modifiers="none" function="4"/>
+		<key code="64" modifiers="none" function="4"/>
+		<key code="35" modifiers="none" function="5"/>
+		<key code="65" modifiers="none" function="5"/>
+		<key code="36" modifiers="none" function="6"/>
+		<key code="66" modifiers="none" function="6"/>
+		<key code="37" modifiers="none" function="7"/>
+		<key code="67" modifiers="none" function="7"/>
+		<key code="38" modifiers="none" function="8"/>
+		<key code="68" modifiers="none" function="8"/>
+		<key code="39" modifiers="none" function="9"/>
+		<key code="69" modifiers="none" function="9"/>
+		<key code="41" modifiers="none" function="A"/>
+		<key code="42" modifiers="none" function="B"/>
+		<key code="43" modifiers="none" function="C"/>
+		<key code="44" modifiers="none" function="D"/>
+		<key code="45" modifiers="none" function="E"/>
+		<key code="46" modifiers="none" function="F"/>
+		<key code="BE" modifiers="none" function="Point"/>
+		<key code="6E" modifiers="none" function="Point"/>
+		<key code="1B" modifiers="none" function="Clear"/>
+		<key code="08" modifiers="none" function="BS"/>
+		<key code="BD" modifiers="shift" function="Equal"/>
+		<key code="0D" modifiers="none" function="Equal"/>
+		<key code="BB" modifiers="shift" function="Plus"/>
+		<key code="6B" modifiers="none" function="Plus"/>
+		<key code="BD" modifiers="none" function="Minus"/>
+		<key code="6D" modifiers="none" function="Minus"/>
+		<key code="BA" modifiers="shift" function="Times"/>
+		<key code="6A" modifiers="none" function="Times"/>
+		<key code="BF" modifiers="none" function="Div"/>
+		<key code="6F" modifiers="none" function="Div"/>
+		<key code="4E" modifiers="none" function="Negate"/>
+		<key code="78" modifiers="none" function="Negate"/>
+		<key code="6D" modifiers="shift" function="Negate"/>
+		<key code="74" modifiers="none" function="Hex"/>
+		<key code="75" modifiers="none" function="Dec"/>
+		<key code="76" modifiers="none" function="Oct"/>
+		<key code="77" modifiers="none" function="Bin"/>
+	</category>
+</keyMappings>
