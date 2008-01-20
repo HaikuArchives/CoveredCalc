@@ -1,5 +1,5 @@
+#summary ダイアログのレイアウトガイドライン
 #labels Phase-Implementation
-#ダイアログのレイアウトガイドライン
 
 = ダイアログのレイアウトガイドライン =
 
