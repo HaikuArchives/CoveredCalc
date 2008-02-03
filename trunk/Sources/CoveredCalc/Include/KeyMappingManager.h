@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -33,14 +33,39 @@
 #ifndef _KEYMAPPINGMANAGER_H_
 #define _KEYMAPPINGMANAGER_H_
 
-#if defined(WIN32)	// ------ for Windows-------------------------------
-	#include "WinKeyMappingManager.h"
-	#define KeyMappingManager WinKeyMappingManager
-	#define MainWindowKeyMappingManager WinMainWindowKeyMappingManager
-#elif defined(BEOS)	// ------ for BeOS ---------------------------------
-	#include "BeKeyMappingManager.h"
-	#define KeyMappingManager BeKeyMappingManager
-	#define MainWindowKeyMappingManager BeMainWindowKeyMappingManager
-#endif
+#include <vector>
+#include "KeyEventParameter.h"
+
+class KeyMappings;
+class KeyFuncOperation;
+
+/**
+ * @brief This class holds key-mapping settings.
+ */
+class KeyMappingManager
+{
+public:
+						KeyMappingManager();
+	virtual				~KeyMappingManager();
+	
+	void				Create(const KeyMappings* keyMappings, ConstUTF8Str category, const KeyFuncOperation* keyFuncOperation);
+	void				Clear();
+	
+	SInt32				GetFunction(const KeyEventParameter& parameter) const;
+
+private:
+	UInt32				analyzeModifierMask(ConstUTF8Str modifierMaskStr);
+	
+private:
+	struct KMRecord
+	{
+		KeyEventParameter::KeyCode	KeyCode;
+		UInt32						Modifiers;
+		SInt32						Function;
+	};
+	typedef std::vector<KMRecord>	KMVector;
+	
+	KMVector			mapping;
+};
 
 #endif // _KEYMAPPINGMANAGER_H_

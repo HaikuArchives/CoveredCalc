@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -24,39 +24,39 @@
  */
 
 /*!
-	@file		WinKeyMappingManager.cpp
-	@brief		WinKeyMappingManager クラスの実装
+	@file		KeyMappingManager.cpp
+	@brief		implementation of KeyMappingManager class.
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2004.3.24 created
+	@date		2008.2.3 created
 */
 
 #include "Prefix.h"
-#include "WinKeyMappingManager.h"
+#include "KeyMappingManager.h"
 #include "KeyMappings.h"
 #include "KeyFuncOperation.h"
 #include "UTF8String.h"
 
 // ---------------------------------------------------------------------
-//! コンストラクタ
+//! Constructor
 // ---------------------------------------------------------------------
-WinKeyMappingManager::WinKeyMappingManager()
+KeyMappingManager::KeyMappingManager()
 {
 }
 
 // ---------------------------------------------------------------------
-//! デストラクタ
+//! Destructor
 // ---------------------------------------------------------------------
-WinKeyMappingManager::~WinKeyMappingManager()
+KeyMappingManager::~KeyMappingManager()
 {
 }
 
 /**
- *	@brief	オブジェクトの構築を行います。
- *	@param[in] keyMapping	キーマッピング定義
- *	@param[in] category		カテゴリー名
- *	@param[in] keyFuncOperation		key-function 定義操作オブジェクト
+ *	@brief	Creates an object.
+ *	@param[in] keyMapping	key-mapping definition.
+ *	@param[in] category		category name
+ *	@param[in] keyFuncOperation		KeyFuncOperation object
  */
-void WinKeyMappingManager::Create(const KeyMappings* keyMappings, ConstUTF8Str category, const KeyFuncOperation* keyFuncOperation)
+void KeyMappingManager::Create(const KeyMappings* keyMappings, ConstUTF8Str category, const KeyFuncOperation* keyFuncOperation)
 {
 	Clear();
 	
@@ -71,12 +71,12 @@ void WinKeyMappingManager::Create(const KeyMappings* keyMappings, ConstUTF8Str c
 		{
 			continue;
 		}
-		record.VirtualKeyCode = strtoul(TypeConv::AsASCII(value), NULL, 16);
+		record.KeyCode = strtoul(TypeConv::AsASCII(value), NULL, 16);
 		if (!item->GetModifiers(value))
 		{
 			continue;
 		}
-		record.ModifierMask = analyzeModifierMask(value);
+		record.Modifiers = analyzeModifierMask(value);
 		if (!item->GetFunction(value))
 		{
 			continue;
@@ -89,22 +89,22 @@ void WinKeyMappingManager::Create(const KeyMappings* keyMappings, ConstUTF8Str c
 }
 
 /**
- *	@brief	マッピングをクリアします。
+ *	@brief	Clears all mappings.
  */
-void WinKeyMappingManager::Clear()
+void KeyMappingManager::Clear()
 {
 	mapping.clear();
 }
 
 /**
- *	@brief	修飾キーのマスク文字列を解析します。
- *	@param[in]	modifierMaskStr	修飾キーマスク文字列
- *	@return 修飾キーマスク
+ *	@brief	Analyzes a string that shows modifier-key masks.
+ *	@param[in]	modifierMaskStr	modifier-key masks string.
+ *	@return modifier masks.
  */
-UInt32 WinKeyMappingManager::analyzeModifierMask(ConstUTF8Str modifierMaskStr)
+UInt32 KeyMappingManager::analyzeModifierMask(ConstUTF8Str modifierMaskStr)
 {
 	ConstAStr maskStr = TypeConv::AsASCII(modifierMaskStr);
-	UInt32	mask = WinKeyEventParameter::ModifierMask_None;
+	UInt32	mask = KeyEventParameter::ModifierMask_None;
 	
 	while ('\0' != maskStr[0])
 	{
@@ -118,18 +118,37 @@ UInt32 WinKeyMappingManager::analyzeModifierMask(ConstUTF8Str modifierMaskStr)
 		{
 			length = separator - maskStr;
 		}
+#if defined (WIN32)
 		if (5 == length && 0 == memcmp(maskStr, "shift", 5))
 		{
-			mask |= WinKeyEventParameter::ModifierMask_Shift;
+			mask |= KeyEventParameter::ModifierMask_Shift;
 		}
 		else if (4 == length && 0 == memcmp(maskStr, "ctrl", 4))
 		{
-			mask |= WinKeyEventParameter::ModifierMask_Ctrl;
+			mask |= KeyEventParameter::ModifierMask_Ctrl;
 		}
 		else if (3 == length && 0 == memcmp(maskStr, "alt", 4))
 		{
-			mask |= WinKeyEventParameter::ModifierMask_Alt;
+			mask |= KeyEventParameter::ModifierMask_Alt;
 		}
+#elif defined (BEOS)
+		if (5 == length && 0 == memcmp(maskStr, "shift", 5))
+		{
+			mask |= KeyEventParameter::ModifierMask_Shift;
+		}
+		else if (7 == length && 0 == memcmp(maskStr, "command", 7))
+		{
+			mask |= KeyEventParameter::ModifierMask_Command;
+		}
+		else if (7 == length && 0 == memcmp(maskStr, "control", 7))
+		{
+			mask |= KeyEventParameter::ModifierMask_Control;
+		}
+		else if (6 == length && 0 == memcmp(maskStr, "option", 6))
+		{
+			mask |= KeyEventParameter::ModifierMask_Option;
+		}
+#endif
 		
 		if (NULL == separator)
 		{
@@ -146,22 +165,21 @@ UInt32 WinKeyMappingManager::analyzeModifierMask(ConstUTF8Str modifierMaskStr)
 
 
 /**
- * @brief	指定したキーボードパラメータに対応する機能を取得します。
- * @return 対応する機能番号
+ * @brief	Retrieves a function from a keyboard parameter.
+ * @param parameter[in] keyboard parameter.
+ * @return function ID.
  */
-SInt32 WinKeyMappingManager::GetFunction(
-	const KeyEventParameter& parameter		//!< キーボードパラメータ
-) const
+SInt32 KeyMappingManager::GetFunction(const KeyEventParameter& parameter) const
 {
-	DWORD virtualKeyCode = parameter.GetVirtualKeyCode();
-	UInt32 modifierMask = parameter.GetModifierMask();
+	KeyEventParameter::KeyCode keyCode = parameter.GetKeyCode();
+	UInt32 modifiers = parameter.GetModifiers() & KeyEventParameter::ModifierMask_AllMask;
 
 	SInt32 length = mapping.size();
 	SInt32 index;
 	for (index = 0; index < length; index++)
 	{
-		if (mapping[index].VirtualKeyCode == virtualKeyCode &&
-			mapping[index].ModifierMask == modifierMask)
+		if (mapping[index].KeyCode == keyCode &&
+			mapping[index].Modifiers == modifiers)
 		{
 			return mapping[index].Function;
 		}
