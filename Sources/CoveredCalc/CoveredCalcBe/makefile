@@ -73,7 +73,6 @@ SRCS= \
 	../UI/BeCoverBrowser.cpp \
 	../UI/BeDeskbarPseudoWindow.cpp \
 	../UI/BeDialog.cpp \
-	../UI/BeKeyMappingManager.cpp \
 	../UI/BeMainView.cpp \
 	../UI/BeMainWindow.cpp \
 	../UI/BeMessageBoxProvider.cpp \
@@ -82,6 +81,7 @@ SRCS= \
 	../UI/BeSkinWindow.cpp \
 	../UI/ButtonUITask.cpp \
 	../UI/CoverBrowser.cpp \
+	../UI/KeyMappingManager.cpp \
 	../UI/MainUIManager.cpp \
 	../UI/MainWindowKeyFunc.cpp \
 	../UI/MouseHoverUITask.cpp \

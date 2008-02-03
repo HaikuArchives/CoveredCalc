@@ -413,6 +413,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\UI\KeyMappingManager.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\Ui\MainUIManager.cpp"
 					>
 				</File>
@@ -466,10 +470,6 @@
 				</File>
 				<File
 					RelativePath="..\Ui\WinDIBitmapDC.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Ui\WinKeyMappingManager.cpp"
 					>
 				</File>
 				<File
@@ -1020,14 +1020,6 @@
 				</File>
 				<File
 					RelativePath="..\Include\WinDIBitmapDC.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\WinKeyEventParameter.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\WinKeyMappingManager.h"
 					>
 				</File>
 				<File

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -33,12 +33,60 @@
 #ifndef _KEYEVENTPARAMETER_H_
 #define _KEYEVENTPARAMETER_H_
 
-#if defined(WIN32)	// ------ for Windows-------------------------------
-	#include "WinKeyEventParameter.h"
-	#define KeyEventParameter WinKeyEventParameter
-#elif defined(BEOS)	// ------ for BeOS ---------------------------------
-	#include "BeKeyEventParameter.h"
-	#define KeyEventParameter BeKeyEventParameter
+#if defined(BEOS)
+#include <InterfaceDefs.h>
 #endif
+
+/**
+ *	@brief	Keyboard event parameter.
+ */
+class KeyEventParameter
+{
+public:
+	enum ModifierMask
+	{
+		ModifierMask_None	= 0x00,
+
+#if defined(WIN32)
+		ModifierMask_Shift		= 0x01,
+		ModifierMask_Ctrl		= 0x02,
+		ModifierMask_Alt		= 0x04,
+		
+		ModifierMask_AllMask	= ModifierMask_Shift | ModifierMask_Ctrl | ModifierMask_Alt
+#elif defined(BEOS)
+		ModifierMask_Shift		= B_SHIFT_KEY,
+		ModifierMask_Command	= B_COMMAND_KEY,
+		ModifierMask_Control	= B_CONTROL_KEY,
+		ModifierMask_Option		= B_OPTION_KEY,
+
+		ModifierMask_AllMask	= ModifierMask_Shift | ModifierMask_Command | ModifierMask_Control | ModifierMask_Option
+#endif
+	};
+
+public:
+#if defined(WIN32)
+	typedef			DWORD	KeyCode;
+#elif defined(BEOS)
+	typedef			int32	KeyCode;
+#endif
+
+public:
+					KeyEventParameter() { keyCode = 0; modifiers = 0; }
+	virtual			~KeyEventParameter() { }
+	
+	KeyCode			GetKeyCode() const
+						{ return keyCode; }
+	UInt32			GetModifiers() const
+						{ return modifiers; }
+	
+	void			SetKeyCode(KeyCode keyCode)
+						{ this->keyCode = keyCode; }
+	void			SetModifiers(UInt32 modifiers)
+						{ this->modifiers = modifiers; }
+	
+private:
+	KeyCode			keyCode;			///< key code
+	UInt32			modifiers;			///< modifiers
+};
 
 #endif // _KEYEVENTPARAMETER_H_

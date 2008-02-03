@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -1088,11 +1088,12 @@ LRESULT WinSkinWindow::onKeyDown(
 	if (NULL != uiManager)
 	{
 		KeyEventParameter parameter;
-		parameter.SetVirtualKeyCode(static_cast<DWORD>(wParam));
-		parameter.SetFlags(static_cast<DWORD>(lParam));
-		parameter.SetShiftPressed((::GetKeyState(VK_SHIFT) & 0x8000) ? true : false);
-		parameter.SetCtrlPressed((::GetKeyState(VK_CONTROL) & 0x8000) ? true : false);
-		parameter.SetAltPressed((::GetKeyState(VK_MENU) & 0x8000) ? true : false);
+		UInt32 modifiers = 0;
+		modifiers |= ((::GetKeyState(VK_SHIFT)   & 0x8000) ? KeyEventParameter::ModifierMask_Shift : 0);
+		modifiers |= ((::GetKeyState(VK_CONTROL) & 0x8000) ? KeyEventParameter::ModifierMask_Ctrl  : 0);
+		modifiers |= ((::GetKeyState(VK_MENU)    & 0x8000) ? KeyEventParameter::ModifierMask_Alt   : 0);
+		parameter.SetKeyCode(static_cast<DWORD>(wParam));
+		parameter.SetModifiers(modifiers);
 		uiManager->KeyDown(parameter);
 	}
 
@@ -1132,11 +1133,12 @@ LRESULT WinSkinWindow::onKeyUp(
 	if (NULL != uiManager)
 	{
 		KeyEventParameter parameter;
-		parameter.SetVirtualKeyCode(static_cast<DWORD>(wParam));
-		parameter.SetFlags(static_cast<DWORD>(lParam));
-		parameter.SetShiftPressed((::GetKeyState(VK_SHIFT) & 0x8000) ? true : false);
-		parameter.SetCtrlPressed((::GetKeyState(VK_CONTROL) & 0x8000) ? true : false);
-		parameter.SetAltPressed((::GetKeyState(VK_MENU) & 0x8000) ? true : false);
+		UInt32 modifiers = 0;
+		modifiers |= ((::GetKeyState(VK_SHIFT)   & 0x8000) ? KeyEventParameter::ModifierMask_Shift : 0);
+		modifiers |= ((::GetKeyState(VK_CONTROL) & 0x8000) ? KeyEventParameter::ModifierMask_Ctrl  : 0);
+		modifiers |= ((::GetKeyState(VK_MENU)    & 0x8000) ? KeyEventParameter::ModifierMask_Alt   : 0);
+		parameter.SetKeyCode(static_cast<DWORD>(wParam));
+		parameter.SetModifiers(modifiers);
 		uiManager->KeyUp(parameter);
 	}
 
