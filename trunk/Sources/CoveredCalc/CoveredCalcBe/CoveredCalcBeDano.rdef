@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -29,12 +29,12 @@ resource app_signature "application/x-vnd.Hironytic-CoveredCalc";
 resource app_version
 {
 	major		= 1,
-	middle		= 7,
+	middle		= 9,
 	minor		= 0,
 	variety		= B_APPV_FINAL,
-	internal	= 2,
-	short_info	= "1.7.0 (ZETA)",
-	long_info	= "CoveredCalc 1.7.0 (ZETA)"
+	internal	= 3,
+	short_info	= "1.9.0+",
+	long_info	= "CoveredCalc for BeOS(dano) 1.9.0+"
 };
 
 resource app_flags B_SINGLE_LAUNCH;
