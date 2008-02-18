@@ -23,32 +23,52 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/**
-	@file		BeXMLLangFile.h
-	@brief		Definition of BeXMLLangFile class
-	@author		ICHIMIYA Hironori (Hiron)
-	@date		2006.12.31 created
+/*!
+	@file		KeyNameDB.h
+	@brief		Definition of KeyNameDB class.
+	@author 	ICHIMIYA Hironori (Hiron)
+	@date		2008.2.4 created
 */
 
-#ifndef _BEXMLLANGFILE_H_
-#define _BEXMLLANGFILE_H_
+#ifndef _KEYNAMEDB_H_
+#define _KEYNAMEDB_H_
 
-#include "XMLLangFile.h"
+#include <map>
+#include "KeyEventParameter.h"
+#include "MBCString.h"
+#if defined(BEOS)
+#include <InterfaceDefs.h>
+#endif
 
-class BeDialogDesign;
+class Path;
+class NCDDocument;
 
-class BeXMLLangFile : public XMLLangFile
+/**
+ * @brief This class converts a keycode to its key name.
+ */
+class KeyNameDB
 {
 public:
-						BeXMLLangFile();
-						~BeXMLLangFile();
+						KeyNameDB();
+	virtual				~KeyNameDB();
 
-	virtual void		LoadString(ConstUTF8Str name, MBCString& message) const;
-	void				LoadStringFromID(SInt32 stringID, MBCString& message) const;
-	BeDialogDesign*		LoadDialogDesign(SInt32 dialogID) const;
+	void				Init(const Path& keyNameDefFile);
+	
+	void				GetKeyName(KeyEventParameter::KeyCode keyCode, MBCString& keyName);
 
-protected:
-	virtual bool		checkVersion(ConstUTF8Str version);
+private:
+	typedef std::map<KeyEventParameter::KeyCode, MBCString> KeyNameMap;
+
+private:
+	void				loadKeyNameDef(NCDDocument* document);
+	void				generateKeyName(KeyEventParameter::KeyCode keyCode, MBCString& keyName);
+
+private:
+	KeyNameMap			keyNameCache;
+#if defined(BEOS)
+	key_map*			mapKeys;		///< copy of the system keymap (key_map structure)
+	char*				mapChars;		///< copy of the system keymap (character data)
+#endif
 };
 
-#endif // _BEXMLLANGFILE_H_
+#endif // _KEYNAMEDB_H_

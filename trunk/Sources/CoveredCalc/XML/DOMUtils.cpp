@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -37,6 +37,7 @@
 #include "NCDElement.h"
 #include "NCDNamedNodeMap.h"
 #include "NCDAttr.h"
+#include "NCDText.h"
 #include "TypeConv.h"
 #include "UTF8String.h"
 #include "UTF8Utils.h"
@@ -765,6 +766,149 @@ void WriteOutAsXML(
 
 	NodeOutputter outputter(outFile);
 	outputter.Visit(document);
+	WriteOutDOMText(TypeConv::AsUTF8("\n"), outFile);
+}
+
+/**
+ * @brief Format DOM tree.
+ * @param[in] document document object of the tree.
+ * @param[in] director	formatting director.
+ */
+void FormatDocument(NCDDocument* document, NodeFormatDirector* director)
+{
+	FormatNodeContent(document->getDocumentElement(), director, 0);
+}
+
+/**
+ * @brief Format child nodes of specified parent node.
+ * @param[in] parentNode parent node. this node must be a instance of NCDDocument or NCDElement.
+ * @param[in] director	formatting director.
+ * @param[in] indentLevel a number of indent depth.
+ */
+void FormatNodeContent(NCDNode* parentNode, NodeFormatDirector* director, SInt32 indentLevel)
+{
+	ConstUTF8Str indentChars = director->GetIndentChars();
+	UInt32 textFormatOptions = director->GetTextFormatOptions(parentNode);
+	bool isContentPreserveSpace = (0 != (textFormatOptions & TextFormatOption_PreserveSpace));
+	bool isTextFormatInline = (0 != (textFormatOptions & TextFormatOption_Inline));
+	
+	// pretreatment: strip line-breaks and spaces.
+	if (!isContentPreserveSpace)
+	{
+		NCDNode* nextNode = parentNode->getFirstChild();
+		while (NULL != nextNode)
+		{
+			NCDNode* node = nextNode;
+			nextNode = node->getNextSibling();
+			
+			NCDNode::NodeType nodeType = node->getNodeType();
+			if (NCDNode::TEXT_NODE == nodeType)
+			{
+				UTF8String newValue;
+				ReadTextNode(node, false, newValue);
+				if (newValue.IsEmpty())
+				{
+					parentNode->removeChild(node);
+					node->release();
+				}
+				else
+				{
+					node->setNodeValue(newValue.CString());
+				}
+			}
+		}
+	}
+	
+	// format children
+	bool postIndent = false;
+	NCDNode* nextNode = parentNode->getFirstChild();
+	while (NULL != nextNode)
+	{
+		NCDNode* node = nextNode;
+		nextNode = node->getNextSibling();
+		bool preIndent = false;
+
+		NCDNode::NodeType nodeType = node->getNodeType();
+		if (NCDNode::ELEMENT_NODE == nodeType)
+		{
+			FormatMode elemFormatMode;
+			if (isContentPreserveSpace)
+			{
+				elemFormatMode = FormatMode_Inline;
+			}
+			else
+			{
+				elemFormatMode = director->GetFormatMode(node);
+			}
+			if (FormatMode_Block == elemFormatMode)
+			{
+				preIndent = true;
+				postIndent = true;
+			}
+			FormatNodeContent(node, director, indentLevel + ((FormatMode_Block == elemFormatMode) ? 1 : 0));
+		}
+		else if (NCDNode::TEXT_NODE == nodeType)
+		{
+			if (!isContentPreserveSpace && !isTextFormatInline)
+			{
+				preIndent = true;
+				postIndent = true;
+			}
+			
+			if (!isContentPreserveSpace)
+			{
+				// TEXT FORMATTING HERE IF REQUIRED.
+				
+				// Is text formatting required?
+				// Currently no. So it does nothing here.
+			}
+		}
+				
+		if (preIndent)
+		{
+			UTF8String preSpaces = TypeConv::AsUTF8("\n");
+			int ix;
+			for (ix = 0; ix < indentLevel + 1; ix++)
+			{
+				preSpaces += indentChars;
+			}
+			NCDNode* prevNode = node->getPreviousSibling();
+			if (NULL != prevNode && NCDNode::TEXT_NODE == prevNode->getNodeType())
+			{
+				UTF8String value;
+				prevNode->getNodeValue(value);
+				value += preSpaces;
+				prevNode->setNodeValue(value.CString());
+			}
+			else
+			{
+				NCDDocument* doc = (NCDNode::DOCUMENT_NODE == parentNode->getNodeType()) ? static_cast<NCDDocument*>(parentNode) : parentNode->getOwnerDocument();
+				parentNode->insertBefore(doc->createTextNode(preSpaces.CString()), node);
+			}
+		}
+	}
+	if (postIndent)
+	{
+		UTF8String postSpaces = TypeConv::AsUTF8("\n");
+		int ix;
+		for (ix = 0; ix < indentLevel; ix++)
+		{
+			postSpaces += indentChars;
+		}
+		NCDNode* lastChild = parentNode->getLastChild();
+		if (NULL != lastChild && NCDNode::TEXT_NODE == lastChild->getNodeType())
+		{
+			UTF8String value;
+			lastChild->getNodeValue(value);
+			value += postSpaces;
+			lastChild->setNodeValue(value.CString());
+		}
+		else
+		{
+			NCDDocument* doc = (NCDNode::DOCUMENT_NODE == parentNode->getNodeType()) ? static_cast<NCDDocument*>(parentNode) : parentNode->getOwnerDocument();
+			parentNode->appendChild(doc->createTextNode(postSpaces.CString()));
+		}
+	}
 }
 
 #ifdef DEBUG

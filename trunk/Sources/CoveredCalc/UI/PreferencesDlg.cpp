@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -37,6 +37,7 @@
 #include "KeyMappings.h"
 #include "UTF8Conv.h"
 #include "Exception.h"
+#include "VirtualPathNames.h"
 
 #if defined (WIN32)
 #include "WinCoveredCalcApp.h"
@@ -160,7 +161,7 @@ bool PreferencesDlg::saveFromDialog()
 	appSettings->Save();
 
 	// load key-mapping again.
-	app->LoadKeyMappings(app->ExpandVirtualKeymapFilePath(keyMappingFilePath));
+	app->LoadKeyMappings(app->ExpandVirtualPath(keyMappingFilePath));
 
 	return true;
 }
@@ -173,7 +174,7 @@ void PreferencesDlg::loadKeyMappingsInfos()
 	unloadKeyMappingsInfos();
 	
 	// load files in ${AppKeymaps} folder.
-	Path virtualAppKeymaps("${AppKeymaps}");
+	Path virtualAppKeymaps("${" VPATH_APP_KEYMAPS "}");
 	loadKeyMappingsInfosInFolder(virtualAppKeymaps);
 }
 
@@ -183,7 +184,7 @@ void PreferencesDlg::loadKeyMappingsInfos()
  */
 void PreferencesDlg::loadKeyMappingsInfosInFolder(const Path& virtualFolderPath)
 {
-	Path folder = CoveredCalcApp::GetInstance()->ExpandVirtualKeymapFilePath(virtualFolderPath);
+	Path folder = CoveredCalcApp::GetInstance()->ExpandVirtualPath(virtualFolderPath);
 
 #if defined (WIN32)
 	Path findPath = folder.Append("*.cckxw");
@@ -240,7 +241,11 @@ void PreferencesDlg::loadOneKeyMappingsInfo(const Path& realKeymapFilePath, cons
 	{
 		KeyMappings keyMappings;
 		keyMappings.Load(realKeymapFilePath);
-		CoveredCalcApp::GetInstance()->CheckKeyMappingsPlatform(&keyMappings);
+		UTF8String platform;
+		if (!keyMappings.GetPlatform(platform) || !CoveredCalcApp::GetInstance()->CheckPlatform(platform))
+		{
+			return;
+		}
 		
 		UTF8String utf8Title;
 		keyMappings.GetTitle(utf8Title);

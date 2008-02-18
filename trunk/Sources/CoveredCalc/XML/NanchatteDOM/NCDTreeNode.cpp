@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -196,7 +196,8 @@ NCDNode* NCDTreeNode::ReplaceChild(
 )
 {
 	// check newChild is created from same document.
-	if (newChild->getOwnerDocument() != thisNode->getOwnerDocument())
+	NCDNode* thisDocument = (NCDNode::DOCUMENT_NODE == thisNode->getNodeType()) ? thisNode : thisNode->getOwnerDocument();
+	if (newChild->getOwnerDocument() != thisDocument)
 	{
 		throw new NCDException(NCDException::WRONG_DOCUMENT_ERR);
 	}

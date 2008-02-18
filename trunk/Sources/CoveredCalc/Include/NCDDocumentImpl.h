@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -93,7 +93,7 @@ public:
 	void								disposeNode(NCDNode* node);
 
 private:
-	bool								checkNewChildNode(NCDNode* newChild);
+	bool								checkNewChildNode(NCDNode* newChild, bool doSecondCheck);
 
 private:
 	typedef	std::set<NCDNode*>			NCDNodeSet;

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -45,7 +45,6 @@
 ////////////////////////////////////////
 
 UTF8Char	SUITABLE_VERSION[] = "5";
-UTF8Char	SUITABLE_TARGET[] = "beos";
 
 #define DEFINE_ID(name)	case name: return TypeConv::AsUTF8(#name);
 static ConstUTF8Str _convertDialogID(SInt32 id)
@@ -143,16 +142,6 @@ BeXMLLangFile::~BeXMLLangFile()
 bool BeXMLLangFile::checkVersion(ConstUTF8Str version)
 {
 	return (0 == UTF8Utils::UTF8StrCmpI(SUITABLE_VERSION, version));
-}
-
-/**
- *	@brief		Checks the platform target is suitable for thie implementation.
- *	@param[in]	target	target string.
- *	@return		true if the target is suitable.
- */
-bool BeXMLLangFile::isTargetSuitable(ConstUTF8Str target)
-{
-	return (0 == UTF8Utils::UTF8StrCmpI(SUITABLE_TARGET, target));
 }
 
 /**

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -39,9 +39,13 @@
 #include "KeyMappingManager.h"
 #include "KeyMappingsException.h"
 #include "MainWindowKeyFunc.h"
+#include "PathException.h"
+#include "StorageUtils.h"
+#include "VirtualPathNames.h"
 
 static const AChar	LangFileFolderName[] = "NLS";		///< the folder which contains language files
 static const AChar	KeymapsFolderName[] = "Keymaps";	///< the folder which contains key-mapping files
+static const AChar	UserKeymapsFolderName[] = "UserKeymaps";	///< the folder which contains user-defined key-mapping files
 
 static const UTF8Char STR_CATEGORY_MAIN_WINDOW[] = "MainWindow";	///< keymap category of main window.
 
@@ -165,11 +169,34 @@ void CoveredCalcAppBase::GetCurrentLanguageCode(
 }
 
 /**
- *	@brief	Converts virtual kay-mapping file path to absolute path.
+ *	@brief	Get absolute path for specified virtual path name.
+ *	@param[in]	virtualPathName	name of virtual path.
+ *				e.g. the name of the path "${Hoge}" is "Hoge".
+ *	@return		result absolute path.
+ *	@throw		PathExceptions::VirtualPathNameNotInterpreted
+ */
+Path CoveredCalcAppBase::resolveVirtualPathName(const MBCString& virtualPathName)
+{
+	if (0 == virtualPathName.CompareNoCase(VPATH_APP_KEYMAPS))
+	{
+		return getAppFolderPath().Append(KeymapsFolderName);
+	}
+	else if (0 == virtualPathName.CompareNoCase(VPATH_USER_KEYMAPS))
+	{
+		return getUserSettingsPath().Append(UserKeymapsFolderName);
+	}
+	else
+	{
+		throw new PathExceptions::VirtualPathNameNotInterpreted(virtualPathName);
+	}
+}
+
+/**
+ *	@brief	Converts virtual path to absolute path.
  *	@param[in]	virtrualPath	virtual path.
  *	@return	result absolute path.
  */
-Path CoveredCalcAppBase::ExpandVirtualKeymapFilePath(const Path& virtualPath)
+Path CoveredCalcAppBase::ExpandVirtualPath(const Path& virtualPath)
 {
 	if (virtualPath.IsEmpty())
 	{
@@ -182,17 +209,67 @@ Path CoveredCalcAppBase::ExpandVirtualKeymapFilePath(const Path& virtualPath)
 
 	MBCString fileName;
 	virtualPath.GetFileName(fileName);
-	if (0 == fileName.CompareNoCase("${AppKeymaps}"))
+	SInt32 length = fileName.Length();
+	if (length > 4 &&
+		'$' == fileName.GetAt(0) &&
+		'{' == fileName.GetAt(1) &&
+		'}' == fileName.GetAt(length - 1))		// "${virtualname}"
 	{
-		return getAppFolderPath().Append(KeymapsFolderName);
+		MBCString virtualPathName = fileName.SubString(2, fileName.Length() - 3);
+		try
+		{
+			return resolveVirtualPathName(virtualPathName);
+		}
+		catch (PathExceptions::VirtualPathNameNotInterpreted* ex)
+		{
+			ex->Delete();
+			return virtualPath;
+		}
 	}
-//	else if (0 == fileName.CompareNoCase("${UserKeymaps}"))
-//	{
-//		return Path();	// TODO:
-//	}
 	else
 	{
-		return ExpandVirtualKeymapFilePath(virtualPath.GetParent()).Append(fileName);
+		return ExpandVirtualPath(virtualPath.GetParent()).Append(fileName);
+	}
+}
+
+/**
+ *	@brief	Replaces a part of specified absolute path with virtual path placeholder (i.e. ${virtualname}).
+ *	@param[in]	absolutePath	absolute path to replace.
+ *	@param[in]	virtualPathName	name of virtual path.
+ *	@return	result virtual path. if it couldn't make virtual path empty path is returned.
+ */
+Path CoveredCalcAppBase::MakeVirtualPath(const Path& absolutePath, ConstAStr virtualPathName)
+{
+	try
+	{
+		Path virtualPathTop = resolveVirtualPathName(virtualPathName);
+		Path relativePath;
+		virtualPathTop.MakeRelativePath(absolutePath, relativePath);
+		
+		MBCString placeholder = "${";
+		placeholder += virtualPathName;
+		placeholder += "}";
+		
+		return Path(placeholder).Append(relativePath);
+	}
+	catch (PathException* ex)
+	{
+		ex->Delete();
+		return Path();
+	}
+}
+
+/**
+ *	@brief	Retrives default setting file path. It also creates setting folder if not exist.
+ *	@param[out]	settingFilePath	a path of default setting file is returned.
+ */
+void CoveredCalcAppBase::readyDefaultSettingFilePath(Path& settingFilePath)
+{
+	const Path path = getUserSettingsPath();
+	if (!path.IsEmpty())
+	{
+		StorageUtils::ReadyFolder(path);
+		settingFilePath = path.Append("Setting.xml");
 	}
 }
 
@@ -211,7 +288,11 @@ void CoveredCalcAppBase::LoadKeyMappings(const Path& keymapFile)
 	keyMappings.Load(keymapFile);
 	
 	// check platform
-	CheckKeyMappingsPlatform(&keyMappings);
+	UTF8String platform;
+	if (!keyMappings.GetPlatform(platform) || !CheckPlatform(platform))
+	{
+		throw new KeyMappingsExceptions::LoadFailed("The key-mapping definition is not for this platform.");
+	}
 
 	// initialize managers.
 	// --- main window.

@@ -23,32 +23,24 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/**
-	@file		BeXMLLangFile.h
-	@brief		Definition of BeXMLLangFile class
+/*!
+	@file		StorageUtils.h
+	@brief		Storage utilities.
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2006.12.31 created
+	@date		2008.2.16 created
 */
 
-#ifndef _BEXMLLANGFILE_H_
-#define _BEXMLLANGFILE_H_
+#ifndef _STORAGEUTILS_H_
+#define _STORAGEUTILS_H_
 
-#include "XMLLangFile.h"
+#include "MBCString.h"
 
-class BeDialogDesign;
+class Path;
 
-class BeXMLLangFile : public XMLLangFile
+//! Storage utilities
+namespace StorageUtils
 {
-public:
-						BeXMLLangFile();
-						~BeXMLLangFile();
-
-	virtual void		LoadString(ConstUTF8Str name, MBCString& message) const;
-	void				LoadStringFromID(SInt32 stringID, MBCString& message) const;
-	BeDialogDesign*		LoadDialogDesign(SInt32 dialogID) const;
-
-protected:
-	virtual bool		checkVersion(ConstUTF8Str version);
+	void				ReadyFolder(const Path& folderPath);
 };
 
-#endif // _BEXMLLANGFILE_H_
+#endif // _STORAGEUTILS_H_

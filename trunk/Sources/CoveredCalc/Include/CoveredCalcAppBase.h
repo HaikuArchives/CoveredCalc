@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -68,7 +68,8 @@ public:
 	virtual const LangFileInfoCollection*	GetLangFileInfos();
 	virtual Path							MakeRelativeLangFilePath(const Path& absolutePath);
 	virtual Path							MakeAbsoluteLangFilePath(const Path& relativePath);
-	virtual Path							ExpandVirtualKeymapFilePath(const Path& virtualPath);
+	virtual Path							ExpandVirtualPath(const Path& virtualPath);
+	virtual Path							MakeVirtualPath(const Path& absolutePath, ConstAStr virtualPathName);
 	virtual void							LoadKeyMappings(const Path& keymapFile);
 	
 	virtual KeyMappingManager*				GetKeyMappingManagerForMainWindow() { return &mainWindowKeyMappingManager; }
@@ -83,6 +84,8 @@ protected:
 	bool									restoreByDefaultCoverDef();
 	void									readyLangFileInfos();
 	void									setCurrentLanguageCode(ConstAStr language) { currentLangCode = language; }
+	virtual Path							resolveVirtualPathName(const MBCString& virtualPathName);
+	void 									readyDefaultSettingFilePath(Path& settingFilePath);
 
 protected:
 
@@ -94,15 +97,14 @@ protected:
 	// ---------------------------------------------------------------------
 	virtual const Path&						getAppFolderPath() = 0;
 	
+	/**
+	 *	@brief	Returns the path of folder in which user settings is stored.
+	 *	@return user settings folder path.
+	 */
+	virtual const Path&						getUserSettingsPath() = 0;
+	
 	virtual Path							makeAbsoluteCoverDefPath(const Path& basePath, const Path& relativePath);
 	virtual Path							makeRelativeCoverDefPath(const Path& basePath, const Path& absolutePath);
-
-	// ---------------------------------------------------------------------
-	//! Returns path of default setting file and create path if not exist.
-	// ---------------------------------------------------------------------
-	virtual void							readyDefaultSettingFilePath(
-												Path& settingFilePath		//!< OUTPUT. default setting file path is returned.
-											) = 0;
 
 private:
 	AppSettings								appSettings;					//!< current application settings

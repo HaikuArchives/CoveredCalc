@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -63,7 +63,21 @@ namespace PathExceptions
 	private:
 		MBCString			base;			//!< base path
 		MBCString			target;			//!< target path
-	};	
+	};
+	
+	/**
+	 *	@brief	Thrown when it meets an undefined virtual path name.
+	 */
+	class VirtualPathNameNotInterpreted : public PathException
+	{
+	public:
+							VirtualPathNameNotInterpreted(ConstAStr name)
+								{ this->name = name; }
+		ConstAStr			GetVirtualPathName() const { return name; }
+	
+	private:
+		MBCString			name;			///< virtual path name.
+	};
 }
 
 #endif // _PATHEXCEPTION_H_

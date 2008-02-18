@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -51,6 +51,7 @@
 #include "KeyMappingsException.h"
 #include "MainWindowKeyFunc.h"
 #include "UTF8Utils.h"
+#include "VirtualPathNames.h"
 
 static const UTF8Char STR_PLATFORM_BEOS[] = "BeOS";			///< keymap platform for BeOS.
 static const UTF8Char STR_CATEGORY_MAIN_WINDOW[] = "MainWindow";	///< keymap category of main window.
@@ -191,84 +192,47 @@ void BeCoveredCalcApp::EndWaitingUI()
 {
 }
 
-// ---------------------------------------------------------------------
-//! 指定したパスのフォルダが存在しなければ作成します。
-// ---------------------------------------------------------------------
-void BeCoveredCalcApp::createFolder(
-	const Path& path				//!< 作成するフォルダのパス
-)
+/**
+ *	@brief	Returns the path of folder in which application program is installed.
+ *	@return application folder path.
+ */
+const Path& BeCoveredCalcApp::getAppFolderPath()
 {
-	const char* pathString = path.GetPathString();
-	BEntry entry(pathString);
-	if (entry.Exists())				// 既に存在する
+	if (appFolderPath.IsEmpty())
 	{
-		if (!entry.IsDirectory())
-		{
-			// フォルダでなければいけない
-			throw new FileExceptions::FileAlreadyExists(path);
-		}
-
-		// 既に存在するので何もしない
-		return;
+		app_info appInfo;
+		GetAppInfo(&appInfo);
+		BPath path(&appInfo.ref);
+		path.GetParent(&path);
+		appFolderPath.Assign(path.Path());
 	}
-
-	// 作成
-	status_t result = create_directory(pathString, 0755);
-	if (B_OK != result)
-	{
-		switch (result)
-		{
-		case B_ENTRY_NOT_FOUND:
-			throw new FileExceptions::FileNotFound(path);
-			break;
-		
-		case B_FILE_EXISTS:
-			throw new FileExceptions::FileAlreadyExists(path);
-			break;
-		
-		case B_NOT_ALLOWED:
-		case B_PERMISSION_DENIED:
-			throw new FileExceptions::AccessDenied(path);
-			break;
-	
-		case B_DEVICE_FULL:
-			throw new FileExceptions::DeviceFull(path);
-			break;
-		
-		default:
-			throw new FileException(path);
-			break;
-		}
-	}
+	return appFolderPath;
 }
 
-// ---------------------------------------------------------------------
-//! デフォルトの設定ファイルのパスを取得します。パスが存在しなければ作成も行います。
-// ---------------------------------------------------------------------
-void BeCoveredCalcApp::readyDefaultSettingFilePath(
-	Path& settingFilePath			//!< OUTPUT. デフォルトの設定ファイルのパスが返ります。
-)
+/**
+ *	@brief	Returns the path of folder in which user settings is stored.
+ *	@return user settings folder path.
+ */
+const Path& BeCoveredCalcApp::getUserSettingsPath()
 {
-	Path path;
-
-	// settings の下
-	BPath objBPath;
-	status_t result = find_directory(B_USER_SETTINGS_DIRECTORY, &objBPath);
-	if (B_OK == result)
+	if (userSettingsPath.IsEmpty())
 	{
-		path.Assign(objBPath.Path());
+		Path path;
+		
+		// settings の下
+		BPath objBPath;
+		status_t result = find_directory(B_USER_SETTINGS_DIRECTORY, &objBPath);
+		if (B_OK == result)
+		{
+			path.Assign(objBPath.Path());
+		}
+		
+		if (!path.IsEmpty())
+		{
+			userSettingsPath = path.Append("CoveredCalc");
+		}
 	}
-	
-	if (!path.IsEmpty())
-	{
-		path = path.Append("CoveredCalc");
-		createFolder(path);
-	}
-
-	if (!path.IsEmpty())
-	{
-		settingFilePath = path.Append("Setting.xml");
-	}		
+	return userSettingsPath;
 }
 
 /**
@@ -306,16 +270,12 @@ void BeCoveredCalcApp::GetCurrentLanguageCode(
 #endif // defined(ZETA)
 
 /**
- *	@brief	Checks the key-mapping platform is suitable for this app.
- *	@throw	KeyMappingExceptions::LoadFailed	when the platform is not suitable for this app.
+ *	@brief	Checks the platform string is suitable for this app.
+ *	@return	true is suitable.
  */
-void BeCoveredCalcApp::CheckKeyMappingsPlatform(const KeyMappings* keyMappings)
+bool BeCoveredCalcApp::CheckPlatform(ConstUTF8Str platform)
 {
-	UTF8String platform;
-	if (!keyMappings->GetPlatform(platform) || 0 != UTF8Utils::UTF8StrCmp(STR_PLATFORM_BEOS, platform))
-	{
-		throw new KeyMappingsExceptions::LoadFailed("The key-mapping definition is not for BeOS/ZETA platform.");
-	}
+	return (0 == UTF8Utils::UTF8StrCmpI(STR_PLATFORM_BEOS, platform));
 }
 
 /**
@@ -330,11 +290,11 @@ void BeCoveredCalcApp::loadKeyMappingsOnInit()
 	if (keymapFile.IsEmpty())
 	{
 		// the default keymap is applied.
-		keymapFile.AssignFromSlashSeparated("${AppKeymaps}/UsQWERTY.cckxb");
+		keymapFile.AssignFromSlashSeparated("${" VPATH_APP_KEYMAPS "}/UsQWERTY.cckxb");
 		appSettings->SetKeymapFilePath(keymapFile);
 	}
 	
-	Path absolutePath = ExpandVirtualKeymapFilePath(keymapFile);
+	Path absolutePath = ExpandVirtualPath(keymapFile);
 	try
 	{
 		LoadKeyMappings(absolutePath);
@@ -362,16 +322,6 @@ void BeCoveredCalcApp::ReadyToRun()
 	// ベースクラス初期化
 	init();
 
-	// リソースローダ初期化
-//	resLoader.SetResources(AppResources());
-
-	//  アプリケーションがあるフォルダのパスを取得
-	app_info appInfo;
-	GetAppInfo(&appInfo);
-	BPath path(&appInfo.ref);
-	path.GetParent(&path);
-	appFolderPath = Path(path.Path());
-	
 	CommandLineParam* clParam = GetCommandLineParam();
 	
 	// 言語ファイルの読み込み

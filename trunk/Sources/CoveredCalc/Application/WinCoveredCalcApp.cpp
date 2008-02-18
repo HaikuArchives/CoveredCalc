@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -45,6 +45,7 @@
 #include "KeyMappings.h"
 #include "KeyMappingsException.h"
 #include "UTF8Utils.h"
+#include "VirtualPathNames.h"
 
 static const char LANG_CODE_JAJP[] = "jaJP";		///< language code for Japanese.
 
@@ -336,138 +337,60 @@ HINSTANCE WinCoveredCalcApp::GetLangResHandle() const
 // ---------------------------------------------------------------------
 //! アプリケーションがあるフォルダのパスを取得します。
 // ---------------------------------------------------------------------
-void WinCoveredCalcApp::makeAppFolderPath()
+const Path& WinCoveredCalcApp::getAppFolderPath()
 {
-	AChar moduleFileName[MAX_PATH];
-	::GetModuleFileName(NULL, moduleFileName, sizeof(moduleFileName)/sizeof(AChar));
-	MBCString appFolderString = PathUtils::RemoveFileSpec(moduleFileName);
-	appFolderPath.Assign(appFolderString);
+	if (appFolderPath.IsEmpty())
+	{
+		AChar moduleFileName[MAX_PATH];
+		::GetModuleFileName(NULL, moduleFileName, sizeof(moduleFileName)/sizeof(AChar));
+		MBCString appFolderString = PathUtils::RemoveFileSpec(moduleFileName);
+		appFolderPath.Assign(appFolderString);
+	}
+	return appFolderPath;
 }
 
-// ---------------------------------------------------------------------
-//! 指定したパスのフォルダが存在しなければ作成します。
-// ---------------------------------------------------------------------
-void WinCoveredCalcApp::createFolder(
-	const Path& path				//!< 作成するフォルダのパス
-)
+/**
+ *	@brief	Returns the path of folder in which user settings is stored.
+ *	@return user settings folder path.
+ */
+const Path& WinCoveredCalcApp::getUserSettingsPath()
 {
-	LPCTSTR pathString = path.GetPathString();
-	DWORD attributes = ::GetFileAttributes(pathString);
-	if (0xffffffff != attributes)				// 既に存在する
+	if (userSettingsPath.IsEmpty())
 	{
-		if (!(attributes & FILE_ATTRIBUTE_DIRECTORY))
-		{
-			// ディレクトリじゃないけど存在している
-			throw new FileExceptions::FileAlreadyExists(path);
-		}
+		Path path;
 		
-		// 既に存在するので何もしない
-		return;
-	}
-	else										// 存在しないかもしれない
-	{
-		DWORD lastError = ::GetLastError();
-		switch (lastError)
+		// Application Data の下
+		ITEMIDLIST* pIdList;
+		HRESULT hResult = ::SHGetSpecialFolderLocation(NULL, CSIDL_APPDATA, &pIdList);
+		if(S_OK == hResult)
 		{
-		case ERROR_FILE_NOT_FOUND:
-		case ERROR_PATH_NOT_FOUND:
-			break;								// 存在しない
-		case ERROR_ACCESS_DENIED:
-			throw new FileExceptions::AccessDenied(path);
-			break;
-		default:
-			throw new FileException(path);
-			break;
+			// 得られた ITEMIDLIST からフォルダ名を取得
+			char pathString[MAX_PATH];
+			if (::SHGetPathFromIDList(pIdList, pathString))
+			{
+				path.Assign(pathString);
+			}
+			
+			// システムが確保した ITEMIDLIST を解放
+			IMalloc* pMalloc;
+			::SHGetMalloc(&pMalloc);
+			if (NULL != pMalloc)
+			{
+				pMalloc->Free(pIdList);
+				pMalloc->Release();
+			}
+		}
+		if (!path.IsEmpty())
+		{
+			userSettingsPath = path.Append("Hironytic").Append("CoveredCalc");
+		}
+		else
+		{
+			// Application Data が得られなかったら、アプリケーションのあるフォルダに保存
+			userSettingsPath = getAppFolderPath();
 		}
 	}
-	
-	ASSERT(!path.IsRoot());		// ルートが存在しないってことはないはずだが...
-	if (path.IsRoot())
-	{
-		return;					// 無限に再帰してスタックを抜いてしまわないよう一応チェックしておく
-	}
-	
-	// 親フォルダがなければ作成
-	createFolder(path.GetParent());
-
-	// 指定されたフォルダを作成
-	if (!::CreateDirectory(pathString, NULL))
-	{
-		DWORD lastError = ::GetLastError();
-		switch (lastError)
-		{
-		case ERROR_ACCESS_DENIED:
-			throw new FileExceptions::AccessDenied(path);
-			break;
-		case ERROR_WRITE_FAULT:
-			throw new FileExceptions::IOError(path);
-			break;
-		case ERROR_SHARING_VIOLATION:
-		case ERROR_LOCK_VIOLATION:
-			throw new FileExceptions::SharingViolation(path);
-			break;
-		case ERROR_ALREADY_EXISTS:
-			throw new FileExceptions::FileAlreadyExists(path);
-			break;
-		default:
-			throw new FileException(path);
-			break;
-		}
-	}
-}
-
-// ---------------------------------------------------------------------
-//! デフォルトの設定ファイルのパスを取得します。パスが存在しなければ作成も行います。
-// ---------------------------------------------------------------------
-void WinCoveredCalcApp::readyDefaultSettingFilePath(
-	Path& settingFilePath			//!< OUTPUT. デフォルトの設定ファイルのパスが返ります。
-)
-{
-	Path path;
-
-	// Application Data の下
-	ITEMIDLIST* pIdList;
-	HRESULT hResult = ::SHGetSpecialFolderLocation(NULL, CSIDL_APPDATA, &pIdList);
-	if(S_OK == hResult)
-	{
-		// 得られた ITEMIDLIST からフォルダ名を取得
-		char pathString[MAX_PATH];
-		if (::SHGetPathFromIDList(pIdList, pathString))
-		{
-			path.Assign(pathString);
-		}
-		
-		// システムが確保した ITEMIDLIST を解放
-		IMalloc* pMalloc;
-		::SHGetMalloc(&pMalloc);
-		if (NULL != pMalloc)
-		{
-			pMalloc->Free(pIdList);
-			pMalloc->Release();
-		}
-	}
-	if (!path.IsEmpty())
-	{
-		path = path.Append("Hironytic").Append("CoveredCalc");
-		createFolder(path);
-	}
-	
-	if (path.IsEmpty())
-	{
-		// Application Data が得られなかったら、アプリケーションのあるフォルダに保存
-		char pathString[MAX_PATH];
-		::GetModuleFileName(NULL, pathString, sizeof(pathString));
-		path.Assign(PathUtils::GetParentDirectory(pathString));
-	}
-
-	if (!path.IsEmpty())
-	{
-		settingFilePath = path.Append("Setting.xml");
-	}
-	else
-	{
-		// TODO: 失敗したら例外投げなきゃ…
-	}
+	return userSettingsPath;
 }
 
 /**
@@ -533,16 +456,12 @@ SInt32 WinCoveredCalcApp::autoSelectLangFile()
 }
 
 /**
- *	@brief	Checks the key-mapping platform is suitable for this app.
- *	@throw	KeyMappingExceptions::LoadFailed	when the platform is not suitable for this app.
+ *	@brief	Checks the platform string is suitable for this app.
+ *	@return	true is suitable.
  */
-void WinCoveredCalcApp::CheckKeyMappingsPlatform(const KeyMappings* keyMappings)
+bool WinCoveredCalcApp::CheckPlatform(ConstUTF8Str platform)
 {
-	UTF8String platform;
-	if (!keyMappings->GetPlatform(platform) || 0 != UTF8Utils::UTF8StrCmp(STR_PLATFORM_WINDOWS, platform))
-	{
-		throw new KeyMappingsExceptions::LoadFailed("The key-mapping definition is not for Windows platform.");
-	}
+	return (0 == UTF8Utils::UTF8StrCmpI(STR_PLATFORM_WINDOWS, platform));
 }
 
 /**
@@ -566,16 +485,16 @@ void WinCoveredCalcApp::loadKeyMappingsOnInit()
 		GetCurrentLanguageCode(langCode);
 		if (0 == langCode.Compare(LANG_CODE_JAJP))
 		{
-			keymapFile.AssignFromSlashSeparated("${AppKeymaps}/JapaneseJIS.cckxw");
+			keymapFile.AssignFromSlashSeparated("${" VPATH_APP_KEYMAPS "}/JapaneseJIS.cckxw");
 		}
 		else
 		{
-			keymapFile.AssignFromSlashSeparated("${AppKeymaps}/UsQWERTY.cckxw");
+			keymapFile.AssignFromSlashSeparated("${" VPATH_APP_KEYMAPS "}/UsQWERTY.cckxw");
 		}
 		appSettings->SetKeymapFilePath(keymapFile);
 	}
 	
-	Path absolutePath = ExpandVirtualKeymapFilePath(keymapFile);
+	Path absolutePath = ExpandVirtualPath(keymapFile);
 	try
 	{
 		LoadKeyMappings(absolutePath);
@@ -620,9 +539,6 @@ BOOL WinCoveredCalcApp::initInstance()
 	// ベースクラス初期化
 	init();
 	setCurrentLanguageCode(LANG_CODE_JAJP);
-
-	// アプリケーションがあるフォルダのパスを取得
-	makeAppFolderPath();	
 
 	// コマンドラインパラメータ解析
 	CommandLineParam* clParam = GetCommandLineParam();

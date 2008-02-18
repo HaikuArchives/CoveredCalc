@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -64,6 +64,44 @@ namespace DOMUtils
 
 	typedef std::vector<NCDNode*>	NCDNodeVector;
 
+	enum FormatMode
+	{
+		FormatMode_Inline = 0,
+		FormatMode_Block
+	};
+	
+	enum TextFormatOptions
+	{
+		TextFormatOption_None			= 0x00,
+		TextFormatOption_PreserveSpace	= 0x01,
+		TextFormatOption_Inline			= 0x02,
+	};
+	
+	/**
+	 * @brief This interface provides directions in formatting.
+	 */
+	class NodeFormatDirector
+	{
+	public:
+									NodeFormatDirector() { }
+		virtual						~NodeFormatDirector() { }
+		
+		/**
+		 * @brief Returns format mode for specified node.
+		 */
+		virtual FormatMode			GetFormatMode(const NCDNode* node) = 0;
+		
+		/**
+		 * @brief Returns text format options for specified node.
+		 */
+		virtual UInt32				GetTextFormatOptions(const NCDNode* node) = 0;
+		
+		/**
+		 * @brief Returns the characters for one level indent.
+		 */
+		virtual ConstUTF8Str		GetIndentChars() = 0;
+	};
+
 	NCDNode*					GetFirstMatchNode(const NCDNode* baseNode, ConstUTF8Str path, bool isIgnoreCase);
 	void						GetAllMatchNode(const NCDNode* baseNode, ConstUTF8Str path, bool isIgnoreCase, NCDNodeVector& outNodes);
 	void						GetAttrValueIgnoreCase(const NCDNode* baseNode, ConstUTF8Str attrName, UTF8String& outValue);
@@ -73,6 +111,8 @@ namespace DOMUtils
 	NCDElement*					SearchElementPrev(const NCDNode* baseNode, ConstUTF8Str targetName, bool isIgnoreCase);
 	void						ReadTextNode(const NCDNode* node, bool isPreserveSpace, UTF8String& text);
 	void						WriteOutAsXML(const NCDDocument* document, File* outFile);
+	void						FormatDocument(NCDDocument* document, NodeFormatDirector* director);
+	void						FormatNodeContent(NCDNode* parentNode, NodeFormatDirector* director, SInt32 indentLevel);
 
 #ifdef DEBUG
 	void						OutputDOMTreeForDebug(const NCDNode* baseNode, File* outFile);
