@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -55,7 +55,7 @@ public:
 	virtual void				GetCurrentLanguageCode(MBCString& outLanguage);
 #endif // degined(ZETA)
 
-	virtual void				CheckKeyMappingsPlatform(const KeyMappings* keyMappings);
+	virtual bool				CheckPlatform(ConstUTF8Str platform);
 
 	// implementation of MessageBoxProvider
 	virtual Button				DoMessageBox(ConstAStr message, ButtonType buttonType, AlertType alertType, Button defaultButton = Button_None);
@@ -81,16 +81,16 @@ private:
 	virtual void				ArgvReceived(int32 argc, char** argv);
 
 protected:
-	virtual const Path&			getAppFolderPath() { return appFolderPath; }
-	virtual void				readyDefaultSettingFilePath(Path& settingFilePath);
+	virtual const Path&			getAppFolderPath();
+	virtual const Path&			getUserSettingsPath();
 
 private:
-	void						createFolder(const Path& path);
 	void						loadLangFile(const Path& path);
 	void						loadKeyMappingsOnInit();
 
 private:
-	Path						appFolderPath;
+	Path						appFolderPath;		///< the folder in which app program exists.
+	Path						userSettingsPath;	///< the folder in which user settings is stored.
 	BeMainWindow*				mainWindow;			//!< main window
 	BeCoverBrowser*				coverBrowser;		//!< cover browser	
 	bool						commandLineParamProcessed;	///< whether command line parameter is already processed.

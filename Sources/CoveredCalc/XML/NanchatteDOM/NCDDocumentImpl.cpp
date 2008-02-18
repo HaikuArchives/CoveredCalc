@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -98,7 +98,8 @@ void NCDDocumentImpl::setNodeValue(
  * @retval	false	the new child node is not allowed.	
  */
 bool NCDDocumentImpl::checkNewChildNode(
-	NCDNode* newChild				///< [in] new child node
+	NCDNode* newChild,				///< [in] new child node
+	bool doSecondCheck				///< [in] if true, it checks that newChild is not a second node.
 )
 {
 	// check that the type of child node is allowed.
@@ -112,13 +113,16 @@ bool NCDDocumentImpl::checkNewChildNode(
 	}
 
 	// check that newChild is not a second Element or DocumentType node.
-	if (nodeType == NCDNode::ELEMENT_NODE || nodeType == NCDNode::DOCUMENT_TYPE_NODE)
+	if (doSecondCheck)
 	{
-		if (treeNode.HasChildNodes())
+		if (nodeType == NCDNode::ELEMENT_NODE || nodeType == NCDNode::DOCUMENT_TYPE_NODE)
 		{
-			if (treeNode.GetFirstChildNode() != newChild)
+			if (treeNode.HasChildNodes())
 			{
-				return false;
+				if (treeNode.GetFirstChildNode() != newChild)
+				{
+					return false;
+				}
 			}
 		}
 	}
@@ -137,7 +141,7 @@ NCDNode* NCDDocumentImpl::insertBefore(
 	NCDNode* refChild			///< [in] existing child node.
 )
 {
-	if (!checkNewChildNode(newChild))
+	if (!checkNewChildNode(newChild, true))
 	{
 		throw new NCDException(NCDException::HIERARCHY_REQUEST_ERR);		
 	}
@@ -156,7 +160,7 @@ NCDNode* NCDDocumentImpl::replaceChild(
 	NCDNode* oldChild			///< [in] existing child node
 )
 {
-	if (!checkNewChildNode(newChild))
+	if (!checkNewChildNode(newChild, false))
 	{
 		throw new NCDException(NCDException::HIERARCHY_REQUEST_ERR);		
 	}
@@ -172,7 +176,7 @@ NCDNode* NCDDocumentImpl::replaceChild(
  */
 NCDNode* NCDDocumentImpl::appendChild(NCDNode* newChild)
 {
-	if (!checkNewChildNode(newChild))
+	if (!checkNewChildNode(newChild, true))
 	{
 		throw new NCDException(NCDException::HIERARCHY_REQUEST_ERR);		
 	}

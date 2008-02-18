@@ -417,6 +417,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\UI\KeyNameDB.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\Ui\MainUIManager.cpp"
 					>
 				</File>
@@ -526,6 +530,10 @@
 				</File>
 				<File
 					RelativePath="..\Utility\PathUtils.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Utility\StorageUtils.cpp"
 					>
 				</File>
 				<File
@@ -664,6 +672,10 @@
 				</File>
 				<File
 					RelativePath="..\Include\SettingValue.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\VirtualPathNames.h"
 					>
 				</File>
 				<File
@@ -919,6 +931,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Include\KeyNameDB.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Include\MainUIManager.h"
 					>
 				</File>
@@ -1088,6 +1104,10 @@
 				</File>
 				<File
 					RelativePath="..\Include\PathUtils.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\StorageUtils.h"
 					>
 				</File>
 				<File

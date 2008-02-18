@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -279,6 +279,32 @@ void AppSettings::LoadDefault()
 	loadDefaultToMember();
 }
 
+/// XML format director.
+class SettingFormatDirector : public DOMUtils::NodeFormatDirector
+{
+	virtual DOMUtils::FormatMode GetFormatMode(const NCDNode* /* node */)
+	{
+		return DOMUtils::FormatMode_Block;
+	}
+	virtual UInt32 GetTextFormatOptions(const NCDNode* node)
+	{
+		UTF8String name;
+		node->getNodeName(name);
+		if (0 == UTF8Utils::UTF8StrCmpI(name, Tag_CoveredCalcSettings))
+		{
+			return DOMUtils::TextFormatOption_None;
+		}
+		else
+		{
+			return DOMUtils::TextFormatOption_Inline | DOMUtils::TextFormatOption_PreserveSpace;
+		}
+	};
+	virtual ConstUTF8Str GetIndentChars()
+	{
+		return TypeConv::AsUTF8("  ");
+	};
+};
+
 // ---------------------------------------------------------------------
 //! Saves settings to the file from which setting was loaded.
 // ---------------------------------------------------------------------
@@ -306,6 +332,9 @@ void AppSettings::SaveAs(
 		ASSERT(false);
 		return;
 	}
+
+	SettingFormatDirector formatDirector;
+	DOMUtils::FormatDocument(domDocument, &formatDirector);
 
 	File file;
 	file.Open(settingFileName, FileConstants::OpenMode_WriteOnly, FileConstants::OpenOption_Create | FileConstants::OpenOption_Erase);
@@ -348,7 +377,9 @@ bool AppSettings::getSettingValueFromDOM(
 		return false;
 	}
 
-	NCDNode* rootNode = domDocument->getDocumentElement();
+	UTF8String path(TypeConv::AsUTF8("/"));
+	path += Tag_CoveredCalcSettings;
+	NCDNode* rootNode = DOMUtils::GetFirstMatchNode(domDocument, path, true);
 	if (NULL == rootNode)
 	{
 		return false;
@@ -389,39 +420,28 @@ void AppSettings::setSettingValueToDOM(
 		domDocument = NCDDocumentFactory::CreateDocument();
 	}
 
-	NCDNode* rootNode = domDocument->getDocumentElement();
+	UTF8String path(TypeConv::AsUTF8("/"));
+	path += Tag_CoveredCalcSettings;
+	NCDNode* rootNode = DOMUtils::GetFirstMatchNode(domDocument, path, true);
 	if (NULL == rootNode)
 	{
 		rootNode = domDocument->createElement(Tag_CoveredCalcSettings);
-		domDocument->appendChild(rootNode);
+		NCDNode* documentElem = domDocument->getDocumentElement();
+		if (NULL == documentElem)
+		{
+			domDocument->appendChild(rootNode);
+		}
+		else
+		{
+			domDocument->replaceChild(rootNode, documentElem);
+		}
 	}
 		
 	NCDNode* settingNode = DOMUtils::GetFirstMatchNode(rootNode, key, true);
 	if (NULL == settingNode)
 	{
-		NCDNode* lastChild = rootNode->getLastChild();
-		if (NULL != lastChild && NCDNode::TEXT_NODE == lastChild->getNodeType())
-		{
-			UTF8String lastChildText;
-			lastChild->getNodeValue(lastChildText);
-			if (lastChildText[lastChildText.Length() - 1] == TypeConv::AsUTF8('\n'))
-			{
-				static_cast<NCDText*>(lastChild)->appendData(TypeConv::AsUTF8("  "));
-			}
-			else
-			{
-				static_cast<NCDText*>(lastChild)->appendData(TypeConv::AsUTF8("\n  "));
-			}
-		}
-		else
-		{
-			NCDNode* textNodeForLooking = domDocument->createTextNode(TypeConv::AsUTF8("\n  "));
-			rootNode->appendChild(textNodeForLooking);
-		}
-		
 		settingNode = domDocument->createElement(key);
 		rootNode->appendChild(settingNode);
-		rootNode->appendChild(domDocument->createTextNode(TypeConv::AsUTF8("\n")));
 	}
 	
 	FirstTextNodeFinder finder;

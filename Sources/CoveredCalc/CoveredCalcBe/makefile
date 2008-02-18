@@ -98,6 +98,7 @@ SRCS= \
 	../Utility/ExceptionMessageUtils.cpp \
 	../Utility/MessageFormatter.cpp \
 	../Utility/PathUtils.cpp \
+	../Utility/StorageUtils.cpp \
 	../Utility/UTF8ConvBe.cpp \
 	../XML/DOMParseEventHandler.cpp \
 	../XML/DOMUtils.cpp \

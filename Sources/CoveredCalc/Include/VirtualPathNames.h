@@ -23,32 +23,17 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/**
-	@file		BeXMLLangFile.h
-	@brief		Definition of BeXMLLangFile class
+/*!
+	@file		VirtualPathNames.h
+	@brief		Definition of virtual path names.
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2006.12.31 created
+	@date		2008.2.15 created
 */
 
-#ifndef _BEXMLLANGFILE_H_
-#define _BEXMLLANGFILE_H_
+#ifndef _VIRTUALPATHNAMES_H_
+#define _VIRTUALPATHNAMES_H_
 
-#include "XMLLangFile.h"
+#define VPATH_APP_KEYMAPS		"AppKeymaps"		///< application defined key-mapping folder.
+#define VPATH_USER_KEYMAPS		"UserKeymaps"		///< user defined key-mapping folder.
 
-class BeDialogDesign;
-
-class BeXMLLangFile : public XMLLangFile
-{
-public:
-						BeXMLLangFile();
-						~BeXMLLangFile();
-
-	virtual void		LoadString(ConstUTF8Str name, MBCString& message) const;
-	void				LoadStringFromID(SInt32 stringID, MBCString& message) const;
-	BeDialogDesign*		LoadDialogDesign(SInt32 dialogID) const;
-
-protected:
-	virtual bool		checkVersion(ConstUTF8Str version);
-};
-
-#endif // _BEXMLLANGFILE_H_
+#endif // _VIRTUALPATHNAMES_H_

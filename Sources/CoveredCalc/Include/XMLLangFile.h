@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -69,7 +69,6 @@ private:
 
 protected:
 	virtual bool				checkVersion(ConstUTF8Str version) = 0;
-	virtual bool				isTargetSuitable(ConstUTF8Str target) = 0;
 
 private:
 	typedef std::map<UTF8String, const NCDElement*>	NameToElementMap;

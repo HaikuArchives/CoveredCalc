@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -64,7 +64,7 @@ public:
 	virtual void					ShowCoverBrowser(bool isShow);
 	virtual bool					IsCoverBrowserVisible();
 
-	virtual void					CheckKeyMappingsPlatform(const KeyMappings* keyMappings);
+	virtual bool					CheckPlatform(ConstUTF8Str platform);
 
 	WinMonitorInfo*					GetMonitorInformation()			{ return &monitorInfo; }
 	const WinMonitorInfo*			GetMonitorInformation() const	{ return &monitorInfo; }
@@ -93,12 +93,10 @@ private:
 	virtual int						messageLoop();
 
 protected:
-	virtual const Path&				getAppFolderPath() { return appFolderPath; }
-	virtual void					readyDefaultSettingFilePath(Path& settingFilePath);
+	virtual const Path&				getAppFolderPath();
+	virtual const Path&				getUserSettingsPath();
 	
 private:
-	void							makeAppFolderPath();
-	void							createFolder(const Path& path);
 	void							loadLangFile(const Path& path);
 	SInt32							autoSelectLangFile();
 	void							loadKeyMappingsOnInit();
@@ -106,6 +104,7 @@ private:
 private:
 	static WinCoveredCalcApp*		theInstance;		//!< 唯一のインスタンス
 	Path							appFolderPath;		//!< アプリケーションのあるフォルダのパス
+	Path							userSettingsPath;	///< ユーザー設定を保存するフォルダのパス
 	WinMainWindow					mainWindow;			//!< メインウィンドウ
 	WinCoverBrowser					coverBrowser;		//!< カバーブラウザウィンドウ
 	HCURSOR							waitCursor;			//!< 処理中を示すウェイトカーソル

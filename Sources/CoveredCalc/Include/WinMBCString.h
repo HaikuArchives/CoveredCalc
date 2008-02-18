@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -91,6 +91,8 @@ public:
 		The byte in the middle of a multi-byte character may be returned.
 	*/
 	// ---------------------------------------------------------------------
+	AChar				GetAt(SInt32 index) const
+							{ return innerString[index]; }
 	AChar				operator[](SInt32 index) const
 							{ return innerString[index]; }
 	AChar&				operator[](SInt32 index)

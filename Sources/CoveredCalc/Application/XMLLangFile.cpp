@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -43,6 +43,7 @@
 #include "UTF8Conv.h"
 #include "XMLLangFileException.h"
 #include "DOMUtils.h"
+#include "CoveredCalcApp.h"
 
 /**
  *	@brief	Constructor
@@ -121,14 +122,6 @@ void XMLLangFile::validateFirst()
 		throw new XMLLangFileExceptions::ValidationFailed(rootElement->getSourceLine(), rootElement->getSourceColumn(), "Not a locale definition file.");
 	}
 
-	// check version.
-	UTF8String versionString;
-	rootElement->getAttribute(TypeConv::AsUTF8("version"), versionString);
-	if (!checkVersion(versionString))
-	{
-		throw new XMLLangFileExceptions::ValidationFailed(rootElement->getSourceLine(), rootElement->getSourceColumn(), "Version mismatch.");
-	}
-
 	// check platform target.
 	bool platformOK = false;
 	NCDElement* platformElement = DOMUtils::SearchElementNext(rootElement->getFirstChild(), TypeConv::AsUTF8("platform"), true);
@@ -136,7 +129,7 @@ void XMLLangFile::validateFirst()
 	{
 		UTF8String targetString;
 		platformElement->getAttribute(TypeConv::AsUTF8("target"), targetString);
-		if (isTargetSuitable(targetString))
+		if (CoveredCalcApp::GetInstance()->CheckPlatform(targetString))
 		{
 			platformOK = true;
 			break;
@@ -146,6 +139,14 @@ void XMLLangFile::validateFirst()
 	{
 		NCDNode* errorNode = (NULL != platformElement) ? platformElement : rootElement;
 		throw new XMLLangFileExceptions::ValidationFailed(errorNode->getSourceLine(), errorNode->getSourceColumn(), "Target platform is not suitable.");
+	}
+
+	// check version.
+	UTF8String versionString;
+	rootElement->getAttribute(TypeConv::AsUTF8("version"), versionString);
+	if (!checkVersion(versionString))
+	{
+		throw new XMLLangFileExceptions::ValidationFailed(rootElement->getSourceLine(), rootElement->getSourceColumn(), "Version mismatch.");
 	}
 }
 

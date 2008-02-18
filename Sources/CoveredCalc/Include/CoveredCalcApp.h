@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -66,15 +66,13 @@ public:
 	virtual const LangFileInfoCollection*	GetLangFileInfos() = 0;	
 	virtual Path							MakeRelativeLangFilePath(const Path& absolutePath) = 0;
 	virtual Path							MakeAbsoluteLangFilePath(const Path& relativePath) = 0;
-	virtual Path							ExpandVirtualKeymapFilePath(const Path& virtualPath) = 0;
+	virtual Path							ExpandVirtualPath(const Path& virtualPath) = 0;
+	virtual Path							MakeVirtualPath(const Path& absolutePath, ConstAStr virtualPathName) = 0;
 	virtual void							LoadKeyMappings(const Path& keymapFile) = 0;
-	
+
+	virtual bool							CheckPlatform(ConstUTF8Str platform) = 0;
+
 	virtual KeyMappingManager*				GetKeyMappingManagerForMainWindow() = 0;
-	/**
-	 *	@brief	Checks the key-mapping platform is suitable for this app.
-	 *	@throw	KeyMappingExceptions::LoadFailed	when the platform is not suitable for this app.
-	 */
-	virtual void							CheckKeyMappingsPlatform(const KeyMappings* keyMappings) = 0;
 
 	virtual void							ShowCoverBrowser(bool isShow) = 0;
 	virtual bool							IsCoverBrowserVisible() = 0;
