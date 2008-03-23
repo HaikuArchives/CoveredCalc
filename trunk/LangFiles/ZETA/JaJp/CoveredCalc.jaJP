@@ -34,6 +34,9 @@
 "Change of language will take effect after you restart CoveredCalc application."	"言語の設定は、CoveredCalc を再起動後に有効になります。"
 "Keyboard"						"キーボード"
 "Keyboard:"						"キーボード:"
+"Edit"							"編集"
+"Duplicate"						"複製"
+"Delete"						"削除"
 
 
 ##     ##

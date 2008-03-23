@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -35,6 +35,7 @@
 
 #include "WinDialog.h"
 #include "PreferencesDlg.h"
+#include "WinComboListSeparators.h"
 
 /**
  *	@brief	設定ダイアログのクラスです。(Windows 版)
@@ -51,7 +52,11 @@ protected:
 	virtual void					setLanguage(const LangFileInfoCollection& langFileInfos, const Path& currentLangFilePath);
 	virtual	bool					getLanguage(Path& langFilePath);
 	virtual void					setKeyMapping(const KeyMappingsInfoPtrVector& keyMappingsInfos, const Path& currentKeyMappingPath);
-	virtual bool					getKeyMapping(Path& keyMappingPath);
+	virtual const PreferencesDlg::KeyMappingsInfo*	getKeyMapping(bool doErrorProcessing);
+	virtual void					enableEditKeyMapping(bool isEnabled);
+	virtual void					enableDuplicateKeyMapping(bool isEnabled);
+	virtual void					enableDeleteKeyMapping(bool isEnabled);
+	
 	virtual void					setOpacity(SInt32 opacity);
 	virtual SInt32					getOpacity();
 	virtual void					enableOpacity(bool isEnabled);
@@ -62,9 +67,11 @@ protected:
 private:
 	LRESULT							onInitDialog(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT							onCommand(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT							onDestroy(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	const LangFileInfoCollection*	langComboInfos;		///< 言語コンボボックスに格納されたアイテムの情報
+	WinComboListSeparators			keyMappingSeparators;	///< キーマッピングコンボボックスのセパレータ
 };
 
 #endif // _WINPREFERENCESDLG_H_

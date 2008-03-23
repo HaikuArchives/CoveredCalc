@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -55,6 +55,9 @@ static const char PREFERENCES_DIALOG_VIEW_LANG_POPUP[]			= "LangPopup";
 static const char PREFERENCES_DIALOG_VIEW_LANG_NOTICE[]			= "LangNotice";
 static const char PREFERENCES_DIALOG_VIEW_KEYMAPPING_BOX[]		= "KeyMappingBox";
 static const char PREFERENCES_DIALOG_VIEW_KEYMAPPING_POPUP[]	= "KeyMappingPopup";
+static const char PREFERENCES_DIALOG_VIEW_EDIT_KEYMAPPING_BUTTON[] = "EditKeyMappingButton";
+static const char PREFERENCES_DIALOG_VIEW_DUPLICATE_KEYMAPPING_BUTTON[] = "DuplicateKeyMappingButton";
+static const char PREFERENCES_DIALOG_VIEW_DELETE_KEYMAPPING_BUTTON[] = "DeleteKeyMappingButton";
 static const char PREFERENCES_DIALOG_VIEW_OK[]					= "OKButton";
 static const char PREFERENCES_DIALOG_VIEW_CANCEL[]				= "CancelButton";
 
@@ -68,6 +71,9 @@ static const char STR_LANGUAGE[]		= "Language:";
 static const char STR_LANG_NOTICE[]		= "Change of language will take effect after you restart CoveredCalc application.";
 static const char STR_KEYMAPPING_BOX[]	= "Keyboard";
 static const char STR_KEYMAPPING[]		= "Keyboard:";
+static const char STR_EDIT[]			= "Edit";
+static const char STR_DUPLICATE[]		= "Duplicate";
+static const char STR_DELETE[]			= "Delete";
 static const char STR_CANCEL[]			= "Cancel";
 static const char STR_OK[]				= "OK";
 
@@ -77,7 +83,7 @@ static const char STR_OK[]				= "OK";
 BePreferencesDlg::BePreferencesDlg(
 	BeDialogDesign* dialogDesign	///< dialog design information
 )
-	: BeDialog(dialogDesign->GetFrame(BRect(0.0, 0.0, 296.0, 210.0)),
+	: BeDialog(dialogDesign->GetFrame(BRect(0.0, 0.0, 300.0, 246.0)),
 				LT(dialogDesign->GetTitle(STR_PREFERENCES)),
 				B_TITLED_WINDOW,
 				B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_MINIMIZABLE)
@@ -113,7 +119,7 @@ void BePreferencesDlg::createViews()
 	
 	// LangBox
 	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_LANG_BOX);
-	BBox* langBox = new BBox(item->GetFrame(BRect(12.0, 12.0, 284.0, 100.0)), PREFERENCES_DIALOG_VIEW_LANG_BOX);
+	BBox* langBox = new BBox(item->GetFrame(BRect(12.0, 12.0, 288.0, 100.0)), PREFERENCES_DIALOG_VIEW_LANG_BOX);
 	baseView->AddChild(langBox);
 	
 	langBox->SetLabel(LT(item->GetLabel(STR_LANGUAGE_BOX)));
@@ -122,7 +128,7 @@ void BePreferencesDlg::createViews()
 	langMenu = new BMenu("");
 	langMenu->SetLabelFromMarked(true);
 	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_LANG_POPUP);
-	BMenuField* langPopup = new BMenuField(item->GetFrame(BRect(12.0, 12.0, 260.0, 38.0)), PREFERENCES_DIALOG_VIEW_LANG_POPUP,
+	BMenuField* langPopup = new BMenuField(item->GetFrame(BRect(12.0, 16.0, 264.0, 38.0)), PREFERENCES_DIALOG_VIEW_LANG_POPUP,
 									LT(item->GetLabel(STR_LANGUAGE)), langMenu);
 	langBox->AddChild(langPopup);
 	
@@ -131,7 +137,7 @@ void BePreferencesDlg::createViews()
 	
 	// LangNotice
 	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_LANG_NOTICE);
-	BRect frameRect = item->GetFrame(BRect(12.0, 50.0, 260.0, 76.0));
+	BRect frameRect = item->GetFrame(BRect(12.0, 50.0, 264.0, 76.0));
 	BRect textRect = frameRect;
 	textRect.OffsetTo(0, 0);
 	BTextView* langNotice = new BTextView(frameRect, PREFERENCES_DIALOG_VIEW_LANG_NOTICE,
@@ -146,7 +152,7 @@ void BePreferencesDlg::createViews()
 
 	// KeyMappingBox
 	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_KEYMAPPING_BOX);
-	BBox* keyMappingBox = new BBox(item->GetFrame(BRect(12.0, 112.0, 284.0, 162.0)), PREFERENCES_DIALOG_VIEW_KEYMAPPING_BOX);
+	BBox* keyMappingBox = new BBox(item->GetFrame(BRect(12.0, 112.0, 288.0, 198.0)), PREFERENCES_DIALOG_VIEW_KEYMAPPING_BOX);
 	baseView->AddChild(keyMappingBox);
 
 	keyMappingBox->SetLabel(LT(item->GetLabel(STR_KEYMAPPING_BOX)));
@@ -155,22 +161,40 @@ void BePreferencesDlg::createViews()
 	keyMappingMenu = new BMenu("");
 	keyMappingMenu->SetLabelFromMarked(true);
 	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_KEYMAPPING_POPUP);
-	BMenuField* keyMappingPopup = new BMenuField(item->GetFrame(BRect(12.0, 16.0, 260.0, 38.0)), PREFERENCES_DIALOG_VIEW_KEYMAPPING_POPUP,
+	BMenuField* keyMappingPopup = new BMenuField(item->GetFrame(BRect(12.0, 16.0, 264.0, 38.0)), PREFERENCES_DIALOG_VIEW_KEYMAPPING_POPUP,
 										LT(item->GetLabel(STR_KEYMAPPING)), keyMappingMenu);
 	keyMappingBox->AddChild(keyMappingPopup);
 	
 	keyMappingPopup->SetDivider(item->GetDivider(64.0));
 	keyMappingPopup->SetAlignment(B_ALIGN_LEFT);
 
+	// EditKeyMappingButton
+	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_EDIT_KEYMAPPING_BUTTON);
+	BButton* editKeymapButton = new BButton(item->GetFrame(BRect(12.0, 50.0, 92.0, 74.0)), PREFERENCES_DIALOG_VIEW_EDIT_KEYMAPPING_BUTTON,
+								LT(item->GetLabel(STR_EDIT)), new BMessage(ID_PREF_EDIT_KEYMAP));
+	keyMappingBox->AddChild(editKeymapButton);
+								
+	// DuplicateKeyMappingButton
+	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_DUPLICATE_KEYMAPPING_BUTTON);
+	BButton* dupKeymapButton = new BButton(item->GetFrame(BRect(98.0, 50.0, 178.0, 74.0)), PREFERENCES_DIALOG_VIEW_DUPLICATE_KEYMAPPING_BUTTON,
+								LT(item->GetLabel(STR_DUPLICATE)), new BMessage(ID_PREF_DUPLICATE_KEYMAP));
+	keyMappingBox->AddChild(dupKeymapButton);
+
+	// DeleteKeyMappingButton
+	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_DELETE_KEYMAPPING_BUTTON);
+	BButton* delKeymapButton = new BButton(item->GetFrame(BRect(184.0, 50.0, 264.0, 74.0)), PREFERENCES_DIALOG_VIEW_DELETE_KEYMAPPING_BUTTON,
+								LT(item->GetLabel(STR_DELETE)), new BMessage(ID_PREF_DELETE_KEYMAP));
+	keyMappingBox->AddChild(delKeymapButton);
+
 	// CancelButton
 	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_CANCEL);
-	BButton* cancelButton = new BButton(item->GetFrame(BRect(118.0, 174.0, 198.0, 198.0)), PREFERENCES_DIALOG_VIEW_CANCEL,
+	BButton* cancelButton = new BButton(item->GetFrame(BRect(122.0, 210.0, 202.0, 234.0)), PREFERENCES_DIALOG_VIEW_CANCEL,
 								LT(item->GetLabel(STR_CANCEL)), new BMessage(ID_DIALOG_CANCEL));
 	baseView->AddChild(cancelButton);
 
 	// OKButton
 	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_OK);
-	BButton* okButton = new BButton(item->GetFrame(BRect(204.0, 174.0, 284.0, 198.0)), PREFERENCES_DIALOG_VIEW_OK,
+	BButton* okButton = new BButton(item->GetFrame(BRect(208.0, 210.0, 288.0, 234.0)), PREFERENCES_DIALOG_VIEW_OK,
 								LT(item->GetLabel(STR_OK)), new BMessage(ID_DIALOG_OK));
 	baseView->AddChild(okButton);
 	
@@ -226,6 +250,30 @@ void BePreferencesDlg::languageChanged()
 	if (NULL != keyMappingPopup)
 	{
 		keyMappingPopup->SetLabel(LT(item->GetLabel(STR_KEYMAPPING)));
+	}
+
+	// EditKeyMappingButton
+	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_EDIT_KEYMAPPING_BUTTON);
+	BButton* editKeymapButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_EDIT_KEYMAPPING_BUTTON));
+	if (NULL != editKeymapButton)
+	{
+		editKeymapButton->SetLabel(LT(item->GetLabel(STR_EDIT)));
+	}
+	
+	// DuplicateKeyMappingButton
+	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_DUPLICATE_KEYMAPPING_BUTTON);
+	BButton* dupKeymapButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_DUPLICATE_KEYMAPPING_BUTTON));
+	if (NULL != dupKeymapButton)
+	{
+		dupKeymapButton->SetLabel(LT(item->GetLabel(STR_DUPLICATE)));
+	}
+
+	// DeleteKeyMappingButton
+	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_DELETE_KEYMAPPING_BUTTON);
+	BButton* delKeymapButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_DELETE_KEYMAPPING_BUTTON));
+	if (NULL != delKeymapButton)
+	{
+		delKeymapButton->SetLabel(LT(item->GetLabel(STR_DELETE)));
 	}
 	
 	// CancelButton
@@ -373,20 +421,6 @@ bool BePreferencesDlg::getLanguage(
 typedef BeDataMenuItem<const PreferencesDlg::KeyMappingsInfo*> BeKMIMenuItem;
 
 /**
- *	@brief	compare function for sorting key-mapping item.
- */
-static int keyMappingInfoCompareFunc(const void* item1, const void* item2)
-{
-	const PreferencesDlg::KeyMappingsInfo* info1 = *static_cast<const PreferencesDlg::KeyMappingsInfo* const *>(item1);
-	const PreferencesDlg::KeyMappingsInfo* info2 = *static_cast<const PreferencesDlg::KeyMappingsInfo* const *>(item2);
-	
-	const MBCString& name1 = info1->title;
-	const MBCString& name2 = info2->title;
-	
-	return name1.Compare(name2);
-}
-
-/**
  *	@brief	Sets key-mapping menu and current item.
  *	@param	keyMappingInfos			This collection contains informations about all key-mapping menu items.
  *	@param	currentKeyMappingPath	Current selection.
@@ -394,47 +428,45 @@ static int keyMappingInfoCompareFunc(const void* item1, const void* item2)
  */
 void BePreferencesDlg::setKeyMapping(const KeyMappingsInfoPtrVector& keyMappingsInfos, const Path& currentKeyMappingPath)
 {
-	// sort key-mappings
-	BList keyMappingsList;
-	const KeyMappingsInfo* selectedInfo = NULL;
+	// add to menu
+	KMCategory category = KMCategory_Invalid;
 	SInt32 count = keyMappingsInfos.size();
 	SInt32 index;
 	for (index = 0; index < count; index++)
 	{
 		const KeyMappingsInfo* info = keyMappingsInfos[index];
-		keyMappingsList.AddItem(const_cast<KeyMappingsInfo*>(info));
-		if (0 == info->keyMapFilePath.Compare(currentKeyMappingPath))
+		if (category != info->category)
 		{
-			selectedInfo = info;
+			if (KMCategory_Invalid != category)
+			{
+				keyMappingMenu->AddSeparatorItem();
+			}
+			category = info->category;
 		}
-	}
-	keyMappingsList.SortItems(keyMappingInfoCompareFunc);
-	
-	// add to menu
-	for (index = 0; index < count; index++)
-	{
-		const KeyMappingsInfo* info = static_cast<KeyMappingsInfo*>(keyMappingsList.ItemAt(index));
-		BeKMIMenuItem* menuItem = new BeKMIMenuItem(info->title.CString(), NULL);
+		BeKMIMenuItem* menuItem = new BeKMIMenuItem(info->title.CString(), new BMessage(ID_PREF_KEYMAP_SELECTED));
 		menuItem->SetItemData(info);
 		menuItem->SetMarked(0 == info->keyMapFilePath.Compare(currentKeyMappingPath));
 		keyMappingMenu->AddItem(menuItem);
 	}
+	processKeyMappingSelectionChanged();
 }
 
 /**
  *	@brief	Retrieves current item of key-mapping menu.
- *	@param[out]	keyMappingPath			a path of the key-mapping file selected on key-mapping menu.
- *	@return true if succeeded, otherwise false.
- *	@note	If error occured, the error message is shown in this function before it returns false.
+ *	@param[in]	doErrorProcessing	if this parameter is true and an error has occured, the error message is shown in this function.
+ *	@return pointer to key-mapping file info which is selected on key-mapping menu. NULL should be returned when an error has occured.
  */
-bool BePreferencesDlg::getKeyMapping(Path& keyMappingPath)
+const PreferencesDlg::KeyMappingsInfo* BePreferencesDlg::getKeyMapping(bool doErrorProcessing)
 {
 	BMenuItem* markedItem = keyMappingMenu->FindMarked();
 	if (NULL == markedItem)
 	{
-		CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_INVALID_KEYMAPPINGS,
-				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
-		return false;
+		if (doErrorProcessing)
+		{
+			CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_INVALID_KEYMAPPINGS,
+					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+		}
+		return NULL;
 	}
 	
 	const KeyMappingsInfo* info = NULL;
@@ -446,13 +478,54 @@ bool BePreferencesDlg::getKeyMapping(Path& keyMappingPath)
 	
 	if (NULL == info)
 	{
-		CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_GET_KEYMAPPINGS,
-				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);	
-		return false;
+		if (doErrorProcessing)
+		{
+			CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_GET_KEYMAPPINGS,
+					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
+		}
+		return NULL;
 	}
 	
-	keyMappingPath = info->keyMapFilePath;
-	return true;
+	return info;
+}
+
+/**
+ *	@brief	Enables or disables "Edit keymapping" button.
+ *	@param	isEnabled	enables the control when true.
+ */
+void BePreferencesDlg::enableEditKeyMapping(bool isEnabled)
+{
+	BButton* editKeymapButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_EDIT_KEYMAPPING_BUTTON));
+	if (NULL != editKeymapButton)
+	{
+		editKeymapButton->SetEnabled(isEnabled);
+	}
+}
+
+/**
+ *	@brief	Enables or disables "Duplicate keymapping" button.
+ *	@param	isEnabled	enables the control when true.
+ */
+void BePreferencesDlg::enableDuplicateKeyMapping(bool isEnabled)
+{
+	BButton* dupKeymapButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_DUPLICATE_KEYMAPPING_BUTTON));
+	if (NULL != dupKeymapButton)
+	{
+		dupKeymapButton->SetEnabled(isEnabled);
+	}
+}
+
+/**
+ *	@brief	Enables or disables "Delete keymapping" button.
+ *	@param	isEnabled	enables the control when true.
+ */
+void BePreferencesDlg::enableDeleteKeyMapping(bool isEnabled)
+{
+	BButton* delKeymapButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_DELETE_KEYMAPPING_BUTTON));
+	if (NULL != delKeymapButton)
+	{
+		delKeymapButton->SetEnabled(isEnabled);
+	}
 }
 
 /**
@@ -466,6 +539,22 @@ void BePreferencesDlg::MessageReceived(
 	{
 		switch (message->what)
 		{
+		case ID_PREF_KEYMAP_SELECTED:
+			processKeyMappingSelectionChanged();
+			break;
+		
+		case ID_PREF_EDIT_KEYMAP:
+			doEditKeyMapping();
+			break;
+			
+		case ID_PREF_DUPLICATE_KEYMAP:
+			doDuplicateKeyMapping();
+			break;
+		
+		case ID_PREF_DELETE_KEYMAP:
+			doDeleteKeyMapping();
+			break;
+		
 		case ID_DIALOG_OK:
 			if (saveFromDialog())
 			{

@@ -38,6 +38,8 @@
 #include "UTF8Conv.h"
 #include "Exception.h"
 #include "VirtualPathNames.h"
+#include <vector>
+#include <algorithm>
 
 #if defined (WIN32)
 #include "WinCoveredCalcApp.h"
@@ -142,10 +144,12 @@ bool PreferencesDlg::saveFromDialog()
 	
 	// key-mapping
 	Path keyMappingFilePath;
-	if (!getKeyMapping(keyMappingFilePath))
+	const KeyMappingsInfo* info = getKeyMapping(true);
+	if (NULL == info)
 	{
 		return false;
 	}
+	keyMappingFilePath = info->keyMapFilePath;
 	
 	// set values to appSettings
 #if defined(WIN32)
@@ -166,6 +170,26 @@ bool PreferencesDlg::saveFromDialog()
 	return true;
 }
 
+class KeyMappingsInfoComparator
+{
+public:
+	bool operator()(PreferencesDlg::KeyMappingsInfo* first, PreferencesDlg::KeyMappingsInfo* second)
+	{
+		if (first->category > second->category)
+		{
+			return false;
+		}
+		else if (first->category < second->category)
+		{
+			return true;
+		}
+		else
+		{
+			return (0 > first->title.Compare(second->title));
+		}
+	}
+};
+
 /**
  *	@brief	Loads informations about installed key-mapping files.
  */
@@ -175,14 +199,22 @@ void PreferencesDlg::loadKeyMappingsInfos()
 	
 	// load files in ${AppKeymaps} folder.
 	Path virtualAppKeymaps("${" VPATH_APP_KEYMAPS "}");
-	loadKeyMappingsInfosInFolder(virtualAppKeymaps);
+	loadKeyMappingsInfosInFolder(virtualAppKeymaps, KMCategory_Application);
+	
+	// load files in ${UserKeymaps} folder.
+	Path virtualUserKeymaps("${" VPATH_USER_KEYMAPS "}");
+	loadKeyMappingsInfosInFolder(virtualUserKeymaps, KMCategory_User);
+	
+	// sort
+	std::sort(keyMappingsInfos.begin(), keyMappingsInfos.end(), KeyMappingsInfoComparator());	
 }
 
 /**
  *	@breif	Loads informations about installed key-mapping files in specified folder.
  *	@param[in]	virtualFolderPath	folder (in virtual path)
+ *	@param[in]	category	category of loading informations.
  */
-void PreferencesDlg::loadKeyMappingsInfosInFolder(const Path& virtualFolderPath)
+void PreferencesDlg::loadKeyMappingsInfosInFolder(const Path& virtualFolderPath, PreferencesDlg::KMCategory category)
 {
 	Path folder = CoveredCalcApp::GetInstance()->ExpandVirtualPath(virtualFolderPath);
 
@@ -190,7 +222,7 @@ void PreferencesDlg::loadKeyMappingsInfosInFolder(const Path& virtualFolderPath)
 	Path findPath = folder.Append("*.cckxw");
 	WIN32_FIND_DATA findData;
 	HANDLE hFind = ::FindFirstFile(findPath.GetPathString(), &findData);
-	if (NULL != hFind)
+	if (INVALID_HANDLE_VALUE != hFind)
 	{
 		do
 		{
@@ -198,7 +230,7 @@ void PreferencesDlg::loadKeyMappingsInfosInFolder(const Path& virtualFolderPath)
 			{
 				continue;
 			}
-			loadOneKeyMappingsInfo(folder.Append(findData.cFileName), virtualFolderPath.Append(findData.cFileName));
+			loadOneKeyMappingsInfo(folder.Append(findData.cFileName), virtualFolderPath.Append(findData.cFileName), category);
 		}
 		while (::FindNextFile(hFind, &findData));
 		::FindClose(hFind);
@@ -222,7 +254,7 @@ void PreferencesDlg::loadKeyMappingsInfosInFolder(const Path& virtualFolderPath)
 					BPath bpath;
 					entry.GetPath(&bpath);
 					Path keymapFilePath(bpath.Path());
-					loadOneKeyMappingsInfo(keymapFilePath, virtualFolderPath.Append(filename));
+					loadOneKeyMappingsInfo(keymapFilePath, virtualFolderPath.Append(filename), category);
 				}
 			}
 		}
@@ -234,8 +266,9 @@ void PreferencesDlg::loadKeyMappingsInfosInFolder(const Path& virtualFolderPath)
  *	@brief	Loads and validates specified key-mapping file, and append it to keyMappingsInfos if it is valid.
  *	@param[in]	realKeymapFilePath		path of a key-mapping file (in real path)
  *	@param[in]	virtualKeymapFilePath	path of a key-mapping file (in virtual path)
+ *	@param[in]	category	category of loading key-mapping.
  */
-void PreferencesDlg::loadOneKeyMappingsInfo(const Path& realKeymapFilePath, const Path& virtualKeymapFilePath)
+void PreferencesDlg::loadOneKeyMappingsInfo(const Path& realKeymapFilePath, const Path& virtualKeymapFilePath, PreferencesDlg::KMCategory category)
 {
 	try
 	{
@@ -251,6 +284,7 @@ void PreferencesDlg::loadOneKeyMappingsInfo(const Path& realKeymapFilePath, cons
 		keyMappings.GetTitle(utf8Title);
 		
 		KeyMappingsInfo* info = new KeyMappingsInfo;
+		info->category = category;
 		UTF8Conv::ToMultiByte(info->title, utf8Title);
 		info->keyMapFilePath = virtualKeymapFilePath;
 		keyMappingsInfos.push_back(info);
@@ -276,3 +310,54 @@ void PreferencesDlg::unloadKeyMappingsInfos()
 	keyMappingsInfos.clear();
 }
 
+/**
+ *	@brief	Called when key-mapping selection has been changed.
+ */
+void PreferencesDlg::processKeyMappingSelectionChanged()
+{
+	const KeyMappingsInfo* currentInfo = getKeyMapping(false);
+	if (NULL == currentInfo || KMCategory_Invalid == currentInfo->category)
+	{
+		enableEditKeyMapping(false);
+		enableDuplicateKeyMapping(false);
+		enableDeleteKeyMapping(false);
+		return;
+	}
+	
+	if (KMCategory_Application == currentInfo->category)
+	{
+		enableEditKeyMapping(true);
+		enableDuplicateKeyMapping(true);
+		enableDeleteKeyMapping(false);
+	}
+	else
+	{
+		enableEditKeyMapping(true);
+		enableDuplicateKeyMapping(true);
+		enableDeleteKeyMapping(true);
+	}
+}
+
+/**
+ *	@brief	Shows a dialog which edit the current key-mapping.
+ */
+void PreferencesDlg::doEditKeyMapping()
+{
+	// TODO: 
+}
+
+/**
+ *	@brief	Duplicates current key-mapping and select it.
+ */
+void PreferencesDlg::doDuplicateKeyMapping()
+{
+	// TODO:
+}
+
+/**
+ *	@brief	Deletes current key-mapping.
+ */
+void PreferencesDlg::doDeleteKeyMapping()
+{
+	// TODO:
+}

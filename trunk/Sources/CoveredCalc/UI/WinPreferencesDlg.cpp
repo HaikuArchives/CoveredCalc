@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -38,6 +38,7 @@
 #include "CoveredCalcApp.h"
 #include "LangFileInfo.h"
 #include "WinCoveredCalcApp.h"
+#include <vector>
 
 ////////////////////////////////////////
 #define baseDialog	WinDialog
@@ -85,6 +86,9 @@ LRESULT WinPreferencesDlg::wndProc(
 		case WM_COMMAND:
 			return onCommand(hWnd, uMsg, wParam, lParam);
 			break;
+		case WM_DESTROY:
+			return onDestroy(hWnd, uMsg, wParam, lParam);
+			break;
 		default:
 			return baseDialog::wndProc(hWnd, uMsg, wParam, lParam);
 			break;
@@ -113,6 +117,9 @@ LRESULT WinPreferencesDlg::onInitDialog(
 {
 	baseDialog::wndProc(hWnd, uMsg, wParam, lParam);
 
+	HWND hComboKeymappings = GetDlgItem(hWnd, IDC_CMB_KEYMAPPINGS);
+	keyMappingSeparators.Attach(hComboKeymappings);
+
 	HWND hControl;
 	HWND hBuddy;
 	
@@ -138,7 +145,8 @@ LRESULT WinPreferencesDlg::onInitDialog(
 	return TRUE;
 }
 
-/**	@brief	WM_COMMAND ハンドラ
+/**
+ *	@brief	WM_COMMAND ハンドラ
  *	@retval 0 このメッセージを処理した。
  */
 LRESULT WinPreferencesDlg::onCommand(
@@ -151,6 +159,29 @@ LRESULT WinPreferencesDlg::onCommand(
 	WORD command = LOWORD(wParam);
 	switch (command)
 	{
+	case IDC_CMB_KEYMAPPINGS:
+		if (CBN_SELCHANGE == HIWORD(wParam))
+		{
+			processKeyMappingSelectionChanged();
+			return 0;
+		}
+		else
+		{
+			return baseDialog::wndProc(hWnd, uMsg, wParam, lParam);
+		}
+		break;
+	case IDC_EDIT_KEYMAPPING:
+		doEditKeyMapping();
+		return 0;
+		break;
+	case IDC_DUPLICATE_KEYMAPPING:
+		doDuplicateKeyMapping();
+		return 0;
+		break;
+	case IDC_DELETE_KEYMAPPING:
+		doDeleteKeyMapping();
+		return 0;
+		break;
 	case IDOK:
 		if (saveFromDialog())
 		{
@@ -163,6 +194,20 @@ LRESULT WinPreferencesDlg::onCommand(
 		return baseDialog::wndProc(hWnd, uMsg, wParam, lParam);
 		break;
 	}
+}
+
+/**
+ *	@brief	WM_DESTROY ハンドラ
+ *	@param[in]	hWnd	ウィンドウハンドル
+ *	@param[in]	uMsg	WM_DESTROY
+ *	@param[in]	wParam	使用しません。
+ *	@param[in]	lParam	使用しません。
+ *	@retval 0 このメッセージを処理した。 
+ */
+LRESULT WinPreferencesDlg::onDestroy(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	keyMappingSeparators.Detach();
+	return baseDialog::wndProc(hWnd, uMsg, wParam, lParam);
 }
 
 /**
@@ -286,8 +331,10 @@ void WinPreferencesDlg::setKeyMapping(const KeyMappingsInfoPtrVector& keyMapping
 		return;
 	
 	// コンボボックスの中身をセット
+	int comboIndex = CB_ERR;
+	KMCategory category = KMCategory_Invalid;
+	keyMappingSeparators.ClearAllSeparators();
 	ComboBox_ResetContent(hWndKeyMappingCombo);
-	const KeyMappingsInfo* selectedInfo = NULL;
 	SInt32 count = keyMappingsInfos.size();
 	SInt32 index;
 	for (index = 0; index < count; index++)
@@ -298,81 +345,117 @@ void WinPreferencesDlg::setKeyMapping(const KeyMappingsInfoPtrVector& keyMapping
 		{
 			ComboBox_SetItemData(hWndKeyMappingCombo, addedComboIndex, info);
 		}
+		if (category != info->category)
+		{
+			if (KMCategory_Invalid != category)
+			{
+				keyMappingSeparators.AddSeparatorAt(addedComboIndex - 1);
+			}
+			category = info->category;
+		}
 		
 		if (0 == info->keyMapFilePath.Compare(currentKeyMappingPath))
 		{
-			selectedInfo = info;
+			comboIndex = addedComboIndex;
 		}
 	}
 	
 	// 現在の選択値を選択
-	int comboIndex = CB_ERR;
-	if (NULL != selectedInfo)
-	{
-		int cmbCount = ComboBox_GetCount(hWndKeyMappingCombo);
-		int cmbIndex;
-		for (cmbIndex=0; cmbIndex<cmbCount; cmbIndex++)
-		{
-			const KeyMappingsInfo* itemInfo = reinterpret_cast<const KeyMappingsInfo*>(ComboBox_GetItemData(hWndKeyMappingCombo, cmbIndex));
-			if (itemInfo == selectedInfo)
-			{
-				comboIndex = cmbIndex;
-				break;
-			}
-		}
-		ASSERT(CB_ERR != comboIndex);
-	}
-	else
+	if (CB_ERR == comboIndex)
 	{
 		comboIndex = ComboBox_AddString(hWndKeyMappingCombo, "# invalid key-mapping #");
 		if (CB_ERR != comboIndex)
 		{
 			ComboBox_SetItemData(hWndKeyMappingCombo, comboIndex, NULL);
 		}
+		if (comboIndex > 0)
+		{
+			keyMappingSeparators.AddSeparatorAt(comboIndex - 1);
+		}
 	}
-	
 	if (CB_ERR != comboIndex)
 	{
 		ComboBox_SetCurSel(hWndKeyMappingCombo, comboIndex);
+		processKeyMappingSelectionChanged();
 	}	
 }
 
 /**
  *	@brief	Retrieves current item of key-mapping menu.
- *	@param[out]	keyMappingPath			a path of the key-mapping file selected on key-mapping menu.
- *	@return true if succeeded, otherwise false.
- *	@note	If error occured, the error message is shown in this function before it returns false.
+ *	@param[in]	doErrorProcessing	if this parameter is true and an error has occured, the error message is shown in this function.
+ *	@return pointer to key-mapping file info which is selected on key-mapping menu. NULL should be returned when an error has occured.
  */
-bool WinPreferencesDlg::getKeyMapping(Path& keyMappingPath)
+const PreferencesDlg::KeyMappingsInfo* WinPreferencesDlg::getKeyMapping(bool doErrorProcessing)
 {
 	HWND hWndKeyMappingCombo = GetDlgItem(m_hWnd, IDC_CMB_KEYMAPPINGS);
 	ASSERT(NULL != hWndKeyMappingCombo);
 	if (NULL == hWndKeyMappingCombo)
 	{
-		CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_GET_KEYMAPPINGS,
-				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);	
-		return false;
+		if (doErrorProcessing)
+		{
+			CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_GET_KEYMAPPINGS,
+					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
+		}
+		return NULL;
 	}
 
 	int comboIndex = ComboBox_GetCurSel(hWndKeyMappingCombo);
 	if (CB_ERR == comboIndex)
 	{
-		CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_GET_KEYMAPPINGS,
-				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
-		SetFocus(hWndKeyMappingCombo);	
-		return false;
+		if (doErrorProcessing)
+		{
+			CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_GET_KEYMAPPINGS,
+					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+			SetFocus(hWndKeyMappingCombo);
+		}
+		return NULL;
 	}
 	const KeyMappingsInfo* itemInfo = reinterpret_cast<const KeyMappingsInfo*>(ComboBox_GetItemData(hWndKeyMappingCombo, comboIndex));
 	if (NULL == itemInfo)
 	{
-		CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_INVALID_KEYMAPPINGS,
-				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
-		SetFocus(hWndKeyMappingCombo);	
-		return false;
+		if (doErrorProcessing)
+		{
+			CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_INVALID_KEYMAPPINGS,
+					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+			SetFocus(hWndKeyMappingCombo);
+		}
+		return NULL;
 	}
 	
-	keyMappingPath = itemInfo->keyMapFilePath;
-	return true;
+	return itemInfo;
+}
+
+/**
+ *	@brief	Enables or disables "Edit keymapping" button.
+ *	@param	isEnabled	enables the control when true.
+ */
+void WinPreferencesDlg::enableEditKeyMapping(bool isEnabled)
+{
+	HWND hControl;
+	hControl = GetDlgItem(m_hWnd, IDC_EDIT_KEYMAPPING);
+	EnableWindow(hControl, isEnabled);
+}
+
+/**
+ *	@brief	Enables or disables "Duplicate keymapping" button.
+ *	@param	isEnabled	enables the control when true.
+ */
+void WinPreferencesDlg::enableDuplicateKeyMapping(bool isEnabled)
+{
+	HWND hControl;
+	hControl = GetDlgItem(m_hWnd, IDC_DUPLICATE_KEYMAPPING);
+	EnableWindow(hControl, isEnabled);
+}
+
+/**
+ *	@brief	Enables or disables "Delete keymapping" button.
+ *	@param	isEnabled	enables the control when true.
+ */
+void WinPreferencesDlg::enableDeleteKeyMapping(bool isEnabled)
+{
+	HWND hControl;
+	hControl = GetDlgItem(m_hWnd, IDC_DELETE_KEYMAPPING);
+	EnableWindow(hControl, isEnabled);
 }
 
 /**

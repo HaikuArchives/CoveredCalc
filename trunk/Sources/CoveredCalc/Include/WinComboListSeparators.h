@@ -24,51 +24,53 @@
  */
 
 /*!
-	@file		CommandID.h
-	@brief		Definition of command ID
+	@file		WinComboListSeparators.h
+	@brief		Definition of WinComboListSeparators class
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2004.09.01 Created
+	@date		2008.2.24 created
 */
 
-#ifndef _COMMANDID_H_
-#define _COMMANDID_H_
+#ifndef _WINCOMBOLISTSEPARATORS_H_
+#define _WINCOMBOLISTSEPARATORS_H_
 
-enum
+#include <vector>
+#include "HrnWnd.h"
+
+/**
+ *	@brief	This class draws separator line on the listbox of specified combobox.
+ */
+class WinComboListSeparators : public CHrnWnd
 {
-	ID_COVER_BROWSER		= 'Cvbr',
-	ID_ABOUT				= 'Abut',
-	ID_PROCESSED			= 'Prcs',
+public:
+						WinComboListSeparators();
+	virtual				~WinComboListSeparators();
+	
+	BOOL				Attach(HWND hComboBox);
+	void				Detach();
 
-	// generic dialog
-	ID_DIALOG_OK			= 'dOK_',
-	ID_DIALOG_CANCEL		= 'dCcl',
-	ID_DIALOG_ACTIVATE		= 'dAct',
-	
-	// main window
-	ID_MAIN_MINIMIZE		= 'mMin',
-	ID_MAIN_CLOSE			= 'mCls',
-	ID_MAIN_ABOUT_COVER		= 'mAbc',
-	ID_MAIN_ALWAYS_ON_TOP	= 'mTop',
-	ID_MAIN_LOCK_POS		= 'mLck',
-	ID_RADIX_HEX			= 'rHex',
-	ID_RADIX_DECIMAL		= 'rDec',
-	ID_RADIX_OCTAL			= 'rOct',
-	ID_RADIX_BINARY			= 'rBin',
-	
-	// cover browser
-	ID_COVERBROWSER_RELOAD	= 'bRld',
-	ID_COVERBROWSER_APPLY	= 'bApl',
-	ID_COVERBROWSER_CLOSE	= 'bCls',
-	
-	// about current cover dialog
-	ID_ABOUTCURCOV_SETDATA	= 'acSd',
-	
-	// preferences
-	ID_PREFERENCES			= 'Pref',
-	ID_PREF_KEYMAP_SELECTED	= 'pKmS',
-	ID_PREF_EDIT_KEYMAP		= 'pEdK',
-	ID_PREF_DUPLICATE_KEYMAP = 'pDuK',
-	ID_PREF_DELETE_KEYMAP	= 'pDeK',
+	void				AddSeparatorAt(SInt32 index);
+	void				RemoveSeparatorAt(SInt32 index);
+	void				ClearAllSeparators();
+
+protected:
+	virtual LRESULT		wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+private:
+	class ListBox : public CHrnWnd
+	{
+	public:
+		void							SetContainer(const WinComboListSeparators* container);
+		void							DrawSeparators(HDC hDC);
+
+	protected:
+		virtual LRESULT					wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	private:
+		const WinComboListSeparators*	container;
+	};
+	friend class ListBox;
+
+	ListBox				listBox;
+	std::vector<SInt32>	separatorIndexes;
 };
 
-#endif // _COMMANDID_H_
+#endif // _WINCOMBOLISTSEPARATORS_H_
