@@ -26,7 +26,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
  */
 DWORD APIENTRY CCNLGetVersion()
 {
-	return 5;
+	return 6;
 }
 
 /**

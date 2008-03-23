@@ -44,7 +44,7 @@
 #define base	XMLLangFile
 ////////////////////////////////////////
 
-UTF8Char	SUITABLE_VERSION[] = "5";
+UTF8Char	SUITABLE_VERSION[] = "6";
 
 #define DEFINE_ID(name)	case name: return TypeConv::AsUTF8(#name);
 static ConstUTF8Str _convertDialogID(SInt32 id)

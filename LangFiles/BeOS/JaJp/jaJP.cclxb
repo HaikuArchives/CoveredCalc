@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<localeDef version="5" xmlns="http://hironytic.1st-shrine.net/schema/CoveredCalc-LocaleDefinition">
+<localeDef version="6" xmlns="http://hironytic.1st-shrine.net/schema/CoveredCalc-LocaleDefinition">
 	<platform target="BeOS"/>
 	
 	<langName>Japanese</langName>
@@ -152,58 +152,76 @@
 	<dialog name="IDD_PREFERENCES">
 		<!--
 			View Hierarchy:
-				+- BaseView					BView
-				    +- LangBox				BBox
-				        +- LangPopup		BMenuField
-				        +- LangNotice		BTextView
-				    +- KeyMappingBox		BBox
-				        +- KeyMappingPopup	BMenuField
-				    +- OKButton				BButton
-				    +- CancelButton			BButton
+				+- BaseView								BView
+				    +- LangBox							BBox
+				        +- LangPopup					BMenuField
+				        +- LangNotice					BTextView
+				    +- KeyMappingBox					BBox
+				        +- KeyMappingPopup				BMenuField
+				        +- EditKeyMappingButton			BButton
+				        +- DuplicateKeyMappingButton	BButton
+				        +- DeleteKeyMappingButton		BButton
+				    +- OKButton							BButton
+				    +- CancelButton						BButton
 		-->
 		
 		<!-- design time font: Haru 11 -->
 		<designFontInfo width="147.000000" height="13.186035"/>
 		
 		<dialogItem name="">
-			<rect left="0.0" top="0.0" right="314.0" bottom="225.0"/>
+			<rect left="0.0" top="0.0" right="322.0" bottom="265.0"/>
 			<label>設定</label>
 		</dialogItem>
 		
 		<dialogItem name="LangBox">
-			<rect left="12.0" top="12.0" right="302.0" bottom="107.0"/>
+			<rect left="12.0" top="12.0" right="310.0" bottom="107.0"/>
 			<label>言語</label>
 		</dialogItem>
 
 		<dialogItem name="LangPopup">
-			<rect left="12.0" top="16.0" right="278.0" bottom="40.0"/>
+			<rect left="12.0" top="16.0" right="286.0" bottom="40.0"/>
 			<label>言語:</label>
 			<divider position="76.0"/>
 		</dialogItem>
 		
 		<dialogItem name="LangNotice">
-			<rect left="12.0" top="54.0" right="278.0" bottom="83.0"/>
+			<rect left="12.0" top="54.0" right="286.0" bottom="83.0"/>
 			<label>言語の設定は、CoveredCalc を再起動後に有効になります。</label>
 		</dialogItem>
 
 		<dialogItem name="KeyMappingBox">
-			<rect left="12.0" top="121.0" right="302.0" bottom="173.0"/>
+			<rect left="12.0" top="121.0" right="310.0" bottom="213.0"/>
 			<label>キーボード</label>
 		</dialogItem>
 		
 		<dialogItem name="KeyMappingPopup">
-			<rect left="12.0" top="16.0" right="278.0" bottom="40.0"/>
+			<rect left="12.0" top="16.0" right="286.0" bottom="40.0"/>
 			<label>キーボード:</label>
 			<divider position="76.0"/>
 		</dialogItem>
 		
+		<dialogItem name="EditKeyMappingButton">
+			<rect left="12.0" top="54.0" right="98.0" bottom="80.0"/>
+			<label>編集</label>
+		</dialogItem>
+
+		<dialogItem name="DuplicateKeyMappingButton">
+			<rect left="106.0" top="54.0" right="192.0" bottom="80.0"/>
+			<label>複製</label>
+		</dialogItem>
+
+		<dialogItem name="DeleteKeyMappingButton">
+			<rect left="200.0" top="54.0" right="286.0" bottom="80.0"/>
+			<label>削除</label>
+		</dialogItem>
+
 		<dialogItem name="CancelButton">
-			<rect left="122.0" top="187.0" right="208.0" bottom="213.0"/>
+			<rect left="130.0" top="227.0" right="216.0" bottom="253.0"/>
 			<label>キャンセル</label>
 		</dialogItem>
 		
 		<dialogItem name="OKButton">
-			<rect left="216.0" top="187.0" right="302.0" bottom="213.0"/>
+			<rect left="224.0" top="227.0" right="310.0" bottom="253.0"/>
 			<label>OK</label>
 		</dialogItem>
 	</dialog>

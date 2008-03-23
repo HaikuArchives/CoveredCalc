@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -408,6 +408,7 @@ void CHrnWnd::UnSubclass()
 	m_gHrnWndMap.RemoveHrnWndObject( m_hWnd );
 	SubclassWindow( m_hWnd, m_orgWndProc );
 	m_orgWndProc = NULL;
+	m_hWnd = NULL;
 }
 
 // -------------------------------------------------------

@@ -516,6 +516,14 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Control"
+					>
+					<File
+						RelativePath="..\UI\Control\WinComboListSeparators.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Utility"
@@ -1079,6 +1087,14 @@
 					</File>
 					<File
 						RelativePath="..\Include\WinUIMessageProvider.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Control"
+					>
+					<File
+						RelativePath="..\Include\WinComboListSeparators.h"
 						>
 					</File>
 				</Filter>

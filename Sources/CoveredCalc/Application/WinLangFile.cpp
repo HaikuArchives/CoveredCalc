@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -41,7 +41,7 @@ typedef DWORD (APIENTRY *PFNCCNLGETLANGUAGECODE)(char* szLangCode);
 typedef DWORD (APIENTRY *PFNCCNLGETLANGUAGENAME)(char* szLangName);
 typedef LANGID (APIENTRY *PFNCCNLGETLANGID)();
 
-#define SPEC_VERSION	(5)		// 言語ファイル仕様のバージョン
+#define SPEC_VERSION	(6)		// 言語ファイル仕様のバージョン
 
 /**
  *	@brief	コンストラクタ

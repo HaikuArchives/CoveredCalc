@@ -27,6 +27,9 @@
 #define IDC_STC_LOW                     1020
 #define IDC_STC_HIGH                    1021
 #define IDC_CMB_KEYMAPPINGS             1022
+#define IDC_EDIT_KEYMAPPING             1023
+#define IDC_DUPLICATE_KEYMAPPING        1024
+#define IDC_DELETE_KEYMAPPING           1025
 #define IDD_ABOUT                       5000
 #define IDD_COVER_BROWSER               5001
 #define IDD_ABOUT_COVER                 5002
@@ -102,7 +105,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        112
 #define _APS_NEXT_COMMAND_VALUE         40012
-#define _APS_NEXT_CONTROL_VALUE         1022
+#define _APS_NEXT_CONTROL_VALUE         1026
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

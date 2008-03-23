@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -69,7 +69,10 @@ protected:
 								);
 
 	virtual void				setKeyMapping(const KeyMappingsInfoPtrVector& keyMappingsInfos, const Path& currentKeyMappingPath);
-	virtual bool				getKeyMapping(Path& keyMappingPath);
+	virtual const PreferencesDlg::KeyMappingsInfo*	getKeyMapping(bool doErrorProcessing);
+	virtual void				enableEditKeyMapping(bool isEnabled);
+	virtual void				enableDuplicateKeyMapping(bool isEnabled);
+	virtual void				enableDeleteKeyMapping(bool isEnabled);
 
 private:
 	void						createViews();
