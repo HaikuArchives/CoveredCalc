@@ -86,9 +86,6 @@ void BeDialog::initView(
 	BView* view					///< this view is initialized.
 )
 {
-	// replace font.
-	view->SetFont(be_plain_font);
-	
 	// initialize child views.
 	int32 childCount = view->CountChildren();
 	int childIndex;

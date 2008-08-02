@@ -56,6 +56,9 @@ protected:
 #if defined (ZETA)
 	virtual void				languageChanged();
 #endif
+
+	virtual MessageBoxProvider*	getMessageBoxProvider();
+	virtual bool				showEditKeyMapDialog(bool isReadOnly, KeyMappings& keyMappings);
 	
 	virtual void				setLanguage(const LangFileInfoCollection& langFileInfos, const Path& currentLangFilePath
 #if defined(ZETA)

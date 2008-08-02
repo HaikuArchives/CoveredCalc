@@ -72,6 +72,11 @@ public:
 
 public:
 					KeyEventParameter() { keyCode = 0; modifiers = 0; }
+					KeyEventParameter(const KeyEventParameter& other)
+						{
+							this->keyCode = other.keyCode;
+							this->modifiers = other.modifiers;
+						}
 	virtual			~KeyEventParameter() { }
 	
 	KeyCode			GetKeyCode() const
@@ -83,6 +88,25 @@ public:
 						{ this->keyCode = keyCode; }
 	void			SetModifiers(UInt32 modifiers)
 						{ this->modifiers = modifiers; }
+	
+	bool			IsValid() const
+						{ return keyCode != 0; }
+
+	bool			IsSame(const KeyEventParameter& other) const
+						{
+							return (this->keyCode == other.keyCode &&
+									(this->modifiers & ModifierMask_AllMask) == (other.modifiers & ModifierMask_AllMask));
+						}
+
+	KeyEventParameter& operator=(const KeyEventParameter& other)
+						{
+							if (this != &other)
+							{
+								this->keyCode = other.keyCode;
+								this->modifiers = other.modifiers;
+							}
+							return *this;
+						}
 	
 private:
 	KeyCode			keyCode;			///< key code

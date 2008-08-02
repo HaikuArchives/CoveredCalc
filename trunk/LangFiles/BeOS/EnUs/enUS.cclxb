@@ -226,6 +226,109 @@
 		</dialogItem>
 	</dialog>
 	
+	<!-- Edit Keyboard dialog -->
+	<dialog name="IDD_EDIT_KEYMAP">
+		<!--
+			View Hierarchy:
+				+- BaseView						BView
+					+- NameText					BTextControl
+					+- FunctionBox				BBox
+						+- FunctionLabel		BStringView
+						+- FunctionList			BListView
+						+- CurrentKeyLabel		BStringView
+						+- CurrentKeyList		BListView
+					+- RemoveButton				BButton
+					+- KeyBox					BBox
+						+- KeyLabel				BStringView
+						+- KeyInput				BeKeyInputEdit
+						+- AssignedFuncLabel	BStringView
+						+- AssignedFuncText		BTextControl
+					+- AssignButton				BButton
+					+- CancelButton				BButton
+					+- OKButton					BButton
+		-->
+		
+		<!-- design time font: Swis721 BT Roman 10 -->
+		<designFontInfo width="137.000000" height="11.987305"/>
+		
+		<dialogItem name="">
+			<rect left="0.0" top="0.0" right="432.0" bottom="316.0"/>
+			<label>Edit Keyboard</label>
+		</dialogItem>
+		
+		<dialogItem name="NameText">
+			<rect left="12.0" top="12.0" right="420.0" bottom="30.0"/>
+			<label>Name:</label>
+			<divider position="50.0"/>
+		</dialogItem>
+		
+		<dialogItem name="FunctionBox">
+			<rect left="12.0" top="42.0" right="164.0" bottom="268.0"/>
+			<label>Function</label>
+		</dialogItem>
+		
+		<dialogItem name="FunctionLabel">
+			<rect left="12.0" top="16.0" right="140.0" bottom="28.0"/>
+			<label>Function:</label>
+		</dialogItem>
+		
+		<dialogItem name="FunctionList">
+			<rect left="12.0" top="31.0" right="140.0" bottom="127.0"/>
+		</dialogItem>
+		
+		<dialogItem name="CurrentKeyLabel">
+			<rect left="12.0" top="139.0" right="140.0" bottom="151.0"/>
+			<label>Current Key:</label>
+		</dialogItem>
+		
+		<dialogItem name="CurrentKeyList">
+			<rect left="12.0" top="154.0" right="140.0" bottom="214.0"/>
+		</dialogItem>
+		
+		<dialogItem name="RemoveButton">
+			<rect left="176.0" top="196.0" right="256.0" bottom="220.0"/>
+			<label>Remove</label>
+		</dialogItem>
+		
+		<dialogItem name="KeyBox">
+			<rect left="268.0" top="42.0" right="420.0" bottom="268.0"/>
+			<label>Key</label>
+		</dialogItem>
+		
+		<dialogItem name="KeyLabel">
+			<rect left="12.0" top="16.0" right="140.0" bottom="28.0"/>
+			<label>Key:</label>
+		</dialogItem>
+
+		<dialogItem name="KeyInput">
+			<rect left="10.0" top="31.0" right="140.0" bottom="50.0"/>
+		</dialogItem>
+		
+		<dialogItem name="AssignedFuncLabel">
+			<rect left="12.0" top="62.0" right="140.0" bottom="74.0"/>
+			<label>Assigned Function:</label>
+		</dialogItem>
+		
+		<dialogItem name="AssignedFuncText">
+			<rect left="10.0" top="77.0" right="140.0" bottom="96.0"/>
+		</dialogItem>
+		
+		<dialogItem name="AssignButton">
+			<rect left="176.0" top="73.0" right="256.0" bottom="97.0"/>
+			<label>Assign</label>
+		</dialogItem>
+		
+		<dialogItem name="CancelButton">
+			<rect left="254.0" top="280.0" right="334.0" bottom="304.0"/>
+			<label>Cancel</label>
+		</dialogItem>
+		
+		<dialogItem name="OKButton">
+			<rect left="340.0" top="280.0" right="420.0" bottom="304.0"/>
+			<label>OK</label>
+		</dialogItem>
+	</dialog>
+	
 	<!-- menu item -->
 	<!-- IDM_MAIN_CONTEXT -->
 	<string name="ID_COVER_BROWSER">Cover ~Browser</string>
@@ -246,6 +349,42 @@
 	<string name="IDS_APPNAME">CoveredCalc</string>
 	<string name="IDS_COVER_BROWSER_COLUMN_NAME">Name</string>
 	<string name="IDS_COVER_BROWSER_COLUMN_DESCRIPTION">Description</string>
+	<string name="IDS_KEYMAPPINGS_COPY"> (Copy)</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_0">0 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_1">1 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_2">2 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_3">3 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_4">4 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_5">5 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_6">6 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_7">7 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_8">8 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_9">9 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_A">A Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_B">B Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_C">C Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_D">D Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_E">E Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_F">F Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_POINT">Point</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_CLEAR">Clear</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_BS">BackSpace</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_EQUAL">= Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_PLUS">+ Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_MINUS">- Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_TIMES">× Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_DIV">÷ Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_NEGATE">Negate</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_HEX">Hex</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_DEC">Decimal</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_OCT">Octal</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_BIN">Binary</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_MINIMIZE">Hide (Minimize)</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_CLOSE">Close</string>
+	<string name="IDS_QMSG_EDITED_KEYMAP_DISCARDING">Are you sure you want to discard all your changes?</string>
+	<string name="IDS_EMSG_EMPTY_KEYMAP_NAME">Please input Name.</string>
+	<string name="IDS_EMSG_DELETE_KEYMAPPINGS_IN_USE">Keyboard "%0:s%" is currently used.&#10;&#10;Hint:&#10;To delete this keyboard, select another keyboard and close this dialog by [OK] button once.</string>
+	<string name="IDS_QMSG_DELETE_KEYMAPPINGS">Are you sure you want to delete the keyboard "%0:s%"?</string>
 	<string name="IDS_EMSG_INVALID_KEYMAPPINGS">Invalid keyboard selection. Please, choose a valid keyboard.</string>
 	<string name="IDS_EMSG_GET_KEYMAPPINGS">Error obtaining the keyboard selection.</string>
 	<string name="IDS_EMSG_LOAD_KEYMAPPINGS">Failed to load key mappings.</string>

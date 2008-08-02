@@ -279,6 +279,27 @@ bool BeCoveredCalcApp::CheckPlatform(ConstUTF8Str platform)
 }
 
 /**
+ *	@brief	Loads keyname DB.
+ *	This function is called by ReadyToRun().
+ */
+void BeCoveredCalcApp::loadKeyNameDB()
+{
+	Path keynameFile;
+	keynameFile.AssignFromSlashSeparated("${" VPATH_APP_KEYMAPS "}/keyname.ccknb");
+	Path absolutePath = ExpandVirtualPath(keynameFile);
+	try
+	{
+		CoveredCalcAppBase::loadKeyNameDB(absolutePath);
+	}
+	catch (Exception* ex)
+	{
+		// it can work even if key name DB was not loaded.
+		// so ignores this exception.
+		ex->Delete();
+	}
+}
+
+/**
  *	@brief	Loads keymap.
  *	This function is called by ReadyToRun().
  */
@@ -445,6 +466,9 @@ void BeCoveredCalcApp::ReadyToRun()
 	
 		GetAppSettings()->SetLanguageFilePath(AppSettings::Value_LangFileBuiltIn);
 	}
+
+	// キー定義名 DB のロード
+	loadKeyNameDB();
 
 	// キーマッピング読み込み
 	loadKeyMappingsOnInit();

@@ -87,6 +87,7 @@ protected:
 private:
 	void						loadLangFile(const Path& path);
 	void						loadKeyMappingsOnInit();
+	void						loadKeyNameDB();
 
 private:
 	Path						appFolderPath;		///< the folder in which app program exists.

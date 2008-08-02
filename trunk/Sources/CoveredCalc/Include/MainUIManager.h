@@ -59,7 +59,7 @@ public:
 	virtual void				MouseMove();
 	virtual void				Button1Down();
 	virtual void				Button2Down();
-	virtual void				KeyDown(const KeyEventParameter& parameter);
+	virtual bool				KeyDown(const KeyEventParameter& parameter);
 	virtual void				UIActivated();
 
 	void						DoFuncCoverBrowser();

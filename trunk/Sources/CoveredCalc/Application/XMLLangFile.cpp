@@ -124,7 +124,7 @@ void XMLLangFile::validateFirst()
 
 	// check platform target.
 	bool platformOK = false;
-	NCDElement* platformElement = DOMUtils::SearchElementNext(rootElement->getFirstChild(), TypeConv::AsUTF8("platform"), true);
+	NCDElement* platformElement = DOMUtils::SearchElementNext(rootElement->getFirstChild(), TypeConv::AsUTF8("platform"), false);
 	while (NULL != platformElement)
 	{
 		UTF8String targetString;

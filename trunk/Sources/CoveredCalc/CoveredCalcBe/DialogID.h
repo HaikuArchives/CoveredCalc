@@ -39,6 +39,7 @@ enum
 	IDD_COVER_BROWSER						= 5001,
 	IDD_ABOUT_COVER							= 5002,
 	IDD_PREFERENCES							= 5003,
+	IDD_EDIT_KEYMAP							= 5004,
 };
 
 #endif // _DIALOGID_H_

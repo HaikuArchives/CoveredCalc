@@ -51,7 +51,7 @@ namespace DOMUtils
 								NodeVisitor() { }
 		virtual					~NodeVisitor() { }
 		
-		/*
+		/**
 		 * do something to specified node.
 		 *
 		 * @retval	true	continue iteration

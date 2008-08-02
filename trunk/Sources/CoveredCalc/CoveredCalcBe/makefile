@@ -73,6 +73,8 @@ SRCS= \
 	../UI/BeCoverBrowser.cpp \
 	../UI/BeDeskbarPseudoWindow.cpp \
 	../UI/BeDialog.cpp \
+	../UI/BeEditKeymapDlg.cpp \
+	../UI/BeKeyEventFilter.cpp \
 	../UI/BeMainView.cpp \
 	../UI/BeMainWindow.cpp \
 	../UI/BeMessageBoxProvider.cpp \
@@ -81,7 +83,9 @@ SRCS= \
 	../UI/BeSkinWindow.cpp \
 	../UI/ButtonUITask.cpp \
 	../UI/CoverBrowser.cpp \
+	../UI/EditKeymapDlg.cpp \
 	../UI/KeyMappingManager.cpp \
+	../UI/KeyNameDB.cpp \
 	../UI/MainUIManager.cpp \
 	../UI/MainWindowKeyFunc.cpp \
 	../UI/MouseHoverUITask.cpp \
@@ -93,12 +97,19 @@ SRCS= \
 	../UI/Message/ExceptionMessageGenerator.cpp \
 	../UI/Control/BeBitmapView.cpp \
 	../UI/Control/BeCCColumnListView.cpp \
+	../UI/Control/BeKeyInputEdit.cpp \
 	../UI/Control/BeToolTipWindow.cpp \
+	../UI/UIComponent/BeControlAdapter.cpp \
+	../UI/UIComponent/BeKeyInputAdapter.cpp \
+	../UI/UIComponent/BeLabeledControlAdapter.cpp \
+	../UI/UIComponent/BeListViewAdapter.cpp \
+	../UI/UIComponent/BeTextControlAdapter.cpp \
+	../UI/UIComponent/BeViewAdapter.cpp \
 	../Utility/BeDialogDesign.cpp \
 	../Utility/ExceptionMessageUtils.cpp \
 	../Utility/MessageFormatter.cpp \
 	../Utility/PathUtils.cpp \
-	../Utility/StorageUtils.cpp \
+	../Utility/StorageUtils.cpp \
 	../Utility/UTF8ConvBe.cpp \
 	../XML/DOMParseEventHandler.cpp \
 	../XML/DOMUtils.cpp \

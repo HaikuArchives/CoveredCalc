@@ -46,6 +46,7 @@
 #include "KeyMappingsException.h"
 #include "UTF8Utils.h"
 #include "VirtualPathNames.h"
+#include "WinMessageFilter.h"
 
 static const char LANG_CODE_JAJP[] = "jaJP";		///< language code for Japanese.
 
@@ -465,6 +466,25 @@ bool WinCoveredCalcApp::CheckPlatform(ConstUTF8Str platform)
 }
 
 /**
+ *	@brief	キー名DBを読み込みます。initInstance の処理で呼ばれます。
+ */
+void WinCoveredCalcApp::loadKeyNameDB()
+{
+	Path keynameFile;
+	keynameFile.AssignFromSlashSeparated("${" VPATH_APP_KEYMAPS "}/keyname.ccknw");
+	Path absolutePath = ExpandVirtualPath(keynameFile);
+	try
+	{
+		CoveredCalcAppBase::loadKeyNameDB(absolutePath);
+	}
+	catch (Exception* ex)
+	{
+		// キー名DBが読めなくても動作はするのでスルーする
+		ex->Delete();
+	}
+}
+
+/**
  *	@brief	キーマップ定義を読み込みます。initInstance の処理で呼ばれます。
  */
 void WinCoveredCalcApp::loadKeyMappingsOnInit()
@@ -529,7 +549,7 @@ BOOL WinCoveredCalcApp::initInstance()
 
 	// レイヤードウィンドウ関連の API
 	apiLayeredWindow.Initialize();
-
+	
 	// ウェイトカーソルを取得しておく
 	waitCursor = ::LoadCursor(NULL, IDC_WAIT);
 
@@ -667,6 +687,9 @@ BOOL WinCoveredCalcApp::initInstance()
 		GetAppSettings()->SetLanguageFilePath(AppSettings::Value_LangFileBuiltIn);
 	}
 	
+	// キー定義名 DB のロード
+	loadKeyNameDB();
+	
 	// キーマッピング読み込み
 	loadKeyMappingsOnInit();
 	
@@ -764,13 +787,121 @@ int WinCoveredCalcApp::messageLoop()
 	MSG	msg;
 	while( GetMessage( &msg, NULL, 0, 0 ) )
 	{
-		if (NULL == coverBrowser.m_hWnd || !::IsDialogMessage(coverBrowser.m_hWnd, &msg))
+		bool doDispatch = CallMessageFilters(&msg);
+		if (doDispatch)
 		{
-			TranslateMessage( &msg );
-			DispatchMessage( &msg );
+			if (NULL == coverBrowser.m_hWnd || !::IsDialogMessage(coverBrowser.m_hWnd, &msg))
+			{
+				TranslateMessage( &msg );
+				DispatchMessage( &msg );
+			}
 		}
 	}
 	return msg.wParam;	
+}
+
+/**
+ *	@brief	コンストラクタ
+ */
+WinCoveredCalcApp::MessageFilterManager::MessageFilterManager()
+{
+	enumerating = 0;
+}
+
+/**
+ *	@brief	デストラクタ
+ */
+WinCoveredCalcApp::MessageFilterManager::~MessageFilterManager()
+{
+}
+
+/**
+ *	@brief	メッセージフィルタのインストール
+ *	@param[in]	filter	インストールするフィルタ
+ */
+void WinCoveredCalcApp::MessageFilterManager::InstallMessageFilter(WinMessageFilter* filter)
+{
+	filters.push_back(filter);
+}
+
+/**
+ *	@brief	メッセージフィルタのアンインストール
+ *	@param[in]	filter	アンインストールするフィルタ
+ */
+void WinCoveredCalcApp::MessageFilterManager::UninstallMessageFilter(WinMessageFilter* filter)
+{
+	FilterVector::iterator ite;
+	for (ite = filters.begin(); ite != filters.end(); ite++)
+	{
+		if (filter == *ite)
+		{
+			*ite = NULL;
+			if (canEraseItem())
+			{
+				filters.erase(ite);
+			}
+			break;
+		}
+	}
+}
+
+/**
+ *	@brief	メッセージフィルタの呼び出し
+ *	@param[in]	呼び出すメッセージ
+ */
+bool WinCoveredCalcApp::MessageFilterManager::CallFilters(MSG* msg)
+{
+	enumerating++;
+
+	bool ret = true;
+	try
+	{
+		FilterVector::iterator ite;
+		for (ite = filters.begin(); ite != filters.end(); ite++)
+		{
+			ret = (*ite)->FilterMessage(msg);
+			if (!ret)
+			{
+				break;
+			}
+		}
+	}
+	catch (...)
+	{
+		enumerating--;
+		eraseNoUseItems();
+		throw;
+	}
+	enumerating--;
+	eraseNoUseItems();
+
+	return ret;
+	
+}
+
+/**
+ *	@brief	アンインストールされたフィルタのアイテムを削除します。
+ *	@note	CallFilters 中に行われたフィルタのアンインストールではその時点ではfiltersから除去されず代わりに NULL が設定されます。
+ */
+void WinCoveredCalcApp::MessageFilterManager::eraseNoUseItems()
+{
+	if (!canEraseItem())
+	{
+		return;
+	}
+
+	FilterVector::iterator ite;
+	for (ite = filters.begin(); ite != filters.end(); )
+	{
+		if (NULL == *ite)
+		{
+			ite = filters.erase(ite);
+		}
+		else
+		{
+			ite++;
+		}
+	}
 }
 
 // ---------------------------------------------------------------------

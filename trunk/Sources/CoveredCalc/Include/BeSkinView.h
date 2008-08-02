@@ -36,6 +36,7 @@
 #include <interface/View.h>
 #include "UIController.h"
 #include "BeToolTipWindow.h"
+#include "BeKeyEventFilter.h"
 
 class UIManager;
 class BeDialog;
@@ -50,7 +51,7 @@ class BPopUpMenu;
 	The view classes which use skins are derived from this class.
 */
 // ---------------------------------------------------------------------
-class BeSkinView : public BView, public UIController
+class BeSkinView : public BView, public UIController, public BeKeyEventHandler
 {
 public:
 							BeSkinView(BRect frame, const char* name);
@@ -86,6 +87,9 @@ public:
 	virtual void			BeginTimer(UIController::TimerID timerId, UInt32 elapse);
 	virtual void			EndTimer(UIController::TimerID timerId);
 
+	// implementation of BeKeyEventHandler
+	virtual bool			HandleKeyEvent(const KeyEventParameter* parameter);
+
 protected:
 	virtual UIManager*		createUIManager() = 0;
 	virtual void			deleteUIManager(UIManager* uiManager) = 0;
@@ -101,9 +105,9 @@ protected:
 	virtual	void			MouseUp(BPoint where);
 	virtual	void			MouseMoved(BPoint where, uint32 code, const BMessage *a_message);
 	virtual	void			WindowActivated(bool state);
-	virtual void			KeyDown(const char* bytes, int32 numBytes);
 	virtual void			KeyUp(const char* bytes, int32 numBytes);
 
+	virtual void			AttachedToWindow();
 	virtual	void			MessageReceived(BMessage* message);
 
 private:

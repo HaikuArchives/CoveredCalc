@@ -65,7 +65,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="comctl32.lib version.lib $(InputDir)\..\..\Libs\libexpatWin\libexpatMTd.lib"
+				AdditionalDependencies="comctl32.lib version.lib imm32.lib $(InputDir)\..\..\Libs\libexpatWin\libexpatMTd.lib"
 				OutputFile="$(OutDir)/CoveredCalc.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
@@ -145,7 +145,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="comctl32.lib version.lib $(InputDir)\..\..\Libs\libexpatWin\libexpatMT.lib"
+				AdditionalDependencies="comctl32.lib version.lib imm32.lib $(InputDir)\..\..\Libs\libexpatWin\libexpatMT.lib"
 				OutputFile="$(OutDir)/CoveredCalc.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
@@ -413,6 +413,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\UI\EditKeymapDlg.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\UI\KeyMappingManager.cpp"
 					>
 				</File>
@@ -477,6 +481,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\UI\WinEditKeymapDlg.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\UI\WinLayeredAppearance.cpp"
 					>
 				</File>
@@ -501,6 +509,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\UI\WinPseudoModalDialog.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\Ui\WinSkinWindow.cpp"
 					>
 				</File>
@@ -521,6 +533,30 @@
 					>
 					<File
 						RelativePath="..\UI\Control\WinComboListSeparators.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Control\WinKeyInputEdit.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="UIComponent"
+					>
+					<File
+						RelativePath="..\UI\UIComponent\WinControlAdapter.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\UIComponent\WinKeyInputAdapter.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\UIComponent\WinListBoxAdapter.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\UIComponent\WinTextControlAdapter.cpp"
 						>
 					</File>
 				</Filter>
@@ -692,6 +728,10 @@
 				</File>
 				<File
 					RelativePath="..\Include\WinLangFile.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\WinMessageFilter.h"
 					>
 				</File>
 			</Filter>
@@ -927,6 +967,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Include\EditKeymapDlg.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Include\KeyEventParameter.h"
 					>
 				</File>
@@ -1047,6 +1091,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Include\WinEditKeymapDlg.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Include\WinLayeredAppearance.h"
 					>
 				</File>
@@ -1068,6 +1116,10 @@
 				</File>
 				<File
 					RelativePath="..\Include\WinPreferencesDlg.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\WinPseudoModalDialog.h"
 					>
 				</File>
 				<File
@@ -1095,6 +1147,62 @@
 					>
 					<File
 						RelativePath="..\Include\WinComboListSeparators.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\WinKeyInputEdit.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="UIComponent"
+					>
+					<File
+						RelativePath="..\Include\DefaultUICButton.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\DefaultUICKeyInput.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\DefaultUICListBox.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\DefaultUICTextEdit.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\UICButton.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\UICKeyInput.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\UICListBox.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\UICTextEdit.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\WinControlAdapter.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\WinKeyInputAdapter.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\WinListBoxAdapter.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\WinTextControlAdapter.h"
 						>
 					</File>
 				</Filter>

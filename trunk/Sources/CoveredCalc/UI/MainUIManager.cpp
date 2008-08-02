@@ -874,14 +874,16 @@ UInt32 MainUIManager::GetCommandState(SInt32 commandId)
 	return state;
 }
 
-// ---------------------------------------------------------------------
-//! Called when key is pressed.
-// ---------------------------------------------------------------------
-void MainUIManager::KeyDown(const KeyEventParameter& parameter)
+/**
+ *	@brief	Called when a key is pressed.
+ *	@return	returns false to skip other behavior assigned to this key-event.
+ */
+bool MainUIManager::KeyDown(const KeyEventParameter& parameter)
 {
-	base::KeyDown(parameter);
-
-	CoverMainWindowInfo::ButtonClass command = getButtonFromKeyFunc(static_cast<MainWindowKeyFunc::KeyFunc>(getKeyMappingManager()->GetFunction(parameter)));
+	bool ret = base::KeyDown(parameter);
+	
+	SInt32 function = getKeyMappingManager()->GetFunction(parameter);
+	CoverMainWindowInfo::ButtonClass command = getButtonFromKeyFunc(static_cast<MainWindowKeyFunc::KeyFunc>(function));
 	if (CoverMainWindowInfo::ButtonClass_None != command)
 	{
 		UInt32 commandState = GetCommandState(command);
@@ -937,6 +939,13 @@ void MainUIManager::KeyDown(const KeyEventParameter& parameter)
 	{
 		// TODO: no button matches this key, but the function of this key can exsits.
 	}
+
+	if (ret)
+	{
+		ret = KeyFuncOperation::KeyFunc_None == function;
+	}
+	
+	return ret;
 }
 
 // ---------------------------------------------------------------------

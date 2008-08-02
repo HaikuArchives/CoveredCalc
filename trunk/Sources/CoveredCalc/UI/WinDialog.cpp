@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -33,6 +33,7 @@
 #include "Prefix.h"
 #include "WinDialog.h"
 #include "WinCoveredCalcApp.h"
+#include "WinMessageBoxProvider.h"
 
 ////////////////////////////////////////
 #define base	CHrnDlg
@@ -151,4 +152,56 @@ LRESULT WinDialog::onInitDialog(
 	}
 	
 	return result;
+}
+
+// ---------------------------------------------------------------------
+//! メッセージボックスを表示します。
+/*!
+	@return ユーザが選択したボタン
+*/
+// ---------------------------------------------------------------------
+MessageBoxProvider::Button WinDialog::DoMessageBox(
+	ConstAStr message,							//!< message text
+	ButtonType buttonType,						//!< button type
+	AlertType alertType,						//!< alert type
+	Button defaultButton /* = Button_None */	//!< default button
+)
+{
+	HWND hOwner;
+	if (NULL != m_hWnd && ::IsWindow(m_hWnd))
+	{
+		hOwner = m_hWnd;
+	}
+	else
+	{
+		hOwner = NULL;
+	}
+	WinMessageBoxProvider messageBoxProvider(hOwner);
+	return messageBoxProvider.DoMessageBox(message, buttonType, alertType, defaultButton);
+}
+
+// ---------------------------------------------------------------------
+//! メッセージボックスを表示します。
+/*!
+	@return ユーザが選択したボタン
+*/
+// ---------------------------------------------------------------------
+MessageBoxProvider::Button WinDialog::DoMessageBox(
+	SInt32 messageId,							//!< message id of the text
+	ButtonType buttonType,						//!< button type
+	AlertType alertType,						//!< alert type
+	Button defaultButton /* = Button_None */	//!< default button
+)
+{
+	HWND hOwner;
+	if (NULL != m_hWnd && ::IsWindow(m_hWnd))
+	{
+		hOwner = m_hWnd;
+	}
+	else
+	{
+		hOwner = NULL;
+	}
+	WinMessageBoxProvider messageBoxProvider(hOwner);
+	return messageBoxProvider.DoMessageBox(messageId, buttonType, alertType, defaultButton);
 }

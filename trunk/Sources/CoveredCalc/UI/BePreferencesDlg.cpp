@@ -40,6 +40,10 @@
 #include "Exception.h"
 #include "ExceptionMessageUtils.h"
 #include "BeDataMenuItem.h"
+#include "BeXMLLangFile.h"
+#include "BeCoveredCalcApp.h"
+#include "DialogID.h"
+#include "BeEditKeymapDlg.h"
 #if defined(ZETA)
 #include <locale/Locale.h>
 #endif // defined(ZETA)
@@ -48,6 +52,8 @@
 #define baseWindow	BeDialog
 #define base		PreferencesDlg
 ////////////////////////////////////////
+
+static const bigtime_t MODAL_POLLING_WAIT = 100000;
 
 static const char PREFERENCES_DIALOG_VIEW_BASE_VIEW[]			= "BaseView";
 static const char PREFERENCES_DIALOG_VIEW_LANG_BOX[]			= "LangBox";
@@ -308,6 +314,48 @@ void BePreferencesDlg::Init()
 }
 
 /**
+ *	@brief	Returns MessageBoxProvider object.
+ *	@return	MessageBoxProvider object.
+ */
+MessageBoxProvider*	BePreferencesDlg::getMessageBoxProvider()
+{
+	return CoveredCalcApp::GetInstance();
+}
+
+bool BePreferencesDlg::showEditKeyMapDialog(bool isReadOnly, KeyMappings& keyMappings)
+{
+	const BeXMLLangFile* langFile = BeCoveredCalcApp::GetInstance()->GetLangFile();
+	if (NULL == langFile)
+	{
+		return false;
+	}
+
+	sem_id semDialog = create_sem(0, "BeEditKeymapDlg");
+	if (semDialog < B_NO_ERROR)
+	{
+		return false;
+	}
+
+	BeDialogDesign* dialogDesign = langFile->LoadDialogDesign(IDD_EDIT_KEYMAP);
+	BeEditKeymapDlg* dlg = new BeEditKeymapDlg(dialogDesign);
+	dlg->SetKeyMappings(&keyMappings);
+	dlg->Init(this, semDialog, isReadOnly, CoveredCalcApp::GetInstance()->GetKeyNameDB());
+	dlg->Show();
+	
+	status_t acquireResult;
+	do
+	{
+		acquireResult = acquire_sem_etc(semDialog, 1, B_RELATIVE_TIMEOUT, MODAL_POLLING_WAIT);
+		UpdateIfNeeded();
+	}
+	while (B_NO_ERROR != acquireResult);
+
+	delete_sem(semDialog);	
+	
+	return dlg->IsDialogClosedByOK();
+}
+
+/**
  *	@brief	compare function for sorting language item.
  */
 static int langFileInfoCompareFunc(const void* item1, const void* item2)
@@ -428,6 +476,15 @@ typedef BeDataMenuItem<const PreferencesDlg::KeyMappingsInfo*> BeKMIMenuItem;
  */
 void BePreferencesDlg::setKeyMapping(const KeyMappingsInfoPtrVector& keyMappingsInfos, const Path& currentKeyMappingPath)
 {
+	// clear menu
+	SInt32 oldCount = keyMappingMenu->CountItems();
+	SInt32 ox;
+	for (ox = oldCount - 1; ox >= 0; ox--)
+	{
+		BMenuItem* menuItem = keyMappingMenu->RemoveItem(ox);
+		delete menuItem;
+	}
+
 	// add to menu
 	KMCategory category = KMCategory_Invalid;
 	SInt32 count = keyMappingsInfos.size();

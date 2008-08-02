@@ -36,6 +36,7 @@
 #include "HrnWnd.h"
 #include "UIController.h"
 #include "WinCCSAppearance.h"
+#include "WinMessageFilter.h"
 
 class UIManager;
 class WinDialog;
@@ -47,7 +48,7 @@ class WinDialog;
 	このクラスを継承します。
 */
 // ---------------------------------------------------------------------
-class WinSkinWindow : public CHrnWnd, public UIController
+class WinSkinWindow : public CHrnWnd, public UIController, public WinMessageFilter
 {
 public:
 	/// ユーザ定義メッセージ
@@ -86,6 +87,9 @@ public:
 	virtual void			BeginTimer(UIController::TimerID timerId, UInt32 elapse);
 	virtual void			EndTimer(UIController::TimerID timerId);
 
+	// WinMessageFilter クラスの実装
+	virtual bool			FilterMessage(MSG* msg);
+
 protected:
 	virtual UIManager*		createUIManager() = 0;
 	virtual void			deleteUIManager(UIManager* uiManager) = 0;
@@ -111,7 +115,6 @@ private:
 	LRESULT					onRButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT					onActivate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT					onUMActivated(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	LRESULT					onKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT					onKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT					onTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT					onRereadSkin(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

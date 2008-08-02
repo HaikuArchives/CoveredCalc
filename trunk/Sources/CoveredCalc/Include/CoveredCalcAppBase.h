@@ -42,6 +42,7 @@
 #include "CommandLineParam.h"
 #include "LangFileInfo.h"
 #include "KeyMappingManager.h"
+#include "KeyNameDB.h"
 
 // ---------------------------------------------------------------------
 //! The base class of application class in each OS.
@@ -71,6 +72,7 @@ public:
 	virtual Path							ExpandVirtualPath(const Path& virtualPath);
 	virtual Path							MakeVirtualPath(const Path& absolutePath, ConstAStr virtualPathName);
 	virtual void							LoadKeyMappings(const Path& keymapFile);
+	virtual const KeyNameDB*				GetKeyNameDB() const { return &keyNameDB; }
 	
 	virtual KeyMappingManager*				GetKeyMappingManagerForMainWindow() { return &mainWindowKeyMappingManager; }
 
@@ -86,6 +88,7 @@ protected:
 	void									setCurrentLanguageCode(ConstAStr language) { currentLangCode = language; }
 	virtual Path							resolveVirtualPathName(const MBCString& virtualPathName);
 	void 									readyDefaultSettingFilePath(Path& settingFilePath);
+	void									loadKeyNameDB(const Path& keyNameDefFile);
 
 protected:
 
@@ -117,6 +120,7 @@ private:
 	bool									isReadyLangFileInfos;			///< is langFileInfos is loaded?
 	MBCString								currentLangCode;				///< current language code.
 	KeyMappingManager						mainWindowKeyMappingManager;	///< key-mapping manager for main window.
+	KeyNameDB								keyNameDB;						///< key name database.
 };
 
 #endif // _COVEREDCALCAPPBASE_H_
