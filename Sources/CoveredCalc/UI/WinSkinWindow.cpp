@@ -719,10 +719,8 @@ LRESULT WinSkinWindow::wndProc(
 		case UM_ACTIVATED:
 			return onUMActivated(hWnd, uMsg, wParam, lParam);
 			break;
-		case WM_KEYDOWN:
-			return onKeyDown(hWnd, uMsg, wParam, lParam);
-			break;
 		case WM_KEYUP:
+		case WM_SYSKEYUP:
 			return onKeyUp(hWnd, uMsg, wParam, lParam);
 			break;
 		case WM_TIMER:
@@ -795,6 +793,9 @@ LRESULT WinSkinWindow::onCreate(
 		ex->Delete();
 		return -1;
 	}
+	
+	// MessageFilter として自分自身をインストール
+	WinCoveredCalcApp::GetInstance()->InstallMessageFilter(this);
 
 	return 0;
 }
@@ -812,6 +813,9 @@ LRESULT WinSkinWindow::onDestroy(
 	LPARAM lParam	// 利用しないパラメータ
 )
 {
+	// MessageFilter としての自分自身を破棄
+	WinCoveredCalcApp::GetInstance()->UninstallMessageFilter(this);
+
 	// マウスキャプチャが残っていたら解除
 	if (mouseCaptureNestCount > 0)
 	{
@@ -1055,49 +1059,45 @@ LRESULT WinSkinWindow::onUMActivated(
 	return 0;
 }
 
-// ---------------------------------------------------------------------
-//! WM_KEYDOWN ハンドラ
-/*!
-	UIManager にイベントを伝えます。
-	@retval 0 処理したとき
-*/
-// ---------------------------------------------------------------------
-LRESULT WinSkinWindow::onKeyDown(
-	HWND hWnd,		//!< ウィンドウハンドル
-	UINT uMsg,		//!< WM_KEYDOWN
-	WPARAM wParam,	//!< 仮想キーコード
-	LPARAM lParam	//!< フラグ
-)
+/**
+ *	@brief	Filters message.
+ *	@param[in,out] msg	message.
+ *	@return false to skip this message. true to dispatch this message.
+ */
+bool WinSkinWindow::FilterMessage(MSG* msg)
 {
-	base::wndProc(hWnd, uMsg, wParam, lParam);
-
-	// マウスボタン、修飾キーは無視
-	switch (wParam)
+	if (msg->hwnd != m_hWnd)
+		return true;
+	
+	if (WM_KEYDOWN == msg->message || WM_SYSKEYDOWN == msg->message)
 	{
-	case VK_LBUTTON:
-	case VK_RBUTTON:
-	case VK_MBUTTON:
-	case VK_SHIFT:
-	case VK_CONTROL:
-	case VK_MENU:
-		return 0;
-	}
+		// マウスボタン、修飾キーは無視
+		switch (msg->wParam)
+		{
+		case VK_LBUTTON:
+		case VK_RBUTTON:
+		case VK_MBUTTON:
+		case VK_SHIFT:
+		case VK_CONTROL:
+		case VK_MENU:
+			return true;
+		}
 
-	UIManager* uiManager = getUIManager();
-	ASSERT(NULL != uiManager);
-	if (NULL != uiManager)
-	{
-		KeyEventParameter parameter;
-		UInt32 modifiers = 0;
-		modifiers |= ((::GetKeyState(VK_SHIFT)   & 0x8000) ? KeyEventParameter::ModifierMask_Shift : 0);
-		modifiers |= ((::GetKeyState(VK_CONTROL) & 0x8000) ? KeyEventParameter::ModifierMask_Ctrl  : 0);
-		modifiers |= ((::GetKeyState(VK_MENU)    & 0x8000) ? KeyEventParameter::ModifierMask_Alt   : 0);
-		parameter.SetKeyCode(static_cast<DWORD>(wParam));
-		parameter.SetModifiers(modifiers);
-		uiManager->KeyDown(parameter);
+		UIManager* uiManager = getUIManager();
+		ASSERT(NULL != uiManager);
+		if (NULL != uiManager)
+		{
+			KeyEventParameter parameter;
+			UInt32 modifiers = 0;
+			modifiers |= ((::GetKeyState(VK_SHIFT)   & 0x8000) ? KeyEventParameter::ModifierMask_Shift : 0);
+			modifiers |= ((::GetKeyState(VK_CONTROL) & 0x8000) ? KeyEventParameter::ModifierMask_Ctrl  : 0);
+			modifiers |= ((::GetKeyState(VK_MENU)    & 0x8000) ? KeyEventParameter::ModifierMask_Alt   : 0);
+			parameter.SetKeyCode(static_cast<DWORD>(msg->wParam));
+			parameter.SetModifiers(modifiers);
+			return uiManager->KeyDown(parameter);
+		}
 	}
-
-	return 0;
+	return true;
 }
 
 // ---------------------------------------------------------------------

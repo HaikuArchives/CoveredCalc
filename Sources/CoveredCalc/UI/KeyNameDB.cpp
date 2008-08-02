@@ -40,6 +40,21 @@
 #include "NCDDocument.h"
 #include "NCDElement.h"
 #include "UTF8Conv.h"
+#include "CoveredCalcApp.h"
+#if defined(BEOS)
+#include <Font.h>
+#endif
+
+#if defined(WIN32)
+static const AChar STR_MODIFIER_CTRL[]				= "Ctrl+";
+static const AChar STR_MODIFIER_SHIFT[]				= "Shift+";
+static const AChar STR_MODIFIER_ALT[]				= "Alt+";
+#elif defined(BEOS)
+static const AChar STR_MODIFIER_COMMAND[]			= "Command-";
+static const AChar STR_MODIFIER_SHIFT[]				= "Shift-";
+static const AChar STR_MODIFIER_OPTION[]			= "Option-";
+static const AChar STR_MODIFIER_CONTROL[]			= "Control-";
+#endif
 
 static const UTF8Char STR_ELEMENT_KEY_NAMES[]		= "keyNames";
 static const UTF8Char STR_ELEMENT_PLATFORM[]		= "platform";
@@ -135,8 +150,24 @@ void KeyNameDB::loadKeyNameDef(NCDDocument* document)
 		return;
 	}
 	
-	// check platform
-	// TODO:
+	// check platform target.
+	bool platformOK = false;
+	NCDElement* platformElement = DOMUtils::SearchElementNext(apexElem->getFirstChild(), TypeConv::AsUTF8("platform"), false);
+	while (NULL != platformElement)
+	{
+		UTF8String targetString;
+		platformElement->getAttribute(TypeConv::AsUTF8("target"), targetString);
+		if (CoveredCalcApp::GetInstance()->CheckPlatform(targetString))
+		{
+			platformOK = true;
+			break;
+		}
+		platformElement = DOMUtils::SearchElementNext(platformElement->getNextSibling(), TypeConv::AsUTF8("platform"), false);
+	}
+	if (!platformOK)
+	{
+		return;
+	}
 	
 	// append to cache
 	UTF8String codeUtf8;
@@ -160,7 +191,7 @@ void KeyNameDB::loadKeyNameDef(NCDDocument* document)
  * @param[in] keyCode keycode.
  * @param[out] keyName key name is returned.
  */
-void KeyNameDB::GetKeyName(KeyEventParameter::KeyCode keyCode, MBCString& keyName)
+void KeyNameDB::GetKeyName(KeyEventParameter::KeyCode keyCode, MBCString& keyName) const
 {
 	KeyNameMap::iterator it = keyNameCache.find(keyCode);
 	if (it != keyNameCache.end())	// found
@@ -179,7 +210,7 @@ void KeyNameDB::GetKeyName(KeyEventParameter::KeyCode keyCode, MBCString& keyNam
  * @param[in] keyCode keycode.
  * @param[out] keyName generated key name is returned.
  */
-void KeyNameDB::generateKeyName(KeyEventParameter::KeyCode keyCode, MBCString& keyName)
+void KeyNameDB::generateKeyName(KeyEventParameter::KeyCode keyCode, MBCString& keyName) const
 {
 	AChar buf[128];
 	
@@ -201,6 +232,7 @@ void KeyNameDB::generateKeyName(KeyEventParameter::KeyCode keyCode, MBCString& k
 			get_key_map(&mapKeys, &mapChars);
 		}
 		
+		SInt32 numChars = 0;
 		char* pos = mapChars + mapKeys->normal_map[keyCode];
 		SInt32 len = *pos++;
 		if (0 < len)
@@ -209,6 +241,7 @@ void KeyNameDB::generateKeyName(KeyEventParameter::KeyCode keyCode, MBCString& k
 			{
 				buf[0] = (isalpha(*pos)) ? (toupper(*pos)) : (*pos);
 				buf[1] = '\0';
+				numChars = 1;
 			}
 			else
 			{
@@ -216,14 +249,85 @@ void KeyNameDB::generateKeyName(KeyEventParameter::KeyCode keyCode, MBCString& k
 				for (ix = 0; ix < len; ix++)
 				{
 					buf[ix] = *pos++;
+					if ((buf[ix] & 0xc0) != 0x80)
+					{
+						numChars++;
+					}
 				}
 				buf[ix] = '\0';
 			}
-			keyName = buf;
-			return;
+			
+			// check if be_plain_font can display the key name.
+			bool hasArray[128];
+			be_plain_font->GetHasGlyphs(buf, numChars, hasArray);
+			bool canDisplay = true;
+			SInt32 ix;
+			for (ix = 0; ix < numChars; ix++)
+			{
+				if (!hasArray[ix])
+				{
+					canDisplay = false;
+					break;
+				}
+			}
+			
+			if (canDisplay)
+			{
+				keyName = buf;
+				return;
+			}
 		}
 	}	
 #endif
 	
-	snprintf(buf, sizeof(buf)/sizeof(AChar), "keycode-%02x", keyCode);
+	snprintf(buf, sizeof(buf)/sizeof(AChar), "(Keycode-%02lX)", keyCode);
+	keyName = buf;
+}
+
+/**
+ * @brief Generates a name of key from KeyEventParameter.
+ * @param[in] keyEventParam KeyEventParameter.
+ * @param[out] keyName generated key name is returned.
+ */
+void KeyNameDB::GetKeyName(const KeyEventParameter* keyEventParam, MBCString& keyName) const
+{
+	MBCString noModifierKeyName;
+	GetKeyName(keyEventParam->GetKeyCode(), noModifierKeyName);
+
+	UInt32 modifiers = keyEventParam->GetModifiers();
+	keyName.Empty();
+	
+#if defined(WIN32)
+	if (modifiers & KeyEventParameter::ModifierMask_Ctrl)
+	{
+		keyName += STR_MODIFIER_CTRL;
+	}
+	if (modifiers & KeyEventParameter::ModifierMask_Shift)
+	{
+		keyName += STR_MODIFIER_SHIFT;
+	}
+	if (modifiers & KeyEventParameter::ModifierMask_Alt)
+	{
+		keyName += STR_MODIFIER_ALT;
+	}
+#elif defined(BEOS)
+	if (modifiers & KeyEventParameter::ModifierMask_Command)
+	{
+		keyName += STR_MODIFIER_COMMAND;
+	}
+	if (modifiers & KeyEventParameter::ModifierMask_Shift)
+	{
+		keyName += STR_MODIFIER_SHIFT;
+	}
+	if (modifiers & KeyEventParameter::ModifierMask_Option)
+	{
+		keyName += STR_MODIFIER_OPTION;
+	}
+	if (modifiers & KeyEventParameter::ModifierMask_Control)
+	{
+		keyName += STR_MODIFIER_CONTROL;
+	}
+#endif
+
+	keyName += noModifierKeyName;
 }

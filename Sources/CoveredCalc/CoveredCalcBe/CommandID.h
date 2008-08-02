@@ -35,40 +35,50 @@
 
 enum
 {
-	ID_COVER_BROWSER		= 'Cvbr',
-	ID_ABOUT				= 'Abut',
-	ID_PROCESSED			= 'Prcs',
+	ID_NULL							= 0,
+
+	ID_COVER_BROWSER				= 'Cvbr',
+	ID_ABOUT						= 'Abut',
+	ID_PROCESSED					= 'Prcs',
 
 	// generic dialog
-	ID_DIALOG_OK			= 'dOK_',
-	ID_DIALOG_CANCEL		= 'dCcl',
-	ID_DIALOG_ACTIVATE		= 'dAct',
+	ID_DIALOG_OK					= 'dOK_',
+	ID_DIALOG_CANCEL				= 'dCcl',
+	ID_DIALOG_ACTIVATE				= 'dAct',
 	
 	// main window
-	ID_MAIN_MINIMIZE		= 'mMin',
-	ID_MAIN_CLOSE			= 'mCls',
-	ID_MAIN_ABOUT_COVER		= 'mAbc',
-	ID_MAIN_ALWAYS_ON_TOP	= 'mTop',
-	ID_MAIN_LOCK_POS		= 'mLck',
-	ID_RADIX_HEX			= 'rHex',
-	ID_RADIX_DECIMAL		= 'rDec',
-	ID_RADIX_OCTAL			= 'rOct',
-	ID_RADIX_BINARY			= 'rBin',
+	ID_MAIN_MINIMIZE				= 'mMin',
+	ID_MAIN_CLOSE					= 'mCls',
+	ID_MAIN_ABOUT_COVER				= 'mAbc',
+	ID_MAIN_ALWAYS_ON_TOP			= 'mTop',
+	ID_MAIN_LOCK_POS				= 'mLck',
+	ID_RADIX_HEX					= 'rHex',
+	ID_RADIX_DECIMAL				= 'rDec',
+	ID_RADIX_OCTAL					= 'rOct',
+	ID_RADIX_BINARY					= 'rBin',
 	
 	// cover browser
-	ID_COVERBROWSER_RELOAD	= 'bRld',
-	ID_COVERBROWSER_APPLY	= 'bApl',
-	ID_COVERBROWSER_CLOSE	= 'bCls',
+	ID_COVERBROWSER_RELOAD			= 'bRld',
+	ID_COVERBROWSER_APPLY			= 'bApl',
+	ID_COVERBROWSER_CLOSE			= 'bCls',
 	
 	// about current cover dialog
-	ID_ABOUTCURCOV_SETDATA	= 'acSd',
+	ID_ABOUTCURCOV_SETDATA			= 'acSd',
 	
 	// preferences
-	ID_PREFERENCES			= 'Pref',
-	ID_PREF_KEYMAP_SELECTED	= 'pKmS',
-	ID_PREF_EDIT_KEYMAP		= 'pEdK',
-	ID_PREF_DUPLICATE_KEYMAP = 'pDuK',
-	ID_PREF_DELETE_KEYMAP	= 'pDeK',
+	ID_PREFERENCES					= 'Pref',
+	ID_PREF_KEYMAP_SELECTED			= 'pKmS',
+	ID_PREF_EDIT_KEYMAP				= 'pEdK',
+	ID_PREF_DUPLICATE_KEYMAP		= 'pDuK',
+	ID_PREF_DELETE_KEYMAP			= 'pDeK',
+	
+	// edit keyboard
+	ID_EDITKEYMAP_REMOVE			= 'kRmv',
+	ID_EDITKEYMAP_ASSIGN			= 'kAsn',
+	ID_EDITKEYMAP_NAME_MODIFIED		= 'kNmM',
+	ID_EDITKEYMAP_FUNCTION_SELECTED	= 'kFcS',
+	ID_EDITKEYMAP_CURRENT_KEY_SELECTED = 'kCkS',
+	ID_EDITKEYMAP_KEYINPUT_CHANGED	= 'kKyC',
 };
 
 #endif // _COMMANDID_H_

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -34,17 +34,22 @@
 #define _WINDIALOG_H_
 
 #include "HrnDlg.h"
+#include "MessageBoxProvider.h"
 
 // ---------------------------------------------------------------------
 //! Windows 版ダイアログクラス
 // ---------------------------------------------------------------------
-class WinDialog : public CHrnDlg
+class WinDialog : public CHrnDlg, virtual public MessageBoxProvider
 {
 public:
 						WinDialog(UINT uTemplateID) : CHrnDlg(uTemplateID) { }
 
 	int					DoModal( HWND hParent );
 	BOOL				Create( HWND hParent );
+
+	// MessageBoxProvider インタフェースの実装
+	virtual Button		DoMessageBox(ConstAStr message, ButtonType buttonType, AlertType alertType, Button defaultButton = Button_None);
+	virtual Button		DoMessageBox(SInt32 messageId, ButtonType buttonType, AlertType alertType, Button defaultButton = Button_None);
 
 protected:
 	virtual LRESULT		wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

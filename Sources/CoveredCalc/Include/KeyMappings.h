@@ -91,13 +91,12 @@ public:
 						KeyMappings();
 	virtual				~KeyMappings();
 
-//	void				CreateNew();
+	void				CreateNew();
 	void				Load(const Path& xmlFilePath);
 	void				Load(const Byte* buffer, SInt32 bufferSize);
-//	void				Save(const Path& xmlFilePath);
+	void				Save(const Path& xmlFilePath);
 	
 	SInt32				GetVersion() const;
-	void				SetVersion(SInt32 version);
 	
 	bool				GetPlatform(UTF8String& platform) const;
 	void				SetPlatform(ConstUTF8Str platform);
@@ -116,6 +115,10 @@ private:
 	void				checkApexElement(NCDElement* apexElement);
 	NCDElement*			getApexElement() const;
 	NCDElement*			findCategoryElement(ConstUTF8Str category) const;
+	void				setVersion(SInt32 version);
+
+public:
+	static const UTF8Char	STR_CATEGORY_MAIN_WINDOW[];	///< keymap category of main window.
 
 private:
 	NCDDocument*		loadedDocument;		///< loaded dom document

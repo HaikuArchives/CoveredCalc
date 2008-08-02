@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -278,6 +278,19 @@ UInt32 WinFile::GetSize() const
 	return ret;
 }
 
+/**
+ *	@brief	Removes an existing file.
+ *	@param[in]	file path to be deleted.
+ *	@throw FileException when failed
+ */
+void WinFile::Remove(const Path &filePath)
+{
+	if (!::DeleteFile(filePath.GetPathString()))
+	{
+		throwNewFileExceptionDirect(::GetLastError(), filePath);
+	}
+}
+
 // ---------------------------------------------------------------------
 //! Creates new FileException or its derived object according to the last error.
 /*!
@@ -306,40 +319,54 @@ void WinFile::throwNewFileException(
 ) const
 {
 	const Path& exFilePath = (filePath.IsEmpty()) ? this->filePath : filePath;
-	
+	throwNewFileExceptionDirect(lastError, exFilePath);
+}
+
+// ---------------------------------------------------------------------
+//! Creates new FileException or its derived object according to the last error. (static method)
+/*!
+	@return new FileException or its derived object.
+*/
+// ---------------------------------------------------------------------
+void WinFile::throwNewFileExceptionDirect(
+	DWORD lastError,		//!< the return value of GetLastError() Win32API.
+	const Path& filePath	//!< this parameter is pass to FileException.
+)
+{
 	switch (lastError)
 	{
 	case ERROR_FILE_NOT_FOUND:
 	case ERROR_PATH_NOT_FOUND:
 	// case ERROR_NOT_READY:
-		throw new FileExceptions::FileNotFound(exFilePath);
+		throw new FileExceptions::FileNotFound(filePath);
 		break;
 	
 	case ERROR_ACCESS_DENIED:
-		throw new FileExceptions::AccessDenied(exFilePath);
+		throw new FileExceptions::AccessDenied(filePath);
 		break;
 
 	case ERROR_WRITE_FAULT:
 	case ERROR_READ_FAULT:
-		throw new FileExceptions::IOError(exFilePath);
+		throw new FileExceptions::IOError(filePath);
 		break;
 	
 	case ERROR_SHARING_VIOLATION:
 	case ERROR_LOCK_VIOLATION:
-		throw new FileExceptions::SharingViolation(exFilePath);
+		throw new FileExceptions::SharingViolation(filePath);
 		break;
 	
 	case ERROR_HANDLE_DISK_FULL:
 	case ERROR_DISK_FULL:
-		throw new FileExceptions::DeviceFull(exFilePath);
+		throw new FileExceptions::DeviceFull(filePath);
 		break;
 		
 	case ERROR_ALREADY_EXISTS:
-		throw new FileExceptions::FileAlreadyExists(exFilePath);
+	case ERROR_FILE_EXISTS:
+		throw new FileExceptions::FileAlreadyExists(filePath);
 		break;
 	
 	default:
-		throw new FileException(exFilePath);
+		throw new FileException(filePath);
 		break;
 	}
 }

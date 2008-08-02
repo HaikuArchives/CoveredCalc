@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -33,7 +33,7 @@
 #ifndef _BEFILE_H_
 #define _BEFILE_H_
 
-#include <storage/File.h>
+#include <File.h>
 #include "Path.h"
 #include "FileConstants.h"
 
@@ -59,11 +59,13 @@ public:
 	UInt32				GetSize() const;
 
 	static ConstAStr	GetLineBreak() { return "\n"; }
+	static void			Remove(const Path& filePath);
 
 private:
 	static	void		analyzeOpenParameter(FileConstants::OpenMode openMode, UInt32 openOption, uint32* openModeBe);
 	void				throwNewFileException(status_t lastError) const;
 	void				throwNewFileException(status_t lastError, const Path& filePath) const;
+	static	void		throwNewFileExceptionDirect(status_t lastError, const Path& filePath);
 
 private:
 	BFile				fileObj;

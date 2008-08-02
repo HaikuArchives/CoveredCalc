@@ -82,8 +82,8 @@ public:
 	virtual void				Button2Down();
 	virtual void				Button2Up();
 	virtual void				UIActivated();
-	virtual void				KeyDown(const KeyEventParameter& parameter);
-	virtual void				KeyUp(const KeyEventParameter& parameter);
+	virtual bool				KeyDown(const KeyEventParameter& parameter);
+	virtual bool				KeyUp(const KeyEventParameter& parameter);
 	virtual void				TimerEvent(SInt32 timerId);
 
 	UIController*				GetUIController() { return uiController; }

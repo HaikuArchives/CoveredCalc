@@ -776,33 +776,29 @@ void BeSkinView::WindowActivated(
 	}
 }
 
-// ---------------------------------------------------------------------
-//! Called when key is down.
-// ---------------------------------------------------------------------
-void BeSkinView::KeyDown(
-	const char* /* bytes */,	//!< character which mapped to the key.
-	int32 /* numBytes */		//!< length of parameter bytes.
-)
+/**
+ *	@brief	Called when assigned to a window.
+ */
+void BeSkinView::AttachedToWindow()
 {
-	UIManager* uiManager = getUIManager();
-	ASSERT(NULL != uiManager);
-	if (NULL != uiManager)
-	{
-		BMessage* message = Window()->CurrentMessage();
-		int32 keyCode = 0;
-		int32 modifiers = 0;
-		message->FindInt32("key", &keyCode);
-		message->FindInt32("modifiers", &modifiers);
-		
-		KeyEventParameter parameter;
-		parameter.SetKeyCode(keyCode);
-		parameter.SetModifiers(modifiers);
-		uiManager->KeyDown(parameter);
-	}
+	BeKeyEventFilter* filter = new BeKeyEventFilter();
+	filter->SetKeyEventHandler(this);
+	AddFilter(filter);
+}
+
+/**
+ *	@brief	Handles key event.
+ *	@param[in]	parameter	key event parameter.
+ *	@retval	true	dispatch this message.
+ *	@retval	false	don't dispatch this message.
+ */
+bool BeSkinView::HandleKeyEvent(const KeyEventParameter* parameter)
+{
+	return uiManager->KeyDown(*parameter);
 }
 
 // ---------------------------------------------------------------------
-//! Called when key is down.
+//! Called when key is up.
 // ---------------------------------------------------------------------
 void BeSkinView::KeyUp(
 	const char* bytes,	//!< character which mapped to the key.

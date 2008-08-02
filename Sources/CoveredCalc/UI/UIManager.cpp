@@ -355,15 +355,17 @@ public:
 private:
 	const KeyEventParameter* parameter;
 };
-// ---------------------------------------------------------------------
-//! Called when a key is pressed.
-// ---------------------------------------------------------------------
-void UIManager::KeyDown(
+/**
+ *	@brief	Called when a key is pressed.
+ *	@return	returns false to skip other behavior assigned to this key-event.
+ */
+bool UIManager::KeyDown(
 	const KeyEventParameter& parameter		//!< event parameter
 )
 {
 	KeyDownCommand command(&parameter);
 	taskManager.DoForEach(&command);
+	return true;
 }
 
 class KeyUpCommand : public UITaskManager::Command
@@ -387,15 +389,17 @@ public:
 private:
 	const KeyEventParameter* parameter;
 };
-// ---------------------------------------------------------------------
-//! Called when a key is released.
-// ---------------------------------------------------------------------
-void UIManager::KeyUp(
+/**
+ *	@brief	Called when a key is released.
+ *	@return	returns false to skip other behavior assigned to this key-event.
+ */
+bool UIManager::KeyUp(
 	const KeyEventParameter& parameter		//!< event parameter
 )
 {
 	KeyUpCommand command(&parameter);
 	taskManager.DoForEach(&command);
+	return true;
 }
 
 class TimerEventCommand : public UITaskManager::Command

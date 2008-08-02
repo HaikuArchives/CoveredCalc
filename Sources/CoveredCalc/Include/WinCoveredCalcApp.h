@@ -41,6 +41,8 @@
 #include "WinLangFile.h"
 #include "WinLayeredWindowAPI.h"
 
+class WinMessageFilter;
+
 // ---------------------------------------------------------------------
 //! CoveredCalc Windows 版 アプリケーションクラス
 /*!
@@ -75,6 +77,9 @@ public:
 
 	const WinMainWindow*			GetMainWindow() const			{ return &mainWindow; }
 
+	void							InstallMessageFilter(WinMessageFilter* filter) { messageFilterManager.InstallMessageFilter(filter); }
+	void							UninstallMessageFilter(WinMessageFilter* filter) {  messageFilterManager.UninstallMessageFilter(filter); }
+	bool							CallMessageFilters(MSG* msg) { return messageFilterManager.CallFilters(msg); }
 
 	// MessageBoxProvider インタフェースの実装
 	virtual Button					DoMessageBox(ConstAStr message, ButtonType buttonType, AlertType alertType, Button defaultButton = Button_None);
@@ -100,6 +105,7 @@ private:
 	void							loadLangFile(const Path& path);
 	SInt32							autoSelectLangFile();
 	void							loadKeyMappingsOnInit();
+	void							loadKeyNameDB();
 	
 private:
 	static WinCoveredCalcApp*		theInstance;		//!< 唯一のインスタンス
@@ -114,6 +120,29 @@ private:
 	WinMonitorInfo					monitorInfo;		//!< モニタ情報
 	WinLangFile						langFile;			///< 言語ファイル
 	WinLayeredWindowAPI				apiLayeredWindow;	///< レイヤードウィンドウ関連の API ラッパー
+
+private:
+	class MessageFilterManager
+	{
+	public:
+									MessageFilterManager();
+									~MessageFilterManager();
+									
+		void						InstallMessageFilter(WinMessageFilter* filter);
+		void						UninstallMessageFilter(WinMessageFilter* filter);
+
+		bool						CallFilters(MSG* msg);
+
+	private:
+		bool						canEraseItem()	{ return (enumerating > 0) ? false : true; }
+		void						eraseNoUseItems();
+		
+	private:
+		typedef	std::vector<WinMessageFilter*>	FilterVector;
+		FilterVector				filters;		///< installed filters
+		SInt32						enumerating;	///< incremented at beginning of DoForEach func and decremented at endding of DoForEach func.
+	};
+	MessageFilterManager			messageFilterManager;	///< Manager for WinMessageFilters
 };
 
 #endif // _COVEREDCALCWINAPP_H_

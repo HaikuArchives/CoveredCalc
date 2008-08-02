@@ -40,6 +40,11 @@
 #include "VirtualPathNames.h"
 #include <vector>
 #include <algorithm>
+#include "UIMessageProvider.h"
+#include "ExceptionMessageUtils.h"
+#include "FileException.h"
+#include <time.h>
+#include "StorageUtils.h"
 
 #if defined (WIN32)
 #include "WinCoveredCalcApp.h"
@@ -50,6 +55,13 @@
 #include <Entry.h>
 #include <Path.h>
 #endif	// defined (BEOS)
+
+const AChar STR_USER_KEYMAP_PREFIX[] = "User";
+#if defined (WIN32)
+const AChar STR_USER_KEYMAP_POSTFIX[] = ".cckxw";
+#elif defined (BEOS)
+const AChar STR_USER_KEYMAP_POSTFIX[] = ".cckxb";
+#endif
 
 /**
  *	@brief	Constructor
@@ -343,7 +355,39 @@ void PreferencesDlg::processKeyMappingSelectionChanged()
  */
 void PreferencesDlg::doEditKeyMapping()
 {
-	// TODO: 
+	const KeyMappingsInfo* currentInfo = getKeyMapping(false);
+	if (NULL == currentInfo)
+	{
+		return;
+	}
+	
+	try
+	{	
+		// load
+		Path virtualPath = currentInfo->keyMapFilePath;
+		Path filePath = CoveredCalcApp::GetInstance()->ExpandVirtualPath(virtualPath);
+		KeyMappings keyMappings;
+		keyMappings.Load(filePath);
+		
+		bool isReadOnly = (currentInfo->category == KMCategory_User) ? false : true;
+		if (showEditKeyMapDialog(isReadOnly, keyMappings))
+		{
+			if (!isReadOnly)
+			{
+				// save to file.
+				keyMappings.Save(filePath);
+
+				// update UI
+				loadKeyMappingsInfos();
+				setKeyMapping(keyMappingsInfos, virtualPath);
+			}
+		}
+	}
+	catch (Exception* ex)
+	{
+		ExceptionMessageUtils::DoExceptionMessageBox(getMessageBoxProvider(), ex);
+		ex->Delete();
+	}
 }
 
 /**
@@ -351,7 +395,86 @@ void PreferencesDlg::doEditKeyMapping()
  */
 void PreferencesDlg::doDuplicateKeyMapping()
 {
-	// TODO:
+	const KeyMappingsInfo* currentInfo = getKeyMapping(false);
+	if (NULL == currentInfo)
+	{
+		return;
+	}
+
+	try
+	{	
+		// load
+		Path originalFilePath = CoveredCalcApp::GetInstance()->ExpandVirtualPath(currentInfo->keyMapFilePath);
+		KeyMappings keyMappings;
+		keyMappings.Load(originalFilePath);
+		
+		// change title
+		UTF8String title;
+		keyMappings.GetTitle(title);
+		MBCString postStr;
+		CoveredCalcApp::GetInstance()->GetMessageProvider()->GetMessage(IDS_KEYMAPPINGS_COPY, postStr);
+		UTF8String utf8PostStr;
+		UTF8Conv::FromMultiByte(utf8PostStr, postStr);
+		title += utf8PostStr;
+		keyMappings.SetTitle(title);
+		
+		// store to new file.
+		Path virtualUserKeymaps("${" VPATH_USER_KEYMAPS "}");
+		Path folderPath = CoveredCalcApp::GetInstance()->ExpandVirtualPath(virtualUserKeymaps);
+		StorageUtils::ReadyFolder(folderPath);
+		Path filePath = createUniqueUserKeyMappingFile(folderPath);
+		keyMappings.Save(filePath);
+		MBCString fileName;
+		filePath.GetFileName(fileName);
+		Path virtualPath = virtualUserKeymaps.Append(fileName);
+		
+		// update UI
+		loadKeyMappingsInfos();
+		setKeyMapping(keyMappingsInfos, virtualPath);
+	}
+	catch (Exception* ex)
+	{
+		ExceptionMessageUtils::DoExceptionMessageBox(getMessageBoxProvider(), ex);
+		ex->Delete();
+	}
+}
+
+/**
+ *	@brief	Creates an empty user key-mapping file and returns its file path.
+ *	@param[in]	folderPath	user key-mapping folder (real path)
+ */
+Path PreferencesDlg::createUniqueUserKeyMappingFile(const Path& folderPath)
+{
+	UInt32 num = static_cast<UInt32>(time(NULL));
+	
+	SInt32 retryCount = 0;
+	for (retryCount = 0; retryCount < 64; retryCount++)
+	{
+		AChar buf[64];
+		sprintf(buf, "%s%lx%s", STR_USER_KEYMAP_PREFIX, num, STR_USER_KEYMAP_POSTFIX);
+		Path filePath = folderPath.Append(buf);
+		try
+		{
+			File file;
+			file.Open(filePath, FileConstants::OpenMode_WriteOnly, FileConstants::OpenOption_Create | FileConstants::OpenOption_FailIfExists);
+			file.Close();
+			return filePath;
+		}
+		catch (FileExceptions::FileAlreadyExists* ex)
+		{
+			ex->Delete();
+		}
+		catch (FileExceptions::AccessDenied* ex)
+		{
+			ex->Delete();
+		}
+		catch (FileExceptions::SharingViolation* ex)
+		{
+			ex->Delete();
+		}
+		num += 31;
+	}
+	throw new FileException();
 }
 
 /**
@@ -359,5 +482,66 @@ void PreferencesDlg::doDuplicateKeyMapping()
  */
 void PreferencesDlg::doDeleteKeyMapping()
 {
-	// TODO:
+	const KeyMappingsInfo* currentInfo = getKeyMapping(false);
+	if (NULL == currentInfo || KMCategory_User != currentInfo->category)
+	{
+		return;
+	}
+
+	UInt32 infosIndex;
+	for (infosIndex = 0; infosIndex < keyMappingsInfos.size(); infosIndex++)
+	{
+		if (keyMappingsInfos[infosIndex] == currentInfo)
+		{
+			break;
+		}
+	}
+	if (infosIndex >= keyMappingsInfos.size())
+	{
+		return;
+	}
+
+	// stop if key-mapping in use is being deleted. because this dialog can be closed by "Cancel" button.
+	MBCString message;
+	if (0 == CoveredCalcApp::GetInstance()->GetAppSettings()->GetKeymapFilePath().Compare(currentInfo->keyMapFilePath))
+	{
+		CoveredCalcApp::GetInstance()->GetMessageProvider()->GetNFormatMessage(message, IDS_EMSG_DELETE_KEYMAPPINGS_IN_USE, currentInfo->title.CString());
+		getMessageBoxProvider()->DoMessageBox(
+			message,
+			MessageBoxProvider::ButtonType_OK,
+			MessageBoxProvider::AlertType_Warning);
+		return;
+	}
+
+	CoveredCalcApp::GetInstance()->GetMessageProvider()->GetNFormatMessage(message, IDS_QMSG_DELETE_KEYMAPPINGS, currentInfo->title.CString());
+	MessageBoxProvider::Button button = getMessageBoxProvider()->DoMessageBox(
+			message,
+			MessageBoxProvider::ButtonType_YesNo,
+			MessageBoxProvider::AlertType_Warning,
+			MessageBoxProvider::Button_No);
+	
+	if (button == MessageBoxProvider::Button_Yes)
+	{
+		Path realPath = CoveredCalcApp::GetInstance()->ExpandVirtualPath(currentInfo->keyMapFilePath);
+		try
+		{
+			File::Remove(realPath);
+		}
+		catch (FileException* ex)
+		{
+			ExceptionMessageUtils::DoExceptionMessageBox(getMessageBoxProvider(), ex,
+					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
+			ex->Delete();
+			return;
+		}
+
+		keyMappingsInfos.erase(keyMappingsInfos.begin() + infosIndex);
+		if (keyMappingsInfos.size() <= infosIndex)
+		{
+			infosIndex = keyMappingsInfos.size() - 1;
+		}
+		setKeyMapping(keyMappingsInfos, keyMappingsInfos[infosIndex]->keyMapFilePath);
+
+		delete currentInfo;
+	}
 }

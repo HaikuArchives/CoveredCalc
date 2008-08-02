@@ -38,6 +38,7 @@
 
 class KeyMappings;
 class KeyFuncOperation;
+class UTF8String;
 
 /**
  * @brief This class holds key-mapping settings.
@@ -50,17 +51,39 @@ public:
 	
 	void				Create(const KeyMappings* keyMappings, ConstUTF8Str category, const KeyFuncOperation* keyFuncOperation);
 	void				Clear();
+	void				WriteOut(KeyMappings* keyMappings, ConstUTF8Str category, const KeyFuncOperation* keyFuncOperation);
 	
 	SInt32				GetFunction(const KeyEventParameter& parameter) const;
+	void				AddKey(SInt32 function, const KeyEventParameter& parameter);
+	void				RemoveKey(SInt32 function, const KeyEventParameter& parameter);
+
+	/// This interface is used to iterate over KeyEventParameters.
+	class KeyVisitor
+	{
+	public:
+						KeyVisitor() {}
+		virtual			~KeyVisitor() {}
+
+		/**
+		 * do something to specified parameter.
+		 *
+		 * @retval	true	continue iteration
+		 * @retval	false	stop iteration
+		 */
+		virtual bool			Visit(
+									const KeyEventParameter& parameter	///< target key
+								) = 0;
+	};
+	bool				ForEachKey(SInt32 function, KeyVisitor* visitor) const;
 
 private:
 	UInt32				analyzeModifierMask(ConstUTF8Str modifierMaskStr);
+	void				makeModifierMask(UInt32 modifierMask, UTF8String& modifierMaskStr);
 	
 private:
 	struct KMRecord
 	{
-		KeyEventParameter::KeyCode	KeyCode;
-		UInt32						Modifiers;
+		KeyEventParameter			KeyEventParam;
 		SInt32						Function;
 	};
 	typedef std::vector<KMRecord>	KMVector;

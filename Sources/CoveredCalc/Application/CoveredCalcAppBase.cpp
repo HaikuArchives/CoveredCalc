@@ -47,8 +47,6 @@ static const AChar	LangFileFolderName[] = "NLS";		///< the folder which contains
 static const AChar	KeymapsFolderName[] = "Keymaps";	///< the folder which contains key-mapping files
 static const AChar	UserKeymapsFolderName[] = "UserKeymaps";	///< the folder which contains user-defined key-mapping files
 
-static const UTF8Char STR_CATEGORY_MAIN_WINDOW[] = "MainWindow";	///< keymap category of main window.
-
 // ---------------------------------------------------------------------
 //! Constructor
 // ---------------------------------------------------------------------
@@ -298,7 +296,7 @@ void CoveredCalcAppBase::LoadKeyMappings(const Path& keymapFile)
 	// --- main window.
 	{
 		MainWindowKeyFunc keyFunc;
-		mainWindowKMM->Create(&keyMappings, STR_CATEGORY_MAIN_WINDOW, &keyFunc);
+		mainWindowKMM->Create(&keyMappings, KeyMappings::STR_CATEGORY_MAIN_WINDOW, &keyFunc);
 	}		
 }
 
@@ -481,4 +479,12 @@ void CoveredCalcAppBase::CurrentCoverChanged()
 		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_SAVE_SETTING);
 		ex->Delete();		
 	}	
+}
+
+/**
+ *	@brief	Load keynameDB
+ */
+void CoveredCalcAppBase::loadKeyNameDB(const Path& keyNameDefFile)
+{
+	keyNameDB.Init(keyNameDefFile);
 }

@@ -70,25 +70,55 @@ MessageBoxProvider::Button BeMessageBoxProvider::DoMessageBox(
 	char button0Shortcut = '\0';
 	char button1Shortcut = '\0';
 	char button2Shortcut = '\0';
+	int32 defaultButtonIndex = 0;
 	button_spacing spacing = B_EVEN_SPACING;
 	switch (buttonType)
 	{
 	case ButtonType_OK:
 		button0Label = "OK";
+		defaultButtonIndex = 0;
 		break;
 	case ButtonType_OKCancel:
 		button0Label = "Cancel";	button0Shortcut = B_ESCAPE;
 		button1Label = "OK";
+		if (Button_OK == defaultButton)
+		{
+			defaultButtonIndex = 1;
+		}
+		else
+		{
+			defaultButtonIndex = 0;
+		}
 		break;
 	case ButtonType_YesNo:
 		button0Label = "No";		button0Shortcut = 'n';
 		button1Label = "Yes";		button1Shortcut = 'y';
+		if (Button_Yes == defaultButton)
+		{
+			defaultButtonIndex = 1;
+		}
+		else
+		{
+			defaultButtonIndex = 0;
+		}
 		break;
 	case ButtonType_YesNoCancel:
 		button0Label = "Cancel";	button0Shortcut = B_ESCAPE;
 		button1Label = "No";		button1Shortcut = 'n';
 		button2Label = "Yes";		button2Shortcut = 'y';
 		spacing = B_OFFSET_SPACING;
+		if (Button_Yes == defaultButton)
+		{
+			defaultButtonIndex = 2;
+		}
+		else if (Button_No == defaultButton)
+		{
+			defaultButtonIndex = 1;
+		}
+		else
+		{
+			defaultButtonIndex = 0;
+		}
 		break;
 	default:
 		ASSERT(false);
@@ -137,6 +167,7 @@ MessageBoxProvider::Button BeMessageBoxProvider::DoMessageBox(
 	{
 		alert->SetShortcut(2, button2Shortcut);
 	}
+	alert->SetDefaultButton(alert->ButtonAt(defaultButtonIndex));
 	int32 result = alert->Go();
 	
 	switch (buttonType)

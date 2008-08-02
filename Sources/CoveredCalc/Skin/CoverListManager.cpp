@@ -193,29 +193,10 @@ void CoverListManager::loadCoverDef(
 {
 	CoverListItem* listItem = items[index];
 
-#if 0
-	// read "CoverDef.xml"
-	File file;
-	file.Open(listItem->GetPath(), FileConstants::OpenMode_ReadOnly, FileConstants::OpenOption_None);
-	UInt32 dataSize = file.GetSize();
-	XMLParser parser;
-	parser.Create();
-	Byte* buf = static_cast<Byte*>(parser.GetParseBuffer(dataSize));
-	file.Read(buf, dataSize);
-	file.Close();
-
-	// TODO: Although all information is read currently,
-	// it's OK that only needed information is read.
-	CoverDefParseEventHandler handler;
-	parser.SetEventHandler(&handler);
-	parser.ParseBuffer(dataSize, true);
-	std::auto_ptr<CoverDef> coverDef(handler.DetachCoverDef());
-#else
 	// read "CoverDef.xml"
 	CoverDefParser parser;
 	parser.Parse(listItem->GetPath());
 	std::auto_ptr<CoverDef> coverDef(parser.DetachCoverDef());
-#endif
 	listItem->SetTitle(coverDef->GetTitle());
 	listItem->SetDescription(coverDef->GetDescription());
 }

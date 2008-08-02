@@ -45,6 +45,7 @@ class ExceptionMessageGenerator;
 class CommandLineParam;
 class WinLangFileInfoCollection;
 class LangFileInfoCollection;
+class KeyNameDB;
 
 // ---------------------------------------------------------------------
 //! An interface of application
@@ -69,6 +70,7 @@ public:
 	virtual Path							ExpandVirtualPath(const Path& virtualPath) = 0;
 	virtual Path							MakeVirtualPath(const Path& absolutePath, ConstAStr virtualPathName) = 0;
 	virtual void							LoadKeyMappings(const Path& keymapFile) = 0;
+	virtual const KeyNameDB*				GetKeyNameDB() const = 0;
 
 	virtual bool							CheckPlatform(ConstUTF8Str platform) = 0;
 

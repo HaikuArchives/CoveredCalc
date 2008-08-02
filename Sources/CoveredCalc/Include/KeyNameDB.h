@@ -54,20 +54,21 @@ public:
 
 	void				Init(const Path& keyNameDefFile);
 	
-	void				GetKeyName(KeyEventParameter::KeyCode keyCode, MBCString& keyName);
+	void				GetKeyName(KeyEventParameter::KeyCode keyCode, MBCString& keyName) const;
+	void				GetKeyName(const KeyEventParameter* keyEventParam, MBCString& keyName) const;
 
 private:
 	typedef std::map<KeyEventParameter::KeyCode, MBCString> KeyNameMap;
 
 private:
 	void				loadKeyNameDef(NCDDocument* document);
-	void				generateKeyName(KeyEventParameter::KeyCode keyCode, MBCString& keyName);
+	void				generateKeyName(KeyEventParameter::KeyCode keyCode, MBCString& keyName) const;
 
 private:
-	KeyNameMap			keyNameCache;
+	mutable KeyNameMap	keyNameCache;
 #if defined(BEOS)
-	key_map*			mapKeys;		///< copy of the system keymap (key_map structure)
-	char*				mapChars;		///< copy of the system keymap (character data)
+	mutable key_map*	mapKeys;		///< copy of the system keymap (key_map structure)
+	mutable char*		mapChars;		///< copy of the system keymap (character data)
 #endif
 };
 

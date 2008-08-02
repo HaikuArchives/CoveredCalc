@@ -37,6 +37,8 @@
 #include "Path.h"
 
 class LangFileInfoCollection;
+class MessageBoxProvider;
+class KeyMappings;
 
 /**
  *	@brief	This is a base class of preferences dialog class.
@@ -55,6 +57,8 @@ protected:
 	void						doEditKeyMapping();
 	void						doDuplicateKeyMapping();
 	void						doDeleteKeyMapping();
+	
+	Path						createUniqueUserKeyMappingFile(const Path& folderPath);
 
 public:
 	enum KMCategory
@@ -78,6 +82,21 @@ private:
 	void						unloadKeyMappingsInfos();
 
 protected:
+	/**
+	 *	@brief	Returns MessageBoxProvider object.
+	 *	@return	MessageBoxProvider object.
+	 */
+	virtual MessageBoxProvider*	getMessageBoxProvider() = 0;
+
+	/**
+	 *	@brief	Shows "Edit Keyboard" dialog and wait until it is closed.
+	 *	@param[in]		isReadOnly	true when read-only mode.
+	 *	@param[in,out]	keyMappings	Key-mappings definition.
+	 *	@retval	true	user closes the dialog by OK button.
+	 *	@retval	false	user closes the dialog by Cancel button.
+	 */
+	virtual bool				showEditKeyMapDialog(bool isReadOnly, KeyMappings& keyMappings) = 0;
+
 	/**
 	 *	@brief	Sets language menu and current item.
 	 *	@param	langFileInfos			This collection contains informations about all language menu items.

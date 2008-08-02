@@ -226,6 +226,109 @@
 		</dialogItem>
 	</dialog>
 	
+	<!-- Edit Keyboard dialog -->
+	<dialog name="IDD_EDIT_KEYMAP">
+		<!--
+			View Hierarchy:
+				+- BaseView						BView
+					+- NameText					BTextControl
+					+- FunctionBox				BBox
+						+- FunctionLabel		BStringView
+						+- FunctionList			BListView
+						+- CurrentKeyLabel		BStringView
+						+- CurrentKeyList		BListView
+					+- RemoveButton				BButton
+					+- KeyBox					BBox
+						+- KeyLabel				BStringView
+						+- KeyInput				BeKeyInputEdit
+						+- AssignedFuncLabel	BStringView
+						+- AssignedFuncText		BTextControl
+					+- AssignButton				BButton
+					+- CancelButton				BButton
+					+- OKButton					BButton
+		-->
+		
+		<!-- design time font: Haru 11 -->
+		<designFontInfo width="147.000000" height="13.186035"/>
+		
+		<dialogItem name="">
+			<rect left="0.0" top="0.0" right="462.0" bottom="360.0"/>
+			<label>キーボードの編集</label>
+		</dialogItem>
+		
+		<dialogItem name="NameText">
+			<rect left="12.0" top="12.0" right="450.0" bottom="32.0"/>
+			<label>キーボード名:</label>
+			<divider position="80.0"/>
+		</dialogItem>
+		
+		<dialogItem name="FunctionBox">
+			<rect left="12.0" top="46.0" right="174.0" bottom="308.0"/>
+			<label>機能</label>
+		</dialogItem>
+		
+		<dialogItem name="FunctionLabel">
+			<rect left="12.0" top="18.0" right="150.0" bottom="32.0"/>
+			<label>機能:</label>
+		</dialogItem>
+		
+		<dialogItem name="FunctionList">
+			<rect left="12.0" top="36.0" right="150.0" bottom="148.0"/>
+		</dialogItem>
+		
+		<dialogItem name="CurrentKeyLabel">
+			<rect left="12.0" top="162.0" right="150.0" bottom="176.0"/>
+			<label>現在のキー:</label>
+		</dialogItem>
+		
+		<dialogItem name="CurrentKeyList">
+			<rect left="12.0" top="180.0" right="150.0" bottom="250.0"/>
+		</dialogItem>
+		
+		<dialogItem name="RemoveButton">
+			<rect left="188.0" top="226.0" right="274.0" bottom="252.0"/>
+			<label>解除</label>
+		</dialogItem>
+		
+		<dialogItem name="KeyBox">
+			<rect left="288.0" top="46.0" right="450.0" bottom="308.0"/>
+			<label>キー</label>
+		</dialogItem>
+		
+		<dialogItem name="KeyLabel">
+			<rect left="12.0" top="18.0" right="150.0" bottom="32.0"/>
+			<label>キー:</label>
+		</dialogItem>
+
+		<dialogItem name="KeyInput">
+			<rect left="10.0" top="36.0" right="150.0" bottom="56.0"/>
+		</dialogItem>
+		
+		<dialogItem name="AssignedFuncLabel">
+			<rect left="12.0" top="70.0" right="150.0" bottom="84.0"/>
+			<label>現在の割り当て機能:</label>
+		</dialogItem>
+		
+		<dialogItem name="AssignedFuncText">
+			<rect left="10.0" top="88.0" right="150.0" bottom="108.0"/>
+		</dialogItem>
+		
+		<dialogItem name="AssignButton">
+			<rect left="188.0" top="82.0" right="274.0" bottom="108.0"/>
+			<label>割り当て</label>
+		</dialogItem>
+		
+		<dialogItem name="CancelButton">
+			<rect left="264.0" top="322.0" right="350.0" bottom="348.0"/>
+			<label>キャンセル</label>
+		</dialogItem>
+		
+		<dialogItem name="OKButton">
+			<rect left="364.0" top="322.0" right="450.0" bottom="348.0"/>
+			<label>OK</label>
+		</dialogItem>
+	</dialog>
+	
 	<!-- menu item -->
 	<!-- IDM_MAIN_CONTEXT -->
 	<string name="ID_COVER_BROWSER">~B: カバーブラウザ</string>
@@ -246,6 +349,42 @@
 	<string name="IDS_APPNAME">CoveredCalc</string>
 	<string name="IDS_COVER_BROWSER_COLUMN_NAME">名前</string>
 	<string name="IDS_COVER_BROWSER_COLUMN_DESCRIPTION">説明</string>
+	<string name="IDS_KEYMAPPINGS_COPY"> (コピー)</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_0">0 ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_1">1 ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_2">2 ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_3">3 ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_4">4 ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_5">5 ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_6">6 ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_7">7 ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_8">8 ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_9">9 ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_A">A ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_B">B ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_C">C ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_D">D ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_E">E ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_F">F ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_POINT">小数点</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_CLEAR">クリア</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_BS">BackSpace</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_EQUAL">= ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_PLUS">+ ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_MINUS">- ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_TIMES">× ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_DIV">÷ ボタン</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_NEGATE">符号反転</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_HEX">16 進</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_DEC">10 進</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_OCT">8 進</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_BIN">2 進</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_MINIMIZE">隠す(最小化)</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_CLOSE">閉じる</string>
+	<string name="IDS_QMSG_EDITED_KEYMAP_DISCARDING">行った変更をすべて破棄します。よろしいですか？</string>
+	<string name="IDS_EMSG_EMPTY_KEYMAP_NAME">キーボード名を入力してください。</string>
+	<string name="IDS_EMSG_DELETE_KEYMAPPINGS_IN_USE">キーボード "%0:s%" は現在使用中のため削除できません。&#10;&#10;ヒント：&#10;このキーボードを削除するには、いったん他のキーボードを選択して [OK] ボタンでこのダイアログを閉じてください。</string>
+	<string name="IDS_QMSG_DELETE_KEYMAPPINGS">キーボード "%0:s%" を削除します。&#10;よろしいですか？</string>
 	<string name="IDS_EMSG_INVALID_KEYMAPPINGS">キーボードの値が不正です。&#10;有効なキーボードを選択してください。</string>
 	<string name="IDS_EMSG_GET_KEYMAPPINGS">キーボードの値を取得できませんでした。</string>
 	<string name="IDS_EMSG_LOAD_KEYMAPPINGS">キーマッピング定義を読み込めませんでした。</string>

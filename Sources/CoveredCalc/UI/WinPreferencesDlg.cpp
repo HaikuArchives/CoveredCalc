@@ -32,13 +32,14 @@
 
 #include "Prefix.h"
 #include "WinPreferencesDlg.h"
+#include <vector>
 #include "resource.h"
 #include "Exception.h"
 #include "ExceptionMessageUtils.h"
 #include "CoveredCalcApp.h"
 #include "LangFileInfo.h"
 #include "WinCoveredCalcApp.h"
-#include <vector>
+#include "WinEditKeymapDlg.h"
 
 ////////////////////////////////////////
 #define baseDialog	WinDialog
@@ -63,6 +64,28 @@ WinPreferencesDlg::WinPreferencesDlg() : baseDialog(IDD_PREFERENCES)
  */
 WinPreferencesDlg::~WinPreferencesDlg()
 {
+}
+
+/**
+ *	@brief	Shows "Edit Keyboard" dialog and wait until it is closed.
+ *	@param[in]		isReadOnly	true when read-only mode.
+ *	@param[in,out]	keyMappings	Key-mappings definition.
+ *	@retval	true	user closes the dialog by OK button.
+ *	@retval	false	user closes the dialog by Cancel button.
+ */
+bool WinPreferencesDlg::showEditKeyMapDialog(bool isReadOnly, KeyMappings& keyMappings)
+{
+	WinEditKeymapDlg dlg;
+	dlg.Init(isReadOnly, CoveredCalcApp::GetInstance()->GetKeyNameDB());
+	dlg.SetKeyMappings(&keyMappings);
+	if (IDOK == dlg.DoModal(m_hWnd))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 /**
@@ -96,7 +119,7 @@ LRESULT WinPreferencesDlg::wndProc(
 	}
 	catch (Exception* ex)
 	{
-		ExceptionMessageUtils::DoExceptionMessageBox(CoveredCalcApp::GetInstance(), ex);
+		ExceptionMessageUtils::DoExceptionMessageBox(this, ex);
 		ex->Delete();
 	}
 	
@@ -291,7 +314,7 @@ bool WinPreferencesDlg::getLanguage(
 	ASSERT(NULL != langComboInfos);
 	if (NULL == hWndLangCombo || NULL == langComboInfos)
 	{
-		CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_GET_LANGUAGE,
+		DoMessageBox(IDS_EMSG_GET_LANGUAGE,
 				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);	
 		return false;
 	}
@@ -299,7 +322,7 @@ bool WinPreferencesDlg::getLanguage(
 	int comboIndex = ComboBox_GetCurSel(hWndLangCombo);
 	if (CB_ERR == comboIndex)
 	{
-		CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_GET_LANGUAGE,
+		DoMessageBox(IDS_EMSG_GET_LANGUAGE,
 				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 		SetFocus(hWndLangCombo);	
 		return false;
@@ -307,7 +330,7 @@ bool WinPreferencesDlg::getLanguage(
 	SInt32 itemIndex = ComboBox_GetItemData(hWndLangCombo, comboIndex);
 	if (itemIndex < 0 || itemIndex >= langComboInfos->GetCount())
 	{
-		CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_INVALID_LANGUAGE,
+		DoMessageBox(IDS_EMSG_INVALID_LANGUAGE,
 				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 		SetFocus(hWndLangCombo);	
 		return false;
@@ -393,7 +416,7 @@ const PreferencesDlg::KeyMappingsInfo* WinPreferencesDlg::getKeyMapping(bool doE
 	{
 		if (doErrorProcessing)
 		{
-			CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_GET_KEYMAPPINGS,
+			DoMessageBox(IDS_EMSG_GET_KEYMAPPINGS,
 					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
 		}
 		return NULL;
@@ -404,7 +427,7 @@ const PreferencesDlg::KeyMappingsInfo* WinPreferencesDlg::getKeyMapping(bool doE
 	{
 		if (doErrorProcessing)
 		{
-			CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_GET_KEYMAPPINGS,
+			DoMessageBox(IDS_EMSG_GET_KEYMAPPINGS,
 					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 			SetFocus(hWndKeyMappingCombo);
 		}
@@ -415,7 +438,7 @@ const PreferencesDlg::KeyMappingsInfo* WinPreferencesDlg::getKeyMapping(bool doE
 	{
 		if (doErrorProcessing)
 		{
-			CoveredCalcApp::GetInstance()->DoMessageBox(IDS_EMSG_INVALID_KEYMAPPINGS,
+			DoMessageBox(IDS_EMSG_INVALID_KEYMAPPINGS,
 					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 			SetFocus(hWndKeyMappingCombo);
 		}

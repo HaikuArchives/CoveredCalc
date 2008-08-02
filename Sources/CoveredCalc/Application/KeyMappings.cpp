@@ -41,6 +41,11 @@
 #include "NCDElement.h"
 #include "NCDText.h"
 #include "XMLParser.h"
+#include "NCDDocumentFactory.h"
+#include "UTF8Utils.h"
+
+static const UTF8Char STR_NAMESPACE_URI[]			= "http://hironytic.1st-shrine.net/schema/CoveredCalc-KeyMappings";
+static const UTF8Char STR_XMLNS[]					= "xmlns";
 
 static const UTF8Char STR_ELEMENT_KEY_MAPPINGS[]	= "keyMappings";
 static const UTF8Char STR_ELEMENT_PLATFORM[]		= "platform";
@@ -53,6 +58,8 @@ static const UTF8Char STR_ATTR_NAME[]				= "name";
 static const UTF8Char STR_ATTR_CODE[]				= "code";
 static const UTF8Char STR_ATTR_MODIFIERS[]			= "modifiers";
 static const UTF8Char STR_ATTR_FUNCTION[]			= "function";
+
+const UTF8Char KeyMappings::STR_CATEGORY_MAIN_WINDOW[] = "MainWindow";
 
 /**
  *	@brief	Constructor
@@ -68,6 +75,25 @@ KeyMappings::~KeyMappings()
 	{
 		loadedDocument->release();
 	}
+}
+
+/**
+ *	@brief	Creates an empty key-mappings.
+ */
+void KeyMappings::CreateNew()
+{
+	if (NULL != loadedDocument)
+	{
+		loadedDocument->release();
+		loadedDocument = NULL;
+	}
+
+	loadedDocument = NCDDocumentFactory::CreateDocument();
+	NCDElement* apexElem = loadedDocument->createElement(STR_ELEMENT_KEY_MAPPINGS);
+	apexElem->setAttribute(STR_XMLNS, STR_NAMESPACE_URI);
+	loadedDocument->appendChild(apexElem);
+	
+	setVersion(Version_Current);
 }
 
 /**
@@ -145,6 +171,54 @@ void KeyMappings::Load(const Byte* buffer, SInt32 bufferSize)
 	loadedDocument = document;
 }
 
+/// XML format director.
+class FormatDirector : public DOMUtils::NodeFormatDirector
+{
+	virtual DOMUtils::FormatMode GetFormatMode(const NCDNode* /* node */)
+	{
+		return DOMUtils::FormatMode_Block;
+	}
+	virtual UInt32 GetTextFormatOptions(const NCDNode* node)
+	{
+		UTF8String name;
+		node->getNodeName(name);
+		if (0 == UTF8Utils::UTF8StrCmp(name, STR_ELEMENT_TITLE))
+		{
+			return DOMUtils::TextFormatOption_Inline | DOMUtils::TextFormatOption_PreserveSpace;
+		}
+		else
+		{
+			return DOMUtils::TextFormatOption_None;
+		}
+	};
+	virtual ConstUTF8Str GetIndentChars()
+	{
+		return TypeConv::AsUTF8("\t");
+	};
+};
+
+/**
+ *	@brief	Saves key mappings to specified XML file.
+ *	@param[in]	xmlFilePath	XML file path.
+ */
+void KeyMappings::Save(const Path& xmlFilePath)
+{
+	if (NULL == loadedDocument)
+	{
+		throw new KeyMappingsExceptions::NotReady();
+	}
+
+	// format
+	FormatDirector director;
+	DOMUtils::FormatDocument(loadedDocument, &director);
+	
+	// save to the file.
+	File file;
+	file.Open(xmlFilePath, FileConstants::OpenMode_WriteOnly, FileConstants::OpenOption_Create | FileConstants::OpenOption_Erase);
+	DOMUtils::WriteOutAsXML(loadedDocument, &file);
+	file.Close();
+}
+
 /**
  *	@brief	Checks specified document is key-mapping document.
  *	@throw	KeyMappingException	when invalid.
@@ -183,8 +257,6 @@ void KeyMappings::checkApexElement(NCDElement* apexElement)
 	}
 }
 
-
-
 /**
  *	@brief	Returns apex element of key-mappings XML file.
  *	@return	an apex element.
@@ -217,7 +289,7 @@ SInt32 KeyMappings::GetVersion() const
  *	@brief	Sets version of this key mappings.
  *	@param[in]	version	version (a value in KeyMappings::Version enum)
  */
-void KeyMappings::SetVersion(SInt32 version)
+void KeyMappings::setVersion(SInt32 version)
 {
 	NCDElement* apexElem = getApexElement();
 

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -58,11 +58,13 @@ public:
 	UInt32				GetSize() const;
 
 	static ConstAStr	GetLineBreak() { return "\r\n"; }
+	static void			Remove(const Path& filePath);
 
 private:
 	static	void		analyzeOpenParameter(FileConstants::OpenMode openMode, UInt32 openOption, DWORD* dwDesiredAccess, DWORD* dwShareMode, DWORD* dwCreateDisposition);
 	void				throwNewFileException(DWORD lastError) const;
 	void				throwNewFileException(DWORD lastError, const Path& filePath) const;
+	static	void		throwNewFileExceptionDirect(DWORD lastError, const Path& filePath);
 
 private:
 	HANDLE				fileHandle;

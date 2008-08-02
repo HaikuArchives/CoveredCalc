@@ -49,6 +49,9 @@ public:
 protected:
 	virtual LRESULT					wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+	virtual MessageBoxProvider*		getMessageBoxProvider() { return this; }
+	virtual bool					showEditKeyMapDialog(bool isReadOnly, KeyMappings& keyMappings);
+	
 	virtual void					setLanguage(const LangFileInfoCollection& langFileInfos, const Path& currentLangFilePath);
 	virtual	bool					getLanguage(Path& langFilePath);
 	virtual void					setKeyMapping(const KeyMappingsInfoPtrVector& keyMappingsInfos, const Path& currentKeyMappingPath);

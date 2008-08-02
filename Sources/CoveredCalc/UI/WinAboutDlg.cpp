@@ -104,7 +104,7 @@ LRESULT WinAboutDlg::wndProc(
 	}
 	catch (Exception* ex)
 	{
-		ExceptionMessageUtils::DoExceptionMessageBox(CoveredCalcApp::GetInstance(), ex);
+		ExceptionMessageUtils::DoExceptionMessageBox(this, ex);
 		ex->Delete();
 	}
 	
