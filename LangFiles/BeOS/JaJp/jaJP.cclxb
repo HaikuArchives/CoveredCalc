@@ -191,12 +191,12 @@
 
 		<dialogItem name="KeyMappingBox">
 			<rect left="12.0" top="121.0" right="310.0" bottom="213.0"/>
-			<label>キーボード</label>
+			<label>キーマップ</label>
 		</dialogItem>
 		
 		<dialogItem name="KeyMappingPopup">
 			<rect left="12.0" top="16.0" right="286.0" bottom="40.0"/>
-			<label>キーボード:</label>
+			<label>キーマップ:</label>
 			<divider position="76.0"/>
 		</dialogItem>
 		
@@ -253,12 +253,12 @@
 		
 		<dialogItem name="">
 			<rect left="0.0" top="0.0" right="462.0" bottom="360.0"/>
-			<label>キーボードの編集</label>
+			<label>キーマップの編集</label>
 		</dialogItem>
 		
 		<dialogItem name="NameText">
 			<rect left="12.0" top="12.0" right="450.0" bottom="32.0"/>
-			<label>キーボード名:</label>
+			<label>キーマップ名:</label>
 			<divider position="80.0"/>
 		</dialogItem>
 		
@@ -382,12 +382,12 @@
 	<string name="IDS_MAIN_WINDOW_KEYFUNC_MINIMIZE">隠す(最小化)</string>
 	<string name="IDS_MAIN_WINDOW_KEYFUNC_CLOSE">閉じる</string>
 	<string name="IDS_QMSG_EDITED_KEYMAP_DISCARDING">行った変更をすべて破棄します。よろしいですか？</string>
-	<string name="IDS_EMSG_EMPTY_KEYMAP_NAME">キーボード名を入力してください。</string>
-	<string name="IDS_EMSG_DELETE_KEYMAPPINGS_IN_USE">キーボード "%0:s%" は現在使用中のため削除できません。&#10;&#10;ヒント：&#10;このキーボードを削除するには、いったん他のキーボードを選択して [OK] ボタンでこのダイアログを閉じてください。</string>
-	<string name="IDS_QMSG_DELETE_KEYMAPPINGS">キーボード "%0:s%" を削除します。&#10;よろしいですか？</string>
-	<string name="IDS_EMSG_INVALID_KEYMAPPINGS">キーボードの値が不正です。&#10;有効なキーボードを選択してください。</string>
-	<string name="IDS_EMSG_GET_KEYMAPPINGS">キーボードの値を取得できませんでした。</string>
-	<string name="IDS_EMSG_LOAD_KEYMAPPINGS">キーマッピング定義を読み込めませんでした。</string>
+	<string name="IDS_EMSG_EMPTY_KEYMAP_NAME">キーマップ名を入力してください。</string>
+	<string name="IDS_EMSG_DELETE_KEYMAPPINGS_IN_USE">キーマップ "%0:s%" は現在使用中のため削除できません。&#10;&#10;ヒント：&#10;このキーマップを削除するには、いったん他のキーマップを選択して [OK] ボタンでこのダイアログを閉じてください。</string>
+	<string name="IDS_QMSG_DELETE_KEYMAPPINGS">キーマップ "%0:s%" を削除します。&#10;よろしいですか？</string>
+	<string name="IDS_EMSG_INVALID_KEYMAPPINGS">キーマップの値が不正です。&#10;有効なキーマップを選択してください。</string>
+	<string name="IDS_EMSG_GET_KEYMAPPINGS">キーマップの値を取得できませんでした。</string>
+	<string name="IDS_EMSG_LOAD_KEYMAPPINGS">キーマップ定義を読み込めませんでした。</string>
 	<string name="IDS_EMSG_INVALID_LANGUAGE">言語の値が不正です。&#10;有効な言語を選択してください。</string>
 	<string name="IDS_EMSG_GET_LANGUAGE">言語の値を取得できませんでした。</string>
 	<string name="IDS_EMSG_CREATE_COVER_BROWSER">カバーブラウザの生成に失敗しました。</string>

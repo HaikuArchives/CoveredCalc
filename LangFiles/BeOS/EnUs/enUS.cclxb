@@ -191,12 +191,12 @@
 
 		<dialogItem name="KeyMappingBox">
 			<rect left="12.0" top="112.0" right="288.0" bottom="198.0"/>
-			<label>Keyboard</label>
+			<label>Keymap</label>
 		</dialogItem>
 		
 		<dialogItem name="KeyMappingPopup">
 			<rect left="12.0" top="16.0" right="264.0" bottom="38.0"/>
-			<label>Keyboard:</label>
+			<label>Keymap:</label>
 			<divider position="64.0"/>
 		</dialogItem>
 		
@@ -226,7 +226,7 @@
 		</dialogItem>
 	</dialog>
 	
-	<!-- Edit Keyboard dialog -->
+	<!-- Edit Keymap dialog -->
 	<dialog name="IDD_EDIT_KEYMAP">
 		<!--
 			View Hierarchy:
@@ -253,13 +253,13 @@
 		
 		<dialogItem name="">
 			<rect left="0.0" top="0.0" right="432.0" bottom="316.0"/>
-			<label>Edit Keyboard</label>
+			<label>Edit Keymap</label>
 		</dialogItem>
 		
 		<dialogItem name="NameText">
 			<rect left="12.0" top="12.0" right="420.0" bottom="30.0"/>
-			<label>Name:</label>
-			<divider position="50.0"/>
+			<label>Keymap name:</label>
+			<divider position="80.0"/>
 		</dialogItem>
 		
 		<dialogItem name="FunctionBox">
@@ -382,12 +382,12 @@
 	<string name="IDS_MAIN_WINDOW_KEYFUNC_MINIMIZE">Hide (Minimize)</string>
 	<string name="IDS_MAIN_WINDOW_KEYFUNC_CLOSE">Close</string>
 	<string name="IDS_QMSG_EDITED_KEYMAP_DISCARDING">Are you sure you want to discard all your changes?</string>
-	<string name="IDS_EMSG_EMPTY_KEYMAP_NAME">Please input Name.</string>
-	<string name="IDS_EMSG_DELETE_KEYMAPPINGS_IN_USE">Keyboard "%0:s%" is currently used.&#10;&#10;Hint:&#10;To delete this keyboard, select another keyboard and close this dialog by [OK] button once.</string>
-	<string name="IDS_QMSG_DELETE_KEYMAPPINGS">Are you sure you want to delete the keyboard "%0:s%"?</string>
-	<string name="IDS_EMSG_INVALID_KEYMAPPINGS">Invalid keyboard selection. Please, choose a valid keyboard.</string>
-	<string name="IDS_EMSG_GET_KEYMAPPINGS">Error obtaining the keyboard selection.</string>
-	<string name="IDS_EMSG_LOAD_KEYMAPPINGS">Failed to load key mappings.</string>
+	<string name="IDS_EMSG_EMPTY_KEYMAP_NAME">Enter keymap name.</string>
+	<string name="IDS_EMSG_DELETE_KEYMAPPINGS_IN_USE">Active keymap: "%0:s%"&#10;&#10;Hint:&#10;To delete this keymap, select another keymap and close this window by clicking [OK].</string>
+	<string name="IDS_QMSG_DELETE_KEYMAPPINGS">Are you sure you want to delete keymap "%0:s%"?</string>
+	<string name="IDS_EMSG_INVALID_KEYMAPPINGS">Invalid keymap selection. Please, choose a valid keymap.</string>
+	<string name="IDS_EMSG_GET_KEYMAPPINGS">Error obtaining the keymap selection.</string>
+	<string name="IDS_EMSG_LOAD_KEYMAPPINGS">Failed to load keymap.</string>
 	<string name="IDS_EMSG_INVALID_LANGUAGE">Invalid language selection. Please, choose a valid language.</string>
 	<string name="IDS_EMSG_GET_LANGUAGE">Error obtaining the language selection.</string>
 	<string name="IDS_EMSG_CREATE_COVER_BROWSER">Could not create the Cover Browser window.</string>

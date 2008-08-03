@@ -123,8 +123,8 @@ BEGIN
                     CBS_SORT | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Change of language will take effect after you restart CoveredCalc application.",
                     IDC_STATIC,24,131,184,16,NOT WS_GROUP
-    GROUPBOX        "Keyboard",IDC_STATIC,7,159,209,54
-    LTEXT           "&Keyboard:",IDC_STATIC,15,173,49,8
+    GROUPBOX        "Keymap",IDC_STATIC,7,159,209,54
+    LTEXT           "&Keymap:",IDC_STATIC,15,173,49,8
     COMBOBOX        IDC_CMB_KEYMAPPINGS,66,171,142,110,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "Ed&it",IDC_EDIT_KEYMAPPING,50,191,50,14,WS_GROUP
@@ -136,11 +136,11 @@ END
 
 IDD_EDIT_KEYMAP DIALOG DISCARDABLE  0, 0, 283, 210
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Edit Keyboard"
+CAPTION "Edit Keymap"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    LTEXT           "&Name:",IDC_STATIC,7,10,30,8
-    EDITTEXT        IDC_EDIT_NAME,41,7,235,14,ES_AUTOHSCROLL
+    LTEXT           "Keymap &name:",IDC_STATIC,7,10,57,8
+    EDITTEXT        IDC_EDIT_NAME,66,7,210,14,ES_AUTOHSCROLL
     GROUPBOX        "Function",IDC_STATIC,7,29,102,152
     LTEXT           "&Function:",IDC_STATIC,15,41,38,8
     LISTBOX         IDC_LIST_FUNCTION,15,51,86,64,LBS_NOINTEGRALHEIGHT | 
@@ -351,15 +351,15 @@ STRINGTABLE DISCARDABLE
 BEGIN
     IDS_QMSG_EDITED_KEYMAP_DISCARDING 
                             "Are you sure you want to discard all your changes?"
-    IDS_EMSG_EMPTY_KEYMAP_NAME "Please input Name."
+    IDS_EMSG_EMPTY_KEYMAP_NAME "Enter keymap name."
     IDS_EMSG_DELETE_KEYMAPPINGS_IN_USE 
-                            "Keyboard ""%0:s%"" is currently used.\n\nHint:\nTo delete this keyboard, select another keyboard and close this dialog by [OK] button once."
+                            "Active keymap: ""%0:s%""\n\nHint:\nTo delete this keymap, select another keymap\nand close this window by clicking [OK]."
     IDS_QMSG_DELETE_KEYMAPPINGS 
-                            "Are you sure you want to delete the keyboard ""%0:s%""?"
+                            "Are you sure you want to delete the keymap ""%0:s%""?"
     IDS_EMSG_INVALID_KEYMAPPINGS 
-                            "Invalid keyboard selection. Please, choose a valid keyboard."
-    IDS_EMSG_GET_KEYMAPPINGS "Error obtaining the keyboard selection."
-    IDS_EMSG_LOAD_KEYMAPPINGS "Failed to load key mappings."
+                            "Invalid keymap selection. Please, choose a valid keymap."
+    IDS_EMSG_GET_KEYMAPPINGS "Error obtaining the keymap selection."
+    IDS_EMSG_LOAD_KEYMAPPINGS "Failed to load keymap."
 END
 
 STRINGTABLE DISCARDABLE 

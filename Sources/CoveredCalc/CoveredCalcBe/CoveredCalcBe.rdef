@@ -29,12 +29,12 @@ resource app_signature "application/x-vnd.Hironytic-CoveredCalc";
 resource app_version
 {
 	major		= 1,
-	middle		= 9,
+	middle		= 10,
 	minor		= 0,
 	variety		= B_APPV_FINAL,
-	internal	= 1,
-	short_info	= "1.9.0+",
-	long_info	= "CoveredCalc for BeOS 1.9.0+"
+	internal	= 0,
+	short_info	= "1.10.0",
+	long_info	= "CoveredCalc for BeOS 1.10.0"
 };
 
 resource app_flags B_SINGLE_LAUNCH;
