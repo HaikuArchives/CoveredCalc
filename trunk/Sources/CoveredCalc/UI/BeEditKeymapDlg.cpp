@@ -69,8 +69,8 @@ static const char EDITKEYMAP_DIALOG_VIEW_ASSIGNED_FUNC_TEXT[]	= "AssignedFuncTex
 static const char EDITKEYMAP_DIALOG_VIEW_OK[]					= "OKButton";
 static const char EDITKEYMAP_DIALOG_VIEW_CANCEL[]				= "CancelButton";
 
-static const char STR_EDIT_KEYBOARD[]		= "Edit Keyboard";
-static const char STR_NAME[]				= "Name:";
+static const char STR_EDIT_KEYBOARD[]		= "Edit Keymap";
+static const char STR_NAME[]				= "Keymap name:";
 static const char STR_FUNCTION_BOX[]		= "Function";
 static const char STR_FUNCTION[]			= "Function:";
 static const char STR_CURRENT_KEY[]			= "Current Key:";
