@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -47,4 +47,4 @@ AChar ApplicationTitleString[] =
 #endif
 
 /// Copyright message - 1 which shown on About dialog.
-AChar CopyrightString1[] = "Copyright (C) 2004-2007 CoveredCalc Project Contributors.";
+AChar CopyrightString1[] = "Copyright (C) 2004-2008 CoveredCalc Project Contributors.";
