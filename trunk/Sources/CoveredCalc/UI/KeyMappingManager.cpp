@@ -53,7 +53,7 @@ static const SInt32 MODIFIER_COMMAND_LENGTH = sizeof(STR_MODIFIER_COMMAND)/sizeo
 static const UTF8Char STR_MODIFIER_CONTROL[] = "control";
 static const SInt32 MODIFIER_CONTROL_LENGTH = sizeof(STR_MODIFIER_CONTROL)/sizeof(AChar) - 1;
 static const UTF8Char STR_MODIFIER_OPTION[] = "option";
-static const SInt32 MODIFIER_OPTION_LENGTH = sizeof(MODIFIER_OPTION_LENGTH)/sizeof(AChar) - 1;
+static const SInt32 MODIFIER_OPTION_LENGTH = sizeof(STR_MODIFIER_OPTION)/sizeof(AChar) - 1;
 static const AChar CHAR_MODIFIER_SEPARATOR = '-';
 #endif
 
