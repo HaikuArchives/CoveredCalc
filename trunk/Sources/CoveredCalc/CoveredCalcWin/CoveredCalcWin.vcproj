@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Include&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XML_STATIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -124,7 +124,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Include&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XML_STATIC"
 				RuntimeLibrary="0"
 				RuntimeTypeInfo="true"
@@ -679,59 +679,59 @@
 				Name="Application"
 				>
 				<File
-					RelativePath="..\Include\AppSettings.h"
+					RelativePath="..\Application\AppSettings.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CommandLineParam.h"
+					RelativePath="..\Application\CommandLineParam.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\Copyright.h"
+					RelativePath="..\Application\Copyright.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoveredCalcApp.h"
+					RelativePath="..\Application\CoveredCalcApp.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoveredCalcAppBase.h"
+					RelativePath="..\Application\CoveredCalcAppBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\KeyMappings.h"
+					RelativePath="..\Application\KeyMappings.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\KeyMappingsException.h"
+					RelativePath="..\Application\KeyMappingsException.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\LangFileException.h"
+					RelativePath="..\Application\LangFileException.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\LangFileInfo.h"
+					RelativePath="..\Application\LangFileInfo.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\SettingValue.h"
+					RelativePath="..\Application\SettingValue.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\VirtualPathNames.h"
+					RelativePath="..\Application\VirtualPathNames.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinCoveredCalcApp.h"
+					RelativePath="..\Application\WinCoveredCalcApp.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinLangFile.h"
+					RelativePath="..\Application\WinLangFile.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinMessageFilter.h"
+					RelativePath="..\Application\WinMessageFilter.h"
 					>
 				</File>
 			</Filter>
@@ -759,31 +759,31 @@
 				Name="Bitmap"
 				>
 				<File
-					RelativePath="..\Include\BMPFileLoader.h"
+					RelativePath="..\Bitmap\BMPFileLoader.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\BMPFileStore.h"
+					RelativePath="..\Bitmap\BMPFileStore.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\DIBColorLookup.h"
+					RelativePath="..\Bitmap\DIBColorLookup.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\DIBFileLoader.h"
+					RelativePath="..\Bitmap\DIBFileLoader.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\DIBFileLoaderException.h"
+					RelativePath="..\Bitmap\DIBFileLoaderException.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\DIBitmap.h"
+					RelativePath="..\Bitmap\DIBitmap.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\DIBitmapStore.h"
+					RelativePath="..\Bitmap\DIBitmapStore.h"
 					>
 				</File>
 			</Filter>
@@ -791,11 +791,11 @@
 				Name="Engine"
 				>
 				<File
-					RelativePath="..\Include\CalcCore.h"
+					RelativePath="..\Engine\CalcCore.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CalcDisplay.h"
+					RelativePath="..\Engine\CalcDisplay.h"
 					>
 				</File>
 			</Filter>
@@ -803,39 +803,39 @@
 				Name="General"
 				>
 				<File
-					RelativePath="..\Include\ColorValue.h"
+					RelativePath="..\General\ColorValue.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\DebugSupport.h"
+					RelativePath="..\General\DebugSupport.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\Exception.h"
+					RelativePath="..\General\Exception.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\MBCString.h"
+					RelativePath="..\General\MBCString.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\MemoryException.h"
+					RelativePath="..\General\MemoryException.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\ObjectNotFoundException.h"
+					RelativePath="..\General\ObjectNotFoundException.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\PortDefs.h"
+					RelativePath="..\General\PortDefs.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\UTF8String.h"
+					RelativePath="..\General\UTF8String.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinMBCString.h"
+					RelativePath="..\General\WinMBCString.h"
 					>
 				</File>
 			</Filter>
@@ -843,75 +843,75 @@
 				Name="Skin"
 				>
 				<File
-					RelativePath="..\Include\ColorCodedSkin.h"
+					RelativePath="..\Skin\ColorCodedSkin.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\ColorCodedSkinAppearance.h"
+					RelativePath="..\Skin\ColorCodedSkinAppearance.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\ColorCodedSkinException.h"
+					RelativePath="..\Skin\ColorCodedSkinException.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoverButtonInfo.h"
+					RelativePath="..\Skin\CoverButtonInfo.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoverChangeEventHandler.h"
+					RelativePath="..\Skin\CoverChangeEventHandler.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoverDef.h"
+					RelativePath="..\Skin\CoverDef.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoverDefParseException.h"
+					RelativePath="..\Skin\CoverDefParseException.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoverDefParser.h"
+					RelativePath="..\Skin\CoverDefParser.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoverDefValidateException.h"
+					RelativePath="..\Skin\CoverDefValidateException.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoverDisplayInfo.h"
+					RelativePath="..\Skin\CoverDisplayInfo.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoverFontInfo.h"
+					RelativePath="..\Skin\CoverFontInfo.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoverInfo.h"
+					RelativePath="..\Skin\CoverInfo.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoverListItem.h"
+					RelativePath="..\Skin\CoverListItem.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoverListManager.h"
+					RelativePath="..\Skin\CoverListManager.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoverMainWindowInfo.h"
+					RelativePath="..\Skin\CoverMainWindowInfo.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoverManager.h"
+					RelativePath="..\Skin\CoverManager.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoverToolTipInfo.h"
+					RelativePath="..\Skin\CoverToolTipInfo.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoverWindowInfo.h"
+					RelativePath="..\Skin\CoverWindowInfo.h"
 					>
 				</File>
 			</Filter>
@@ -919,27 +919,27 @@
 				Name="Storage"
 				>
 				<File
-					RelativePath="..\Include\File.h"
+					RelativePath="..\Storage\File.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\FileConstants.h"
+					RelativePath="..\Storage\FileConstants.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\FileException.h"
+					RelativePath="..\Storage\FileException.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\Path.h"
+					RelativePath="..\Storage\Path.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\PathException.h"
+					RelativePath="..\Storage\PathException.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinFile.h"
+					RelativePath="..\Storage\WinFile.h"
 					>
 				</File>
 			</Filter>
@@ -947,198 +947,198 @@
 				Name="UI"
 				>
 				<File
-					RelativePath="..\Include\AboutCurrentCoverDlg.h"
+					RelativePath="..\UI\AboutCurrentCoverDlg.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\ButtonUITask.h"
+					RelativePath="..\UI\ButtonUITask.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\CoverBrowser.h"
+					RelativePath="..\UI\CoverBrowser.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\DialogDef.h"
+					RelativePath="..\UI\DialogDef.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\DialogInfo.h"
+					RelativePath="..\UI\DialogInfo.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\EditKeymapDlg.h"
+					RelativePath="..\UI\EditKeymapDlg.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\KeyEventParameter.h"
+					RelativePath="..\UI\KeyEventParameter.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\KeyFuncOperation.h"
+					RelativePath="..\UI\KeyFuncOperation.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\KeyMappingManager.h"
+					RelativePath="..\UI\KeyMappingManager.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\KeyNameDB.h"
+					RelativePath="..\UI\KeyNameDB.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\MainUIManager.h"
+					RelativePath="..\UI\MainUIManager.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\MainWindowKeyFunc.h"
+					RelativePath="..\UI\MainWindowKeyFunc.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\MenuDef.h"
+					RelativePath="..\UI\MenuDef.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\MenuInfo.h"
+					RelativePath="..\UI\MenuInfo.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\MessageBoxProvider.h"
+					RelativePath="..\UI\MessageBoxProvider.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\MessageDef.h"
+					RelativePath="..\UI\MessageDef.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\MouseHoverUITask.h"
+					RelativePath="..\UI\MouseHoverUITask.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\MovingUITask.h"
+					RelativePath="..\UI\MovingUITask.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\PreferencesDlg.h"
+					RelativePath="..\UI\PreferencesDlg.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\UIController.h"
+					RelativePath="..\UI\UIController.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\UIControllerException.h"
+					RelativePath="..\UI\UIControllerException.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\UIManager.h"
+					RelativePath="..\UI\UIManager.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\UITask.h"
+					RelativePath="..\UI\UITask.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\UITaskClass.h"
+					RelativePath="..\UI\UITaskClass.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\UITaskManager.h"
+					RelativePath="..\UI\UITaskManager.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WaitingUI.h"
+					RelativePath="..\UI\WaitingUI.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WaitingUIKeeper.h"
+					RelativePath="..\UI\WaitingUIKeeper.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinAboutCurrentCoverDlg.h"
+					RelativePath="..\UI\WinAboutCurrentCoverDlg.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinAboutDlg.h"
+					RelativePath="..\UI\WinAboutDlg.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinBitmapDC.h"
+					RelativePath="..\UI\WinBitmapDC.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinBitmapDCException.h"
+					RelativePath="..\UI\WinBitmapDCException.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinCCSAppearance.h"
+					RelativePath="..\UI\WinCCSAppearance.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinCoverBrowser.h"
+					RelativePath="..\UI\WinCoverBrowser.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinDialog.h"
+					RelativePath="..\UI\WinDialog.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinDIBitmap32DC.h"
+					RelativePath="..\UI\WinDIBitmap32DC.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinDIBitmapDC.h"
+					RelativePath="..\UI\WinDIBitmapDC.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinEditKeymapDlg.h"
+					RelativePath="..\UI\WinEditKeymapDlg.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinLayeredAppearance.h"
+					RelativePath="..\UI\WinLayeredAppearance.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinMainWindow.h"
+					RelativePath="..\UI\WinMainWindow.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinMessageBoxProvider.h"
+					RelativePath="..\UI\WinMessageBoxProvider.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinMonitorInfo.h"
+					RelativePath="..\UI\WinMonitorInfo.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinNormalAppearance.h"
+					RelativePath="..\UI\WinNormalAppearance.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinPreferencesDlg.h"
+					RelativePath="..\UI\WinPreferencesDlg.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinPseudoModalDialog.h"
+					RelativePath="..\UI\WinPseudoModalDialog.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinSkinWindow.h"
+					RelativePath="..\UI\WinSkinWindow.h"
 					>
 				</File>
 				<Filter
 					Name="Message"
 					>
 					<File
-						RelativePath="..\Include\ExceptionMessageGenerator.h"
+						RelativePath="..\UI\Message\ExceptionMessageGenerator.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\UIMessageProvider.h"
+						RelativePath="..\UI\Message\UIMessageProvider.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\WinUIMessageProvider.h"
+						RelativePath="..\UI\Message\WinUIMessageProvider.h"
 						>
 					</File>
 				</Filter>
@@ -1146,11 +1146,11 @@
 					Name="Control"
 					>
 					<File
-						RelativePath="..\Include\WinComboListSeparators.h"
+						RelativePath="..\UI\Control\WinComboListSeparators.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\WinKeyInputEdit.h"
+						RelativePath="..\UI\Control\WinKeyInputEdit.h"
 						>
 					</File>
 				</Filter>
@@ -1158,51 +1158,51 @@
 					Name="UIComponent"
 					>
 					<File
-						RelativePath="..\Include\DefaultUICButton.h"
+						RelativePath="..\UI\UIComponent\DefaultUICButton.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\DefaultUICKeyInput.h"
+						RelativePath="..\UI\UIComponent\DefaultUICKeyInput.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\DefaultUICListBox.h"
+						RelativePath="..\UI\UIComponent\DefaultUICListBox.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\DefaultUICTextEdit.h"
+						RelativePath="..\UI\UIComponent\DefaultUICTextEdit.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\UICButton.h"
+						RelativePath="..\UI\UIComponent\UICButton.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\UICKeyInput.h"
+						RelativePath="..\UI\UIComponent\UICKeyInput.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\UICListBox.h"
+						RelativePath="..\UI\UIComponent\UICListBox.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\UICTextEdit.h"
+						RelativePath="..\UI\UIComponent\UICTextEdit.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\WinControlAdapter.h"
+						RelativePath="..\UI\UIComponent\WinControlAdapter.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\WinKeyInputAdapter.h"
+						RelativePath="..\UI\UIComponent\WinKeyInputAdapter.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\WinListBoxAdapter.h"
+						RelativePath="..\UI\UIComponent\WinListBoxAdapter.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\WinTextControlAdapter.h"
+						RelativePath="..\UI\UIComponent\WinTextControlAdapter.h"
 						>
 					</File>
 				</Filter>
@@ -1211,43 +1211,43 @@
 				Name="Utility"
 				>
 				<File
-					RelativePath="..\Include\Enumerator.h"
+					RelativePath="..\Utility\Enumerator.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\ExceptionMessageUtils.h"
+					RelativePath="..\Utility\ExceptionMessageUtils.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\ExpandingBuffer.h"
+					RelativePath="..\Utility\ExpandingBuffer.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\MessageFormatter.h"
+					RelativePath="..\Utility\MessageFormatter.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\PathUtils.h"
+					RelativePath="..\Utility\PathUtils.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\StorageUtils.h"
+					RelativePath="..\Utility\StorageUtils.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\TypeConv.h"
+					RelativePath="..\Utility\TypeConv.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\UTF8Conv.h"
+					RelativePath="..\Utility\UTF8Conv.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\UTF8Utils.h"
+					RelativePath="..\Utility\UTF8Utils.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\WinLayeredWindowAPI.h"
+					RelativePath="..\Utility\WinLayeredWindowAPI.h"
 					>
 				</File>
 			</Filter>
@@ -1255,100 +1255,96 @@
 				Name="XML"
 				>
 				<File
-					RelativePath="..\Include\DOMParseEventHandler.h"
+					RelativePath="..\XML\DOMParseEventHandler.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\DOMUtils.h"
+					RelativePath="..\XML\DOMUtils.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\XMLEventHandler.h"
+					RelativePath="..\XML\XMLEventHandler.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\XMLParseException.h"
+					RelativePath="..\XML\XMLParseException.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\XMLParser.h"
+					RelativePath="..\XML\XMLParser.h"
 					>
 				</File>
 				<Filter
 					Name="NanchatteDOM"
 					>
 					<File
-						RelativePath="..\Include\NCDAttr.h"
+						RelativePath="..\XML\NanchatteDOM\NCDAttr.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\NCDCharacterData.h"
+						RelativePath="..\XML\NanchatteDOM\NCDAttrImpl.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\NCDComment.h"
+						RelativePath="..\XML\NanchatteDOM\NCDAttrNodeMapImpl.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\NCDDocument.h"
+						RelativePath="..\XML\NanchatteDOM\NCDCharacterData.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\NCDDocumentFactory.h"
+						RelativePath="..\XML\NanchatteDOM\NCDComment.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\NCDElement.h"
+						RelativePath="..\XML\NanchatteDOM\NCDCommentImpl.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\NCDException.h"
+						RelativePath="..\XML\NanchatteDOM\NCDDocument.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\NCDNamedNodeMap.h"
+						RelativePath="..\XML\NanchatteDOM\NCDDocumentFactory.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\NCDNode.h"
+						RelativePath="..\XML\NanchatteDOM\NCDDocumentImpl.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\NCDText.h"
+						RelativePath="..\XML\NanchatteDOM\NCDElement.h"
 						>
 					</File>
-					<Filter
-						Name="Implement"
+					<File
+						RelativePath="..\XML\NanchatteDOM\NCDElementImpl.h"
 						>
-						<File
-							RelativePath="..\Include\NCDAttrImpl.h"
-							>
-						</File>
-						<File
-							RelativePath="..\Include\NCDAttrNodeMapImpl.h"
-							>
-						</File>
-						<File
-							RelativePath="..\Include\NCDCommentImpl.h"
-							>
-						</File>
-						<File
-							RelativePath="..\Include\NCDDocumentImpl.h"
-							>
-						</File>
-						<File
-							RelativePath="..\Include\NCDElementImpl.h"
-							>
-						</File>
-						<File
-							RelativePath="..\Include\NCDTextImpl.h"
-							>
-						</File>
-						<File
-							RelativePath="..\Include\NCDTreeNode.h"
-							>
-						</File>
-					</Filter>
+					</File>
+					<File
+						RelativePath="..\XML\NanchatteDOM\NCDException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\XML\NanchatteDOM\NCDNamedNodeMap.h"
+						>
+					</File>
+					<File
+						RelativePath="..\XML\NanchatteDOM\NCDNode.h"
+						>
+					</File>
+					<File
+						RelativePath="..\XML\NanchatteDOM\NCDText.h"
+						>
+					</File>
+					<File
+						RelativePath="..\XML\NanchatteDOM\NCDTextImpl.h"
+						>
+					</File>
+					<File
+						RelativePath="..\XML\NanchatteDOM\NCDTreeNode.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>

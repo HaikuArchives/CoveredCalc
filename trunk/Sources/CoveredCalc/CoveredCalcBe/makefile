@@ -192,7 +192,24 @@ SYSTEM_INCLUDE_PATHS =
 #	additional paths to look for local headers
 #	thes use the form: #include "header"
 #	source file directories are automatically included
-LOCAL_INCLUDE_PATHS = . ../Include ../../Libs/libexpatBe ../../Libs/ColumnListViewBe
+LOCAL_INCLUDE_PATHS = \
+	. \
+	../Application \
+	../Bitmap \
+	../Engine \
+	../General \
+	../Skin \
+	../Storage \
+	../UI \
+	../UI/Control \
+	../UI/Message \
+	../UI/UIComponent \
+	../Utility \
+	../XML \
+	../XML/NanchatteDOM \
+	../../Libs/libexpatBe \
+	../../Libs/ColumnListViewBe \
+
 
 #	specify the level of optimization that you desire
 #	NONE, SOME, FULL
