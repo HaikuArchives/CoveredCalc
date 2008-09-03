@@ -85,6 +85,6 @@ Haiku 上で開発が行える環境になっているので、そろそろ Haik
 現状の Windows 版は Visual Studio 2005 Standard Edition の Visual C++ を使ってビルドしています。
 現時点で Visual C++ の最新版は Visual C++ 2008 (Visual Studio 2008) なので、その無料版である Visual C++ 2008 Express Edition にコンパイラを変更します。
 
- * ソリューションファイル(*.sln)、プロジェクトファイル(*.vcproj) のアップグレード
+ * ソリューションファイル({{{*.sln}}})、プロジェクトファイル({{{*.vcproj}}}) のアップグレード
  * コンパイルエラーの修正
  * リソースエディタの調達（Express Edition にはリソースエディタが付属しないため）
