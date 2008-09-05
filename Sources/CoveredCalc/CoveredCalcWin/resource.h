@@ -2,6 +2,10 @@
 // Microsoft Visual C++ generated include file.
 // Used by CoveredCalcWin.rc
 //
+#ifndef IDC_STATIC
+#define IDC_STATIC (-1)
+#endif
+
 #define IDR_APP_MANIFEST                1
 #define IDI_APPICON                     128
 #define IDB_APPICON64                   129

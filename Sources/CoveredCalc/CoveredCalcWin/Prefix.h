@@ -64,6 +64,7 @@
 // VS2005 の CRT セキュリティ強化に関する未推奨警告を表示しない。
 #define _CRT_SECURE_NO_DEPRECATE 1
 
+#include <stdio.h>
 #include <windows.h>
 #include <windowsx.h>
 #include <commctrl.h>
