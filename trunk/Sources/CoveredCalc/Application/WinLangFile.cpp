@@ -133,6 +133,7 @@ void WinLangFile::GetLanguageCode(
 )
 {
 	langCode.Empty();
+#if 0 // FIXME: 言語ファイル見直しまで放っておきます。
 	PFNCCNLGETLANGUAGECODE pfnCCNLGetLanguageCode = reinterpret_cast<PFNCCNLGETLANGUAGECODE>(GetProcAddress(hInstance, "CCNLGetLanguageCode"));
 	if (NULL == pfnCCNLGetLanguageCode)
 	{
@@ -165,6 +166,7 @@ void WinLangFile::GetLanguageCode(
 	}
 	langCode = langCodeBuf;
 	free(langCodeBuf);
+#endif
 }
 
 /**
@@ -175,6 +177,7 @@ void WinLangFile::GetLanguageName(
 )
 {
 	langName.Empty();
+#if 0 // FIXME: 言語ファイル見直しまで放っておきます。
 	PFNCCNLGETLANGUAGENAME pfnCCNLGetLanguageName = reinterpret_cast<PFNCCNLGETLANGUAGENAME>(GetProcAddress(hInstance, "CCNLGetLanguageName"));
 	if (NULL == pfnCCNLGetLanguageName)
 	{
@@ -207,6 +210,7 @@ void WinLangFile::GetLanguageName(
 	}
 	langName = langNameBuf;
 	free(langNameBuf);
+#endif
 }
 
 /**

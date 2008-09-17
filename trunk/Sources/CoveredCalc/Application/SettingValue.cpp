@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -122,10 +122,10 @@ void SettingValue::SetValue(ConstAStr value)
 // ---------------------------------------------------------------------
 void SettingValue::SetValue(SInt32 value)
 {
-	AChar buf[16];
-	snprintf(buf, sizeof(buf)/sizeof(AChar), "%ld", value);
-	buf[sizeof(buf)/sizeof(AChar) - 1] = '\0';
-	this->value = TypeConv::AsUTF8(buf);
+	UTF8Char buf[16];
+	snprintf(TypeConv::AsASCII(buf), sizeof(buf)/sizeof(UTF8Char), "%ld", value);
+	buf[sizeof(buf)/sizeof(UTF8Char) - 1] = '\0';
+	this->value = buf;
 }
 
 // ---------------------------------------------------------------------
@@ -133,10 +133,10 @@ void SettingValue::SetValue(SInt32 value)
 // ---------------------------------------------------------------------
 void SettingValue::SetValue(UInt32 value)
 {
-	AChar buf[16];
-	snprintf(buf, sizeof(buf)/sizeof(AChar), "%lu", value);
-	buf[sizeof(buf)/sizeof(AChar) - 1] = '\0';
-	this->value = TypeConv::AsUTF8(buf);
+	UTF8Char buf[16];
+	snprintf(TypeConv::AsASCII(buf), sizeof(buf)/sizeof(UTF8Char), "%lu", value);
+	buf[sizeof(buf)/sizeof(SChar) - 1] = '\0';
+	this->value = buf;
 }
 
 // ---------------------------------------------------------------------

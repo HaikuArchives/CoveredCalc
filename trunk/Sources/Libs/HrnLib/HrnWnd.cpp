@@ -468,7 +468,7 @@ LRESULT CALLBACK CHrnWnd::cbHrnWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 		}
 		catch( CHrnException* e )
 		{
-			if ( IDCANCEL == ::MessageBox( NULL, e->GetErrorMessage(), "", MB_OKCANCEL | MB_ICONSTOP ) )
+			if ( IDCANCEL == ::MessageBox( NULL, e->GetErrorMessage(), _T(""), MB_OKCANCEL | MB_ICONSTOP ) )
 			{
 				::PostQuitMessage( 0 );
 			}

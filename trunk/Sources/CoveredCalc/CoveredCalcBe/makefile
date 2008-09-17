@@ -69,7 +69,7 @@ SRCS= \
 	../Bitmap/DIBColorLookup.cpp \
 	../Bitmap/DIBitmap.cpp \
 	../Engine/CalcCore.cpp \
-	../General/BeMBCString.cpp \
+	../General/MBCString.cpp \
 	../General/Exception.cpp \
 	../General/MemoryException.cpp \
 	../Skin/ColorCodedSkin.cpp \

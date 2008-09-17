@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -85,6 +85,6 @@ void CoverInfo::Validate()
 {
 	if (NULL == mainWindowInfo)
 	{
-		throw new CoverDefValidateException("The cover has no information about main window.");
+		throw new CoverDefValidateException(ALITERAL("The cover has no information about main window."));
 	}
 }

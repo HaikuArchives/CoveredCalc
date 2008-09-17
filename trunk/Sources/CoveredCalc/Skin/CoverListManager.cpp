@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -119,7 +119,7 @@ void CoverListManager::enumCoverDef(
 )
 {
 #if defined (WIN32)
-	Path findPath = coverPath.Append("*.*");
+	Path findPath = coverPath.Append(ALITERAL("*.*"));
 	WIN32_FIND_DATA findData;
 	HANDLE hFind = ::FindFirstFile(findPath.GetPathString(), &findData);
 	if (NULL != hFind)
@@ -130,12 +130,12 @@ void CoverListManager::enumCoverDef(
 			{
 				continue;
 			}
-			if (0 == lstrcmp(".", findData.cFileName) || 0 == lstrcmp("..", findData.cFileName))
+			if (0 == lstrcmp(ALITERAL("."), findData.cFileName) || 0 == lstrcmp(ALITERAL(".."), findData.cFileName))
 			{
 				continue;
 			}
 			
-			Path coverDefPath = coverPath.Append(findData.cFileName).Append("CoverDef.xml");
+			Path coverDefPath = coverPath.Append(findData.cFileName).Append(ALITERAL("CoverDef.xml"));
 			DWORD attributes = ::GetFileAttributes(coverDefPath.GetPathString());
 			if (0xffffffff != attributes && (!(attributes & FILE_ATTRIBUTE_DIRECTORY)))
 			{

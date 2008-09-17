@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -105,7 +105,7 @@ CHrnApp::~CHrnApp()
 // 作成:	Hironori Ichimiya / 2000.4.22
 // 特記事項:	これを呼べるのはプログラムで1回だけ。
 // -------------------------------------------------------
-int CHrnApp::WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+int CHrnApp::WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow )
 {
 	int	retValue = 0;
 

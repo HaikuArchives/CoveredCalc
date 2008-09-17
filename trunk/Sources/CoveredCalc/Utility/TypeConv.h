@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -41,17 +41,17 @@ namespace TypeConv
 	// -----------------------------------------------------------------
 	// AChar/AStr to UTF8Char/UTF8Str
 	// -----------------------------------------------------------------
-	inline UTF8Char AsUTF8(AChar character)
+	inline UTF8Char AsUTF8(SChar character)
 	{
 		return static_cast<UTF8Char>(character);
 	}
 
-	inline UTF8Str AsUTF8(AStr string)
+	inline UTF8Str AsUTF8(SStr string)
 	{
 		return reinterpret_cast<UTF8Str>(string);
 	}
 
-	inline ConstUTF8Str AsUTF8(ConstAStr string)
+	inline ConstUTF8Str AsUTF8(ConstSStr string)
 	{
 		return reinterpret_cast<ConstUTF8Str>(string);
 	}
@@ -59,19 +59,19 @@ namespace TypeConv
 	// -----------------------------------------------------------------
 	// UTF8Char/UTF8Str to AChar/AStr 
 	// -----------------------------------------------------------------
-	inline AChar AsASCII(UTF8Char character)
+	inline SChar AsASCII(UTF8Char character)
 	{
-		return static_cast<AChar>(character);
+		return static_cast<SChar>(character);
 	}
 		
-	inline AStr AsASCII(UTF8Str string)
+	inline SStr AsASCII(UTF8Str string)
 	{
-		return reinterpret_cast<AStr>(string);
+		return reinterpret_cast<SStr>(string);
 	}
 	
-	inline ConstAStr AsASCII(ConstUTF8Str string)
+	inline ConstSStr AsASCII(ConstUTF8Str string)
 	{
-		return reinterpret_cast<ConstAStr>(string);
+		return reinterpret_cast<ConstSStr>(string);
 	}
 }
 

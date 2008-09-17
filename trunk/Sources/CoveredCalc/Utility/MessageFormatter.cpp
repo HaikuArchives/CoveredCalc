@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -37,7 +37,7 @@
 #include "MemoryException.h"
 
 #define REPLACE_BUFFER_LEN		1024
-#define RECORD_SEPARATOR		'\x1e'
+#define RECORD_SEPARATOR		ALITERAL('\x1e')
 
 struct FormatParamInfo
 {
@@ -100,26 +100,26 @@ void MessageFormatter::FormatV(
 	while (true)
 	{
 		FormatParamInfo paramInfo;
-		paramInfo.startIndex = strFormat.Find('%', searchStart);
+		paramInfo.startIndex = strFormat.Find(ALITERAL('%'), searchStart);
 		if (-1 == paramInfo.startIndex)
 		{
 			break;
 		}
-		if ('%' == format[paramInfo.startIndex + 1])		// "%%" -> "%"
+		if (ALITERAL('%') == format[paramInfo.startIndex + 1])		// "%%" -> "%"
 		{
-			strFormat.Replace(paramInfo.startIndex, 1, "");
+			strFormat.Replace(paramInfo.startIndex, 1, ALITERAL(""));
 			searchStart = paramInfo.startIndex + 1;
 			continue;
 		}
 		
-		SInt32 colon = strFormat.Find(':', paramInfo.startIndex + 1);
+		SInt32 colon = strFormat.Find(ALITERAL(':'), paramInfo.startIndex + 1);
 		if (-1 == colon)
 		{
 			throw new MessageFormatException(format);
 		}
 		MBCString strOrder = strFormat.SubString(paramInfo.startIndex + 1, colon - paramInfo.startIndex);
-		SInt32 order = atoi(strOrder);
-		SInt32 endPoint = strFormat.Find('%', colon + 1);
+		SInt32 order = ttoi(strOrder);
+		SInt32 endPoint = strFormat.Find(ALITERAL('%'), colon + 1);
 		if (-1 == endPoint)
 		{
 			throw new MessageFormatException(format);
@@ -143,7 +143,7 @@ void MessageFormatter::FormatV(
 		}
 		
 		const FormatParamInfo& paramInfo = findIte->second;
-		replaceFormat += "%" + paramInfo.format + RECORD_SEPARATOR;
+		replaceFormat += MBCString(ALITERAL("%")) + paramInfo.format + RECORD_SEPARATOR;
 		index++;
 	}
 
@@ -157,13 +157,13 @@ void MessageFormatter::FormatV(
 		while (true)
 		{
 			memset(replaceTos, 0, bufSize);
-			vsnprintf(replaceTos, bufSize, replaceFormat, args);
-			if (replaceTos[bufSize - 1] != '\0')
+			vsntprintf(replaceTos, bufSize, replaceFormat.CString(), args);
+			if (replaceTos[bufSize - 1] != ALITERAL('\0'))
 			{
 				// Since the buffer is too small for result,
 				// it doubles buffer size and retry.
 				bufSize *= 2;
-				char* newBuf = static_cast<char*>(realloc(dynBuf, bufSize));
+				AChar* newBuf = static_cast<AChar*>(realloc(dynBuf, bufSize));
 				if (NULL == newBuf)
 				{
 					free(dynBuf);
@@ -178,12 +178,12 @@ void MessageFormatter::FormatV(
 		}
 
 		AChar* oneReplaceTo = replaceTos;
-		for (index=0; *oneReplaceTo != '\0'; index++)
+		for (index=0; *oneReplaceTo != ALITERAL('\0'); index++)
 		{
 			SInt32 findSeparator = MBCString(oneReplaceTo).Find(RECORD_SEPARATOR);
 			if (-1 != findSeparator)
 			{
-				oneReplaceTo[findSeparator] = '\0';
+				oneReplaceTo[findSeparator] = ALITERAL('\0');
 			}
 		
 			ParamMap::const_iterator findIte = paramMap.find(index);
@@ -192,7 +192,7 @@ void MessageFormatter::FormatV(
 			const FormatParamInfo& paramInfo = findIte->second;
 			strFormat.Replace(paramInfo.startIndex, paramInfo.length, oneReplaceTo);
 
-			SInt32 oneReplaceToLen = strlen(oneReplaceTo);
+			SInt32 oneReplaceToLen = tcslen(oneReplaceTo);
 			SInt32 diffChars = oneReplaceToLen - paramInfo.length;
 			ParamMap::iterator modIte;
 			for (modIte=paramMap.begin(); modIte!=paramMap.end(); modIte++)

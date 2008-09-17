@@ -597,24 +597,24 @@ static void WriteOutDOMText(
 	File* outFile				///< destination file
 )
 {
-	ConstAStr lineBreak = outFile->GetLineBreak();
+	ConstSStr lineBreak = outFile->GetLineBreakS();
 	UInt32 lineBreakLength = strlen(lineBreak);
 
-	ConstAStr textA = TypeConv::AsASCII(text);
+	ConstSStr textS = TypeConv::AsASCII(text);
 	
-	while ('\0' != *textA)
+	while (ALITERAL('\0') != *textS)
 	{
-		ConstAStr lineBreakPos = strchr(textA, '\n');
+		ConstSStr lineBreakPos = strchr(textS, '\n');
 		if (NULL == lineBreakPos)
 		{
-			outFile->Write(textA, strlen(textA));
+			outFile->Write(textS, strlen(textS));
 			break;
 		}
 		else
 		{
-			outFile->Write(textA, (lineBreakPos - textA) * sizeof(AChar));
+			outFile->Write(textS, (lineBreakPos - textS) * sizeof(SChar));
 			outFile->Write(lineBreak, lineBreakLength);
-			textA = lineBreakPos + 1;
+			textS = lineBreakPos + 1;
 		}
 	}
 }
@@ -961,10 +961,10 @@ void OutputDOMTreeForDebug(
 				UTF8String name;
 				node->getNodeName(name);
 				
-				AChar typeStr[16 + 3];
-				ConstAStr lineBreak = outFile->GetLineBreak();
-				sprintf(typeStr, "%d : ", nodeType);
-				outFile->Write(typeStr, strlen(typeStr));
+				UTF8Char typeStr[16 + 3];
+				ConstSStr lineBreak = outFile->GetLineBreakS();
+				snprintf(TypeConv::AsASCII(typeStr), sizeof(typeStr)/sizeof(UTF8Char), "%d : ", nodeType);
+				outFile->Write(typeStr, strlen(TypeConv::AsASCII(typeStr)));
 				outFile->Write(name, name.Length());
 				outFile->Write(lineBreak, strlen(lineBreak));
 			}

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -178,7 +178,7 @@ INT_PTR CALLBACK CHrnDlg::cbHrnDlgProc( HWND hwndDlg, UINT uMsg, WPARAM wParam, 
 		}
 		catch( CHrnException* e )
 		{
-			if ( IDCANCEL == ::MessageBox( NULL, e->GetErrorMessage(), "", MB_OKCANCEL | MB_ICONSTOP ) )
+			if ( IDCANCEL == ::MessageBox( NULL, e->GetErrorMessage(), _T(""), MB_OKCANCEL | MB_ICONSTOP ) )
 			{
 				::PostQuitMessage( 0 );
 			}

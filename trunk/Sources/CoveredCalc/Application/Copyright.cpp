@@ -35,16 +35,16 @@
 /// Applitation title
 AChar ApplicationTitleString[] =
 #if defined (WIN32)
-	"CoveredCalc for Windows";
+	ALITERAL("CoveredCalc for Windows");
 #elif defined (BEOS)
  #if defined (ZETA)
-	"CoveredCalc for ZETA";
+	ALITERAL("CoveredCalc for ZETA");
  #else
- 	"CoveredCalc for BeOS";
+ 	ALITERAL("CoveredCalc for BeOS");
  #endif
 #else
-	"CoveredCalc"
+	ALITERAL("CoveredCalc")
 #endif
 
 /// Copyright message - 1 which shown on About dialog.
-AChar CopyrightString1[] = "Copyright (C) 2004-2008 CoveredCalc Project Contributors.";
+AChar CopyrightString1[] = ALITERAL("Copyright (C) 2004-2008 CoveredCalc Project Contributors.");

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -47,6 +47,29 @@ AStr UTF8Conv::ToMultiByte(
 	ConstUTF8Str utf8Str		//!< source UTF-8 string
 )
 {
+#if defined(_UNICODE)
+	AStr result = NULL;
+	try
+	{
+		int wideCharCount = ::MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<LPCSTR>(utf8Str), -1, NULL, 0);
+		result = static_cast<LPWSTR>(malloc(wideCharCount * sizeof(WCHAR)));
+		if (NULL == result)
+		{
+			MemoryException::Throw();
+		}
+		::MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<LPCSTR>(utf8Str), -1, result, wideCharCount);
+	}
+	catch (...)
+	{
+		if (NULL != result)
+		{
+			free(result);
+		}
+		throw;
+	}
+
+	return result;
+#else
 	WCHAR wideBuf[256];				// to avoid allocating from heap when needed buffer is small.
 	LPWSTR wideStr = wideBuf;
 	AStr result = NULL;
@@ -91,6 +114,7 @@ AStr UTF8Conv::ToMultiByte(
 	}
 	
 	return result;
+#endif
 }
 
 // ---------------------------------------------------------------------
@@ -110,7 +134,7 @@ void UTF8Conv::ToMultiByte(
 //! Converts UTF-8 string to OS specific multi byte characters in consideration of line ending character.
 /*!
 	This function suppose that the line ending character of input UTF-8 string is LF
-	and the output multi byte string is OS specific char. i.e. CF-LF on Windows.
+	and the output multi byte string is OS specific char. i.e. CR-LF on Windows.
 */
 // ---------------------------------------------------------------------
 void UTF8Conv::ToMultiByteWithLineEnding(
@@ -174,6 +198,30 @@ UTF8Str UTF8Conv::FromMultiByte(
 	ConstAStr mbcStr			//!< source multi byte string
 )
 {
+#if defined(_UNICODE)
+	UTF8Str result = NULL;
+
+	try
+	{
+		int utf8CharCount = ::WideCharToMultiByte(CP_UTF8, 0, mbcStr, -1, NULL, 0, NULL, NULL);
+		result = static_cast<UTF8Str>(malloc(utf8CharCount));
+		if (NULL == result)
+		{
+			MemoryException::Throw();
+		}
+		::WideCharToMultiByte(CP_UTF8, 0, mbcStr, -1, reinterpret_cast<LPSTR>(result), utf8CharCount, NULL, NULL);
+	}
+	catch (...)
+	{
+		if (NULL != result)
+		{
+			free(result);
+		}
+		throw;
+	}
+
+	return result;
+#else
 	WCHAR wideBuf[256];				// to avoid allocating from heap when needed buffer is small.
 	LPWSTR wideStr = wideBuf;
 	UTF8Str result = NULL;
@@ -218,6 +266,7 @@ UTF8Str UTF8Conv::FromMultiByte(
 	}
 	
 	return result;
+#endif
 }
 
 // ---------------------------------------------------------------------

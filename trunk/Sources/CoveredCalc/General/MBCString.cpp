@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -24,15 +24,14 @@
  */
 
 /*!
-	@file		WinMBCString.cpp
-	@brief		Implementation of WinMBCString class.
+	@file		MBCString.cpp
+	@brief		Implementation of MBCString class.
 	@author		ICHIMIYA Hironori (Hiron)
 	@date		2004.1.17 created
 */
 
 #include "Prefix.h"
-#include <mbstring.h>
-#include "WinMBCString.h"
+#include "MBCString.h"
 
 // ---------------------------------------------------------------------
 //! Compares with the specified string.
@@ -42,9 +41,13 @@
 	@retval >0	this string is greater than specified string
 */
 // ---------------------------------------------------------------------
-SInt32 WinMBCString::Compare(ConstAStr string) const
+SInt32 MBCString::Compare(ConstAStr string) const
 {
-	return _mbscmp(reinterpret_cast<const unsigned char*>(innerString.c_str()), reinterpret_cast<const unsigned char*>(string));
+#if defined (WIN32)
+	return _tcscmp(innerString.c_str(), string);
+#else
+	return innerString.compare(string);
+#endif
 }
 
 // ---------------------------------------------------------------------
@@ -55,9 +58,13 @@ SInt32 WinMBCString::Compare(ConstAStr string) const
 	@retval >0	this string is greater than specified string
 */
 // ---------------------------------------------------------------------
-SInt32 WinMBCString::Compare(const WinMBCString& other) const
+SInt32 MBCString::Compare(const MBCString& other) const
 {
-	return _mbscmp(reinterpret_cast<const unsigned char*>(innerString.c_str()), reinterpret_cast<const unsigned char*>(other.innerString.c_str()));
+#if defined (WIN32)
+	return _tcscmp(innerString.c_str(), other.innerString.c_str());
+#else
+	return innerString.compare(other.innerString);
+#endif
 }
 
 // ---------------------------------------------------------------------
@@ -68,9 +75,13 @@ SInt32 WinMBCString::Compare(const WinMBCString& other) const
 	@retval >0	this string is greater than specified string
 */
 // ---------------------------------------------------------------------
-SInt32 WinMBCString::CompareNoCase(ConstAStr string) const
+SInt32 MBCString::CompareNoCase(ConstAStr string) const
 {
-	return _mbsicmp(reinterpret_cast<const unsigned char*>(innerString.c_str()), reinterpret_cast<const unsigned char*>(string));
+#if defined (WIN32)
+	return _tcsicmp(innerString.c_str(), string);
+#else
+	return strcasecmp(innerString.c_str(), string);
+#endif
 }
 
 // ---------------------------------------------------------------------
@@ -81,9 +92,13 @@ SInt32 WinMBCString::CompareNoCase(ConstAStr string) const
 	@retval >0	this string is greater than specified string
 */
 // ---------------------------------------------------------------------
-SInt32 WinMBCString::CompareNoCase(const WinMBCString& other) const
+SInt32 MBCString::CompareNoCase(const MBCString& other) const
 {
-	return _mbsicmp(reinterpret_cast<const unsigned char*>(innerString.c_str()), reinterpret_cast<const unsigned char*>(other.innerString.c_str()));
+#if defined (WIN32)
+	return _tcsicmp(innerString.c_str(), other.innerString.c_str());
+#else
+	return strcasecmp(innerString.c_str(), other.innerString.c_str());
+#endif
 }
 
 // ---------------------------------------------------------------------
@@ -93,18 +108,30 @@ SInt32 WinMBCString::CompareNoCase(const WinMBCString& other) const
 	@retval >=0	index of found character.
 */
 // ---------------------------------------------------------------------
-SInt32 WinMBCString::Find(AChar character, SInt32 startIndex /* = 0 */) const
+SInt32 MBCString::Find(AChar character, SInt32 startIndex /* = 0 */) const
 {
-	const unsigned char* target = reinterpret_cast<const unsigned char*>(innerString.c_str() + startIndex);
-	const unsigned char* found = _mbschr(target, static_cast<unsigned char>(character));
+#if defined (WIN32)
+	const TCHAR* target = innerString.c_str() + startIndex;
+	const TCHAR* found = _tcschr(target, character);
 	if (NULL == found)
 	{
 		return -1;
 	}
 	else
 	{
-		return found - target + startIndex;
+		return static_cast<SInt32>(found - target + startIndex);
 	}
+#else
+	string::size_type ret = innerString.find(character, startIndex);
+	if (string::npos == ret)
+	{
+		return -1;
+	}
+	else
+	{
+		return ret;
+	}
+#endif
 }
 
 // ---------------------------------------------------------------------
@@ -114,18 +141,30 @@ SInt32 WinMBCString::Find(AChar character, SInt32 startIndex /* = 0 */) const
 	@retval >=0	index of first character of found string.
 */
 // ---------------------------------------------------------------------
-SInt32 WinMBCString::Find(ConstAStr string, SInt32 startIndex /* = 0 */) const
+SInt32 MBCString::Find(ConstAStr string, SInt32 startIndex /* = 0 */) const
 {
-	const unsigned char* target = reinterpret_cast<const unsigned char*>(innerString.c_str() + startIndex);
-	const unsigned char* found = _mbsstr(target, reinterpret_cast<const unsigned char*>(string));
+#if defined (WIN32)
+	const TCHAR* target = innerString.c_str() + startIndex;
+	const TCHAR* found = _tcsstr(target, string);
 	if (NULL == found)
 	{
 		return -1;
 	}
 	else
 	{
-		return found - target + startIndex;
+		return static_cast<SInt32>(found - target + startIndex);
 	}
+#else
+	string::size_type ret = innerString.find(string, startIndex);
+	if (string::npos == ret)
+	{
+		return -1;
+	}
+	else
+	{
+		return ret;
+	}
+#endif
 }
 
 // ---------------------------------------------------------------------
@@ -135,18 +174,30 @@ SInt32 WinMBCString::Find(ConstAStr string, SInt32 startIndex /* = 0 */) const
 	@retval >=0	index of first character of found string.
 */
 // ---------------------------------------------------------------------
-SInt32 WinMBCString::Find(const WinMBCString& other, SInt32 startIndex /* = 0 */) const
+SInt32 MBCString::Find(const MBCString& other, SInt32 startIndex /* = 0 */) const
 {
-	const unsigned char* target = reinterpret_cast<const unsigned char*>(innerString.c_str() + startIndex);
-	const unsigned char* found = _mbsstr(target, reinterpret_cast<const unsigned char*>(other.innerString.c_str()));
+#if defined (WIN32)
+	const TCHAR* target = innerString.c_str() + startIndex;
+	const TCHAR* found = _tcsstr(target, other.innerString.c_str());
 	if (NULL == found)
 	{
 		return -1;
 	}
 	else
 	{
-		return found - target + startIndex;
+		return static_cast<SInt32>(found - target + startIndex);
 	}
+#else
+	string::size_type ret = innerString.find(other.innerString, startIndex);
+	if (string::npos == ret)
+	{
+		return -1;
+	}
+	else
+	{
+		return ret;
+	}
+#endif
 }
 
 // ---------------------------------------------------------------------
@@ -156,16 +207,28 @@ SInt32 WinMBCString::Find(const WinMBCString& other, SInt32 startIndex /* = 0 */
 	@retval >=0	index of found character.
 */
 // ---------------------------------------------------------------------
-SInt32 WinMBCString::RFind(AChar character) const
+SInt32 MBCString::RFind(AChar character) const
 {
-	const unsigned char* target = reinterpret_cast<const unsigned char*>(innerString.c_str());
-	const unsigned char* found = _mbsrchr(target, static_cast<unsigned char>(character));
+#if defined (WIN32)
+	const TCHAR* target = innerString.c_str();
+	const TCHAR* found = _tcsrchr(target, character);
 	if (NULL == found)
 	{
 		return -1;
 	}
 	else
 	{
-		return found - target;
+		return static_cast<SInt32>(found - target);
 	}	
+#else
+	string::size_type ret = innerString.rfind(character);
+	if (string::npos == ret)
+	{
+		return -1;
+	}
+	else
+	{
+		return ret;
+	}
+#endif
 }

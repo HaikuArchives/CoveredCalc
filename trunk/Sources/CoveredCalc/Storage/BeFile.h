@@ -58,7 +58,8 @@ public:
 	
 	UInt32				GetSize() const;
 
-	static ConstAStr	GetLineBreak() { return "\n"; }
+	static ConstAStr	GetLineBreak() { return ALITERAL("\n"); }
+	static ConstSStr	GetLineBreakS() { return "\n"; }
 	static void			Remove(const Path& filePath);
 
 private:

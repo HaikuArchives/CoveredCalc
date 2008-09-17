@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -29,8 +29,8 @@
 #include "Prefix.h"
 #include "HrnException.h"
 
-static char _NoMessageToReport_[] = "内部エラーが発生しました。";
-static char _OutOfMemory_[] = "メモリが不足しています。";
+static TCHAR _NoMessageToReport_[] = _T("内部エラーが発生しました。");
+static TCHAR _OutOfMemory_[] = _T("メモリが不足しています。");
 
 static CHrnMemoryException _TheUniqueMemoryException_;
 
@@ -68,7 +68,7 @@ CHrnException::~CHrnException()
 // 作成:	Hironori Ichimiya / 1999.5.3
 // 特記事項:	
 // -------------------------------------------------------
-LPCSTR CHrnException::GetErrorMessage()
+LPCTSTR CHrnException::GetErrorMessage()
 {
 	return _NoMessageToReport_;
 }
@@ -122,7 +122,7 @@ CHrnMemoryException::~CHrnMemoryException()
 // 作成:	Hironori Ichimiya / 1999.5.3
 // 特記事項:	
 // -------------------------------------------------------
-LPCSTR CHrnMemoryException::GetErrorMessage()
+LPCTSTR CHrnMemoryException::GetErrorMessage()
 {
 	return _OutOfMemory_;
 }

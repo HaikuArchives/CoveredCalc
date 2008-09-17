@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -141,12 +141,12 @@ void WinCoverBrowser::setDataToListUI()
 		item.mask = LVIF_TEXT | LVIF_PARAM;
 		item.iItem = index;
 		item.lParam = reinterpret_cast<LPARAM>(*iterator);
-		item.pszText = const_cast<LPSTR>(text.CString());
+		item.pszText = const_cast<LPTSTR>(text.CString());
 		int itemIndex = ListView_InsertItem(listWnd, &item);
 		
 		// ê‡ñæ
 		UTF8Conv::ToMultiByte(text, (*iterator)->GetDescription());
-		ListView_SetItemText(listWnd, itemIndex, 1, const_cast<LPSTR>(text.CString()));		
+		ListView_SetItemText(listWnd, itemIndex, 1, const_cast<LPTSTR>(text.CString()));		
 	}
 }
 
@@ -289,12 +289,12 @@ LRESULT WinCoverBrowser::onInitDialog(
 		
 		// -- ñºëO
 		messageProvider->GetMessage(IDS_COVER_BROWSER_COLUMN_NAME, columnName);
-		column.pszText = const_cast<LPSTR>(columnName.CString());
+		column.pszText = const_cast<LPTSTR>(columnName.CString());
 		ListView_InsertColumn(listWnd, 0, &column);
 		
 		// -- ê‡ñæ
 		messageProvider->GetMessage(IDS_COVER_BROWSER_COLUMN_DESCRIPTION, columnName);
-		column.pszText = const_cast<LPSTR>(columnName.CString());
+		column.pszText = const_cast<LPTSTR>(columnName.CString());
 		ListView_InsertColumn(listWnd, 1, &column);
 
 		// ÉJÉâÉÄïùÇÃí≤êÆ

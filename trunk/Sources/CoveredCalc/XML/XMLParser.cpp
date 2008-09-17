@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -36,6 +36,7 @@
 #include "XMLParseException.h"
 #include "XMLEventHandler.h"
 #include "MemoryException.h"
+#include "UTF8Conv.h"
 
 // ---------------------------------------------------------------------
 //! Constructor
@@ -168,8 +169,10 @@ void XMLParser::throwNewXMLParseExcepton()
 	{
 		SInt32 line = GetCurrentLineNumber();
 		SInt32 column = GetCurrentColumnNumber();
-		ConstAStr message = GetErrorString();
-		throw new XMLParseException(line, column, message);
+		ConstUTF8Str message = GetErrorString();
+		MBCString mbcMessage;
+		UTF8Conv::ToMultiByte(mbcMessage, message);
+		throw new XMLParseException(line, column, mbcMessage);
 	}
 	else
 	{
@@ -221,11 +224,11 @@ XML_Error XMLParser::GetErrorCode()
 	@return error string.
 */
 // ---------------------------------------------------------------------
-ConstAStr XMLParser::GetErrorString(
+ConstUTF8Str XMLParser::GetErrorString(
 	XML_Error code			//!< error code
 )
 {
-	return ::XML_ErrorString(code);
+	return TypeConv::AsUTF8(::XML_ErrorString(code));
 }
 
 // ---------------------------------------------------------------------

@@ -297,7 +297,7 @@ void EditKeymapDlg::processKeyInputChanged()
 			SInt32 func = keyMappingManager.GetFunction(keyParam);
 			if (KeyFuncOperation::KeyFunc_None == func)
 			{
-				assignedFuncEdit->SetText("");
+				assignedFuncEdit->SetText(ALITERAL(""));
 			}
 			else
 			{
@@ -317,7 +317,7 @@ void EditKeymapDlg::processKeyInputChanged()
 				}
 				if (!found)
 				{
-					assignedFuncEdit->SetText("");
+					assignedFuncEdit->SetText(ALITERAL(""));
 				}
 			}
 		}

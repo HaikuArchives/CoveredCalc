@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -47,7 +47,7 @@ public:
 	virtual				~MessageFormatException() { }
 	
 	virtual	ConstAStr	GetErrorMessage() const
-							{ return "Message format error."; }
+							{ return ALITERAL("Message format error."); }
 	virtual ConstAStr	GetErrorFormat() const
 							{ return format; }
 

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -96,13 +96,13 @@ void ExceptionMessageGenerator::GetMessageString(
 			catch (Exception* ex3)
 			{
 				ex3->Delete();
-				message = "An error has occurred.";			
+				message = ALITERAL("An error has occurred.");			
 			}
 
 			ConstAStr errorMessage = ex->GetErrorMessage();
-			if (NULL != errorMessage && '\0' != errorMessage[0])
+			if (NULL != errorMessage && ALITERAL('\0') != errorMessage[0])
 			{
-				message += "\n";
+				message += ALITERAL("\n");
 				message += errorMessage;
 			}
 		}
@@ -330,7 +330,7 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		if (NULL != myExceptionVF)
 		{
 			Exception* innerException = ex->GetInnerException();
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_VALIDATION_FAILED, (NULL != innerException) ? innerException->GetErrorMessage() : "");			
+			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_VALIDATION_FAILED, (NULL != innerException) ? innerException->GetErrorMessage() : ALITERAL(""));
 			resolved = true;
 		}
 	}
@@ -670,8 +670,8 @@ bool ExceptionMessageGenerator::processPathException(
 			ConstAStr basePath = myExceptionRPNE->GetBase();
 
 			uiMessageProvider->GetNFormatMessage(message, IDS_EMSG_PATH_MAKE_RELATIVE,
-											(target) ? target : "",
-											(basePath) ? basePath : "");
+											(target) ? target : ALITERAL(""),
+											(basePath) ? basePath : ALITERAL(""));
 			resolved = true;
 		}
 	}

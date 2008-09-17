@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -33,9 +33,9 @@
 #include "Prefix.h"
 #include "CommandLineParam.h"
 
-static const AChar ParamSettingFileShort[]	= "f";
-static const AChar ParamSettingFileLong[] = "-setting-file";
-static const AChar ParamSettingLangFileLong[] = "-language-file";
+static const AChar ParamSettingFileShort[]	= ALITERAL("f");
+static const AChar ParamSettingFileLong[] = ALITERAL("-setting-file");
+static const AChar ParamSettingLangFileLong[] = ALITERAL("-language-file");
 
 /**
  *	@brief	Constructor
@@ -82,12 +82,13 @@ void CommandLineParam::SetParameter(
 		}
 		else if ('-' == currentArg[0])	// parameter switch
 		{
-			if (0 == strcmp(&currentArg[1], ParamSettingFileShort) ||
-					0 == strcmp(&currentArg[1], ParamSettingFileLong))
+			MBCString paramArg = currentArg[1];
+			if (0 == paramArg.Compare(ParamSettingFileShort) ||
+					0 == paramArg.Compare(ParamSettingFileLong))
 			{
 				currentSwitch = ParamSwitch_SettingFile;
 			}
-			else if (0 == strcmp(&currentArg[1], ParamSettingLangFileLong))
+			else if (0 == paramArg.Compare(ParamSettingLangFileLong))
 			{
 				currentSwitch = ParamSwitch_LangFile;
 			}

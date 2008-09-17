@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -50,13 +50,17 @@ typedef double				Float64;	//!< 64bit IEEE float
 
 typedef unsigned char		Byte;		//!< for byte sequence buffer
 
-typedef char				AChar;		//!< ASCII character
-typedef AChar*				AStr;		//!< string which consists of ASCII characters
-typedef const AChar*		ConstAStr;	//!< read-only string consists of ASCII characters
+typedef char				SChar;		//!< single byte character
+typedef SChar*				SStr;		//!< string which consists of single byte characters
+typedef const SChar*		ConstSStr;	//!< read-only string consists of single byte characters
 
-// WChar
-// WStr
-// ConstWStr
+#if defined (WIN32)
+typedef TCHAR				AChar;		//!< native encode character
+#else
+typedef char				AChar;		//!< native encode character
+#endif
+typedef AChar*				AStr;		//!< string which consists of native encode characters
+typedef const AChar*		ConstAStr;	//!< read-only string consists of native encode characters
 
 typedef unsigned char		UTF8Char;	//!< UTF-8 character
 typedef UTF8Char*			UTF8Str;	//!< string which consists of UTF-8 characeters
@@ -86,11 +90,31 @@ typedef struct {
 #define strcasecmp		_stricmp
 #define snprintf		_snprintf
 #define vsnprintf		_vsnprintf
+
+#define stscanf			_stscanf
+#define tcslen			_tcslen
+#define tcschr			_tcschr
+#define ttoi			_ttoi
+#define sntprintf		_sntprintf
+#define vsntprintf		_vsntprintf
 #endif
 
 #if defined (BEOS)
 #define min(a, b)  (((a) < (b)) ? (a) : (b)) 
 #define max(a, b)  (((a) > (b)) ? (a) : (b)) 
+
+#define stscanf			sscanf
+#define tcslen			strlen
+#define tcschr			strchr
+#define ttoi			atoi
+#define sntprintf		snprintf
+#define vsntprintf		vsnprintf
+#endif
+
+#if defined (WIN32)
+#define ALITERAL(x)	_T(x)
+#else
+#define ALITERAL(x)	x
 #endif
 
 #endif // _PORTDEFS_H_

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -61,7 +61,7 @@ namespace LangFileExceptions
 		virtual				~LoadFailed() { }
 
 		virtual	ConstAStr	GetErrorMessage() const
-								{ return "Failed to load a language file."; }
+								{ return ALITERAL("Failed to load a language file."); }
 
 		const Path&			GetFileName() const	{ return fileName; }
 		ConstAStr			GetMessage() const { return message; }

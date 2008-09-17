@@ -64,7 +64,7 @@ static UTF8Char	Tag_CoveredCalcSettings[]		= "coveredcalcSettings";
 #endif	// defined(ZETA)
 	static UTF8Char	Key_KeymapPath[]				= "keymapFile";
 
-const Path AppSettings::Value_LangFileBuiltIn("#Built-In#");
+const Path AppSettings::Value_LangFileBuiltIn(ALITERAL("#Built-In#"));
 
 // ---------------------------------------------------------------------
 //! Constructor
@@ -249,7 +249,7 @@ void AppSettings::Load(
 void AppSettings::loadDefaultToMember()
 {
 	baseFolder.Empty();
-	lastCoverDef = Path("Covers").Append("default").Append("CoverDef.xml");
+	lastCoverDef = Path(ALITERAL("Covers")).Append(ALITERAL("default")).Append(ALITERAL("CoverDef.xml"));
 	lastCoverNo = 0;
 	lastMainWindowPos.x = lastMainWindowPos.y = 100;
 	lastCoverBrowserPos.x = lastCoverBrowserPos.y = 200;
