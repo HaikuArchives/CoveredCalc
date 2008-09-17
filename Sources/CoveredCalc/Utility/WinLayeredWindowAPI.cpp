@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -33,6 +33,7 @@
 #define WINVER			0x0500
 #define _WIN32_WINNT	0x0500
 #include <windows.h>
+#include <tchar.h>
 #include "WinLayeredWindowAPI.h"
 
 DWORD WinLayeredWindowAPI::cWS_EX_LAYERED = WS_EX_LAYERED;
@@ -62,7 +63,7 @@ void WinLayeredWindowAPI::Initialize()
 {
 	Terminate();
 	
-	hDLLUser32 = ::LoadLibrary("user32.dll");
+	hDLLUser32 = ::LoadLibrary(_T("user32.dll"));
 	if (NULL != hDLLUser32)
 	{
 		pfnUpdateLayeredWindow = reinterpret_cast<PFN_UpdateLayeredWindow>(GetProcAddress(hDLLUser32, "UpdateLayeredWindow"));

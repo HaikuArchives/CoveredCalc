@@ -56,11 +56,11 @@
 #include <Path.h>
 #endif	// defined (BEOS)
 
-const AChar STR_USER_KEYMAP_PREFIX[] = "User";
+const AChar STR_USER_KEYMAP_PREFIX[] = ALITERAL("User");
 #if defined (WIN32)
-const AChar STR_USER_KEYMAP_POSTFIX[] = ".cckxw";
+const AChar STR_USER_KEYMAP_POSTFIX[] = ALITERAL(".cckxw");
 #elif defined (BEOS)
-const AChar STR_USER_KEYMAP_POSTFIX[] = ".cckxb";
+const AChar STR_USER_KEYMAP_POSTFIX[] = ALITERAL(".cckxb");
 #endif
 
 /**
@@ -210,11 +210,11 @@ void PreferencesDlg::loadKeyMappingsInfos()
 	unloadKeyMappingsInfos();
 	
 	// load files in ${AppKeymaps} folder.
-	Path virtualAppKeymaps("${" VPATH_APP_KEYMAPS "}");
+	Path virtualAppKeymaps(ALITERAL("${") VPATH_APP_KEYMAPS ALITERAL("}"));
 	loadKeyMappingsInfosInFolder(virtualAppKeymaps, KMCategory_Application);
 	
 	// load files in ${UserKeymaps} folder.
-	Path virtualUserKeymaps("${" VPATH_USER_KEYMAPS "}");
+	Path virtualUserKeymaps(ALITERAL("${") VPATH_USER_KEYMAPS ALITERAL("}"));
 	loadKeyMappingsInfosInFolder(virtualUserKeymaps, KMCategory_User);
 	
 	// sort
@@ -231,7 +231,7 @@ void PreferencesDlg::loadKeyMappingsInfosInFolder(const Path& virtualFolderPath,
 	Path folder = CoveredCalcApp::GetInstance()->ExpandVirtualPath(virtualFolderPath);
 
 #if defined (WIN32)
-	Path findPath = folder.Append("*.cckxw");
+	Path findPath = folder.Append(ALITERAL("*.cckxw"));
 	WIN32_FIND_DATA findData;
 	HANDLE hFind = ::FindFirstFile(findPath.GetPathString(), &findData);
 	if (INVALID_HANDLE_VALUE != hFind)
@@ -261,7 +261,7 @@ void PreferencesDlg::loadKeyMappingsInfosInFolder(const Path& virtualFolderPath,
 			{
 				entry.GetName(filename);
 				SInt32 length = strlen(filename);
-				if (6 < length && 0 == strcmp(filename + length - 6, ".cckxb"))
+				if (6 < length && 0 == strcmp(filename + length - 6, ALITERAL(".cckxb")))
 				{
 					BPath bpath;
 					entry.GetPath(&bpath);
@@ -419,7 +419,7 @@ void PreferencesDlg::doDuplicateKeyMapping()
 		keyMappings.SetTitle(title);
 		
 		// store to new file.
-		Path virtualUserKeymaps("${" VPATH_USER_KEYMAPS "}");
+		Path virtualUserKeymaps(ALITERAL("${") VPATH_USER_KEYMAPS ALITERAL("}"));
 		Path folderPath = CoveredCalcApp::GetInstance()->ExpandVirtualPath(virtualUserKeymaps);
 		StorageUtils::ReadyFolder(folderPath);
 		Path filePath = createUniqueUserKeyMappingFile(folderPath);
@@ -451,7 +451,7 @@ Path PreferencesDlg::createUniqueUserKeyMappingFile(const Path& folderPath)
 	for (retryCount = 0; retryCount < 64; retryCount++)
 	{
 		AChar buf[64];
-		sprintf(buf, "%s%lx%s", STR_USER_KEYMAP_PREFIX, num, STR_USER_KEYMAP_POSTFIX);
+		sntprintf(buf, sizeof(buf)/sizeof(AChar), ALITERAL("%s%lx%s"), STR_USER_KEYMAP_PREFIX, num, STR_USER_KEYMAP_POSTFIX);
 		Path filePath = folderPath.Append(buf);
 		try
 		{

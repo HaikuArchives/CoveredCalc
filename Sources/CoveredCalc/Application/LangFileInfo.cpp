@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -73,12 +73,12 @@ void LangFileInfoCollection::Load(
 	// add Japanese resource (default)
 	LangFileInfo* japaneseInfo = new LangFileInfo();
 	japaneseInfo->SetPath(Path());
-	japaneseInfo->SetLanguageName("Japanese");
+	japaneseInfo->SetLanguageName(ALITERAL("Japanese"));
 	japaneseInfo->SetLangID(MAKELANGID(LANG_JAPANESE, SUBLANG_DEFAULT));
 	langFileInfos.push_back(japaneseInfo);
 	
 	// add information of language files.
-	Path findPath = langFileFolder.Append("*.cclw");
+	Path findPath = langFileFolder.Append(ALITERAL("*.cclw"));
 	WIN32_FIND_DATA findData;
 	HANDLE hFind = ::FindFirstFile(findPath.GetPathString(), &findData);
 	if (NULL != hFind)
@@ -139,7 +139,7 @@ void LangFileInfoCollection::Load(
 			{
 				entry.GetName(filename);
 				SInt32 length = strlen(filename);
-				if (6 < length && 0 == strcmp(filename + length - 6, ".cclxb"))
+				if (6 < length && 0 == strcmp(filename + length - 6, ALITERAL(".cclxb")))
 				{
 					if (0 != strcmp(filename, "enUS.cclxb"))	// built-in language file is already added
 					{

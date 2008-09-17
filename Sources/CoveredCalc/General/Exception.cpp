@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -34,7 +34,7 @@
 #include "Exception.h"
 
 //! default error message
-static char* TheDefaultErrorMessage = "Error has occured.";
+static ConstAStr TheDefaultErrorMessage = ALITERAL("Error has occured.");
 
 // ---------------------------------------------------------------------
 //! Constructor

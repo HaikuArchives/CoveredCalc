@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -228,7 +228,7 @@ void KeyMappings::checkDocument(NCDDocument* document)
 	NCDElement* apexElem = document->getDocumentElement();
 	if (NULL == apexElem)
 	{
-		throw new KeyMappingsExceptions::LoadFailed("missing apex element.");
+		throw new KeyMappingsExceptions::LoadFailed(ALITERAL("missing apex element."));
 	}
 	
 	checkApexElement(apexElem);
@@ -244,7 +244,7 @@ void KeyMappings::checkApexElement(NCDElement* apexElement)
 	apexElement->getTagName(name);
 	if (0 != name.Compare(STR_ELEMENT_KEY_MAPPINGS))
 	{
-		throw new KeyMappingsExceptions::LoadFailed("not a key-mappings file.");
+		throw new KeyMappingsExceptions::LoadFailed(ALITERAL("not a key-mappings file."));
 	}
 	
 	// check version
@@ -253,7 +253,7 @@ void KeyMappings::checkApexElement(NCDElement* apexElement)
 	SInt32 numVersion = atoi(TypeConv::AsASCII(version));
 	if (0 == numVersion || Version_Current < numVersion)
 	{
-		throw new KeyMappingsExceptions::LoadFailed("unsupported version.");
+		throw new KeyMappingsExceptions::LoadFailed(ALITERAL("unsupported version."));
 	}
 }
 

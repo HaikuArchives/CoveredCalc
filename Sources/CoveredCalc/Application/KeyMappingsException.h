@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -60,7 +60,7 @@ namespace KeyMappingsExceptions
 		virtual				~NotReady() { }
 
 		virtual	ConstAStr	GetErrorMessage() const
-								{ return "Key-mappings is not ready yet."; }
+								{ return ALITERAL("Key-mappings is not ready yet."); }
 	};
 
 	/**
@@ -74,7 +74,7 @@ namespace KeyMappingsExceptions
 		virtual				~LoadFailed() { }
 
 		virtual	ConstAStr	GetErrorMessage() const
-								{ return "Failed to load a key-mappings file."; }
+								{ return ALITERAL("Failed to load a key-mappings file."); }
 
 		ConstAStr			GetMessage() const { return message; }
 

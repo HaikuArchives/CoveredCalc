@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -196,6 +196,8 @@ void CoverDefParser::readTextNode(
 	{
 		MBCString languageString;
 		CoveredCalcApp::GetInstance()->GetCurrentLanguageCode(languageString);
+		UTF8String languageStringUtf8;
+		UTF8Conv::FromMultiByte(languageStringUtf8, languageString.CString());
 		if (!languageString.IsEmpty())
 		{
 			DOMUtils::NCDNodeVector languageNodeVector;
@@ -208,7 +210,7 @@ void CoverDefParser::readTextNode(
 				{
 					UTF8String langAttr;
 					DOMUtils::GetAttrValueIgnoreCase(language, TypeConv::AsUTF8("lang"), langAttr);
-					if (0 == UTF8Utils::UTF8StrCmpI(TypeConv::AsUTF8(languageString.CString()), langAttr.CString()))
+					if (0 == UTF8Utils::UTF8StrCmpI(languageStringUtf8.CString(), langAttr.CString()))
 					{
 						DOMUtils::NCDNodeVector altTextNodeVector;
 						DOMUtils::GetAllMatchNode(language, TypeConv::AsUTF8("altText"), true, altTextNodeVector);

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -38,7 +38,7 @@ public:
 	CHrnException( BOOL bAutoDelete );
 	virtual ~CHrnException();
 
-	virtual LPCSTR GetErrorMessage();
+	virtual LPCTSTR GetErrorMessage();
 	void Delete();
 
 protected:
@@ -52,7 +52,7 @@ public:
 	CHrnMemoryException();
 	virtual ~CHrnMemoryException();
 
-	LPCSTR GetErrorMessage();
+	LPCTSTR GetErrorMessage();
 };
 
 void ThrowHrnMemoryException();

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -181,7 +181,7 @@ CalcCore::StorageNumber CalcCore::stringToValue(
 	switch(form)
 	{
 	case DigitForm_10:
-		if (1 != sscanf(str, "%lf", &(val.decimal)))
+		if (1 != stscanf(str, ALITERAL("%lf"), &(val.decimal)))
 		{
 			val.decimal = 0.0;
 		}
@@ -209,7 +209,7 @@ CalcCore::StorageNumber CalcCore::stringToValue(
 }
 
 /**
- *	@brief	Concverts from specified string to unsigned long interger
+ *	@brief	Converts from specified string to unsigned long interger
  *	@return	converted integer.
  */
 UInt32 CalcCore::stringToValueUInt(
@@ -217,8 +217,12 @@ UInt32 CalcCore::stringToValueUInt(
 	SInt32 base			///< base number.
 ) const
 {
-	char* end = NULL;
+	AStr end = NULL;
+#if defined (WIN32)
+	UInt32 ret = _tcstoul(str, &end, base);
+#else
 	UInt32 ret = strtoul(str, &end, base);
+#endif
 	if (end == str)
 	{
 		ret = 0;
@@ -279,14 +283,14 @@ void CalcCore::valueToString10(
 	// It has 15-16 significant digits.
 	// 1 of 15 digits is for rounding, so the calc can accept 14 digits.
 	// 14 minus the minimum length of the integer part (=1) equals maximum length of the fractional part (=13) 
-	snprintf( buf, sizeof(buf)/sizeof(AChar), "%.13f", val.decimal );
-	buf[sizeof(buf)-1] = '\0';
+	sntprintf( buf, sizeof(buf)/sizeof(AChar), ALITERAL("%.13f"), val.decimal );
+	buf[sizeof(buf)/sizeof(AChar)-1] = ALITERAL('\0');
 	// trim right 0s
-	for(frcNum=static_cast<SInt32>(strlen(buf))-1; '0'==buf[frcNum]; frcNum--);
-	buf[frcNum+1] = '\0';
+	for(frcNum=static_cast<SInt32>(tcslen(buf))-1; ALITERAL('0')==buf[frcNum]; frcNum--);
+	buf[frcNum+1] = ALITERAL('\0');
 
 	for(intNum=0; '.'!=buf[intNum]; intNum++);		// count the length of the integer part
-	frcNum = static_cast<SInt32>(strlen( &buf[intNum+1] ));				// count the length of the fractional part
+	frcNum = static_cast<SInt32>(tcslen( &buf[intNum+1] ));				// count the length of the fractional part
 #if 0	// Bug-12 minus sign may not be displayed.
 		// why did I check this before?
 	if ('-' == buf[0])
@@ -305,28 +309,30 @@ void CalcCore::valueToString10(
 	// sprintf again for auto rounding
 	if (0 >= frcNum)
 	{
-		sprintf(format, "%%%u.0f.", static_cast<unsigned>(maxDispLength) - 1);
+		sntprintf(format, sizeof(format)/sizeof(AChar), ALITERAL("%%%u.0f."), static_cast<unsigned>(maxDispLength) - 1);
 	}
 	else
 	{
-		sprintf( format, "%%%u.%df", static_cast<unsigned>(maxDispLength), static_cast<int>(frcNum) );
+		sntprintf(format, sizeof(format)/sizeof(AChar), ALITERAL("%%%u.%df"), static_cast<unsigned>(maxDispLength), static_cast<int>(frcNum) );
 	}
-	sprintf( str, format, val );
+	format[sizeof(format)/sizeof(AChar)-1] = ALITERAL('\0');
+	sntprintf(str, 33, format, val);
+	str[32] = ALITERAL('\0');
 	if (0 < frcNum)
 	{
 		// trim right 0s
 		SInt32 count = 0;
 		count = 0;
-		SInt32 length = static_cast<SInt32>(strlen(str));
+		SInt32 length = static_cast<SInt32>(tcslen(str));
 		SInt32 index;
-		for (index=length-1; '0'==str[index]; index--)
+		for (index=length-1; ALITERAL('0')==str[index]; index--)
 			count++;
 		
 		if (count > 0)
 		{
 			memmove(str + count, str, (length - count) * sizeof(AChar));
 			for (index=0; index<count; index++)
-				str[index] = ' ';
+				str[index] = ALITERAL(' ');
 		}
 	}
 }
@@ -343,12 +349,12 @@ void CalcCore::valueToStringUInt(
 {
 	memset(str, ' ', maxDispLength);
 	AChar* curPos = str + maxDispLength;
-	*curPos = '\0';
+	*curPos = ALITERAL('\0');
 	curPos--;
 	
 	if (val == 0)
 	{
-		*curPos = '0';
+		*curPos = ALITERAL('0');
 		return;
 	}
 	
@@ -363,11 +369,11 @@ void CalcCore::valueToStringUInt(
 		val /= base;
 		if (digit > 9)
 		{
-			*curPos = static_cast<AChar>('A' + digit - 10);
+			*curPos = static_cast<AChar>(ALITERAL('A') + digit - 10);
 		}
 		else
 		{
-			*curPos = static_cast<AChar>('0' + digit);
+			*curPos = static_cast<AChar>(ALITERAL('0') + digit);
 		}
 		curPos--;
 	}
@@ -544,7 +550,7 @@ void CalcCore::calculateCurrentInput()
 	}
 	
 	checkOverFlow(currentStorage);
-	inputedString[0] = '\0';
+	inputedString[0] = ALITERAL('\0');
 	inputedLength = 0;
 	isPointMode = false;
 }
@@ -561,7 +567,7 @@ static void TrimLeftSpace(AStr string)
 	}
 	if (curPos != string)
 	{
-		memmove(string, curPos, (strlen(curPos) + 1) * sizeof(AChar));
+		memmove(string, curPos, (tcslen(curPos) + 1) * sizeof(AChar));
 	}	
 }
 
@@ -620,8 +626,8 @@ void CalcCore::Put(
 				{
 					inputedLength--;
 				}
-				inputedString[inputedLength++] = static_cast<AChar>(value + ((value > 9) ? 'A' - 10 : '0'));
-				inputedString[inputedLength] = '\0';
+				inputedString[inputedLength++] = static_cast<AChar>(value + ((value > 9) ? ALITERAL('A') - 10 : ALITERAL('0')));
+				inputedString[inputedLength] = ALITERAL('\0');
 				displayInputting();
 			}
 			break;
@@ -636,10 +642,10 @@ void CalcCore::Put(
 			}
 			if (0 == inputedLength)
 			{
-				inputedString[inputedLength++] = '0';
+				inputedString[inputedLength++] = ALITERAL('0');
 			}
-			inputedString[inputedLength++] = '.';
-			inputedString[inputedLength] = '\0';
+			inputedString[inputedLength++] = ALITERAL('.');
+			inputedString[inputedLength] = ALITERAL('\0');
 			isPointMode = true;
 			displayInputting();
 			break;		
@@ -661,7 +667,7 @@ void CalcCore::Put(
 			{
 				isPointMode = false;
 			}		
-			inputedString[--inputedLength] = '\0';
+			inputedString[--inputedLength] = ALITERAL('\0');
 			displayInputting();
 			break;
 		case Key_Equal:
@@ -745,16 +751,16 @@ void CalcCore::handleNegate()
 				// Note: if value is rounded off, the length of integer part can be increase. it's no point.
 				//       (for example, 99.9999 can become 100.999.)
 				//       so here, just truncate the last fractional part.
-				inputedString[inputedLength - 1] = '\0';
+				inputedString[inputedLength - 1] = ALITERAL('\0');
 				inputedLength--;
 				while ('0' == inputedString[inputedLength - 1])		// example: if 2.506 becomes 2.50, then modify it to 2.5.
 				{
-					inputedString[inputedLength - 1] = '\0';
+					inputedString[inputedLength - 1] = ALITERAL('\0');
 					inputedLength--;
 				}
 				if ('.' == inputedString[inputedLength - 1])
 				{
-					inputedString[inputedLength - 1] = '\0';
+					inputedString[inputedLength - 1] = ALITERAL('\0');
 					inputedLength--;
 					isPointMode = false;
 				}
@@ -767,10 +773,10 @@ void CalcCore::handleNegate()
 		}
 
 		// handle special case: -0 is modified to 0.
-		if (inputedLength == 2 && inputedString[0] == '-' && inputedString[1] == '0')	// handle special case: modify -0 to 0
+		if (inputedLength == 2 && inputedString[0] == ALITERAL('-') && inputedString[1] == ALITERAL('0'))	// handle special case: modify -0 to 0
 		{
-			inputedString[0] = '0';
-			inputedString[1] = '\0';
+			inputedString[0] = ALITERAL('0');
+			inputedString[1] = ALITERAL('\0');
 			inputedLength = 1;
 		}
 	}
@@ -855,7 +861,7 @@ void CalcCore::displayInputting()
 	}
 	for( index=0; index<ctMax; index++ )
 	{
-		valueStr[index] = ' ';
+		valueStr[index] = ALITERAL(' ');
 	}
 
 	// set the value to display
@@ -866,17 +872,17 @@ void CalcCore::displayInputting()
 	}
 	if (0 == inputedLength)
 	{
-		valueStr[index++] = '0';
+		valueStr[index++] = ALITERAL('0');
 	}
 	// add the period if decimal form mode and value is integer
 	if ( DigitForm_10 == currentDigitForm)
 	{
 		if (!isPointMode)
 		{
-			valueStr[index++] = '.';
+			valueStr[index++] = ALITERAL('.');
 		}
 	}
-	valueStr[index] = '\0';
+	valueStr[index] = ALITERAL('\0');
 	
 	display->DisplayValue(valueStr);
 	currentDisplayNum = stringToValue(inputedString, currentDigitForm);
@@ -910,10 +916,10 @@ void CalcCore::inputFromNumber(
 {
 	valueToString(inputedString, number, currentDigitForm);
 	TrimLeftSpace(inputedString);
-	inputedLength = strlen(inputedString);
-	if ('.' == inputedString[inputedLength - 1])
+	inputedLength = tcslen(inputedString);
+	if (ALITERAL('.') == inputedString[inputedLength - 1])
 	{
-		inputedString[inputedLength - 1] = '\0';
+		inputedString[inputedLength - 1] = ALITERAL('\0');
 		inputedLength--;
 		isPointMode = false;					
 	}

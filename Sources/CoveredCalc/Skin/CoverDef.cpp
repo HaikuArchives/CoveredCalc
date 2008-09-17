@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -80,6 +80,6 @@ void CoverDef::Validate()
 {
 	if (0 >= coverInfos.size())
 	{
-		throw new CoverDefValidateException("The cover definition has no information about cover(s).");
+		throw new CoverDefValidateException(ALITERAL("The cover definition has no information about cover(s)."));
 	}
 }

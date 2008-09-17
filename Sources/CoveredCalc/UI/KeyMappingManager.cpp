@@ -164,9 +164,9 @@ void KeyMappingManager::WriteOut(KeyMappings* keyMappings, ConstUTF8Str category
 	SInt32 index;
 	for (index = 0; index < length; index++)
 	{
-		AChar buf[16];
-		sprintf(buf, "%02lX", mapping[index].KeyEventParam.GetKeyCode());
-		keyCode = TypeConv::AsUTF8(buf);
+		UTF8Char buf[16];
+		sprintf(TypeConv::AsASCII(buf), "%02lX", mapping[index].KeyEventParam.GetKeyCode());
+		keyCode = buf;
 		makeModifierMask(mapping[index].KeyEventParam.GetModifiers(), modifiers);
 		keyFuncOperation->KeyFuncToFuncName(mapping[index].Function, function);
 		KMRecordItem item(keyCode, modifiers, function);
@@ -181,48 +181,47 @@ void KeyMappingManager::WriteOut(KeyMappings* keyMappings, ConstUTF8Str category
  */
 UInt32 KeyMappingManager::analyzeModifierMask(ConstUTF8Str modifierMaskStr)
 {
-	ConstAStr maskStr = TypeConv::AsASCII(modifierMaskStr);
 	UInt32	mask = KeyEventParameter::ModifierMask_None;
 	
-	while ('\0' != maskStr[0])
+	while ('\0' != modifierMaskStr[0])
 	{
 		SInt32 length;
-		ConstAStr separator = strchr(maskStr, CHAR_MODIFIER_SEPARATOR);
+		ConstUTF8Str separator = TypeConv::AsUTF8(strchr(TypeConv::AsASCII(modifierMaskStr), CHAR_MODIFIER_SEPARATOR));
 		if (NULL == separator)
 		{
-			length = strlen(maskStr);
+			length = strlen(TypeConv::AsASCII(modifierMaskStr));
 		}
 		else
 		{
-			length = separator - maskStr;
+			length = separator - modifierMaskStr;
 		}
 #if defined (WIN32)
-		if (MODIFIER_SHIFT_LENGTH == length && 0 == memcmp(maskStr, STR_MODIFIER_SHIFT, MODIFIER_SHIFT_LENGTH))
+		if (MODIFIER_SHIFT_LENGTH == length && 0 == memcmp(modifierMaskStr, STR_MODIFIER_SHIFT, MODIFIER_SHIFT_LENGTH))
 		{
 			mask |= KeyEventParameter::ModifierMask_Shift;
 		}
-		else if (MODIFIER_CTRL_LENGTH == length && 0 == memcmp(maskStr, STR_MODIFIER_CTRL, MODIFIER_CTRL_LENGTH))
+		else if (MODIFIER_CTRL_LENGTH == length && 0 == memcmp(modifierMaskStr, STR_MODIFIER_CTRL, MODIFIER_CTRL_LENGTH))
 		{
 			mask |= KeyEventParameter::ModifierMask_Ctrl;
 		}
-		else if (MODIFIER_ALT_LENGTH == length && 0 == memcmp(maskStr, STR_MODIFIER_ALT, MODIFIER_ALT_LENGTH))
+		else if (MODIFIER_ALT_LENGTH == length && 0 == memcmp(modifierMaskStr, STR_MODIFIER_ALT, MODIFIER_ALT_LENGTH))
 		{
 			mask |= KeyEventParameter::ModifierMask_Alt;
 		}
 #elif defined (BEOS)
-		if (MODIFIER_SHIFT_LENGTH == length && 0 == memcmp(maskStr, STR_MODIFIER_SHIFT, MODIFIER_SHIFT_LENGTH))
+		if (MODIFIER_SHIFT_LENGTH == length && 0 == memcmp(modifierMaskStr, STR_MODIFIER_SHIFT, MODIFIER_SHIFT_LENGTH))
 		{
 			mask |= KeyEventParameter::ModifierMask_Shift;
 		}
-		else if (MODIFIER_COMMAND_LENGTH == length && 0 == memcmp(maskStr, STR_MODIFIER_COMMAND, MODIFIER_COMMAND_LENGTH))
+		else if (MODIFIER_COMMAND_LENGTH == length && 0 == memcmp(modifierMaskStr, STR_MODIFIER_COMMAND, MODIFIER_COMMAND_LENGTH))
 		{
 			mask |= KeyEventParameter::ModifierMask_Command;
 		}
-		else if (MODIFIER_CONTROL_LENGTH == length && 0 == memcmp(maskStr, STR_MODIFIER_CONTROL, MODIFIER_CONTROL_LENGTH))
+		else if (MODIFIER_CONTROL_LENGTH == length && 0 == memcmp(modifierMaskStr, STR_MODIFIER_CONTROL, MODIFIER_CONTROL_LENGTH))
 		{
 			mask |= KeyEventParameter::ModifierMask_Control;
 		}
-		else if (MODIFIER_OPTION_LENGTH == length && 0 == memcmp(maskStr, STR_MODIFIER_OPTION, MODIFIER_OPTION_LENGTH))
+		else if (MODIFIER_OPTION_LENGTH == length && 0 == memcmp(modifierMaskStr, STR_MODIFIER_OPTION, MODIFIER_OPTION_LENGTH))
 		{
 			mask |= KeyEventParameter::ModifierMask_Option;
 		}
@@ -230,11 +229,11 @@ UInt32 KeyMappingManager::analyzeModifierMask(ConstUTF8Str modifierMaskStr)
 		
 		if (NULL == separator)
 		{
-			maskStr += length;
+			modifierMaskStr += length;
 		}
 		else
 		{
-			maskStr += length + 1;
+			modifierMaskStr += length + 1;
 		}
 	}
 	

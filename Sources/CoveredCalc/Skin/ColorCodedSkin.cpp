@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -131,14 +131,24 @@ void ColorCodedSkin::Init(
 	@throw ColorCodedSkinExceptions::BadInitParams parameter is invalid.
 */
 // ---------------------------------------------------------------------
+/**
+ *	@brief	Checks the parameters specified in Init().
+ *	@param[in]	dibStore	an object which holds loaded bitmaps.
+ *	@param[in]	mapBitmap	the color-coded bitmap which has information about the location of parts in the skin. 
+ *	@param[in]	stateSkins	the vector which has appearances bitmap.
+ *	@param[in]	otherImages	a vector which has other bitmap.
+ *	@param[in]	colorAreas	the map object which maps color value to area ID.
+ *							note that the negative area ID is reserved so ID in the map should be zero or positive value.
+ */
 void ColorCodedSkin::checkInitParams(
-	DIBitmapStore* /*dibStore*/,				///< an object which holds loaded bitmaps.
-	const DIBitmap* mapBitmap,					//!< the color-coded bitmap which has information about the location of parts in the skin. 
-	const ConstDIBitmapVector* stateSkins,		//!< the vector which has appearances bitmap.
-	const ConstDIBitmapVector* /*otherImages*/,	//!< a vector which has other bitmap.
-	const ColorAreaMap* colorAreas				//!< the map object which maps color value to area ID.
-												/*!< note that the negative area ID is reserved so ID in the map
-													should be zero or positive value */
+	DIBitmapStore* /*dibStore*/,
+	const DIBitmap* mapBitmap,
+	const ConstDIBitmapVector* stateSkins,
+	const ConstDIBitmapVector* /*otherImages*/,
+	const ColorAreaMap* 
+#ifdef DEBUG
+						colorAreas
+#endif
 )
 {
 	SInt32 width  = mapBitmap->GetWidth();
@@ -166,8 +176,6 @@ void ColorCodedSkin::checkInitParams(
 			throw new ColorCodedSkinExceptions::BadInitParams();
 		}
 	}
-#else	// Release
-	colorAreas;	// avoid warning
 #endif
 }
 

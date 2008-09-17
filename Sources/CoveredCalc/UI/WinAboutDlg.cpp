@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -239,11 +239,11 @@ void WinAboutDlg::makeVersionString(
 	MBCString& versionString			//!< OUTPUT. ここに作成した文字列が返される
 )
 {
-	versionString = "Version ";
-	char fileName[MAX_PATH];
+	versionString = ALITERAL("Version ");
+	TCHAR fileName[MAX_PATH];
 
 	// ファイル名を取得
-	::GetModuleFileName(NULL, fileName, sizeof(fileName));
+	::GetModuleFileName(NULL, fileName, sizeof(fileName) / sizeof(TCHAR));
 
 	// 情報ブロックの実際のサイズを取得する
 	DWORD handle;
@@ -265,13 +265,13 @@ void WinAboutDlg::makeVersionString(
 					WORD wCodePage;
 				} *lpTranslate;
 				UINT translateLen;
-				if (::VerQueryValue(block, "\\VarFileInfo\\Translation", reinterpret_cast<LPVOID*>(&lpTranslate), &translateLen))
+				if (::VerQueryValue(block, _T("\\VarFileInfo\\Translation"), reinterpret_cast<LPVOID*>(&lpTranslate), &translateLen))
 				{
 					if (translateLen >= 1)
 					{
-						char subBlock[64];	// 本当はこんなにいらないけど、まあ余裕をみて。
-						wsprintf(subBlock, "\\StringFileInfo\\%04x%04x\\ProductVersion", lpTranslate[0].wLanguage, lpTranslate[0].wCodePage);
-						char* fileVersion;
+						TCHAR subBlock[64];	// 本当はこんなにいらないけど、まあ余裕をみて。
+						wsprintf(subBlock, _T("\\StringFileInfo\\%04x%04x\\ProductVersion"), lpTranslate[0].wLanguage, lpTranslate[0].wCodePage);
+						TCHAR* fileVersion;
 						UINT fileVersionLen;
 						if (::VerQueryValue(block, subBlock, reinterpret_cast<LPVOID*>(&fileVersion), &fileVersionLen))
 						{

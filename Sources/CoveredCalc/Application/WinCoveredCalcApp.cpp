@@ -48,9 +48,9 @@
 #include "VirtualPathNames.h"
 #include "WinMessageFilter.h"
 
-static const char LANG_CODE_JAJP[] = "jaJP";		///< language code for Japanese.
+static const AChar LANG_CODE_JAJP[] = ALITERAL("jaJP");		///< language code for Japanese.
 
-static const UTF8Char STR_PLATFORM_WINDOWS[] = "Windows";			///< keymap platform for Windows.
+static const UTF8Char STR_PLATFORM_WINDOWS[] = "Windows";	///< keymap platform for Windows.
 
 ////////////////////////////////////////
 #define base	CHrnApp
@@ -366,7 +366,7 @@ const Path& WinCoveredCalcApp::getUserSettingsPath()
 		if(S_OK == hResult)
 		{
 			// 得られた ITEMIDLIST からフォルダ名を取得
-			char pathString[MAX_PATH];
+			TCHAR pathString[MAX_PATH];
 			if (::SHGetPathFromIDList(pIdList, pathString))
 			{
 				path.Assign(pathString);
@@ -383,7 +383,7 @@ const Path& WinCoveredCalcApp::getUserSettingsPath()
 		}
 		if (!path.IsEmpty())
 		{
-			userSettingsPath = path.Append("Hironytic").Append("CoveredCalc");
+			userSettingsPath = path.Append(ALITERAL("Hironytic")).Append(ALITERAL("CoveredCalc"));
 		}
 		else
 		{
@@ -471,7 +471,7 @@ bool WinCoveredCalcApp::CheckPlatform(ConstUTF8Str platform)
 void WinCoveredCalcApp::loadKeyNameDB()
 {
 	Path keynameFile;
-	keynameFile.AssignFromSlashSeparated("${" VPATH_APP_KEYMAPS "}/keyname.ccknw");
+	keynameFile.AssignFromSlashSeparated(ALITERAL("${") VPATH_APP_KEYMAPS ALITERAL("}/keyname.ccknw"));
 	Path absolutePath = ExpandVirtualPath(keynameFile);
 	try
 	{
@@ -505,11 +505,11 @@ void WinCoveredCalcApp::loadKeyMappingsOnInit()
 		GetCurrentLanguageCode(langCode);
 		if (0 == langCode.Compare(LANG_CODE_JAJP))
 		{
-			keymapFile.AssignFromSlashSeparated("${" VPATH_APP_KEYMAPS "}/JapaneseJIS.cckxw");
+			keymapFile.AssignFromSlashSeparated(ALITERAL("${") VPATH_APP_KEYMAPS ALITERAL("}/JapaneseJIS.cckxw"));
 		}
 		else
 		{
-			keymapFile.AssignFromSlashSeparated("${" VPATH_APP_KEYMAPS "}/UsQWERTY.cckxw");
+			keymapFile.AssignFromSlashSeparated(ALITERAL("${") VPATH_APP_KEYMAPS ALITERAL("}/UsQWERTY.cckxw"));
 		}
 		appSettings->SetKeymapFilePath(keymapFile);
 	}
@@ -562,7 +562,7 @@ BOOL WinCoveredCalcApp::initInstance()
 
 	// コマンドラインパラメータ解析
 	CommandLineParam* clParam = GetCommandLineParam();
-	clParam->SetParameter(__argc, __argv);
+	clParam->SetParameter(__argc, __targv);
 
 	// 言語ファイルの読み込み
 	if (clParam->IsLangFileSpecified())
@@ -719,13 +719,13 @@ BOOL WinCoveredCalcApp::initInstance()
 		exStyle = WS_EX_TOPMOST;
 	}
 	const Point32& lastMainWindowPos = GetAppSettings()->GetLastMainWindowPos();
-	if (!mainWindow.CreateEx(exStyle, WinMainWindow::GetWindowClassName(), "CoveredCalc", WS_SYSMENU | WS_POPUP | WS_MINIMIZEBOX, lastMainWindowPos.x, lastMainWindowPos.y, 0, 0, NULL, NULL))
+	if (!mainWindow.CreateEx(exStyle, WinMainWindow::GetWindowClassName(), ALITERAL("CoveredCalc"), WS_SYSMENU | WS_POPUP | WS_MINIMIZEBOX, lastMainWindowPos.x, lastMainWindowPos.y, 0, 0, NULL, NULL))
 	{
 		// デフォルトカバーにして再チャレンジ
 		bool restored = false;
 		if (restoreByDefaultCoverDef())
 		{
-			if (mainWindow.CreateEx(exStyle, WinMainWindow::GetWindowClassName(), "CoveredCalc", WS_SYSMENU | WS_POPUP | WS_MINIMIZEBOX, lastMainWindowPos.x, lastMainWindowPos.y, 0, 0, NULL, NULL))
+			if (mainWindow.CreateEx(exStyle, WinMainWindow::GetWindowClassName(), ALITERAL("CoveredCalc"), WS_SYSMENU | WS_POPUP | WS_MINIMIZEBOX, lastMainWindowPos.x, lastMainWindowPos.y, 0, 0, NULL, NULL))
 			{
 				restored = true;
 			}
@@ -745,7 +745,7 @@ BOOL WinCoveredCalcApp::initInstance()
 	{
 		baseFolderPath = getAppFolderPath();
 	}
-	coverBrowser.SetCoversFolderPath(baseFolderPath.Append("Covers"));
+	coverBrowser.SetCoversFolderPath(baseFolderPath.Append(ALITERAL("Covers")));
 	if (!coverBrowser.Create(NULL))
 	{
 		DoMessageBox(IDS_EMSG_CREATE_COVER_BROWSER, MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
@@ -910,10 +910,10 @@ void WinCoveredCalcApp::MessageFilterManager::eraseNoUseItems()
 	@retval 0 正常終了
 */
 // ---------------------------------------------------------------------
-int APIENTRY WinMain(
+int APIENTRY _tWinMain(
 	HINSTANCE hInstance,		//!< インスタンスハンドル
 	HINSTANCE hPrevInstance,	//!< 既に存在するインスタンスハンドル (Win32では常にNULL)
-	LPSTR     lpCmdLine,		//!< コマンドライン文字列
+	LPTSTR     lpCmdLine,		//!< コマンドライン文字列
 	int       nCmdShow			//!< 表示モード
 )
 {

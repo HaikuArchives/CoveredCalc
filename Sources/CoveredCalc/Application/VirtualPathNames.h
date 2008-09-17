@@ -33,7 +33,7 @@
 #ifndef _VIRTUALPATHNAMES_H_
 #define _VIRTUALPATHNAMES_H_
 
-#define VPATH_APP_KEYMAPS		"AppKeymaps"		///< application defined key-mapping folder.
-#define VPATH_USER_KEYMAPS		"UserKeymaps"		///< user defined key-mapping folder.
+#define VPATH_APP_KEYMAPS		ALITERAL("AppKeymaps")		///< application defined key-mapping folder.
+#define VPATH_USER_KEYMAPS		ALITERAL("UserKeymaps")		///< user defined key-mapping folder.
 
 #endif // _VIRTUALPATHNAMES_H_

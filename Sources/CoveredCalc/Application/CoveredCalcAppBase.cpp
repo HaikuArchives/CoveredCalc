@@ -43,9 +43,9 @@
 #include "StorageUtils.h"
 #include "VirtualPathNames.h"
 
-static const AChar	LangFileFolderName[] = "NLS";		///< the folder which contains language files
-static const AChar	KeymapsFolderName[] = "Keymaps";	///< the folder which contains key-mapping files
-static const AChar	UserKeymapsFolderName[] = "UserKeymaps";	///< the folder which contains user-defined key-mapping files
+static const AChar	LangFileFolderName[] = ALITERAL("NLS");				///< the folder which contains language files
+static const AChar	KeymapsFolderName[] = ALITERAL("Keymaps");			///< the folder which contains key-mapping files
+static const AChar	UserKeymapsFolderName[] = ALITERAL("UserKeymaps");	///< the folder which contains user-defined key-mapping files
 
 // ---------------------------------------------------------------------
 //! Constructor
@@ -244,9 +244,9 @@ Path CoveredCalcAppBase::MakeVirtualPath(const Path& absolutePath, ConstAStr vir
 		Path relativePath;
 		virtualPathTop.MakeRelativePath(absolutePath, relativePath);
 		
-		MBCString placeholder = "${";
+		MBCString placeholder = ALITERAL("${");
 		placeholder += virtualPathName;
-		placeholder += "}";
+		placeholder += ALITERAL("}");
 		
 		return Path(placeholder).Append(relativePath);
 	}
@@ -267,7 +267,7 @@ void CoveredCalcAppBase::readyDefaultSettingFilePath(Path& settingFilePath)
 	if (!path.IsEmpty())
 	{
 		StorageUtils::ReadyFolder(path);
-		settingFilePath = path.Append("Setting.xml");
+		settingFilePath = path.Append(ALITERAL("Setting.xml"));
 	}
 }
 
@@ -289,7 +289,7 @@ void CoveredCalcAppBase::LoadKeyMappings(const Path& keymapFile)
 	UTF8String platform;
 	if (!keyMappings.GetPlatform(platform) || !CheckPlatform(platform))
 	{
-		throw new KeyMappingsExceptions::LoadFailed("The key-mapping definition is not for this platform.");
+		throw new KeyMappingsExceptions::LoadFailed(ALITERAL("The key-mapping definition is not for this platform."));
 	}
 
 	// initialize managers.

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -34,11 +34,12 @@
 #include <stdio.h>
 #include <string.h>
 #include "XMLParseException.h"
+#include "UTF8Conv.h"
 
 // ---------------------------------------------------------------------
 //! buffer for empty message
 // ---------------------------------------------------------------------
-const AChar XMLParseException::emptyMessage[1] = {'\0'};
+const AChar XMLParseException::emptyMessage[1] = {ALITERAL('\0')};
 
 // ---------------------------------------------------------------------
 //! Constructor
@@ -170,9 +171,9 @@ ConstAStr XMLParseException::GetErrorMessage() const
 	@return Error message
 */
 // ---------------------------------------------------------------------
-void XMLParseException::setErrorMessage(ConstAStr message)
+void XMLParseException::setErrorMessage(ConstUTF8Str message)
 {
-	this->message = message;
+	UTF8Conv::ToMultiByte(this->message, message);
 }
 
 // ---------------------------------------------------------------------
@@ -219,9 +220,9 @@ void XMLParseExceptions::NoMatchStartTag::init(
 // ---------------------------------------------------------------------
 void XMLParseExceptions::NoMatchStartTag::makeErrorMessage()
 {
-	AChar formatMessage[128];
-	snprintf(formatMessage, sizeof(formatMessage)/sizeof(AChar) - 1, "Start tag of </%s> is not found.", TypeConv::AsASCII(name));
-	formatMessage[sizeof(formatMessage)/sizeof(AChar) - 1] = '\0';
+	UTF8Char formatMessage[128];
+	snprintf(TypeConv::AsASCII(formatMessage), sizeof(formatMessage)/sizeof(UTF8Char) - 1, "Start tag of </%s> is not found.", TypeConv::AsASCII(name));
+	formatMessage[sizeof(formatMessage)/sizeof(UTF8Char) - 1] = '\0';
 	setErrorMessage(formatMessage);	
 }
 
@@ -278,16 +279,16 @@ XMLParseExceptions::InvalidParentEntity::InvalidParentEntity(
 // ---------------------------------------------------------------------
 void XMLParseExceptions::InvalidParentEntity::makeErrorMessage()
 {
-	AChar formatMessage[128];
+	UTF8Char formatMessage[128];
 	if (parentName.IsEmpty())
 	{
-		snprintf(formatMessage, sizeof(formatMessage)/sizeof(AChar) - 1, "The tag <%s> cannot be root entity.", TypeConv::AsASCII(name));
-		formatMessage[sizeof(formatMessage)/sizeof(AChar) - 1] = '\0';
+		snprintf(TypeConv::AsASCII(formatMessage), sizeof(formatMessage)/sizeof(UTF8Char) - 1, "The tag <%s> cannot be root entity.", TypeConv::AsASCII(name));
+		formatMessage[sizeof(formatMessage)/sizeof(UTF8Char) - 1] = '\0';
 	}
 	else
 	{
-		snprintf(formatMessage, sizeof(formatMessage)/sizeof(AChar) - 1, "The tag <%s> cannot be in the tag <%s>.", TypeConv::AsASCII(name), TypeConv::AsASCII(parentName));
-		formatMessage[sizeof(formatMessage)/sizeof(AChar) - 1] = '\0';
+		snprintf(TypeConv::AsASCII(formatMessage), sizeof(formatMessage)/sizeof(UTF8Char) - 1, "The tag <%s> cannot be in the tag <%s>.", TypeConv::AsASCII(name), TypeConv::AsASCII(parentName));
+		formatMessage[sizeof(formatMessage)/sizeof(UTF8Char) - 1] = '\0';
 	}
 	setErrorMessage(formatMessage);
 }
@@ -321,9 +322,9 @@ XMLParseExceptions::MissingAttribute::MissingAttribute(
 // ---------------------------------------------------------------------
 void XMLParseExceptions::MissingAttribute::makeErrorMessage()
 {
-	AChar formatMessage[128];
-	snprintf(formatMessage, sizeof(formatMessage)/sizeof(AChar) - 1, "The tag <%s> must have \"%s\" attribute.", TypeConv::AsASCII(tagName), TypeConv::AsASCII(attrName));
-	formatMessage[sizeof(formatMessage)/sizeof(AChar) - 1] = '\0';
+	UTF8Char formatMessage[128];
+	snprintf(TypeConv::AsASCII(formatMessage), sizeof(formatMessage)/sizeof(UTF8Char) - 1, "The tag <%s> must have \"%s\" attribute.", TypeConv::AsASCII(tagName), TypeConv::AsASCII(attrName));
+	formatMessage[sizeof(formatMessage)/sizeof(UTF8Char) - 1] = '\0';
 	setErrorMessage(formatMessage);
 }
 
@@ -364,9 +365,9 @@ void XMLParseExceptions::UnknownTag::init(
 // ---------------------------------------------------------------------
 void XMLParseExceptions::UnknownTag::makeErrorMessage()
 {
-	AChar formatMessage[128];
-	snprintf(formatMessage, sizeof(formatMessage)/sizeof(AChar) - 1, "The tag \"%s\" is unknown.", TypeConv::AsASCII(name));
-	formatMessage[sizeof(formatMessage)/sizeof(AChar) - 1] = '\0';
+	UTF8Char formatMessage[128];
+	snprintf(TypeConv::AsASCII(formatMessage), sizeof(formatMessage)/sizeof(UTF8Char) - 1, "The tag \"%s\" is unknown.", TypeConv::AsASCII(name));
+	formatMessage[sizeof(formatMessage)/sizeof(UTF8Char) - 1] = '\0';
 	setErrorMessage(formatMessage);	
 }
 

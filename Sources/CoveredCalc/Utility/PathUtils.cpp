@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -326,7 +326,7 @@ MBCString PathUtils::MakeRelativePath(
 		SInt32 count;
 		for (count=baseDepth; count>targetDepth; count--)
 		{
-			front = Append("..", front);
+			front = Append(ALITERAL(".."), front);
 		}
 		SInt32 index = 0;
 		for (count=0; count<=targetDepth; count++)
@@ -356,7 +356,7 @@ MBCString PathUtils::MakeRelativePath(
 		}
 		normalTarget = GetParentDirectory(normalTarget);
 		
-		front = Append("..", front);
+		front = Append(ALITERAL(".."), front);
 		normalBase = GetParentDirectory(normalBase);		
 	}
 	

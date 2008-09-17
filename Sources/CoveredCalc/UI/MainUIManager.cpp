@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -1345,7 +1345,7 @@ void MainUIManager::drawNumberStringOnDisplay(
 	// draw characters
 	if (displayRect.bottom - displayRect.top + 1 >= fontInfo->GetHeight())
 	{
-		const AChar* curChar = string + strlen(string) - 1;
+		const AChar* curChar = string + tcslen(string) - 1;
 		Point32 drawPoint;
 		drawPoint.y = displayRect.top;
 		drawPoint.x = displayRect.right - fontInfo->GetWidth();
@@ -1430,7 +1430,7 @@ void MainUIManager::changeLastCursorSkinArea(
 		}
 		else
 		{
-			GetUIController()->SetToolTipText("");
+			GetUIController()->SetToolTipText(ALITERAL(""));
 		}
 	}
 

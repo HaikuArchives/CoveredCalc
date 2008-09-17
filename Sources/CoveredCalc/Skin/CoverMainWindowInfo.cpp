@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -169,23 +169,23 @@ void CoverMainWindowInfo::Validate()
 	// image path
 	if (imageFilePath[ImageClass_ColorMap].IsEmpty())
 	{
-		throw new CoverDefValidateException("Map image is required.");
+		throw new CoverDefValidateException(ALITERAL("Map image is required."));
 	}
 	if (imageFilePath[ImageClass_BackgroundActive].IsEmpty())
 	{
-		throw new CoverDefValidateException("\"BackgroundActive\" image is required.");
+		throw new CoverDefValidateException(ALITERAL("\"BackgroundActive\" image is required."));
 	}
 	
 	// display information
 	if (NULL == displayInfo)
 	{
-		throw new CoverDefValidateException("Definition of display is required.");
+		throw new CoverDefValidateException(ALITERAL("Definition of display is required."));
 	}
 	
 	// font
 	if (NULL == fontInfo)
 	{
-		throw new CoverDefValidateException("Definition of font is required.");
+		throw new CoverDefValidateException(ALITERAL("Definition of font is required."));
 	}
 }
 

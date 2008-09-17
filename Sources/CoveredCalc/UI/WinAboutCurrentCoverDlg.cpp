@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -65,9 +65,9 @@ void WinAboutCurrentCoverDlg::setDataToDialog(
 {
 	if (NULL == coverDef)
 	{
-		SetDlgItemText(m_hWnd, IDC_EDIT_NAME, "");
-		SetDlgItemText(m_hWnd, IDC_EDIT_DESCRIPTION, "");
-		SetDlgItemText(m_hWnd, IDC_EDIT_ABOUT, "");
+		SetDlgItemText(m_hWnd, IDC_EDIT_NAME, ALITERAL(""));
+		SetDlgItemText(m_hWnd, IDC_EDIT_DESCRIPTION, ALITERAL(""));
+		SetDlgItemText(m_hWnd, IDC_EDIT_ABOUT, ALITERAL(""));
 	}
 	else
 	{

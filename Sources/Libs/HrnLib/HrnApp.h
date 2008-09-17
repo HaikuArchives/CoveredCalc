@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -67,10 +67,10 @@ public:
 	CHrnApp();
 	virtual ~CHrnApp();
 
-	int WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow );
+	int WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow );
 		
 	HINSTANCE GetPrevInstanceHandle() const { return m_hPrevInstance; }
-	LPCSTR GetCmdLine() const { return m_lpCmdLine; }
+	LPCTSTR GetCmdLine() const { return m_lpCmdLine; }
 	int GetCmdShow() const { return m_nCmdShow; }
 
 protected:
@@ -82,7 +82,7 @@ protected:
 
 protected:
 	HINSTANCE	m_hPrevInstance;	// パラメータを記憶する
-	LPCSTR		m_lpCmdLine;
+	LPCTSTR		m_lpCmdLine;
 	int		m_nCmdShow;
 };
 

@@ -46,14 +46,14 @@
 #endif
 
 #if defined(WIN32)
-static const AChar STR_MODIFIER_CTRL[]				= "Ctrl+";
-static const AChar STR_MODIFIER_SHIFT[]				= "Shift+";
-static const AChar STR_MODIFIER_ALT[]				= "Alt+";
+static const AChar STR_MODIFIER_CTRL[]				= ALITERAL("Ctrl+");
+static const AChar STR_MODIFIER_SHIFT[]				= ALITERAL("Shift+");
+static const AChar STR_MODIFIER_ALT[]				= ALITERAL("Alt+");
 #elif defined(BEOS)
-static const AChar STR_MODIFIER_COMMAND[]			= "Command-";
-static const AChar STR_MODIFIER_SHIFT[]				= "Shift-";
-static const AChar STR_MODIFIER_OPTION[]			= "Option-";
-static const AChar STR_MODIFIER_CONTROL[]			= "Control-";
+static const AChar STR_MODIFIER_COMMAND[]			= ALITERAL("Command-");
+static const AChar STR_MODIFIER_SHIFT[]				= ALITERAL("Shift-");
+static const AChar STR_MODIFIER_OPTION[]			= ALITERAL("Option-");
+static const AChar STR_MODIFIER_CONTROL[]			= ALITERAL("Control-");
 #endif
 
 static const UTF8Char STR_ELEMENT_KEY_NAMES[]		= "keyNames";
@@ -280,7 +280,7 @@ void KeyNameDB::generateKeyName(KeyEventParameter::KeyCode keyCode, MBCString& k
 	}	
 #endif
 	
-	snprintf(buf, sizeof(buf)/sizeof(AChar), "(Keycode-%02lX)", keyCode);
+	sntprintf(buf, sizeof(buf)/sizeof(AChar), ALITERAL("(Keycode-%02lX)"), keyCode);
 	keyName = buf;
 }
 

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -79,10 +79,10 @@ void WinUIMessageProvider::GetMessage(
 {
 	// ほとんどの場合、小さいサイズのバッファで間に合うはずなので、
 	// 最初の 1 つは動的に確保しない。
-	char fixedBuf[256];
-	char* buf = fixedBuf;
-	int bufSize = sizeof(fixedBuf)/sizeof(char);
-	char* dynBuf = NULL;
+	TCHAR fixedBuf[256];
+	TCHAR* buf = fixedBuf;
+	int bufSize = sizeof(fixedBuf)/sizeof(TCHAR);
+	TCHAR* dynBuf = NULL;
 
 	while (true)
 	{	
@@ -91,7 +91,7 @@ void WinUIMessageProvider::GetMessage(
 		{
 			// バッファが足りなかった可能性があるので倍確保してみる
 			bufSize *= 2;
-			char* newBuf = static_cast<char*>(realloc(dynBuf, bufSize));
+			TCHAR* newBuf = static_cast<TCHAR*>(realloc(dynBuf, bufSize));
 			if (NULL == newBuf)
 			{
 				free(dynBuf);
