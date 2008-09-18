@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -60,9 +60,6 @@ BeSkinView::BeSkinView(
 	const char* name		//!< view name
 )		: BView(frame, name, B_FOLLOW_ALL_SIDES, B_WILL_DRAW)
 {
-	mousePosition.x = 0;
-	mousePosition.y = 0;
-	mousePositionAvailable = false;
 	uiManager = NULL;
 	lastPressedMouseButton = 0;
 	toolTipMessenger = NULL;
@@ -150,37 +147,21 @@ void BeSkinView::DisposeSkinAppearance(ColorCodedSkinAppearance *appearance)
 }
 
 /**
- *	@brief	If mouse position is not available, this function retrives current mouse position.]
+ *	@brief	Retrieves mouse locaiton.
+ *	@param[in] inScreenCoordinates if true, this function returns the location in screen coordinates.
  */
-void BeSkinView::readyMousePosition() const
-{
-	if (!mousePositionAvailable)
-	{
-		BWindow* window = Window();
-		BAutolock locker(window);
-	
-		BPoint where;
-		uint32 buttons;
-		
-		BeSkinView* nonConstThis = const_cast<BeSkinView*>(this);
-		nonConstThis->GetMouse(&where, &buttons, false);
-		nonConstThis->mousePosition.x = static_cast<SInt32>(where.x);
-		nonConstThis->mousePosition.y = static_cast<SInt32>(where.y);
-		nonConstThis->mousePositionAvailable = true;
-	}
-}
-
-// ---------------------------------------------------------------------
-//! Retrives mouse location in screen coordinates.
-// ---------------------------------------------------------------------
-Point32 BeSkinView::GetMouseScreenPosition() const
+Point32 BeSkinView::getCurrentMousePosition(bool inScreenCoordinates) const
 {
 	BAutolock locker(Window());
 	
-	readyMousePosition();
-
-	BPoint mousePoint(mousePosition.x, mousePosition.y);
-	ConvertToScreen(&mousePoint);
+	uint32 buttons;
+	BPoint mousePoint;
+	BeSkinView* nonConstThis = const_cast<BeSkinView*>(this);
+	nonConstThis->GetMouse(&mousePoint, &buttons, false);
+	if (inScreenCoordinates)
+	{
+		ConvertToScreen(&mousePoint);
+	}
 	Point32 retPoint;
 	retPoint.x = static_cast<SInt32>(mousePoint.x);
 	retPoint.y = static_cast<SInt32>(mousePoint.y);
@@ -188,7 +169,7 @@ Point32 BeSkinView::GetMouseScreenPosition() const
 }
 
 // ---------------------------------------------------------------------
-//! Retrives rectangele of UI in screen coordinates.
+//! Retrieves rectangele of UI in screen coordinates.
 // ---------------------------------------------------------------------
 void BeSkinView::GetUIRect(
 	Rect32& rect				//!< OUTPUT. UI rectangle is returned.
@@ -676,10 +657,6 @@ void BeSkinView::MouseDown(
 		return;
 	}
 
-	mousePosition.x = static_cast<SInt32>(where.x);
-	mousePosition.y = static_cast<SInt32>(where.y);
-	mousePositionAvailable = true;
-
 	BWindow* window = Window();
 	if (!window->IsActive())
 	{
@@ -719,10 +696,6 @@ void BeSkinView::MouseUp(
 		return;
 	}
 	
-	mousePosition.x = static_cast<SInt32>(where.x);
-	mousePosition.y = static_cast<SInt32>(where.y);
-	mousePositionAvailable = true;
-	
 	UIManager* uiManager = getUIManager();
 	ASSERT(NULL != uiManager);
 	if (NULL != uiManager)
@@ -749,10 +722,6 @@ void BeSkinView::MouseMoved(
 	const BMessage *a_message	//!< message if user is dragging
 )
 {
-	mousePosition.x = static_cast<SInt32>(where.x);
-	mousePosition.y = static_cast<SInt32>(where.y);
-	mousePositionAvailable = true;
-
 	UIManager* uiManager = getUIManager();
 	ASSERT(NULL != uiManager);
 	if (NULL != uiManager)
@@ -827,8 +796,6 @@ void BeSkinView::KeyUp(
  */
 void BeSkinView::MessageReceived(BMessage *message)
 {
-	mousePositionAvailable = false;
-	
 	switch (message->what)
 	{
 	case MSG_TIMER_MOUSEHOVER:
