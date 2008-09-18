@@ -17,7 +17,7 @@ Windows 環境では、Windows 98 などは過去の OS であり、最近では
 ここに書いたタスクは最終的にすべて実現するかどうかはわかりません。
 また、タスクの番号に優先順序的な意味はありません。
 
-== タスク1: Windows 版の Unicode ビルド対応 ==
+== ~~タスク1: Windows 版の Unicode ビルド対応~~ (終了) ==
 
 *Windows 版を Unicode ビルドできるようにします。*
 
@@ -32,7 +32,7 @@ Windows 9X 系向けと Windows NT 系（NT4/2000/XP/Vista）の 2 つのバイ�
 
   * ANSI/MBCS ビルドと Unicode ビルドをコンパイルオプションで切り替えられるようにする。
   * {{{AChar}}} → {{{char}}}/{{{wchar_t}}}、{{{AStr}}} → {{{char*}}}/{{{wchar_t*}}}、{{{ConstAStr}}} → {{{const char*}}}/{{{const wchar_t*}}} で定義
-  * 文字列クラスの Unicode 対応（関連タスク：4）
+  * 文字列クラスの Unicode 対応
   * HrnLib 内の Unicode 対応
   * Windows 9X 系向けバイナリのリリースは今後行わない予定。
 
@@ -101,7 +101,7 @@ Haiku 版用にベクターアイコンが用意できればいいなあと思�
 タスク7とほとんど一緒です。
 ただし、デフォルトカバーは機能を追加するたびに変更が入ることが多いので継続してデザインできる必要があります。
 
-== タスク9: Windows 版のコンパイラを VC++ 2008 に ==
+== ~~タスク9: Windows 版のコンパイラを VC++ 2008 に~~ (終了) ==
 
 *Windows 版のコンパイラを VC++ 2008 Express Edition にします。*
 
