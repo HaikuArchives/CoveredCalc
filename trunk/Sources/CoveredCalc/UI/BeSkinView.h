@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -65,8 +65,8 @@ public:
 	// implementation of UIController interface
 	virtual ColorCodedSkinAppearance*	InitSkinAppearance();
 	virtual void			DisposeSkinAppearance(ColorCodedSkinAppearance* appearance);
-	virtual Point32 		GetMousePosition() const { readyMousePosition(); return mousePosition; }
-	virtual Point32 		GetMouseScreenPosition() const;
+	virtual Point32 		GetMousePosition() const { return getCurrentMousePosition(false); }
+	virtual Point32 		GetMouseScreenPosition() const { return getCurrentMousePosition(true); }
 	virtual void			GetUIRect(Rect32& rect) const;
 	virtual void			MoveUI(const Point32& topLeft);
 	virtual void			BeginMouseCapture();
@@ -117,11 +117,9 @@ private:
 	uint32					timerIdToTimerCommand(UIController::TimerID timerId);
 	UIController::TimerID	timerCommandToTimerId(uint32 timerCommand);
 	void					timerCommandReceived(uint32 timerCommand);
-	void					readyMousePosition() const;
+	Point32					getCurrentMousePosition(bool inScreenCoordinates) const;
 
 private:
-	Point32 				mousePosition;	//!< mouse location when some event has occured
-	bool					mousePositionAvailable;
 	UIManager*				uiManager;		//!< ui manager for this view
 	SInt32					lastPressedMouseButton;		//!< mouse button which pressed at last MouseDown()
 														//!< 0:none, 1:primary, 2:secondary
