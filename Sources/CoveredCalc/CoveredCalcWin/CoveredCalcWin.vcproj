@@ -1181,10 +1181,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\UI\MenuDef.h"
-					>
-				</File>
-				<File
 					RelativePath="..\UI\MessageBoxProvider.h"
 					>
 				</File>

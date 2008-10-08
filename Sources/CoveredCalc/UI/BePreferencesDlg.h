@@ -49,7 +49,7 @@ public:
 								BePreferencesDlg(BeDialogDesign* dialogDesign);
 	virtual						~BePreferencesDlg();
 	
-	virtual void				Init();
+	void						Init();
 	
 protected:
 	virtual void				MessageReceived(BMessage *message);

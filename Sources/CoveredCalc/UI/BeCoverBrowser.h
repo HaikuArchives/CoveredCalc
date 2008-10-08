@@ -49,7 +49,7 @@ public:
 									BeCoverBrowser(BeDialogDesign* dialogDesign);
 	virtual							~BeCoverBrowser();
 
-	virtual void					Init();
+	void							Init();
 	virtual void					Quit();
 	
 	virtual void					GetUIRect(Rect32& rect) const;
