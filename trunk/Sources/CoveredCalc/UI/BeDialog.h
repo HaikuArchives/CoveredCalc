@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -33,7 +33,7 @@
 #ifndef _BEDIALOG_H_
 #define _BEDIALOG_H_
 
-#include <interface/Window.h>
+#include <Window.h>
 
 // ---------------------------------------------------------------------
 //! Dialog class on BeOS
@@ -45,7 +45,7 @@ public:
 						BeDialog(BRect frame, const char* title, window_look look, window_feel feel, uint32 flags, uint32 workspaces = B_CURRENT_WORKSPACE);
 	virtual				~BeDialog();
 	
-	virtual void		Init();
+	void				Init();
 
 protected:
 	virtual void		initView(BView* view);
