@@ -41,6 +41,7 @@
 #include "ColorCodedSkinException.h"
 #include "PathException.h"
 #include "XMLLangFileException.h"
+#include "UTF8Conv.h"
 
 // ---------------------------------------------------------------------
 //! Constructor
@@ -213,7 +214,9 @@ bool ExceptionMessageGenerator::processXMLParseException(
 		XMLParseExceptions::NoMatchStartTag* myExceptionNMST = dynamic_cast<XMLParseExceptions::NoMatchStartTag*>(ex);
 		if (NULL != myExceptionNMST)
 		{
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_NO_MATCH_START_TAG, myExceptionNMST->GetName());
+			MBCString name;
+			UTF8Conv::ToMultiByte(name, myExceptionNMST->GetName());
+			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_NO_MATCH_START_TAG, name.CString());
 			resolved = true;
 		}
 	}
@@ -224,7 +227,10 @@ bool ExceptionMessageGenerator::processXMLParseException(
 		XMLParseExceptions::InvalidParentEntity* myExceptionIPE = dynamic_cast<XMLParseExceptions::InvalidParentEntity*>(ex);
 		if (NULL != myExceptionIPE)
 		{
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_INVALID_PARENT_ENTITY, myExceptionIPE->GetName(), myExceptionIPE->GetParentName());
+			MBCString name, parentName;
+			UTF8Conv::ToMultiByte(name, myExceptionIPE->GetName());
+			UTF8Conv::ToMultiByte(parentName, myExceptionIPE->GetParentName());
+			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_INVALID_PARENT_ENTITY, name.CString(), parentName.CString());
 			resolved = true;
 		}
 	}
@@ -235,7 +241,10 @@ bool ExceptionMessageGenerator::processXMLParseException(
 		XMLParseExceptions::MissingAttribute* myExceptionMA = dynamic_cast<XMLParseExceptions::MissingAttribute*>(ex);
 		if (NULL != myExceptionMA)
 		{
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_MISSING_ATTRIBUTE, myExceptionMA->GetTagName(), myExceptionMA->GetAttributeName());
+			MBCString tagName, attrName;
+			UTF8Conv::ToMultiByte(tagName, myExceptionMA->GetTagName());
+			UTF8Conv::ToMultiByte(attrName, myExceptionMA->GetAttributeName());
+			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_MISSING_ATTRIBUTE, tagName.CString(), attrName.CString());
 			resolved = true;
 		}
 	}
@@ -246,7 +255,9 @@ bool ExceptionMessageGenerator::processXMLParseException(
 		XMLParseExceptions::UnknownTag* myExceptionUT = dynamic_cast<XMLParseExceptions::UnknownTag*>(ex);
 		if (NULL != myExceptionUT)
 		{
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_UNKNOWN_TAG, myExceptionUT->GetName());
+			MBCString name;
+			UTF8Conv::ToMultiByte(name, myExceptionUT->GetName());
+			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_UNKNOWN_TAG, name.CString());
 			resolved = true;
 		}
 	}
@@ -296,7 +307,9 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		CoverDefParseExceptions::UnknownID* myExceptionUID = dynamic_cast<CoverDefParseExceptions::UnknownID*>(ex);
 		if (NULL != myExceptionUID)
 		{
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_UNKNOWN_ID, myExceptionUID->GetID());
+			MBCString id;
+			UTF8Conv::ToMultiByte(id, myExceptionUID->GetID());
+			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_UNKNOWN_ID, id.CString());
 			resolved = true;
 		}
 	}
@@ -307,7 +320,9 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		CoverDefParseExceptions::UnknownClass* myExceptionUC = dynamic_cast<CoverDefParseExceptions::UnknownClass*>(ex);
 		if (NULL != myExceptionUC)
 		{
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_UNKNOWN_CLASS, myExceptionUC->GetClass());
+			MBCString classStr;
+			UTF8Conv::ToMultiByte(classStr, myExceptionUC->GetClass());
+			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_UNKNOWN_CLASS, classStr.CString());
 			resolved = true;
 		}
 	}
@@ -318,7 +333,9 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		CoverDefParseExceptions::UnknownType* myExceptionUT = dynamic_cast<CoverDefParseExceptions::UnknownType*>(ex);
 		if (NULL != myExceptionUT)
 		{
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_UNKNOWN_TYPE, myExceptionUT->GetType());
+			MBCString typeStr;
+			UTF8Conv::ToMultiByte(typeStr, myExceptionUT->GetType());
+			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_UNKNOWN_TYPE, typeStr.CString());
 			resolved = true;
 		}
 	}
@@ -341,7 +358,9 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		CoverDefParseExceptions::ColorStringNotUnderstood* myExceptionCSNU = dynamic_cast<CoverDefParseExceptions::ColorStringNotUnderstood*>(ex);
 		if (NULL != myExceptionCSNU)
 		{
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_COLOR_STRING_NOT_UNDERSTOOD, myExceptionCSNU->GetColorString());
+			MBCString color;
+			UTF8Conv::ToMultiByte(color, myExceptionCSNU->GetColorString());
+			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_COLOR_STRING_NOT_UNDERSTOOD, color.CString());
 			resolved = true;
 		}
 	}
@@ -352,7 +371,9 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		CoverDefParseExceptions::UnsupportedCoverDefVersion* myExceptionUCDV = dynamic_cast<CoverDefParseExceptions::UnsupportedCoverDefVersion*>(ex);
 		if (NULL != myExceptionUCDV)
 		{
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_UNSUPPORTED_COVERDEF_VERSION, myExceptionUCDV->GetVersionString());
+			MBCString version;
+			UTF8Conv::ToMultiByte(version, myExceptionUCDV->GetVersionString());
+			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_UNSUPPORTED_COVERDEF_VERSION, version.CString());
 			resolved = true;
 		}		
 	}

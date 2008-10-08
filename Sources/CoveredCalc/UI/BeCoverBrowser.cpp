@@ -36,7 +36,8 @@
 #include <Autolock.h>
 #include "BeCCColumnListView.h"
 #include "ColumnTypes.h"
-#include "DialogDef.h"
+#include "DialogID.h"
+#include "CommandID.h"
 #include "GenericException.h"
 #include "MBCString.h"
 #include "UIMessageProvider.h"

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -34,6 +34,7 @@
 #define _BEMAINVIEW_H_
 
 #include "BeSkinView.h"
+#include "MainUIController.h"
 #include "BeDeskbarPseudoWindow.h"
 
 class BeXMLLangFile;
@@ -42,15 +43,13 @@ class BPopUpMenu;
 // ---------------------------------------------------------------------
 //! Main view in the main window for BeOS
 // ---------------------------------------------------------------------
-class BeMainView : public BeSkinView
+class BeMainView : public BeSkinView, public MainUIController
 {
 public:
 							BeMainView(BRect frame, const char* name);
 	virtual					~BeMainView();
 
 	virtual void			Init();
-
-	virtual void			ShowDialog(DialogInfo* dialogInfo);
 
 	virtual void			Minimize();
 	virtual void 			SetAlwaysOnTopFlag(bool isFlagOn);
@@ -59,15 +58,17 @@ public:
 
 	void					MainWindowActivated();
 
+	// MainUIController interface
+	virtual void			ShowMainUIContextMenu(Point32 menuPos);
+	virtual void			ShowAboutDialog();
+	virtual void			ShowAboutCurrentCoverDialog();
+	virtual void			ShowPreferencesDialog();
+
 protected:
 	virtual UIManager*		createUIManager();
 	virtual void			deleteUIManager(UIManager* uiManager);
-
-	virtual BPopUpMenu*		createContextMenu(SInt32 menuID);
-
-private:
-	BPopUpMenu*				createMainContextMenu(const BeXMLLangFile* langFile);
-	void					MessageReceived(BMessage* msg);
+	
+	virtual SInt32			getMenuCommand(uint32 menuCommand);
 
 private:
 	BMessenger*				aboutDialogMessenger;	//!< messenger to existing about dialog object

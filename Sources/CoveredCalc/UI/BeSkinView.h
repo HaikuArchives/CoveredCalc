@@ -40,7 +40,6 @@
 
 class UIManager;
 class BeDialog;
-class DialogInfo;
 class BMenu;
 class BMenuItem;
 class BPopUpMenu;
@@ -78,8 +77,6 @@ public:
 	virtual void			Minimize();
 	virtual bool			IsUIMinimized() const;
 	virtual void			Restore();
-	virtual void			ShowContextMenu(MenuInfo* menuInfo);
-	virtual void			ShowDialog(DialogInfo* dialogInfo);
 	virtual void			UpdateUI();
 	virtual void			Wait(UInt32 milliseconds);
 	virtual void			SetToolTipText(ConstAStr text);
@@ -94,7 +91,8 @@ protected:
 	virtual UIManager*		createUIManager() = 0;
 	virtual void			deleteUIManager(UIManager* uiManager) = 0;
 
-	virtual BPopUpMenu*		createContextMenu(SInt32 menuID);
+	virtual SInt32			getMenuCommand(uint32 menuCommand) = 0;
+	void					showContextMenu(BPopUpMenu* popupMenu, Point32 menuPos);
 	BMenuItem*				createMenuItem(ConstUTF8Str name, uint32 command, int8 shortcut, uint32 modifiers);
 	BMenu*					createSubMenu(ConstUTF8Str name);
 
@@ -111,7 +109,6 @@ protected:
 	virtual	void			MessageReceived(BMessage* message);
 
 private:
-	void					updateMenuItemStates(BMenu* menu, MenuInfo* menuInfo);
 	char					parseMenuItemTrigger(const char* sourceLabel, BString& outLabel);
 
 	uint32					timerIdToTimerCommand(UIController::TimerID timerId);

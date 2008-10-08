@@ -1149,14 +1149,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\UI\DialogDef.h"
-					>
-				</File>
-				<File
-					RelativePath="..\UI\DialogInfo.h"
-					>
-				</File>
-				<File
 					RelativePath="..\UI\EditKeymapDlg.h"
 					>
 				</File>
@@ -1177,6 +1169,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\UI\MainUIController.h"
+					>
+				</File>
+				<File
 					RelativePath="..\UI\MainUIManager.h"
 					>
 				</File>
@@ -1186,10 +1182,6 @@
 				</File>
 				<File
 					RelativePath="..\UI\MenuDef.h"
-					>
-				</File>
-				<File
-					RelativePath="..\UI\MenuInfo.h"
 					>
 				</File>
 				<File

@@ -34,7 +34,8 @@
 #include "BeAboutCurrentCoverDialog.h"
 #include <InterfaceKit.h>
 #include <support/Autolock.h>
-#include "DialogDef.h"
+#include "DialogID.h"
+#include "CommandID.h"
 #include "MBCString.h"
 #include "CoverDef.h"
 #include "UTF8Conv.h"

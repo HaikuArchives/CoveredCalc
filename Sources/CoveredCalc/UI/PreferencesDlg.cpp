@@ -451,7 +451,8 @@ Path PreferencesDlg::createUniqueUserKeyMappingFile(const Path& folderPath)
 	for (retryCount = 0; retryCount < 64; retryCount++)
 	{
 		AChar buf[64];
-		sntprintf(buf, sizeof(buf)/sizeof(AChar), ALITERAL("%s%lx%s"), STR_USER_KEYMAP_PREFIX, num, STR_USER_KEYMAP_POSTFIX);
+		sntprintf(buf, sizeof(buf)/sizeof(AChar) - 1, ALITERAL("%s%lx%s"), STR_USER_KEYMAP_PREFIX, num, STR_USER_KEYMAP_POSTFIX);
+		buf[sizeof(buf)/sizeof(AChar) - 1] = ALITERAL('\0');
 		Path filePath = folderPath.Append(buf);
 		try
 		{

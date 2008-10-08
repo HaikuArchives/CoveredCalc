@@ -46,13 +46,12 @@
 #include "AppSettings.h"
 #include "UIMessageProvider.h"
 #include "ExceptionMessageUtils.h"
-#include "MenuInfo.h"
-#include "DialogInfo.h"
 #include "MainUIManager.h"
 #include "UTF8Conv.h"
 #include "CoverToolTipInfo.h"
 #include "BMPFileStore.h"
 #include "UITaskClass.h"
+#include "MainUIController.h"
 
 ////////////////////////////////////////
 #define base	UIManager
@@ -90,6 +89,7 @@ enum OtherImageIndex
 // ---------------------------------------------------------------------
 MainUIManager::MainUIManager()
 {
+	mainUIController = NULL;
 	currentDigitForm = CalcCore::DigitForm_10;
 }
 
@@ -107,6 +107,21 @@ MainUIManager::~MainUIManager()
 void MainUIManager::clearMembers()
 {
 	base::clearMembers();
+}
+
+// ---------------------------------------------------------------------
+//! Initializes the object.
+// ---------------------------------------------------------------------
+/**
+ *	@brief	Initializes the object.
+ *	@param[in]	uiController		UI controller object
+ *	@param[in]	mainUIController	main UI controller object
+ *	@param[in	keyMappingManager	key-mapping manager
+ */
+void MainUIManager::Init(UIController* uiController, MainUIController* mainUIController, const KeyMappingManager* keyMappingManager)
+{
+	base::Init(uiController, keyMappingManager);
+	this->mainUIController = mainUIController;
 }
 
 // ---------------------------------------------------------------------
@@ -736,37 +751,43 @@ MainUIManager::getButtonFromKeyFunc(
 
 	switch (keyFunc)
 	{
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_0,		CoverMainWindowInfo::ButtonClass_0)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_1,		CoverMainWindowInfo::ButtonClass_1)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_2,		CoverMainWindowInfo::ButtonClass_2)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_3,		CoverMainWindowInfo::ButtonClass_3)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_4,		CoverMainWindowInfo::ButtonClass_4)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_5,		CoverMainWindowInfo::ButtonClass_5)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_6,		CoverMainWindowInfo::ButtonClass_6)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_7,		CoverMainWindowInfo::ButtonClass_7)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_8,		CoverMainWindowInfo::ButtonClass_8)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_9,		CoverMainWindowInfo::ButtonClass_9)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_A,		CoverMainWindowInfo::ButtonClass_A)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_B,		CoverMainWindowInfo::ButtonClass_B)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_C,		CoverMainWindowInfo::ButtonClass_C)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_D,		CoverMainWindowInfo::ButtonClass_D)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_E,		CoverMainWindowInfo::ButtonClass_E)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_F,		CoverMainWindowInfo::ButtonClass_F)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Point,	CoverMainWindowInfo::ButtonClass_Point)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Clear,	CoverMainWindowInfo::ButtonClass_Clear)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_BS,		CoverMainWindowInfo::ButtonClass_BS)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Equal,	CoverMainWindowInfo::ButtonClass_Equal)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Plus,		CoverMainWindowInfo::ButtonClass_Plus)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Minus,	CoverMainWindowInfo::ButtonClass_Minus)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Times,	CoverMainWindowInfo::ButtonClass_Times)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Div,		CoverMainWindowInfo::ButtonClass_Div)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Negate,	CoverMainWindowInfo::ButtonClass_Negate)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Hex,		CoverMainWindowInfo::ButtonClass_Hex)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Dec,		CoverMainWindowInfo::ButtonClass_Dec)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Oct,		CoverMainWindowInfo::ButtonClass_Oct)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Bin,		CoverMainWindowInfo::ButtonClass_Bin)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Minimize,	CoverMainWindowInfo::ButtonClass_Minimize)
-	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Close,	CoverMainWindowInfo::ButtonClass_Close)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_0,						CoverMainWindowInfo::ButtonClass_0)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_1,						CoverMainWindowInfo::ButtonClass_1)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_2,						CoverMainWindowInfo::ButtonClass_2)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_3,						CoverMainWindowInfo::ButtonClass_3)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_4,						CoverMainWindowInfo::ButtonClass_4)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_5,						CoverMainWindowInfo::ButtonClass_5)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_6,						CoverMainWindowInfo::ButtonClass_6)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_7,						CoverMainWindowInfo::ButtonClass_7)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_8,						CoverMainWindowInfo::ButtonClass_8)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_9,						CoverMainWindowInfo::ButtonClass_9)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_A,						CoverMainWindowInfo::ButtonClass_A)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_B,						CoverMainWindowInfo::ButtonClass_B)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_C,						CoverMainWindowInfo::ButtonClass_C)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_D,						CoverMainWindowInfo::ButtonClass_D)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_E,						CoverMainWindowInfo::ButtonClass_E)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_F,						CoverMainWindowInfo::ButtonClass_F)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Point,					CoverMainWindowInfo::ButtonClass_Point)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Clear,					CoverMainWindowInfo::ButtonClass_Clear)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_BS,						CoverMainWindowInfo::ButtonClass_BS)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Equal,					CoverMainWindowInfo::ButtonClass_Equal)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Plus,						CoverMainWindowInfo::ButtonClass_Plus)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Minus,					CoverMainWindowInfo::ButtonClass_Minus)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Times,					CoverMainWindowInfo::ButtonClass_Times)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Div,						CoverMainWindowInfo::ButtonClass_Div)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Negate,					CoverMainWindowInfo::ButtonClass_Negate)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Hex,						CoverMainWindowInfo::ButtonClass_Hex)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Dec,						CoverMainWindowInfo::ButtonClass_Dec)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Oct,						CoverMainWindowInfo::ButtonClass_Oct)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Bin,						CoverMainWindowInfo::ButtonClass_Bin)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Minimize,					CoverMainWindowInfo::ButtonClass_Minimize)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_Close,					CoverMainWindowInfo::ButtonClass_Close)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_ShowHideCoverBrowser,		CoverMainWindowInfo::ButtonClass_ShowHideCoverBrowser)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_ToggleAlwaysOnTop,		CoverMainWindowInfo::ButtonClass_ToggleAlwaysOnTop)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_ToggleLockPos,			CoverMainWindowInfo::ButtonClass_ToggleLockPos)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_ShowPreferencesDialog,	CoverMainWindowInfo::ButtonClass_ShowPreferencesDialog)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_ShowCurrentCoverInfo,		CoverMainWindowInfo::ButtonClass_ShowCurrentCoverInfo)
+	HANDLE_KEYFUNC(MainWindowKeyFunc::KeyFunc_About,					CoverMainWindowInfo::ButtonClass_About)
 
 	default:
 		buttonClass = CoverMainWindowInfo::ButtonClass_None;
@@ -803,7 +824,7 @@ SInt32 MainUIManager::GetSkinAreaFromCommandId(
 }
 
 /**
- *	@brief		returns state of specified command.
+ *	@brief		Returns state of specified command.
  *	@param[in]	commandId	command ID
  *	@return		command state. it is a combination of UIManager::CommandState_xxx.
  */
@@ -846,25 +867,47 @@ UInt32 MainUIManager::GetCommandState(SInt32 commandId)
 		}
 		break;
 	case CoverMainWindowInfo::ButtonClass_Hex:
+		state |= UIManager::CommandState_Radio;
 		if (CalcCore::DigitForm_16 == currentDigitForm)
 		{
 			state |= UIManager::CommandState_Checked;
 		}
 		break;
 	case CoverMainWindowInfo::ButtonClass_Dec:
+		state |= UIManager::CommandState_Radio;
 		if (CalcCore::DigitForm_10 == currentDigitForm)
 		{
 			state |= UIManager::CommandState_Checked;
 		}
 		break;
 	case CoverMainWindowInfo::ButtonClass_Oct:
+		state |= UIManager::CommandState_Radio;
 		if (CalcCore::DigitForm_8 == currentDigitForm)
 		{
 			state |= UIManager::CommandState_Checked;
 		}
 		break;
 	case CoverMainWindowInfo::ButtonClass_Bin:
+		state |= UIManager::CommandState_Radio;
 		if (CalcCore::DigitForm_2 == currentDigitForm)
+		{
+			state |= UIManager::CommandState_Checked;
+		}
+		break;
+	case CoverMainWindowInfo::ButtonClass_ShowHideCoverBrowser:
+		if (CoveredCalcApp::GetInstance()->IsCoverBrowserVisible())
+		{
+			state |= UIManager::CommandState_Checked;
+		}	
+		break;
+	case CoverMainWindowInfo::ButtonClass_ToggleAlwaysOnTop:
+		if (CoveredCalcApp::GetInstance()->GetAppSettings()->IsMainWindowAlwaysOnTop())
+		{
+			state |= UIManager::CommandState_Checked;
+		}
+		break;
+	case CoverMainWindowInfo::ButtonClass_ToggleLockPos:
+		if (CoveredCalcApp::GetInstance()->GetAppSettings()->IsMainWindowLocked())
 		{
 			state |= UIManager::CommandState_Checked;
 		}
@@ -872,6 +915,91 @@ UInt32 MainUIManager::GetCommandState(SInt32 commandId)
 	}
 
 	return state;
+}
+
+/**
+ *	@brief	Executes a command.
+ *	@param[in]	commandId	command ID
+ */
+void MainUIManager::ExecuteCommand(SInt32 commandId)
+{
+	CoverMainWindowInfo::ButtonClass button = static_cast<CoverMainWindowInfo::ButtonClass>(commandId);
+	ASSERT(CoverMainWindowInfo::ButtonClass_None != button);
+
+#define HANDLE_CALCKEY(buttonClass, calcKey)				\
+		case buttonClass:									\
+			calcCore.Put(calcKey);							\
+			break;
+
+	switch (button)
+	{
+	case CoverMainWindowInfo::ButtonClass_Close:
+		doCommandClose();
+		break;
+	
+	case CoverMainWindowInfo::ButtonClass_Minimize:
+		doCommandMainMinimize();
+		break;
+
+	case CoverMainWindowInfo::ButtonClass_ShowHideCoverBrowser:
+		doCommandCoverBrowser();
+		break;
+
+	case CoverMainWindowInfo::ButtonClass_ToggleAlwaysOnTop:
+		doCommandMainWindowAlwaysOnTop();
+		break;
+
+	case CoverMainWindowInfo::ButtonClass_ToggleLockPos:
+		doCommandMainWindowLockPos();
+		break;
+
+	case CoverMainWindowInfo::ButtonClass_ShowPreferencesDialog:
+		doCommandPreferences();
+		break;
+
+	case CoverMainWindowInfo::ButtonClass_ShowCurrentCoverInfo:
+		doCommandAboutCurrentCover();
+		break;
+
+	case CoverMainWindowInfo::ButtonClass_About:
+		doCommandAbout();
+		break;
+
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_0,		CalcCore::Key_0)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_1,		CalcCore::Key_1)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_2,		CalcCore::Key_2)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_3,		CalcCore::Key_3)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_4,		CalcCore::Key_4)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_5,		CalcCore::Key_5)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_6,		CalcCore::Key_6)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_7,		CalcCore::Key_7)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_8,		CalcCore::Key_8)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_9,		CalcCore::Key_9)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_A,		CalcCore::Key_A)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_B,		CalcCore::Key_B)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_C,		CalcCore::Key_C)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_D,		CalcCore::Key_D)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_E,		CalcCore::Key_E)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_F,		CalcCore::Key_F)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Point,	CalcCore::Key_Point)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Clear,	CalcCore::Key_Clear)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_BS,		CalcCore::Key_BS)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Equal,	CalcCore::Key_Equal)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Plus,	CalcCore::Key_Plus)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Minus,	CalcCore::Key_Minus)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Times,	CalcCore::Key_Times)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Div,	CalcCore::Key_Div)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Negate, CalcCore::Key_Negate)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Hex,	CalcCore::Key_DigitForm16)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Dec,	CalcCore::Key_DigitForm10)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Oct,	CalcCore::Key_DigitForm8)
+	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Bin,	CalcCore::Key_DigitForm2)
+
+	default:
+		break;
+	}
+
+#undef HANDLE_CALCKEY
 }
 
 /**
@@ -937,7 +1065,7 @@ bool MainUIManager::KeyDown(const KeyEventParameter& parameter)
 	}
 	else
 	{
-		// TODO: no button matches this key, but the function of this key can exsits.
+		// no button matches this key, but the function of this key can exsits.
 	}
 
 	if (ret)
@@ -949,95 +1077,6 @@ bool MainUIManager::KeyDown(const KeyEventParameter& parameter)
 }
 
 // ---------------------------------------------------------------------
-//! This class holds information about context menu of main UI.
-// ---------------------------------------------------------------------
-class MainUIManagerContextMenuInfo : public MenuInfo
-{
-public:
-						MainUIManagerContextMenuInfo(MainUIManager* mainUIManager, Point32 position)
-								{
-									this->mainUIManager = mainUIManager;
-									this->position = position;
-								}
-	virtual				~MainUIManagerContextMenuInfo()
-								{ }
-	
-	virtual Point32		GetMenuPosition()
-								{ return position; }
-	virtual SInt32		GetMenuID()
-								{ return IDM_MAIN_CONTEXT; }
-	virtual UInt32		GetMenuItemStates(SInt32 menuItemID);
-
-private:
-	MainUIManager*		mainUIManager;
-	Point32				position;
-};
-
-// ---------------------------------------------------------------------
-//! returns states of the specified menu item.
-// ---------------------------------------------------------------------
-UInt32 MainUIManagerContextMenuInfo::GetMenuItemStates(
-	SInt32 menuItemID
-)
-{
-	switch (menuItemID)
-	{
-	case ID_COVER_BROWSER:
-		if (CoveredCalcApp::GetInstance()->IsCoverBrowserVisible())
-		{
-			return MenuInfo::MenuItemState_Checked;
-		}
-		else
-		{
-			return MenuInfo::MenuItemState_Normal;
-		}
-	
-		break;
-	case ID_MAIN_ALWAYS_ON_TOP:
-		if (CoveredCalcApp::GetInstance()->GetAppSettings()->IsMainWindowAlwaysOnTop())
-		{
-			return MenuInfo::MenuItemState_Checked;
-		}
-		else
-		{
-			return MenuInfo::MenuItemState_Normal;
-		}
-		break;
-	case ID_MAIN_LOCK_POS:
-		if (CoveredCalcApp::GetInstance()->GetAppSettings()->IsMainWindowLocked())
-		{
-			return MenuInfo::MenuItemState_Checked;
-		}
-		else
-		{
-			return MenuInfo::MenuItemState_Normal;
-		}
-		break;
-	case ID_RADIX_HEX:
-	case ID_RADIX_DECIMAL:
-	case ID_RADIX_OCTAL:
-	case ID_RADIX_BINARY:
-		{
-			CalcCore::DigitForm digitForm = mainUIManager->GetCurrentDigitForm();
-			if ((ID_RADIX_HEX == menuItemID && CalcCore::DigitForm_16 == digitForm) ||
-				(ID_RADIX_DECIMAL == menuItemID && CalcCore::DigitForm_10 == digitForm) ||
-				(ID_RADIX_OCTAL == menuItemID && CalcCore::DigitForm_8 == digitForm) ||
-				(ID_RADIX_BINARY == menuItemID && CalcCore::DigitForm_2 == digitForm))
-			{
-				return MenuInfo::MenuItemState_Checked | MenuInfo::MenuItemState_Radio;
-			}
-			else
-			{
-				return MenuInfo::MenuItemState_Radio;
-			}
-		}
-		break;
-	default:
-		return MenuInfo::MenuItemState_Normal;
-	}
-}
-
-// ---------------------------------------------------------------------
 //! Called when mouse button 2 is pressed.
 // ---------------------------------------------------------------------
 void MainUIManager::Button2Down()
@@ -1046,134 +1085,73 @@ void MainUIManager::Button2Down()
 	
 	UIController* uiController = GetUIController();
 	Point32 position = uiController->GetMouseScreenPosition();
-	MainUIManagerContextMenuInfo menuInfo(this, position);
-	GetUIController()->ShowContextMenu(&menuInfo);
+	GetMainUIController()->ShowMainUIContextMenu(position);
 }
 
 // ---------------------------------------------------------------------
 //! Called when user execute "Cover Browser" command.
 // ---------------------------------------------------------------------
-void MainUIManager::DoFuncCoverBrowser()
+void MainUIManager::doCommandCoverBrowser()
 {
 	CoveredCalcApp* app = CoveredCalcApp::GetInstance();
 	bool isShown = app->IsCoverBrowserVisible();
 	app->ShowCoverBrowser(!isShown);
+	updateWholeAppearance();
 }
 
 /**
  *	@brief	Called when user execute "Always on top" command.
  */
-void MainUIManager::DoFuncMainWindowAlwaysOnTop()
+void MainUIManager::doCommandMainWindowAlwaysOnTop()
 {
 	CoveredCalcApp* app = CoveredCalcApp::GetInstance();
 	AppSettings* appSettings = app->GetAppSettings();
 	bool isFlagOn = appSettings->IsMainWindowAlwaysOnTop();
 	GetUIController()->SetAlwaysOnTopFlag(!isFlagOn);
 	appSettings->SetMainWindowAlwaysOnTop(!isFlagOn);
+	updateWholeAppearance();
 }
 
 /**
  *	@brief	Called when user execute "Lock position" command.
  */
-void MainUIManager::DoFuncMainWindowLockPos()
+void MainUIManager::doCommandMainWindowLockPos()
 {
 	CoveredCalcApp* app = CoveredCalcApp::GetInstance();
 	AppSettings* appSettings = app->GetAppSettings();
 	bool isLocked = appSettings->IsMainWindowLocked();
 	appSettings->SetMainWindowLocked(!isLocked);
+	updateWholeAppearance();
 }
-
-/**
- *	@brief	Called when user execute "Radix" command.
- */
-void MainUIManager::DoFuncChangeRadix(
-	CalcCore::DigitForm radix			///< radix
-)
-{
-	switch (radix)
-	{
-	case CalcCore::DigitForm_16:
-		calcCore.Put(CalcCore::Key_DigitForm16);
-		break;
-	case CalcCore::DigitForm_10:
-		calcCore.Put(CalcCore::Key_DigitForm10);
-		break;
-	case CalcCore::DigitForm_8:
-		calcCore.Put(CalcCore::Key_DigitForm8);
-		break;
-	case CalcCore::DigitForm_2:
-		calcCore.Put(CalcCore::Key_DigitForm2);
-		break;
-	}
-}
-
-/**
- *	@brief	DialogInfo about "Preferences" dialog.
- */
-class MainUIManagerPrefDlgInfo : public DialogInfo
-{
-public:
-					MainUIManagerPrefDlgInfo() { }
-	virtual			~MainUIManagerPrefDlgInfo() { }
-
-	virtual SInt32	GetDialogID() { return IDD_PREFERENCES; }
-};
 
 /**
  *	@brief	Called when user execute "Preferences" command.
  */
-void MainUIManager::DoFuncPreferences()
+void MainUIManager::doCommandPreferences()
 {
-	MainUIManagerPrefDlgInfo dialogInfo;
-	getUIController()->ShowDialog(&dialogInfo);
+	mainUIController->ShowPreferencesDialog();
 }
-
-// ---------------------------------------------------------------------
-//! DialogInfo about "About" dialog.
-// ---------------------------------------------------------------------
-class MainUIManagerAboutDlgInfo : public DialogInfo
-{
-public:
-					MainUIManagerAboutDlgInfo() { }
-	virtual			~MainUIManagerAboutDlgInfo() { }
-		
-	virtual SInt32	GetDialogID() { return IDD_ABOUT; }
-};
 
 // ---------------------------------------------------------------------
 //! Called when user execute "About" command.
 // ---------------------------------------------------------------------
-void MainUIManager::DoFuncAbout()
+void MainUIManager::doCommandAbout()
 {
-	MainUIManagerAboutDlgInfo dialogInfo;
-	getUIController()->ShowDialog(&dialogInfo);
+	mainUIController->ShowAboutDialog();
 }
-
-// ---------------------------------------------------------------------
-//! DialogInfo about "About current cover" dialog.
-// ---------------------------------------------------------------------
-class MainUIManagerAboutCurrentCoverDlgInfo : public DialogInfo
-{
-public:
-					MainUIManagerAboutCurrentCoverDlgInfo() { }
-	virtual			~MainUIManagerAboutCurrentCoverDlgInfo() { }
-	
-	virtual SInt32	GetDialogID() { return IDD_ABOUT_COVER; }
-};
 
 // ---------------------------------------------------------------------
 //! Called when user execute "About current cover" command.
 // ---------------------------------------------------------------------
-void MainUIManager::DoFuncAboutCurrentCover()
+void MainUIManager::doCommandAboutCurrentCover()
 {
-	MainUIManagerAboutCurrentCoverDlgInfo dialogInfo;
-	getUIController()->ShowDialog(&dialogInfo);	
+	mainUIController->ShowAboutCurrentCoverDialog();
 }
 
 // ---------------------------------------------------------------------
 //! Called when user execute "Minimize" command.
 // ---------------------------------------------------------------------
-void MainUIManager::DoFuncMainMinimize()
+void MainUIManager::doCommandMainMinimize()
 {
 	getUIController()->Minimize();
 }
@@ -1181,7 +1159,7 @@ void MainUIManager::DoFuncMainMinimize()
 // ---------------------------------------------------------------------
 //! Called when user execute "Close" command.
 // ---------------------------------------------------------------------
-void MainUIManager::DoFuncClose()
+void MainUIManager::doCommandClose()
 {
 	GetUIController()->CloseUI();
 }
@@ -1193,59 +1171,7 @@ void MainUIManager::ButtonClicked(
 	SInt32 buttonCommand			//!< command of clicked button
 )
 {
-	CoverMainWindowInfo::ButtonClass button = static_cast<CoverMainWindowInfo::ButtonClass>(buttonCommand);
-	ASSERT(CoverMainWindowInfo::ButtonClass_None != button);
-
-#define HANDLE_CALCKEY(buttonClass, calcKey)				\
-		case buttonClass:									\
-			calcCore.Put(calcKey);							\
-			break;
-
-	switch (button)
-	{
-	case CoverMainWindowInfo::ButtonClass_Close:
-		DoFuncClose();
-		break;
-	
-	case CoverMainWindowInfo::ButtonClass_Minimize:
-		DoFuncMainMinimize();
-		break;
-
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_0,		CalcCore::Key_0)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_1,		CalcCore::Key_1)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_2,		CalcCore::Key_2)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_3,		CalcCore::Key_3)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_4,		CalcCore::Key_4)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_5,		CalcCore::Key_5)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_6,		CalcCore::Key_6)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_7,		CalcCore::Key_7)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_8,		CalcCore::Key_8)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_9,		CalcCore::Key_9)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_A,		CalcCore::Key_A)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_B,		CalcCore::Key_B)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_C,		CalcCore::Key_C)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_D,		CalcCore::Key_D)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_E,		CalcCore::Key_E)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_F,		CalcCore::Key_F)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Point,	CalcCore::Key_Point)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Clear,	CalcCore::Key_Clear)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_BS,		CalcCore::Key_BS)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Equal,	CalcCore::Key_Equal)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Plus,	CalcCore::Key_Plus)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Minus,	CalcCore::Key_Minus)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Times,	CalcCore::Key_Times)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Div,	CalcCore::Key_Div)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Negate, CalcCore::Key_Negate)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Hex,	CalcCore::Key_DigitForm16)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Dec,	CalcCore::Key_DigitForm10)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Oct,	CalcCore::Key_DigitForm8)
-	HANDLE_CALCKEY(CoverMainWindowInfo::ButtonClass_Bin,	CalcCore::Key_DigitForm2)
-
-	default:
-		break;
-	}
-
-#undef HANDLE_CALCKEY	
+	ExecuteCommand(buttonCommand);
 }
 
 // ---------------------------------------------------------------------
