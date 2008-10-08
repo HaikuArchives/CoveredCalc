@@ -381,6 +381,12 @@
 	<string name="IDS_MAIN_WINDOW_KEYFUNC_BIN">Binary</string>
 	<string name="IDS_MAIN_WINDOW_KEYFUNC_MINIMIZE">Hide (Minimize)</string>
 	<string name="IDS_MAIN_WINDOW_KEYFUNC_CLOSE">Close</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_COVER_BROWSER">Cover Browser</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_ALWAYS_ON_TOP">Always On Top</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_LOCK_POS">Lock Window Position</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_PREFERENCES">Preferences</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_ABOUT_COVER">About this Cover</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_ABOUT">About CoveredCalc</string>
 	<string name="IDS_QMSG_EDITED_KEYMAP_DISCARDING">Are you sure you want to discard all your changes?</string>
 	<string name="IDS_EMSG_EMPTY_KEYMAP_NAME">Enter keymap name.</string>
 	<string name="IDS_EMSG_DELETE_KEYMAPPINGS_IN_USE">Active keymap: "%0:s%"&#10;&#10;Hint:&#10;To delete this keymap, select another keymap and close this window by clicking [OK].</string>

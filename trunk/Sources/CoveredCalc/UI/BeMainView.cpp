@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -34,17 +34,16 @@
 #include <AppKit.h>
 #include <InterfaceKit.h>
 #include "MainUIManager.h"
-#include "MenuInfo.h"
 #include "BeMainView.h"
 #include "BeCoveredCalcApp.h"
-#include "DialogInfo.h"
+#include "DialogID.h"
+#include "CommandID.h"
 #include "BeAboutDialog.h"
 #include "UIControllerException.h"
 #include "BeAboutCurrentCoverDialog.h"
 #include "BeDialogDesign.h"
 #include "BePreferencesDlg.h"
 #include <support/Autolock.h>
-#include "ExceptionMessageUtils.h"
 
 ////////////////////////////////////////
 #define base	BeSkinView
@@ -112,7 +111,7 @@ UIManager* BeMainView::createUIManager()
 	MainUIManager* uiManager = new MainUIManager();
 	try
 	{
-		uiManager->Init(this, CoveredCalcApp::GetInstance()->GetKeyMappingManagerForMainWindow());
+		uiManager->Init(this, this, CoveredCalcApp::GetInstance()->GetKeyMappingManagerForMainWindow());
 		uiManager->Create();
 	}
 	catch (...)
@@ -144,31 +143,10 @@ void BeMainView::deleteUIManager(
 }
 
 /**
- *	@brief	Creates context menu.
- *	@param[in]	menuID	menu id.
- *	@return		context menu.
+ *	@brief	Shows main ui context menu.
+ *	@param[in]	menuPos	position of the menu (in screen coordinates).
  */
-BPopUpMenu* BeMainView::createContextMenu(SInt32 menuID)
-{
-	const BeXMLLangFile* langFile = BeCoveredCalcApp::GetInstance()->GetLangFile();
-	switch (menuID)
-	{
-	case IDM_MAIN_CONTEXT:
-		return createMainContextMenu(langFile);
-		break;
-		
-	default:
-		return base::createContextMenu(menuID);
-		break;
-	}
-}
-
-/**
- *	@brief	Creates main context menu.
- *	@param[in]	language file.
- *	@return		context menu.
- */
-BPopUpMenu* BeMainView::createMainContextMenu(const BeXMLLangFile* langFile)
+void BeMainView::ShowMainUIContextMenu(Point32 menuPos)
 {
 	BMenu* subMenu;
 	BPopUpMenu* popupMenu = new BPopUpMenu("context menu", false, false, B_ITEMS_IN_COLUMN);
@@ -189,102 +167,173 @@ BPopUpMenu* BeMainView::createMainContextMenu(const BeXMLLangFile* langFile)
 	popupMenu->AddSeparatorItem();
 	popupMenu->AddItem(createMenuItem(TypeConv::AsUTF8("ID_MAIN_MINIMIZE"), ID_MAIN_MINIMIZE, 0, 0));
 	popupMenu->AddItem(createMenuItem(TypeConv::AsUTF8("ID_MAIN_CLOSE"), ID_MAIN_CLOSE, 0, 0));
-	return popupMenu;
-}
-
-// ---------------------------------------------------------------------
-//! Shows dialog
-// ---------------------------------------------------------------------
-void BeMainView::ShowDialog(
-	DialogInfo* dialogInfo		//!< information about the dialog.
-)
-{
-	SInt32 dialogID = dialogInfo->GetDialogID();
-	const BeXMLLangFile* langFile = BeCoveredCalcApp::GetInstance()->GetLangFile();
-	if (NULL == langFile)
-	{
-		throw new UIControllerExceptions::FailedToShowDialog(dialogID);
-	}
-
-	BeDialogDesign* dialogDesign = NULL;
 
 	try
 	{
-		switch (dialogID)
-		{
-		case IDD_ABOUT:
-			{
-				if (NULL != aboutDialogMessenger && aboutDialogMessenger->IsValid())
-				{
-					aboutDialogMessenger->SendMessage(ID_DIALOG_ACTIVATE);
-				}
-				else
-				{
-					dialogDesign = langFile->LoadDialogDesign(dialogID);
-					BeAboutDialog* aboutDialog = new BeAboutDialog(dialogDesign);
-					dialogDesign = NULL;
-					aboutDialog->Init();
-					aboutDialog->Show();
-					if (NULL != aboutDialogMessenger)
-						delete aboutDialogMessenger;
-					aboutDialogMessenger = new BMessenger(aboutDialog);
-				}
-			}
-			break;
-		case IDD_ABOUT_COVER:
-			{
-				if (NULL != aboutCCDialogMessenger && aboutCCDialogMessenger->IsValid())
-				{
-					aboutCCDialogMessenger->SendMessage(ID_DIALOG_ACTIVATE);
-				}
-				else
-				{
-					dialogDesign = langFile->LoadDialogDesign(dialogID);
-					BeAboutCurrentCoverDialog* aboutCCDialog = new BeAboutCurrentCoverDialog(dialogDesign);
-					dialogDesign = NULL;
-					aboutCCDialog->Init();
-					aboutCCDialog->Show();
-					if (NULL != aboutCCDialogMessenger)
-						delete aboutCCDialogMessenger;
-					aboutCCDialogMessenger = new BMessenger(aboutCCDialog);
-				}
-			}
-			break;
-		case IDD_PREFERENCES:
-			{
-				if (NULL != prefDialogMessenger && prefDialogMessenger->IsValid())
-				{
-					prefDialogMessenger->SendMessage(ID_DIALOG_ACTIVATE);
-				}
-				else
-				{
-					dialogDesign = langFile->LoadDialogDesign(dialogID);
-					BePreferencesDlg* prefDialog = new BePreferencesDlg(dialogDesign);
-					dialogDesign = NULL;
-					prefDialog->Init();
-					prefDialog->Show();
-					if (NULL != prefDialogMessenger)
-						delete prefDialogMessenger;
-					prefDialogMessenger = new BMessenger(prefDialog);
-				}
-			}
-			break;			
-		default:
-			base::ShowDialog(dialogInfo);
-			break;
-		}
+		showContextMenu(popupMenu, menuPos);
+	}
+	catch (...)
+	{
+		delete popupMenu;
+		throw;
+	}
+	delete popupMenu;
+}
+
+/**
+ *	@brief	Returns menu item's command.
+ *	@param[in] menuID	menu ID.
+ *	@return	command id is returned.
+ */
+SInt32 BeMainView::getMenuCommand(uint32 menuCommand)
+{
+	SInt32 commandID;
+
+#define HANDLE_MENU_ID(menu, buttonClass)		\
+	case menu:									\
+		commandID = buttonClass;				\
+		break;
+
+	switch (menuCommand)
+	{
+		HANDLE_MENU_ID(ID_COVER_BROWSER, CoverMainWindowInfo::ButtonClass_ShowHideCoverBrowser)
+		HANDLE_MENU_ID(ID_RADIX_HEX, CoverMainWindowInfo::ButtonClass_Hex)
+		HANDLE_MENU_ID(ID_RADIX_DECIMAL, CoverMainWindowInfo::ButtonClass_Dec)
+		HANDLE_MENU_ID(ID_RADIX_OCTAL, CoverMainWindowInfo::ButtonClass_Oct)
+		HANDLE_MENU_ID(ID_RADIX_BINARY, CoverMainWindowInfo::ButtonClass_Bin)
+		HANDLE_MENU_ID(ID_MAIN_ALWAYS_ON_TOP, CoverMainWindowInfo::ButtonClass_ToggleAlwaysOnTop)
+		HANDLE_MENU_ID(ID_MAIN_LOCK_POS, CoverMainWindowInfo::ButtonClass_ToggleLockPos)
+		HANDLE_MENU_ID(ID_PREFERENCES, CoverMainWindowInfo::ButtonClass_ShowPreferencesDialog)
+		HANDLE_MENU_ID(ID_MAIN_ABOUT_COVER, CoverMainWindowInfo::ButtonClass_ShowCurrentCoverInfo)
+		HANDLE_MENU_ID(ID_ABOUT, CoverMainWindowInfo::ButtonClass_About)
+		HANDLE_MENU_ID(ID_MAIN_MINIMIZE, CoverMainWindowInfo::ButtonClass_Minimize)
+		HANDLE_MENU_ID(ID_MAIN_CLOSE, CoverMainWindowInfo::ButtonClass_Close)
+	
+	default:
+		commandID = UIManager::Command_None;
+		break;
+	}
+	
+	return commandID;
+}
+
+/**
+ *	@brief	Shows "About" dialog.
+ */
+void BeMainView::ShowAboutDialog()
+{
+	if (NULL != aboutDialogMessenger && aboutDialogMessenger->IsValid())
+	{
+		aboutDialogMessenger->SendMessage(ID_DIALOG_ACTIVATE);
+		return;
+	}
+	
+	if (NULL != aboutDialogMessenger)
+	{
+		delete aboutDialogMessenger;
+		aboutDialogMessenger = NULL;
+	}
+
+	const BeXMLLangFile* langFile = BeCoveredCalcApp::GetInstance()->GetLangFile();
+	if (NULL == langFile)
+	{
+		throw new UIControllerExceptions::FailedToShowDialog(IDD_ABOUT);
+	}
+	
+	BeDialogDesign* dialogDesign = langFile->LoadDialogDesign(IDD_ABOUT);
+	try
+	{
+		BeAboutDialog* aboutDialog = new BeAboutDialog(dialogDesign);
+		dialogDesign = NULL;
+		aboutDialog->Init();
+		aboutDialog->Show();
+		aboutDialogMessenger = new BMessenger(aboutDialog);
 	}
 	catch (...)
 	{
 		if (NULL != dialogDesign)
 			delete dialogDesign;
-		
 		throw;
 	}
-	
-	if (NULL != dialogDesign)
+}
+
+/**
+ *	@brief	Shows "About Current Cover" dialog.
+ */
+void BeMainView::ShowAboutCurrentCoverDialog()
+{
+	if (NULL != aboutCCDialogMessenger && aboutCCDialogMessenger->IsValid())
 	{
-		delete dialogDesign;
+		aboutCCDialogMessenger->SendMessage(ID_DIALOG_ACTIVATE);
+		return;
+	}
+
+	if (NULL != aboutCCDialogMessenger)
+	{
+		delete aboutCCDialogMessenger;
+		aboutCCDialogMessenger = NULL;
+	}
+
+	const BeXMLLangFile* langFile = BeCoveredCalcApp::GetInstance()->GetLangFile();
+	if (NULL == langFile)
+	{
+		throw new UIControllerExceptions::FailedToShowDialog(IDD_ABOUT_COVER);
+	}
+	
+	BeDialogDesign* dialogDesign = langFile->LoadDialogDesign(IDD_ABOUT_COVER);
+	try
+	{
+		BeAboutCurrentCoverDialog* aboutCCDialog = new BeAboutCurrentCoverDialog(dialogDesign);
+		dialogDesign = NULL;
+		aboutCCDialog->Init();
+		aboutCCDialog->Show();
+		aboutCCDialogMessenger = new BMessenger(aboutCCDialog);
+	}
+	catch (...)
+	{
+		if (NULL != dialogDesign)
+			delete dialogDesign;
+		throw;
+	}
+}
+
+/**
+ *	@brief	Shows "Preferences" dialog.
+ */
+void BeMainView::ShowPreferencesDialog()
+{
+	if (NULL != prefDialogMessenger && prefDialogMessenger->IsValid())
+	{
+		prefDialogMessenger->SendMessage(ID_DIALOG_ACTIVATE);
+		return;
+	}
+
+	if (NULL != prefDialogMessenger)
+	{
+		delete prefDialogMessenger;
+		prefDialogMessenger = NULL;
+	}
+	
+	const BeXMLLangFile* langFile = BeCoveredCalcApp::GetInstance()->GetLangFile();
+	if (NULL == langFile)
+	{
+		throw new UIControllerExceptions::FailedToShowDialog(IDD_PREFERENCES);
+	}
+	
+	BeDialogDesign* dialogDesign = langFile->LoadDialogDesign(IDD_PREFERENCES);
+	try
+	{
+		BePreferencesDlg* prefDialog = new BePreferencesDlg(dialogDesign);
+		dialogDesign = NULL;
+		prefDialog->Init();
+		prefDialog->Show();
+		prefDialogMessenger = new BMessenger(prefDialog);		
+	}
+	catch (...)
+	{
+		if (NULL != dialogDesign)
+			delete dialogDesign;
+		throw;
 	}
 }
 
@@ -353,70 +402,3 @@ void BeMainView::MainWindowActivated()
 		}	
 	}
 }
-
-// ---------------------------------------------------------------------
-//! Message handling
-// ---------------------------------------------------------------------
-void BeMainView::MessageReceived(
-	BMessage* msg				//!< received message
-)
-{
-	UIManager* uiManager = getUIManager();
-	MainUIManager* mainUIManager = dynamic_cast<MainUIManager*>(uiManager);
-	if (mainUIManager == NULL)
-	{
-		base::MessageReceived(msg);
-		return;
-	}
-
-	try
-	{
-		switch (msg->what)
-		{
-		case ID_COVER_BROWSER:
-			mainUIManager->DoFuncCoverBrowser();
-			break;
-		case ID_RADIX_HEX:
-			mainUIManager->DoFuncChangeRadix(CalcCore::DigitForm_16);
-			break;
-		case ID_RADIX_DECIMAL:
-			mainUIManager->DoFuncChangeRadix(CalcCore::DigitForm_10);
-			break;
-		case ID_RADIX_OCTAL:
-			mainUIManager->DoFuncChangeRadix(CalcCore::DigitForm_8);
-			break;
-		case ID_RADIX_BINARY:
-			mainUIManager->DoFuncChangeRadix(CalcCore::DigitForm_2);
-			break;	
-		case ID_MAIN_ALWAYS_ON_TOP:
-			mainUIManager->DoFuncMainWindowAlwaysOnTop();
-			break;
-		case ID_MAIN_LOCK_POS:
-			mainUIManager->DoFuncMainWindowLockPos();
-			break;
-		case ID_PREFERENCES:
-			mainUIManager->DoFuncPreferences();
-			break;
-		case ID_ABOUT:
-			mainUIManager->DoFuncAbout();
-			break;
-		case ID_MAIN_ABOUT_COVER:
-			mainUIManager->DoFuncAboutCurrentCover();
-			break;
-		case ID_MAIN_MINIMIZE:
-			mainUIManager->DoFuncMainMinimize();
-			break;
-		case ID_MAIN_CLOSE:
-			mainUIManager->DoFuncClose();
-			break;
-		default:
-			base::MessageReceived(msg);
-			break;
-		}
-	}
-	catch (Exception* ex)
-	{
-		ExceptionMessageUtils::DoExceptionMessageBox(CoveredCalcApp::GetInstance(), ex);
-		ex->Delete();		
-	}	
-}	

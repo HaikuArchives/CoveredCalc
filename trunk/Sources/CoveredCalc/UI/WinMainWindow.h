@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -34,11 +34,12 @@
 #define _WINMAINWINDOW_H_
 
 #include "WinSkinWindow.h"
+#include "MainUIController.h"
 
 // ---------------------------------------------------------------------
 //! メインウィンドウ for Windows
 // ---------------------------------------------------------------------
-class WinMainWindow : public WinSkinWindow
+class WinMainWindow : public WinSkinWindow, public MainUIController
 {
 public:
 							WinMainWindow();
@@ -47,10 +48,16 @@ public:
 	static ATOM				RegisterClass();
 	static ConstAStr		GetWindowClassName() { return windowClassName; }
 
+	// MainUIController interface
+	virtual void			ShowMainUIContextMenu(Point32 menuPos);
+	virtual void			ShowAboutDialog();
+	virtual void			ShowAboutCurrentCoverDialog();
+	virtual void			ShowPreferencesDialog();
+
 protected:
 	virtual UIManager*		createUIManager();
 	virtual void			deleteUIManager(UIManager* uiManager);
-	virtual WinDialog*		createDialogObject(DialogInfo* dialogInfo);
+	virtual SInt32			getMenuCommand(UINT menuID);
 	
 	virtual LRESULT			wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -58,7 +65,6 @@ private:
 	LRESULT					onCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT					onClose(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT					onEnable(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	LRESULT					onCommand(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT					onDisplayChange(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

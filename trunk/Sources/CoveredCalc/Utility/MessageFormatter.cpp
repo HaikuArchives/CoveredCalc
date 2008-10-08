@@ -156,14 +156,14 @@ void MessageFormatter::FormatV(
 	{
 		while (true)
 		{
-			memset(replaceTos, 0, bufSize);
+			memset(replaceTos, 0, bufSize * sizeof(AChar));
 			vsntprintf(replaceTos, bufSize, replaceFormat.CString(), args);
 			if (replaceTos[bufSize - 1] != ALITERAL('\0'))
 			{
 				// Since the buffer is too small for result,
 				// it doubles buffer size and retry.
 				bufSize *= 2;
-				AChar* newBuf = static_cast<AChar*>(realloc(dynBuf, bufSize));
+				AChar* newBuf = static_cast<AChar*>(realloc(dynBuf, bufSize * sizeof(AChar)));
 				if (NULL == newBuf)
 				{
 					free(dynBuf);

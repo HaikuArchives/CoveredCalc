@@ -381,6 +381,12 @@
 	<string name="IDS_MAIN_WINDOW_KEYFUNC_BIN">2 進</string>
 	<string name="IDS_MAIN_WINDOW_KEYFUNC_MINIMIZE">隠す(最小化)</string>
 	<string name="IDS_MAIN_WINDOW_KEYFUNC_CLOSE">閉じる</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_COVER_BROWSER">カバーブラウザ</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_ALWAYS_ON_TOP">常に手前に表示</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_LOCK_POS">位置を固定</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_PREFERENCES">設定</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_ABOUT_COVER">このカバーの情報</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_ABOUT">バージョン情報</string>
 	<string name="IDS_QMSG_EDITED_KEYMAP_DISCARDING">行った変更をすべて破棄します。よろしいですか？</string>
 	<string name="IDS_EMSG_EMPTY_KEYMAP_NAME">キーマップ名を入力してください。</string>
 	<string name="IDS_EMSG_DELETE_KEYMAPPINGS_IN_USE">キーマップ "%0:s%" は現在使用中のため削除できません。&#10;&#10;ヒント：&#10;このキーマップを削除するには、いったん他のキーマップを選択して [OK] ボタンでこのダイアログを閉じてください。</string>

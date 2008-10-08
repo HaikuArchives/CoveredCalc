@@ -32,7 +32,6 @@
 
 #include "Prefix.h"
 #include "WinCoveredCalcApp.h"
-#include "DialogInfo.h"
 #include "UIControllerException.h"
 #include "MainUIManager.h"
 #include "WinAboutDlg.h"
@@ -98,7 +97,7 @@ UIManager* WinMainWindow::createUIManager()
 	MainUIManager* uiManager = new MainUIManager();
 	try
 	{
-		uiManager->Init(this, CoveredCalcApp::GetInstance()->GetKeyMappingManagerForMainWindow());
+		uiManager->Init(this, this, CoveredCalcApp::GetInstance()->GetKeyMappingManagerForMainWindow());
 		uiManager->Create();
 	}
 	catch (...)
@@ -130,36 +129,78 @@ void WinMainWindow::deleteUIManager(UIManager* uiManager)
 	}
 }
 
-// ---------------------------------------------------------------------
-//! 指定されたダイアログに対応する WinDialog オブジェクトを生成します。
-/*!
-	@return WinDialog オブジェクト
-	@throw UIControllerExceptions::FailedToShowDialog オブジェクトが生成できなかったとき
-*/
-// ---------------------------------------------------------------------
-WinDialog* WinMainWindow::createDialogObject(
-	DialogInfo* dialogInfo					//!< ダイアログの情報
-)
+/**
+ *	@brief	Shows main ui context menu.
+ *	@param[in]	menuPos	position of the menu (in screen coordinates).
+ */
+void WinMainWindow::ShowMainUIContextMenu(Point32 menuPos)
 {
-	WinDialog* retDlg = NULL;
+		showContextMenu(IDM_MAIN_CONTEXT, menuPos);
+}
 
-	switch (dialogInfo->GetDialogID())
+/**
+ *	@brief	Returns menu item's command.
+ *	@param[in] menuID	menu ID.
+ *	@return	command id is returned.
+ */
+SInt32 WinMainWindow::getMenuCommand(UINT menuID)
+{
+	SInt32 commandID;
+
+#define HANDLE_MENU_ID(menu, buttonClass)		\
+	case menu:									\
+		commandID = buttonClass;				\
+		break;
+
+	switch (menuID)
 	{
-	case IDD_ABOUT:
-		retDlg = new WinAboutDlg();
-		break;
-	case IDD_ABOUT_COVER:
-		retDlg = new WinAboutCurrentCoverDlg();
-		break;
-	case IDD_PREFERENCES:
-		retDlg = new WinPreferencesDlg();
-		break;
+		HANDLE_MENU_ID(ID_COVER_BROWSER, CoverMainWindowInfo::ButtonClass_ShowHideCoverBrowser)
+		HANDLE_MENU_ID(ID_RADIX_HEX, CoverMainWindowInfo::ButtonClass_Hex)
+		HANDLE_MENU_ID(ID_RADIX_DECIMAL, CoverMainWindowInfo::ButtonClass_Dec)
+		HANDLE_MENU_ID(ID_RADIX_OCTAL, CoverMainWindowInfo::ButtonClass_Oct)
+		HANDLE_MENU_ID(ID_RADIX_BINARY, CoverMainWindowInfo::ButtonClass_Bin)
+		HANDLE_MENU_ID(ID_MAIN_ALWAYS_ON_TOP, CoverMainWindowInfo::ButtonClass_ToggleAlwaysOnTop)
+		HANDLE_MENU_ID(ID_MAIN_LOCK_POS, CoverMainWindowInfo::ButtonClass_ToggleLockPos)
+		HANDLE_MENU_ID(ID_PREFERENCES, CoverMainWindowInfo::ButtonClass_ShowPreferencesDialog)
+		HANDLE_MENU_ID(ID_MAIN_ABOUT_COVER, CoverMainWindowInfo::ButtonClass_ShowCurrentCoverInfo)
+		HANDLE_MENU_ID(ID_ABOUT, CoverMainWindowInfo::ButtonClass_About)
+		HANDLE_MENU_ID(ID_MAIN_MINIMIZE, CoverMainWindowInfo::ButtonClass_Minimize)
+		HANDLE_MENU_ID(IDCLOSE, CoverMainWindowInfo::ButtonClass_Close)
+		HANDLE_MENU_ID(ID_MAIN_CLOSE, CoverMainWindowInfo::ButtonClass_Close)
+	
 	default:
-		throw new UIControllerExceptions::FailedToShowDialog(dialogInfo->GetDialogID());
+		commandID = UIManager::Command_None;
 		break;
 	}
-	
-	return retDlg;
+
+	return commandID;
+}
+
+/**
+ *	@brief	Shows "About" dialog.
+ */
+void WinMainWindow::ShowAboutDialog()
+{
+	WinAboutDlg dlg;
+	dlg.DoModal(m_hWnd);
+}
+
+/**
+ *	@brief	Shows "About Current Cover" dialog.
+ */
+void WinMainWindow::ShowAboutCurrentCoverDialog()
+{
+	WinAboutCurrentCoverDlg dlg;
+	dlg.DoModal(m_hWnd);
+}
+
+/**
+ *	@brief	Shows "Preferences" dialog.
+ */
+void WinMainWindow::ShowPreferencesDialog()
+{
+	WinPreferencesDlg dlg;
+	dlg.DoModal(m_hWnd);
 }
 
 // ---------------------------------------------------------------------
@@ -187,9 +228,6 @@ LRESULT WinMainWindow::wndProc(
 			break;
 		case WM_ENABLE:
 			return onEnable(hWnd, uMsg, wParam, lParam);
-			break;
-		case WM_COMMAND:
-			return onCommand(hWnd, uMsg, wParam, lParam);
 			break;
 		case WM_DISPLAYCHANGE:
 			return onDisplayChange(hWnd, uMsg, wParam, lParam);
@@ -266,74 +304,6 @@ LRESULT WinMainWindow::onEnable(
 
 	bool isEnabled = (wParam) ? true : false;
 	WinCoveredCalcApp::GetInstance()->EnableCoveredCalcWindows(isEnabled);
-	return 0;
-}
-
-// ---------------------------------------------------------------------
-//! WM_COMMAND ハンドラ
-/*!
-	@retval 0 このメッセージを処理した
-*/
-// ---------------------------------------------------------------------
-LRESULT WinMainWindow::onCommand(
-	HWND hWnd,			//!< ウィンドウハンドル
-	UINT uMsg,			//!< WM_COMMAND
-	WPARAM wParam,		//!< 上位ワードが通知コード、下位ワードがコマンドID
-	LPARAM lParam		//!< このメッセージを送ったコントロールのハンドル
-)
-{
-	WORD command = LOWORD(wParam);
-	UIManager* uiManager = getUIManager();
-	MainUIManager* mainUIManager = dynamic_cast<MainUIManager*>(uiManager);
-	if (mainUIManager == NULL)
-	{
-		return base::wndProc(hWnd, uMsg, wParam, lParam);		
-	}
-
-	switch (command)
-	{
-	case ID_COVER_BROWSER:
-		mainUIManager->DoFuncCoverBrowser();
-		break;
-	case ID_RADIX_HEX:
-		mainUIManager->DoFuncChangeRadix(CalcCore::DigitForm_16);
-		break;
-	case ID_RADIX_DECIMAL:
-		mainUIManager->DoFuncChangeRadix(CalcCore::DigitForm_10);
-		break;
-	case ID_RADIX_OCTAL:
-		mainUIManager->DoFuncChangeRadix(CalcCore::DigitForm_8);
-		break;
-	case ID_RADIX_BINARY:
-		mainUIManager->DoFuncChangeRadix(CalcCore::DigitForm_2);
-		break;	
-	case ID_MAIN_ALWAYS_ON_TOP:
-		mainUIManager->DoFuncMainWindowAlwaysOnTop();
-		break;
-	case ID_MAIN_LOCK_POS:
-		mainUIManager->DoFuncMainWindowLockPos();
-		break;
-	case ID_PREFERENCES:
-		mainUIManager->DoFuncPreferences();
-		break;
-	case ID_ABOUT:
-		mainUIManager->DoFuncAbout();
-		break;
-	case ID_MAIN_ABOUT_COVER:
-		mainUIManager->DoFuncAboutCurrentCover();
-		break;
-	case ID_MAIN_MINIMIZE:
-		mainUIManager->DoFuncMainMinimize();
-		break;
-	case IDCLOSE:
-	case ID_MAIN_CLOSE:
-		mainUIManager->DoFuncClose();
-		break;
-	default:
-		return base::wndProc(hWnd, uMsg, wParam, lParam);
-		break;
-	}
-	
 	return 0;
 }
 

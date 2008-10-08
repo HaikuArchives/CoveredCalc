@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -112,7 +112,13 @@ public:
 		ButtonClass_Bin,
 		ButtonClass_Minimize,
 		ButtonClass_Close,
-		
+		ButtonClass_ShowHideCoverBrowser,
+		ButtonClass_ToggleAlwaysOnTop,
+		ButtonClass_ToggleLockPos,
+		ButtonClass_ShowPreferencesDialog,
+		ButtonClass_ShowCurrentCoverInfo,
+		ButtonClass_About,
+				
 		ButtonClass_Max
 	};
 		

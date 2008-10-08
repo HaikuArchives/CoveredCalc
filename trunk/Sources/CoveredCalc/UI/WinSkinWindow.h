@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -78,8 +78,6 @@ public:
 	virtual void			Minimize();
 	virtual bool			IsUIMinimized() const;
 	virtual void			Restore();
-	virtual void			ShowContextMenu(MenuInfo* menuInfo);
-	virtual void			ShowDialog(DialogInfo* dialogInfo);
 	virtual void			UpdateUI();
 	virtual void			Wait(UInt32 milliseconds);
 	virtual void			SetToolTipText(ConstAStr text);
@@ -93,15 +91,16 @@ public:
 protected:
 	virtual UIManager*		createUIManager() = 0;
 	virtual void			deleteUIManager(UIManager* uiManager) = 0;
-	virtual WinDialog*		createDialogObject(DialogInfo* /*dialogInfo*/) { return NULL; }	// どれも知らない TODO: 例外投げる必要があるかも
-	virtual void			deleteDialogObject(WinDialog* dialog);
+	virtual SInt32			getMenuCommand(UINT menuID) = 0;
 
-
-	UIManager*				getUIManager() { return uiManager; }
 	virtual LRESULT			wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+protected:
+	UIManager*				getUIManager() { return uiManager; }
+	void					showContextMenu(WORD resourceID, Point32 menuPos);
+
 private:
-	void					updateMenuItemStates(HMENU menu, MenuInfo* menuInfo);
+	void					updateMenuItemStates(HMENU menu);
 	UINT_PTR				timerIdToWinTimerId(UIController::TimerID timerId);
 	UIController::TimerID	winTimerIdToTimerId(UINT_PTR winTimerId);
 	void					readyMousePosition() const;
@@ -118,6 +117,7 @@ private:
 	LRESULT					onKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT					onTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT					onRereadSkin(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT					onCommand(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	Point32					mousePosition;					//!< イベント発生時のマウス位置を記憶する

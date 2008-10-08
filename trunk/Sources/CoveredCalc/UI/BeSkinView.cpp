@@ -37,14 +37,13 @@
 #include <support/String.h>
 #include "UIManager.h"
 #include "ColorCodedSkin.h"
-#include "MenuInfo.h"
 #include "UIControllerException.h"
 #include "BeSkinView.h"
-#include "DialogInfo.h"
 #include "BeDialog.h"
 #include "BeCoveredCalcApp.h"
 #include "BeCCSAppearance.h"
 #include "MemoryException.h"
+#include "ExceptionMessageUtils.h"
 
 #define MSG_TIMER_MOUSEHOVER	'tmmh'
 
@@ -312,25 +311,18 @@ void BeSkinView::Restore()
 	window->Minimize(false);
 }
 
-// ---------------------------------------------------------------------
-//! Shows context menu
-// ---------------------------------------------------------------------
-void BeSkinView::ShowContextMenu(
-	MenuInfo *menuInfo			//!< information about the menu.
-)
+/**
+ *	@brief	Shows context menu. This utility function is called by derived classes.
+ *	@param[in] popupMenu	menu.
+ *	@param[in] menuPos		position of menu (in screen coordinates)
+ */
+void BeSkinView::showContextMenu(BPopUpMenu* popupMenu, Point32 menuPos)
 {
 	BWindow* window = Window();
 	BAutolock locker(window);
 
-	// Create popup menu.
-	BPopUpMenu* popupMenu = createContextMenu(menuInfo->GetMenuID());
-
-	// Update states
-	updateMenuItemStates(popupMenu, menuInfo);
-
 	// Show popup menu.
-	Point32 point32 = menuInfo->GetMenuPosition();
-	BPoint	point(point32.x, point32.y);
+	BPoint	point(menuPos.x, menuPos.y);
 	BRect rect(point, point);
 	rect.InsetBy(-5, -5);
 	BMenuItem* selectedMenuItem = popupMenu->Go(point, false, true, rect, false);
@@ -339,17 +331,6 @@ void BeSkinView::ShowContextMenu(
 		BMessenger messenger(this);
 		messenger.SendMessage(selectedMenuItem->Message());
 	}
-	delete popupMenu;
-}
-
-/**
- *	@brief	Creates context menu.
- *	@param[in]	menuID	menu id.
- *	@return		context menu.
- */
-BPopUpMenu* BeSkinView::createContextMenu(SInt32 menuID)
-{
-	throw new UIControllerExceptions::FailedToShowContextMenu(menuID);
 }
 
 /**
@@ -399,6 +380,22 @@ BMenuItem* BeSkinView::createMenuItem(ConstUTF8Str name, uint32 command, int8 sh
 	char trigger = parseMenuItemTrigger(sourceLabel, label);
 	BMenuItem* newItem = new BMenuItem(label.String(), new BMessage(command), shortcut, modifiers);
 	newItem->SetTrigger(trigger);
+
+	bool isEnabled = true;
+	bool isChecked = false;
+	SInt32 commandId = getMenuCommand(command);
+	UInt32 itemStates = uiManager->GetCommandState(commandId);
+	if (itemStates & UIManager::CommandState_Checked)
+	{
+		isChecked = true;
+	}
+	if (itemStates & UIManager::CommandState_Disabled)
+	{
+		isEnabled = false;
+	}
+	newItem->SetEnabled(isEnabled);
+	newItem->SetMarked(isChecked);
+	
 	return newItem;
 }
 
@@ -411,64 +408,6 @@ BMenu* BeSkinView::createSubMenu(ConstUTF8Str name)
 	BString label;
 	parseMenuItemTrigger(sourceLabel, label);
 	return new BMenu(label.String(), B_ITEMS_IN_COLUMN);
-}
-
-// ---------------------------------------------------------------------
-//! Updates the state of each menu item in specified menu.
-/*!
-	@note if there is submenu in the menu, update items in it.
-*/
-// ---------------------------------------------------------------------
-void BeSkinView::updateMenuItemStates(
-	BMenu* menu,					//!< menu
-	MenuInfo* menuInfo				//!< information about menu
-)
-{
-	int32 count = menu->CountItems();
-	int32 index;
-	for (index=0; index<count; index++)
-	{
-		BMenuItem* menuItem = menu->ItemAt(index);
-		if (NULL == menuItem)
-		{
-			continue;
-		}
-		BMenu* subMenu = menuItem->Submenu();
-		if (NULL != subMenu)
-		{
-			updateMenuItemStates(subMenu, menuInfo);
-		}
-		else
-		{
-			BMessage* itemMessage = menuItem->Message();
-			if (NULL != itemMessage)
-			{
-				bool isEnabled = true;
-				bool isChecked = false;
-				UInt32 itemStates = menuInfo->GetMenuItemStates(static_cast<SInt32>(itemMessage->what));
-				if (itemStates & MenuInfo::MenuItemState_Checked)
-				{
-					isChecked = true;
-				}
-				if (itemStates & MenuInfo::MenuItemState_Disabled)
-				{
-					isEnabled = false;
-				}
-				menuItem->SetEnabled(isEnabled);
-				menuItem->SetMarked(isChecked);
-			}
-		}
-	}
-}
-
-// ---------------------------------------------------------------------
-//! Shows dialog
-// ---------------------------------------------------------------------
-void BeSkinView::ShowDialog(
-	DialogInfo* dialogInfo		//!< information about the dialog.
-)
-{
-	throw new UIControllerExceptions::FailedToShowDialog(dialogInfo->GetDialogID());
 }
 
 // ---------------------------------------------------------------------
@@ -796,15 +735,30 @@ void BeSkinView::KeyUp(
  */
 void BeSkinView::MessageReceived(BMessage *message)
 {
-	switch (message->what)
+	try
 	{
-	case MSG_TIMER_MOUSEHOVER:
-		timerCommandReceived(message->what);
-		break;
-	default:
-		base::MessageReceived(message);
-		break;
+		if (MSG_TIMER_MOUSEHOVER == message->what)
+		{
+			timerCommandReceived(message->what);
+		}
+		else
+		{
+			SInt32 commandId = getMenuCommand(message->what);
+			if (UIManager::Command_None != commandId)
+			{
+				uiManager->ExecuteCommand(commandId);
+			}
+			else
+			{
+				base::MessageReceived(message);
+			}
+		}
 	}
+	catch (Exception* ex)
+	{
+		ExceptionMessageUtils::DoExceptionMessageBox(CoveredCalcApp::GetInstance(), ex);
+		ex->Delete();		
+	}	
 }
 
 /**

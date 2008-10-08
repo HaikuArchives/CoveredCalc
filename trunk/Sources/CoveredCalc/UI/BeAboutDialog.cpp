@@ -37,7 +37,8 @@
 #include <support/Autolock.h>
 #include <translation/TranslationUtils.h>
 #include "BeAboutDialog.h"
-#include "DialogDef.h"
+#include "DialogID.h"
+#include "CommandID.h"
 #include "GenericException.h"
 #include "BeBitmapView.h"
 #include "ResourceID.h"

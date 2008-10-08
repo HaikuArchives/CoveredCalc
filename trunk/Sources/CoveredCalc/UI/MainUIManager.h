@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -43,6 +43,7 @@
 #include "CoverMainWindowInfo.h"
 
 class ColorCodedSkin;
+class MainUIController;
 
 // ---------------------------------------------------------------------
 //! This class manages user interface of a main window
@@ -52,7 +53,9 @@ class MainUIManager : public UIManager, public ButtonUITaskEventHandler, public 
 public:
 								MainUIManager();
 	virtual						~MainUIManager();
-	
+
+	void						Init(UIController* uiController, MainUIController* mainUIController, const KeyMappingManager* keyMappingManager);
+
 	virtual void				Create();
 	virtual void				Destroy();
 
@@ -62,18 +65,10 @@ public:
 	virtual bool				KeyDown(const KeyEventParameter& parameter);
 	virtual void				UIActivated();
 
-	void						DoFuncCoverBrowser();
-	void						DoFuncMainWindowAlwaysOnTop();
-	void						DoFuncMainWindowLockPos();
-	void						DoFuncChangeRadix(CalcCore::DigitForm radix);
-	void						DoFuncPreferences();
-	void						DoFuncAbout();
-	void						DoFuncAboutCurrentCover();
-	void						DoFuncMainMinimize();
-	void						DoFuncClose();
-
 	virtual SInt32				GetSkinAreaFromCommandId(SInt32 commandId);
 	virtual UInt32				GetCommandState(SInt32 commandId);
+	virtual void				ExecuteCommand(SInt32 commandId);
+
 
 	CalcCore::DigitForm			GetCurrentDigitForm() const { return currentDigitForm; }
 	
@@ -90,6 +85,9 @@ public:
 	virtual void				CoverDefChanged();
 	virtual void				CurrentCoverChanged();
 
+	MainUIController*			GetMainUIController() { return mainUIController; }
+	const MainUIController*		GetMainUIController() const { return mainUIController; }
+
 protected:
 	virtual void				clearMembers();
 	virtual void				readSkin();
@@ -103,8 +101,17 @@ private:
 	const CoverMainWindowInfo*	getCurrentMainWindowInfo() const;
 	const Path&					getImageFilePath(const CoverMainWindowInfo* mainWindowInfo, SInt32 skinIndex);
 	void						updateWholeAppearance();
+	void						doCommandCoverBrowser();
+	void						doCommandMainWindowAlwaysOnTop();
+	void						doCommandMainWindowLockPos();
+	void						doCommandPreferences();
+	void						doCommandAbout();
+	void						doCommandAboutCurrentCover();
+	void						doCommandMainMinimize();
+	void						doCommandClose();
 
 private:
+	MainUIController*			mainUIController;			///< main UI controller.
 	CalcCore					calcCore;					//!< calc engine.
 	CalcCore::DigitForm			currentDigitForm;			///< current digit form of engine.
 	MBCString					numberStringOnDisplay;		//!< string on display

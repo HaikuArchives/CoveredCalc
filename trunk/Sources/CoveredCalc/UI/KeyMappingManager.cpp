@@ -39,21 +39,21 @@
 static const UTF8Char STR_MODIFIER_NONE[] = "none";
 #if defined (WIN32)
 static const UTF8Char STR_MODIFIER_SHIFT[] = "shift";
-static const SInt32 MODIFIER_SHIFT_LENGTH = sizeof(STR_MODIFIER_SHIFT)/sizeof(AChar) - 1;
+static const SInt32 MODIFIER_SHIFT_LENGTH = sizeof(STR_MODIFIER_SHIFT)/sizeof(UTF8Char) - 1;
 static const UTF8Char STR_MODIFIER_CTRL[] = "ctrl";
-static const SInt32 MODIFIER_CTRL_LENGTH = sizeof(STR_MODIFIER_CTRL)/sizeof(AChar) - 1;
+static const SInt32 MODIFIER_CTRL_LENGTH = sizeof(STR_MODIFIER_CTRL)/sizeof(UTF8Char) - 1;
 static const UTF8Char STR_MODIFIER_ALT[] = "alt";
-static const SInt32 MODIFIER_ALT_LENGTH = sizeof(STR_MODIFIER_ALT)/sizeof(AChar) - 1;
+static const SInt32 MODIFIER_ALT_LENGTH = sizeof(STR_MODIFIER_ALT)/sizeof(UTF8Char) - 1;
 static const AChar CHAR_MODIFIER_SEPARATOR = '+';
 #elif defined (BEOS)
 static const UTF8Char STR_MODIFIER_SHIFT[] = "shift";
-static const SInt32 MODIFIER_SHIFT_LENGTH = sizeof(STR_MODIFIER_SHIFT)/sizeof(AChar) - 1;
+static const SInt32 MODIFIER_SHIFT_LENGTH = sizeof(STR_MODIFIER_SHIFT)/sizeof(UTF8Char) - 1;
 static const UTF8Char STR_MODIFIER_COMMAND[] = "command";
-static const SInt32 MODIFIER_COMMAND_LENGTH = sizeof(STR_MODIFIER_COMMAND)/sizeof(AChar) - 1;
+static const SInt32 MODIFIER_COMMAND_LENGTH = sizeof(STR_MODIFIER_COMMAND)/sizeof(UTF8Char) - 1;
 static const UTF8Char STR_MODIFIER_CONTROL[] = "control";
-static const SInt32 MODIFIER_CONTROL_LENGTH = sizeof(STR_MODIFIER_CONTROL)/sizeof(AChar) - 1;
+static const SInt32 MODIFIER_CONTROL_LENGTH = sizeof(STR_MODIFIER_CONTROL)/sizeof(UTF8Char) - 1;
 static const UTF8Char STR_MODIFIER_OPTION[] = "option";
-static const SInt32 MODIFIER_OPTION_LENGTH = sizeof(STR_MODIFIER_OPTION)/sizeof(AChar) - 1;
+static const SInt32 MODIFIER_OPTION_LENGTH = sizeof(STR_MODIFIER_OPTION)/sizeof(UTF8Char) - 1;
 static const AChar CHAR_MODIFIER_SEPARATOR = '-';
 #endif
 

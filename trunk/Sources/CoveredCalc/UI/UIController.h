@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -33,8 +33,6 @@
 #ifndef _UICONTROLLER_H_
 #define _UICONTROLLER_H_
 
-class MenuInfo;
-class DialogInfo;
 class ColorCodedSkin;
 class ColorCodedSkinAppearance;
 
@@ -70,8 +68,6 @@ public:
 	virtual void		Minimize() = 0;
 	virtual bool		IsUIMinimized() const = 0;
 	virtual void		Restore() = 0;
-	virtual void		ShowContextMenu(MenuInfo* menuInfo) = 0;
-	virtual void		ShowDialog(DialogInfo* dialogInfo) = 0;
 	virtual void		UpdateUI() = 0;
 	virtual void		Wait(UInt32 milliseconds) = 0;
 	virtual void		SetToolTipText(ConstAStr text) = 0;

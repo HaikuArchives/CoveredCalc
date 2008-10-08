@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -53,13 +53,18 @@ public:
 		CommandState_None		= 0x0000,	///< normal state only
 		CommandState_Disabled	= 0x0001,	///< command is disabled
 		CommandState_Checked	= 0x0002,	///< command is checked (selected)
+		CommandState_Radio		= 0x0004,	///< command is radio-button behavior
+	};
+
+	enum {
+		Command_None = -1,	// no command
 	};
 
 public:
 								UIManager();
 	virtual						~UIManager();
 
-	virtual void				Init(UIController* uiController, const KeyMappingManager* keyMappingManager);
+	void						Init(UIController* uiController, const KeyMappingManager* keyMappingManager);
 
 	virtual void				Create() = 0;
 	virtual void				Destroy();
@@ -74,6 +79,7 @@ public:
 
 	virtual SInt32				GetSkinAreaFromCommandId(SInt32 commandId) = 0;
 	virtual UInt32				GetCommandState(SInt32 commandId) = 0;
+	virtual void				ExecuteCommand(SInt32 commandId) = 0;
 	
 	// event handler for user interface
 	virtual void				MouseMove();

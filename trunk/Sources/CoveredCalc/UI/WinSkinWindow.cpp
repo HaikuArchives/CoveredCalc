@@ -39,7 +39,6 @@
 #include "ExceptionMessageUtils.h"
 #include "WinSkinWindow.h"
 #include "UIControllerException.h"
-#include "MenuInfo.h"
 #include "WinNormalAppearance.h"
 #include "WinLayeredAppearance.h"
 #include "MemoryException.h"
@@ -379,17 +378,17 @@ void WinSkinWindow::Restore()
 	::ShowWindow(m_hWnd, SW_RESTORE);
 }
 
-// ---------------------------------------------------------------------
-//! コンテキストメニューを表示します。
-// ---------------------------------------------------------------------
-void WinSkinWindow::ShowContextMenu(
-	MenuInfo* menuInfo					//!< メニューに関する情報
-)
+/**
+ *	@brief	Shows context menu. This utility function is called by derived classes.
+ *	@param[in] resourceID	resource ID of menu.
+ *	@param[in] menuPos		position of menu (in screen coordinates)
+ */
+void WinSkinWindow::showContextMenu(WORD resourceID, Point32 menuPos)
 {
-	HMENU menu = ::LoadMenu(WinCoveredCalcApp::GetInstance()->GetLangResHandle(), MAKEINTRESOURCE(menuInfo->GetMenuID()));
+	HMENU menu = ::LoadMenu(WinCoveredCalcApp::GetInstance()->GetLangResHandle(), MAKEINTRESOURCE(resourceID));
 	if (NULL == menu)
 	{
-		throw new UIControllerExceptions::FailedToShowContextMenu(menuInfo->GetMenuID());
+		throw new UIControllerExceptions::FailedToShowContextMenu(resourceID);
 	}
 
 	try
@@ -398,10 +397,9 @@ void WinSkinWindow::ShowContextMenu(
 		if (NULL != subMenu)
 		{
 			// メニューアイテムの状態を設定
-			updateMenuItemStates(subMenu, menuInfo);
+			updateMenuItemStates(subMenu);
 			
 			// メニューを表示		
-			Point32 menuPos = menuInfo->GetMenuPosition();
 			::TrackPopupMenu(subMenu, TPM_RIGHTBUTTON, menuPos.x, menuPos.y, 0, m_hWnd, NULL);
 		}
 		
@@ -421,8 +419,7 @@ void WinSkinWindow::ShowContextMenu(
 */
 // ---------------------------------------------------------------------
 void WinSkinWindow::updateMenuItemStates(
-	HMENU menu,				//!< メニューハンドル
-	MenuInfo* menuInfo		//!< メニューの状態を取得するための MenuInfo オブジェクト
+	HMENU menu				//!< メニューハンドル
 )
 {
 	int count = ::GetMenuItemCount(menu);
@@ -436,24 +433,25 @@ void WinSkinWindow::updateMenuItemStates(
 		::GetMenuItemInfo(menu, index, TRUE, &itemInfo);
 		if (NULL != itemInfo.hSubMenu)
 		{
-			updateMenuItemStates(itemInfo.hSubMenu, menuInfo);
+			updateMenuItemStates(itemInfo.hSubMenu);
 		}
 		else if (!(itemInfo.fType & MFT_SEPARATOR))
 		{
 			bool isEnabled = true;
 			bool isChecked = false;
-			UInt32 itemStates = menuInfo->GetMenuItemStates(itemInfo.wID);
-			if (itemStates & MenuInfo::MenuItemState_Checked)
+			SInt32 command = getMenuCommand(itemInfo.wID);
+			UInt32 itemStates = uiManager->GetCommandState(command);
+			if (itemStates & UIManager::CommandState_Checked)
 			{
 				isChecked = true;
 			}
-			if (itemStates & MenuInfo::MenuItemState_Disabled)
+			if (itemStates & UIManager::CommandState_Disabled)
 			{
 				isEnabled = false;
 			}
 
 			::EnableMenuItem(menu, index, MF_BYPOSITION | ((isEnabled) ? MF_ENABLED : MF_GRAYED));
-			if (itemStates & MenuInfo::MenuItemState_Radio)
+			if (itemStates & UIManager::CommandState_Radio)
 			{
 				if (isChecked)
 				{
@@ -470,37 +468,6 @@ void WinSkinWindow::updateMenuItemStates(
 			}
 		}
 	}
-}
-
-// ---------------------------------------------------------------------
-//! ダイアログを表示します。
-/*!
-	ダイアログを表示します。
-	ダイアログがモーダルになるかモードレスになるかは OS によって異なります。
-	
-	@note Windows 版ではモーダルダイアログで表示します。
-*/
-// ---------------------------------------------------------------------
-void WinSkinWindow::ShowDialog(
-	DialogInfo* dialogInfo			//!< 表示するダイアログに関する情報
-)
-{
-	WinDialog* dialog = createDialogObject(dialogInfo);
-	if (NULL != dialog)
-	{
-		dialog->DoModal(m_hWnd);
-	}
-	deleteDialogObject(dialog);
-}
-
-// ---------------------------------------------------------------------
-//! createDialogObject で生成した WinDialog オブジェクトを削除します。
-// ---------------------------------------------------------------------
-void WinSkinWindow::deleteDialogObject(
-	WinDialog* dialog				//!< ダイアログオブジェクト
-)
-{
-	delete dialog;
 }
 
 // ---------------------------------------------------------------------
@@ -729,6 +696,10 @@ LRESULT WinSkinWindow::wndProc(
 		case UM_REREAD_SKIN:
 			return onRereadSkin(hWnd, uMsg, wParam, lParam);
 			break;
+		case WM_COMMAND:
+			return onCommand(hWnd, uMsg, wParam, lParam);
+			break;
+
 		default:
 			if (isProcessed)
 			{
@@ -1183,4 +1154,31 @@ LRESULT WinSkinWindow::onRereadSkin(
 {
 	getUIManager()->RereadSkin();
 	return 0;
+}
+
+// ---------------------------------------------------------------------
+//! WM_COMMAND ハンドラ
+/*!
+	@retval 0 このメッセージを処理した
+*/
+// ---------------------------------------------------------------------
+LRESULT WinSkinWindow::onCommand(
+	HWND hWnd,			//!< ウィンドウハンドル
+	UINT uMsg,			//!< WM_COMMAND
+	WPARAM wParam,		//!< 上位ワードが通知コード、下位ワードがコマンドID
+	LPARAM lParam		//!< このメッセージを送ったコントロールのハンドル
+)
+{
+	WORD menuID = LOWORD(wParam);
+
+	SInt32 command = getMenuCommand(menuID);
+	if (NULL != uiManager && UIManager::Command_None != command)
+	{
+		uiManager->ExecuteCommand(command);
+		return 0;
+	}
+	else
+	{
+		return base::wndProc(hWnd, uMsg, wParam, lParam);
+	}
 }

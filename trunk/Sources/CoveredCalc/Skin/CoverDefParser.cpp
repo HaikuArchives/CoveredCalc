@@ -386,6 +386,7 @@ static const UTF8Char SUPPORTED_VERSION_1_2[] = "1.2";
 static const UTF8Char SUPPORTED_VERSION_1_3[] = "1.3";
 static const UTF8Char SUPPORTED_VERSION_1_4[] = "1.4";
 static const UTF8Char SUPPORTED_VERSION_1_5[] = "1.5";
+static const UTF8Char SUPPORTED_VERSION_1_6[] = "1.6";
 
 /**
  *	@brief	Parses element node "coverDef" and its descendant node.
@@ -397,7 +398,7 @@ CoverDef* CoverDefParser::parseTagCoverDef(
 {
 	// check "version" attribute
 	ConstUTF8Str supportedVersions[] = { SUPPORTED_VERSION_1_0, SUPPORTED_VERSION_1_1, SUPPORTED_VERSION_1_2, SUPPORTED_VERSION_1_3,
-											SUPPORTED_VERSION_1_4, SUPPORTED_VERSION_1_5 };
+			SUPPORTED_VERSION_1_4, SUPPORTED_VERSION_1_5, SUPPORTED_VERSION_1_6 };
 
 	UTF8String versionString;
 	getAttrValue(coverDefElement, TypeConv::AsUTF8("version"), versionString, true);
@@ -660,37 +661,43 @@ static CoverMainWindowInfo::ButtonClass getMainWindowButtonClass(
 		return buttonClass;													\
 	}
 
-	HANDLE_CLASS_NAME("0",				CoverMainWindowInfo::ButtonClass_0)
-	HANDLE_CLASS_NAME("1",				CoverMainWindowInfo::ButtonClass_1)
-	HANDLE_CLASS_NAME("2",				CoverMainWindowInfo::ButtonClass_2)
-	HANDLE_CLASS_NAME("3",				CoverMainWindowInfo::ButtonClass_3)
-	HANDLE_CLASS_NAME("4",				CoverMainWindowInfo::ButtonClass_4)
-	HANDLE_CLASS_NAME("5",				CoverMainWindowInfo::ButtonClass_5)
-	HANDLE_CLASS_NAME("6",				CoverMainWindowInfo::ButtonClass_6)
-	HANDLE_CLASS_NAME("7",				CoverMainWindowInfo::ButtonClass_7)
-	HANDLE_CLASS_NAME("8",				CoverMainWindowInfo::ButtonClass_8)
-	HANDLE_CLASS_NAME("9",				CoverMainWindowInfo::ButtonClass_9)
-	HANDLE_CLASS_NAME("A",				CoverMainWindowInfo::ButtonClass_A)
-	HANDLE_CLASS_NAME("B",				CoverMainWindowInfo::ButtonClass_B)
-	HANDLE_CLASS_NAME("C",				CoverMainWindowInfo::ButtonClass_C)
-	HANDLE_CLASS_NAME("D",				CoverMainWindowInfo::ButtonClass_D)
-	HANDLE_CLASS_NAME("E",				CoverMainWindowInfo::ButtonClass_E)
-	HANDLE_CLASS_NAME("F",				CoverMainWindowInfo::ButtonClass_F)
-	HANDLE_CLASS_NAME("Point",			CoverMainWindowInfo::ButtonClass_Point)
-	HANDLE_CLASS_NAME("Clear",			CoverMainWindowInfo::ButtonClass_Clear)
-	HANDLE_CLASS_NAME("BackSpace",		CoverMainWindowInfo::ButtonClass_BS)
-	HANDLE_CLASS_NAME("Equal",			CoverMainWindowInfo::ButtonClass_Equal)
-	HANDLE_CLASS_NAME("Plus",			CoverMainWindowInfo::ButtonClass_Plus)
-	HANDLE_CLASS_NAME("Minus",			CoverMainWindowInfo::ButtonClass_Minus)
-	HANDLE_CLASS_NAME("Times",			CoverMainWindowInfo::ButtonClass_Times)
-	HANDLE_CLASS_NAME("Div",			CoverMainWindowInfo::ButtonClass_Div)
-	HANDLE_CLASS_NAME("Negate",			CoverMainWindowInfo::ButtonClass_Negate)
-	HANDLE_CLASS_NAME("Hex",			CoverMainWindowInfo::ButtonClass_Hex)
-	HANDLE_CLASS_NAME("Dec",			CoverMainWindowInfo::ButtonClass_Dec)
-	HANDLE_CLASS_NAME("Oct",			CoverMainWindowInfo::ButtonClass_Oct)
-	HANDLE_CLASS_NAME("Bin",			CoverMainWindowInfo::ButtonClass_Bin)
-	HANDLE_CLASS_NAME("Minimize",		CoverMainWindowInfo::ButtonClass_Minimize)
-	HANDLE_CLASS_NAME("Close",			CoverMainWindowInfo::ButtonClass_Close)
+	HANDLE_CLASS_NAME("0",						CoverMainWindowInfo::ButtonClass_0)
+	HANDLE_CLASS_NAME("1",						CoverMainWindowInfo::ButtonClass_1)
+	HANDLE_CLASS_NAME("2",						CoverMainWindowInfo::ButtonClass_2)
+	HANDLE_CLASS_NAME("3",						CoverMainWindowInfo::ButtonClass_3)
+	HANDLE_CLASS_NAME("4",						CoverMainWindowInfo::ButtonClass_4)
+	HANDLE_CLASS_NAME("5",						CoverMainWindowInfo::ButtonClass_5)
+	HANDLE_CLASS_NAME("6",						CoverMainWindowInfo::ButtonClass_6)
+	HANDLE_CLASS_NAME("7",						CoverMainWindowInfo::ButtonClass_7)
+	HANDLE_CLASS_NAME("8",						CoverMainWindowInfo::ButtonClass_8)
+	HANDLE_CLASS_NAME("9",						CoverMainWindowInfo::ButtonClass_9)
+	HANDLE_CLASS_NAME("A",						CoverMainWindowInfo::ButtonClass_A)
+	HANDLE_CLASS_NAME("B",						CoverMainWindowInfo::ButtonClass_B)
+	HANDLE_CLASS_NAME("C",						CoverMainWindowInfo::ButtonClass_C)
+	HANDLE_CLASS_NAME("D",						CoverMainWindowInfo::ButtonClass_D)
+	HANDLE_CLASS_NAME("E",						CoverMainWindowInfo::ButtonClass_E)
+	HANDLE_CLASS_NAME("F",						CoverMainWindowInfo::ButtonClass_F)
+	HANDLE_CLASS_NAME("Point",					CoverMainWindowInfo::ButtonClass_Point)
+	HANDLE_CLASS_NAME("Clear",					CoverMainWindowInfo::ButtonClass_Clear)
+	HANDLE_CLASS_NAME("BackSpace",				CoverMainWindowInfo::ButtonClass_BS)
+	HANDLE_CLASS_NAME("Equal",					CoverMainWindowInfo::ButtonClass_Equal)
+	HANDLE_CLASS_NAME("Plus",					CoverMainWindowInfo::ButtonClass_Plus)
+	HANDLE_CLASS_NAME("Minus",					CoverMainWindowInfo::ButtonClass_Minus)
+	HANDLE_CLASS_NAME("Times",					CoverMainWindowInfo::ButtonClass_Times)
+	HANDLE_CLASS_NAME("Div",					CoverMainWindowInfo::ButtonClass_Div)
+	HANDLE_CLASS_NAME("Negate",					CoverMainWindowInfo::ButtonClass_Negate)
+	HANDLE_CLASS_NAME("Hex",					CoverMainWindowInfo::ButtonClass_Hex)
+	HANDLE_CLASS_NAME("Dec",					CoverMainWindowInfo::ButtonClass_Dec)
+	HANDLE_CLASS_NAME("Oct",					CoverMainWindowInfo::ButtonClass_Oct)
+	HANDLE_CLASS_NAME("Bin",					CoverMainWindowInfo::ButtonClass_Bin)
+	HANDLE_CLASS_NAME("Minimize",				CoverMainWindowInfo::ButtonClass_Minimize)
+	HANDLE_CLASS_NAME("Close",					CoverMainWindowInfo::ButtonClass_Close)
+	HANDLE_CLASS_NAME("ShowHideCoverBrowser",	CoverMainWindowInfo::ButtonClass_ShowHideCoverBrowser)
+	HANDLE_CLASS_NAME("ToggleAlwaysOnTop",		CoverMainWindowInfo::ButtonClass_ToggleAlwaysOnTop)
+	HANDLE_CLASS_NAME("ToggleLockPosition",		CoverMainWindowInfo::ButtonClass_ToggleLockPos)
+	HANDLE_CLASS_NAME("ShowPreferencesDialog",	CoverMainWindowInfo::ButtonClass_ShowPreferencesDialog)
+	HANDLE_CLASS_NAME("ShowCurrentCoverInfo",	CoverMainWindowInfo::ButtonClass_ShowCurrentCoverInfo)
+	HANDLE_CLASS_NAME("About",					CoverMainWindowInfo::ButtonClass_About)
 
 #undef HANDLE_CLASS_NAME
 	

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -74,6 +74,12 @@ public:
 		KeyFunc_Bin,
 		KeyFunc_Minimize,
 		KeyFunc_Close,
+		KeyFunc_ShowHideCoverBrowser,
+		KeyFunc_ToggleAlwaysOnTop,
+		KeyFunc_ToggleLockPos,
+		KeyFunc_ShowPreferencesDialog,
+		KeyFunc_ShowCurrentCoverInfo,
+		KeyFunc_About,
 	};
 
 						MainWindowKeyFunc() { }

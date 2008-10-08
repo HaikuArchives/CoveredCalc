@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -24,20 +24,29 @@
  */
 
 /*!
-	@file		DialogDef.h
-	@brief		Definition about dialog
+	@file		MainUIController.h
+	@brief		Definition of MainUIController class
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2004.09.01 created
+	@date		2008.9.23 created
 */
 
-#ifndef _DIALOGDEF_H_
-#define _DIALOGDEF_H_
+#ifndef _MAINUICONTROLLER_H_
+#define _MAINUICONTROLLER_H_
 
-#if defined(WIN32)	// ------ for Windows-------------------------------
-	#include "resource.h"
-#elif defined(BEOS)	// ------ for BeOS ---------------------------------
-	#include "DialogID.h"
-	#include "CommandID.h"
-#endif
+// ---------------------------------------------------------------------
+//! The interface which controls main window UI.
+// ---------------------------------------------------------------------
+class MainUIController
+{
+public:
+						MainUIController() { }
+	virtual				~MainUIController() { }
 
-#endif // _DIALOGDEF_H_
+	virtual void		ShowMainUIContextMenu(Point32 menuPos) = 0;
+
+	virtual void		ShowAboutDialog() = 0;
+	virtual void		ShowAboutCurrentCoverDialog() = 0;
+	virtual void		ShowPreferencesDialog() = 0;
+};
+
+#endif // _MAINUICONTROLLER_H_
