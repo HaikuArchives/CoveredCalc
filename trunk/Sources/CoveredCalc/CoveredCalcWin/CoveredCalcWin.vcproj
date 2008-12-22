@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Dialog&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XML_STATIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -124,7 +124,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Dialog&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XML_STATIC"
 				RuntimeLibrary="0"
 				RuntimeTypeInfo="true"
@@ -205,7 +205,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Dialog&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XML_STATIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -287,7 +287,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Dialog&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XML_STATIC"
 				RuntimeLibrary="0"
 				RuntimeTypeInfo="true"
@@ -407,6 +407,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Application\DialogID.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\Application\KeyMappings.cpp"
 					>
 				</File>
@@ -419,11 +423,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Application\StringID.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\Application\WinCoveredCalcApp.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Application\WinLangFile.cpp"
+					RelativePath="..\Application\XMLLangFile.cpp"
 					>
 				</File>
 			</Filter>
@@ -701,10 +709,6 @@
 						RelativePath="..\Ui\Message\ExceptionMessageGenerator.cpp"
 						>
 					</File>
-					<File
-						RelativePath="..\Ui\Message\WinUIMessageProvider.cpp"
-						>
-					</File>
 				</Filter>
 				<Filter
 					Name="Control"
@@ -735,6 +739,18 @@
 					</File>
 					<File
 						RelativePath="..\UI\UIComponent\WinTextControlAdapter.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Dialog"
+					>
+					<File
+						RelativePath="..\UI\Dialog\DialogLayout.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\WinDialogControlCreator.cpp"
 						>
 					</File>
 				</Filter>
@@ -893,6 +909,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Application\DialogID.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Application\KeyMappings.h"
 					>
 				</File>
@@ -909,7 +929,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Application\NativeStringLoader.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Application\SettingValue.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Application\StringID.h"
 					>
 				</File>
 				<File
@@ -921,11 +949,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Application\WinLangFile.h"
+					RelativePath="..\Application\WinMessageFilter.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Application\WinMessageFilter.h"
+					RelativePath="..\Application\XMLLangFile.h"
 					>
 				</File>
 			</Filter>
@@ -1311,14 +1339,6 @@
 						RelativePath="..\UI\Message\ExceptionMessageGenerator.h"
 						>
 					</File>
-					<File
-						RelativePath="..\UI\Message\UIMessageProvider.h"
-						>
-					</File>
-					<File
-						RelativePath="..\UI\Message\WinUIMessageProvider.h"
-						>
-					</File>
 				</Filter>
 				<Filter
 					Name="Control"
@@ -1381,6 +1401,26 @@
 					</File>
 					<File
 						RelativePath="..\UI\UIComponent\WinTextControlAdapter.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Dialog"
+					>
+					<File
+						RelativePath="..\UI\Dialog\DialogFont.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\DialogLayout.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\DialogLayoutException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\WinDialogControlCreator.h"
 						>
 					</File>
 				</Filter>

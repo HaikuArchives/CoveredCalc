@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -37,16 +37,16 @@
 #include "BeCCColumnListView.h"
 #include "ColumnTypes.h"
 #include "DialogID.h"
+#include "StringID.h"
 #include "CommandID.h"
 #include "GenericException.h"
 #include "MBCString.h"
-#include "UIMessageProvider.h"
 #include "BeCoveredCalcApp.h"
 #include "CoverListItem.h"
 #include "UTF8Conv.h"
 #include "ExceptionMessageUtils.h"
 #include "BeCoverBrowser.h"
-#include "BeDialogDesign.h"
+#include "BeDialogControlHelper.h"
 
 ////////////////////////////////////////
 #define baseWindow	BeDialog
@@ -68,15 +68,11 @@ static const char STR_CLOSE[]			= "Close";
 // ---------------------------------------------------------------------
 //! Constructor
 // ---------------------------------------------------------------------
-BeCoverBrowser::BeCoverBrowser(
-	BeDialogDesign* dialogDesign	//!< dialog design information
-)
-	: BeDialog(dialogDesign->GetFrame(BRect(100.0, 100.0, 486.0, 384.0)),
-				LT(dialogDesign->GetTitle(STR_COVER_BROWSER)),
+BeCoverBrowser::BeCoverBrowser()
+	: BeDialog(IDD_COVER_BROWSER,
 				B_TITLED_WINDOW,
 				B_NOT_ZOOMABLE | B_NOT_RESIZABLE)
 {
-	this->dialogDesign = dialogDesign;
 	coverList = NULL;
 }
 
@@ -85,8 +81,6 @@ BeCoverBrowser::BeCoverBrowser(
 // ---------------------------------------------------------------------
 BeCoverBrowser::~BeCoverBrowser()
 {
-	if (NULL != dialogDesign)
-		delete dialogDesign;
 }
 
 /**
@@ -94,10 +88,14 @@ BeCoverBrowser::~BeCoverBrowser()
  */
 void BeCoverBrowser::createViews()
 {
-	const BeDialogDesignItem* item;
+	BeDialogControlHelper dch(getDialogLayout());
+	NativeStringLoader* nsl = CoveredCalcApp::GetInstance();
 
 	rgb_color viewColor = { 216, 216, 216, 255 };
 	
+	// dialog title
+	SetTitle(nsl->LoadNativeString(IDS_COVER_BROWSER_TITLE).CString());
+
 	// BaseView
 	BView* baseView = new BView(Bounds(), COVER_BROWSER_VIEW_BASE_VIEW,
 							B_FOLLOW_ALL_SIDES, B_WILL_DRAW);
@@ -106,49 +104,39 @@ void BeCoverBrowser::createViews()
 	baseView->SetViewColor(viewColor);
 	
 	// CoverListLabel
-	item = dialogDesign->FindItem(COVER_BROWSER_VIEW_COVER_LIST_LABEL);
-	BStringView* coverListLabelView = new BStringView(item->GetFrame(BRect(12.0, 12.0, 374.0, 24.0)),
-									COVER_BROWSER_VIEW_COVER_LIST_LABEL, LT(item->GetLabel(STR_SELECT_COVER)));
+	BStringView* coverListLabelView = new BStringView(dch.GetItemRect(ALITERAL("IDC_SELECT_COVER"), ITEMNAME_WINDOW),
+									COVER_BROWSER_VIEW_COVER_LIST_LABEL, nsl->LoadNativeString(IDS_COVER_BROWSER_SELECT_COVER));
 	baseView->AddChild(coverListLabelView);
 	
 	// CoverList
-	item = dialogDesign->FindItem(COVER_BROWSER_VIEW_COVER_LIST);
-	coverList = new BeCCColumnListView(item->GetFrame(BRect(12.0, 27.0, 374.0, 236.0)),
+	coverList = new BeCCColumnListView(dch.GetItemRect(ALITERAL("IDC_COVER_LIST"), ITEMNAME_WINDOW),
 										COVER_BROWSER_VIEW_COVER_LIST,
 										B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE, B_FANCY_BORDER);
 	baseView->AddChild(coverList);
 	
 	// initialize the cover list.
-	MBCString columnName;
-	UIMessageProvider* messageProvider = CoveredCalcApp::GetInstance()->GetMessageProvider();
-	messageProvider->GetMessage(IDS_COVER_BROWSER_COLUMN_NAME, columnName);
-	coverList->AddColumn(new BStringColumn(columnName, 150, 50, INT_MAX, B_TRUNCATE_END, B_ALIGN_LEFT), 0);
-	messageProvider->GetMessage(IDS_COVER_BROWSER_COLUMN_DESCRIPTION, columnName);
-	coverList->AddColumn(new BStringColumn(columnName, 200, 50, INT_MAX, B_TRUNCATE_END, B_ALIGN_LEFT), 1);
-	
+	coverList->AddColumn(new BStringColumn(nsl->LoadNativeString(IDS_COVER_BROWSER_COLUMN_NAME), 150, 50, INT_MAX, B_TRUNCATE_END, B_ALIGN_LEFT), 0);
+	coverList->AddColumn(new BStringColumn(nsl->LoadNativeString(IDS_COVER_BROWSER_COLUMN_DESCRIPTION), 200, 50, INT_MAX, B_TRUNCATE_END, B_ALIGN_LEFT), 1);	
 	coverList->SetColumnFlags(B_ALLOW_COLUMN_RESIZE);
 	coverList->SetSelectionMode(B_SINGLE_SELECTION_LIST);
 	coverList->SetInvocationMessage(new BMessage(ID_COVERBROWSER_APPLY));
 	
 	// Reload
-	item = dialogDesign->FindItem(COVER_BROWSER_VIEW_RELOAD_BUTTON);
-	BButton* reloadButton = new BButton(item->GetFrame(BRect(12.0, 248.0, 92.0, 272.0)),
+	BButton* reloadButton = new BButton(dch.GetItemRect(ALITERAL("IDC_RELOAD"), ITEMNAME_WINDOW),
 									COVER_BROWSER_VIEW_RELOAD_BUTTON,
-									LT(item->GetLabel(STR_REFRESH)), new BMessage(ID_COVERBROWSER_RELOAD));
+									nsl->LoadNativeString(IDS_COVER_BROWSER_RELOAD).CString(), new BMessage(ID_COVERBROWSER_RELOAD));
 	baseView->AddChild(reloadButton);
 	
 	// Apply
-	item = dialogDesign->FindItem(COVER_BROWSER_VIEW_APPLY_BUTTON);
-	BButton* applyButton = new BButton(item->GetFrame(BRect(208.0, 248.0, 288.0, 272.0)),
+	BButton* applyButton = new BButton(dch.GetItemRect(ALITERAL("IDC_APPLY"), ITEMNAME_WINDOW),
 									COVER_BROWSER_VIEW_APPLY_BUTTON,
-									LT(item->GetLabel(STR_APPLY)), new BMessage(ID_COVERBROWSER_APPLY));
+									nsl->LoadNativeString(IDS_COVER_BROWSER_APPLY).CString(), new BMessage(ID_COVERBROWSER_APPLY));
 	baseView->AddChild(applyButton);
 	
 	// Close
-	item = dialogDesign->FindItem(COVER_BROWSER_VIEW_CLOSE_BUTTON);
-	BButton* closeButton = new BButton(item->GetFrame(BRect(294.0, 248.0, 374.0, 272.0)),
+	BButton* closeButton = new BButton(dch.GetItemRect(ALITERAL("IDCLOSE"), ITEMNAME_WINDOW),
 									COVER_BROWSER_VIEW_CLOSE_BUTTON,
-									LT(item->GetLabel(STR_CLOSE)), new BMessage(ID_COVERBROWSER_CLOSE));
+									nsl->LoadNativeString(IDS_COVER_BROWSER_CLOSE).CString(), new BMessage(ID_COVERBROWSER_CLOSE));
 	baseView->AddChild(closeButton);
 }
 
@@ -158,60 +146,52 @@ void BeCoverBrowser::createViews()
  */
 void BeCoverBrowser::languageChanged()
 {
-	const BeDialogDesignItem* item;
+	NativeStringLoader* nsl = CoveredCalcApp::GetInstance();
 
 	// dialog title
-	SetTitle(LT(dialogDesign->GetTitle(STR_COVER_BROWSER)));
+	SetTitle(nsl->LoadNativeString(IDS_COVER_BROWSER_TITLE).CString());
 	
 	// CoverListLabel
-	item = dialogDesign->FindItem(COVER_BROWSER_VIEW_COVER_LIST_LABEL);
 	BStringView* coverListLabelView = dynamic_cast<BStringView*>(FindView(COVER_BROWSER_VIEW_COVER_LIST_LABEL));
 	if (NULL != coverListLabelView)
 	{
-		coverListLabelView->SetText(LT(item->GetLabel(STR_SELECT_COVER)));
+		coverListLabelView->SetText(nsl->LoadNativeString(IDS_COVER_BROWSER_SELECT_COVER));
 	}
 	
 	// CoverList
-	MBCString columnName;
-	UIMessageProvider* messageProvider = CoveredCalcApp::GetInstance()->GetMessageProvider();
 	BStringColumn* column;
 	column = dynamic_cast<BStringColumn*>(coverList->ColumnAt(0));
 	if (NULL != column)
 	{
-		messageProvider->GetMessage(IDS_COVER_BROWSER_COLUMN_NAME, columnName);
-		column->SetTitle(columnName);
+		column->SetTitle(nsl->LoadNativeString(IDS_COVER_BROWSER_COLUMN_NAME).CString());
 	}
 	column = dynamic_cast<BStringColumn*>(coverList->ColumnAt(1));
 	if (NULL != column)
 	{
-		messageProvider->GetMessage(IDS_COVER_BROWSER_COLUMN_DESCRIPTION, columnName);
-		column->SetTitle(columnName);
+		column->SetTitle(nsl->LoadNativeString(IDS_COVER_BROWSER_COLUMN_DESCRIPTION).CString());
 	}
 	coverList->Hide();	// reflesh coverList's title
 	coverList->Show();
 	
 	// Reload
-	item = dialogDesign->FindItem(COVER_BROWSER_VIEW_RELOAD_BUTTON);
 	BButton* reloadButton = dynamic_cast<BButton*>(FindView(COVER_BROWSER_VIEW_RELOAD_BUTTON));
 	if (NULL != reloadButton)
 	{
-		reloadButton->SetLabel(LT(item->GetLabel(STR_REFRESH)));
+		reloadButton->SetLabel(nsl->LoadNativeString(IDS_COVER_BROWSER_RELOAD).CString());
 	}
 
 	// Apply
-	item = dialogDesign->FindItem(COVER_BROWSER_VIEW_APPLY_BUTTON);
 	BButton* applyButton = dynamic_cast<BButton*>(FindView(COVER_BROWSER_VIEW_APPLY_BUTTON));
 	if (NULL != applyButton)
 	{
-		applyButton->SetLabel(LT(item->GetLabel(STR_APPLY)));
+		applyButton->SetLabel(nsl->LoadNativeString(IDS_COVER_BROWSER_APPLY).CString());
 	}
 
 	// Close
-	item = dialogDesign->FindItem(COVER_BROWSER_VIEW_CLOSE_BUTTON);
 	BButton* closeButton = dynamic_cast<BButton*>(FindView(COVER_BROWSER_VIEW_CLOSE_BUTTON));
 	if (NULL != closeButton)
 	{
-		closeButton->SetLabel(LT(item->GetLabel(STR_CLOSE)));
+		closeButton->SetLabel(nsl->LoadNativeString(IDS_COVER_BROWSER_CLOSE).CString());
 	}	
 }
 #endif
@@ -219,10 +199,9 @@ void BeCoverBrowser::languageChanged()
 // ---------------------------------------------------------------------
 //! Initialize.
 // ---------------------------------------------------------------------
-void BeCoverBrowser::Init()
+void BeCoverBrowser::initDialog()
 {
 	createViews();
-	baseWindow::Init();
 	moveToInitialLocation();
 	
 	// make the list and show it.

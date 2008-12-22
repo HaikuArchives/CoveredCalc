@@ -92,18 +92,14 @@ public:
 
 	SInt32				Length() const
 							{ return static_cast<SInt32>(innerString.length()); }
-	// ---------------------------------------------------------------------
-	/*!
-		@note
-		The byte in the middle of a multi-byte character may be returned.
-	*/
-	// ---------------------------------------------------------------------
 	AChar				GetAt(SInt32 index) const
 							{ return innerString[index]; }
 	AChar				operator[](SInt32 index) const
 							{ return innerString[index]; }
 	AChar&				operator[](SInt32 index)
 							{ return innerString[index]; }
+	void				SetAt(SInt32 index, AChar ch)
+							{ innerString[index] = ch; }
 	
 	ConstAStr			CString() const
 							{ return innerString.c_str(); }

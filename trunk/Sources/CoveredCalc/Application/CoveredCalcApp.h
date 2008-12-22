@@ -34,8 +34,8 @@
 #define _COVEREDCALCAPP_H_
 
 #include "MessageBoxProvider.h"
+#include "NativeStringLoader.h"
 #include "WaitingUI.h"
-#include "UIMessageProvider.h"
 #include "Path.h"
 #include "KeyMappingManager.h"
 
@@ -46,11 +46,14 @@ class CommandLineParam;
 class WinLangFileInfoCollection;
 class LangFileInfoCollection;
 class KeyNameDB;
+class Exception;
+class DialogLayout;
+class DialogFont;
 
 // ---------------------------------------------------------------------
 //! An interface of application
 // ---------------------------------------------------------------------
-class CoveredCalcApp : virtual public MessageBoxProvider, virtual public WaitingUI
+class CoveredCalcApp : virtual public MessageBoxProvider, virtual public NativeStringLoader, virtual public WaitingUI
 {
 public:
 											CoveredCalcApp() { }
@@ -60,7 +63,6 @@ public:
 
 	virtual CoverManager*					GetCoverManager() = 0;
 	virtual AppSettings*					GetAppSettings() = 0;
-	virtual UIMessageProvider*				GetMessageProvider() = 0;
 	virtual ExceptionMessageGenerator*		GetExceptionMessageGenerator() = 0;
 	virtual CommandLineParam*				GetCommandLineParam() = 0;
 	virtual void							GetCurrentLanguageCode(MBCString& outLanguage) = 0;
@@ -71,6 +73,9 @@ public:
 	virtual Path							MakeVirtualPath(const Path& absolutePath, ConstAStr virtualPathName) = 0;
 	virtual void							LoadKeyMappings(const Path& keymapFile) = 0;
 	virtual const KeyNameDB*				GetKeyNameDB() const = 0;
+	virtual MBCString						LoadNativeString(SInt32 stringId) = 0;
+	virtual void							LoadDialogLayout(SInt32 dialogId, DialogLayout& outLayout) = 0;
+	virtual void							LoadDialogFont(SInt32 dialogId, DialogFont& outFont) = 0;
 
 	virtual bool							CheckPlatform(ConstUTF8Str platform) = 0;
 

@@ -43,6 +43,7 @@
 #include "UICListBox.h"
 #include "UICButton.h"
 #include "UICKeyInput.h"
+#include "StringID.h"
 
 EditKeymapDlg::FuncInfo EditKeymapDlg::funcInfo[] =
 {
@@ -159,12 +160,11 @@ void EditKeymapDlg::readyToShow()
 	UICListBox* funcList = getFunctionListBox();
 	if (NULL != funcList)
 	{
-		UIMessageProvider* messageProvider = CoveredCalcApp::GetInstance()->GetMessageProvider();
+		NativeStringLoader* stringLoader = CoveredCalcApp::GetInstance();
 		SInt32 index;
 		for (index = 0; KeyFuncOperation::KeyFunc_None != funcInfo[index].keyFunc; index++)
 		{
-			MBCString funcName;
-			messageProvider->GetMessage(funcInfo[index].funcNameId, funcName);
+			MBCString funcName = stringLoader->LoadNativeString(funcInfo[index].funcNameId);
 			funcList->AddItem(funcName.CString(), &funcInfo[index]);
 		}
 		funcList->SetSelectedItem(-1);
@@ -313,9 +313,8 @@ void EditKeymapDlg::processKeyInputChanged()
 				{
 					if (funcInfo[index].keyFunc == func)
 					{
-						UIMessageProvider* messageProvider = CoveredCalcApp::GetInstance()->GetMessageProvider();
-						MBCString funcName;
-						messageProvider->GetMessage(funcInfo[index].funcNameId, funcName);
+						NativeStringLoader* stringLoader = CoveredCalcApp::GetInstance();
+						MBCString funcName = stringLoader->LoadNativeString(funcInfo[index].funcNameId);
 						assignedFuncEdit->SetText(funcName.CString());
 						found = true;
 						break;

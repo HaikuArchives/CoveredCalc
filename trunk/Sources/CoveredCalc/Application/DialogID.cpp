@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -24,23 +24,14 @@
  */
 
 /*!
-	@file		UIMessageProvider.h
-	@brief		Definition of UIMessageProvider class
+	@file		DialogID.cpp
+	@brief		Implementation of ConvertDialogID function.
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2004.01.12 created
+	@date		2008.11.24 Created
 */
 
-#ifndef _UIMESSAGEPROVIDER_H_
-#define _UIMESSAGEPROVIDER_H_
+#include "Prefix.h"
+#include "XMLLangFileException.h"
 
-#include "MessageDef.h"
-
-#if defined(WIN32)	// ------ for Windows-------------------------------
-	#include "WinUIMessageProvider.h"
-	#define UIMessageProvider WinUIMessageProvider
-#elif defined(BEOS)	// ------ for BeOS ---------------------------------
-	#include "BeUIMessageProvider.h"
-	#define UIMessageProvider BeUIMessageProvider
-#endif
-
-#endif // _UIMESSAGEPROVIDER_H_
+#define IMPLEMENT_DIALOGID_CONVERSION
+#include "DialogID.h"

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -35,14 +35,15 @@
 #include <InterfaceKit.h>
 #include <support/Autolock.h>
 #include "DialogID.h"
+#include "StringID.h"
 #include "CommandID.h"
 #include "MBCString.h"
 #include "CoverDef.h"
 #include "UTF8Conv.h"
-#include "BeDialogDesign.h"
 #include "Exception.h"
 #include "ExceptionMessageUtils.h"
 #include "CoveredCalcApp.h"
+#include "BeDialogControlHelper.h"
 
 ////////////////////////////////////////
 #define baseWindow	BeDialog
@@ -62,24 +63,14 @@ static const char ABOUT_CURCOV_DIALOG_VIEW_ABOUT_COVER_SCROLLER[]	= "AboutCoverT
 
 static const char ABOUT_CURCOV_SETDATA_PARAM_COVERDEF[]			= "CoverDef";
 
-static const char STR_COVER_INFO[]			= "Cover Info";
-static const char STR_NAME[]				= "Name:";
-static const char STR_DESCRIPTION[]			= "Description:";
-static const char STR_COVER_AUTHOR_INFO[]	= "Cover Author Info:";
-static const char STR_OK[]					= "OK";
-
 /**
  *	@brief	Constructor
  */
-BeAboutCurrentCoverDialog::BeAboutCurrentCoverDialog(
-	BeDialogDesign* dialogDesign	///< dialog design information
-)
-	: BeDialog(dialogDesign->GetFrame(BRect(0.0, 0.0, 312.0, 230.0)),
-				LT(dialogDesign->GetTitle(STR_COVER_INFO)),
+BeAboutCurrentCoverDialog::BeAboutCurrentCoverDialog()
+	: BeDialog(IDD_ABOUT_COVER,
 				B_TITLED_WINDOW,
 				B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_MINIMIZABLE)
 {
-	this->dialogDesign = dialogDesign;
 }
 
 // ---------------------------------------------------------------------
@@ -87,8 +78,6 @@ BeAboutCurrentCoverDialog::BeAboutCurrentCoverDialog(
 // ---------------------------------------------------------------------
 BeAboutCurrentCoverDialog::~BeAboutCurrentCoverDialog()
 {
-	if (NULL != dialogDesign)
-		delete dialogDesign;
 }
 
 /**
@@ -96,10 +85,14 @@ BeAboutCurrentCoverDialog::~BeAboutCurrentCoverDialog()
  */
 void BeAboutCurrentCoverDialog::createViews()
 {
-	const BeDialogDesignItem* item;
+	BeDialogControlHelper dch(getDialogLayout());
+	NativeStringLoader* nsl = CoveredCalcApp::GetInstance();
 
 	rgb_color viewColor = { 216, 216, 216, 255 };
 	rgb_color highColor = { 0, 0, 0, 255 };
+
+	// dialog title
+	SetTitle(nsl->LoadNativeString(IDS_ABOUT_COVER_TITLE).CString());
 
 	// BaseView
 	BView* baseView = new BView(Bounds(), ABOUT_CURCOV_DIALOG_VIEW_BASE_VIEW,
@@ -109,14 +102,12 @@ void BeAboutCurrentCoverDialog::createViews()
 	baseView->SetViewColor(viewColor);
 	
 	// NameLabel
-	item = dialogDesign->FindItem(ABOUT_CURCOV_DIALOG_VIEW_NAME_LABEL);
-	BStringView* nameLabelView = new BStringView(item->GetFrame(BRect(12.0, 12.0, 74.0, 24.0)), ABOUT_CURCOV_DIALOG_VIEW_NAME_LABEL,
-									LT(item->GetLabel(STR_NAME)));
+	BStringView* nameLabelView = new BStringView(dch.GetItemRect(ALITERAL("IDC_STATIC_NAME"), ITEMNAME_WINDOW), ABOUT_CURCOV_DIALOG_VIEW_NAME_LABEL,
+									nsl->LoadNativeString(IDS_ABOUT_COVER_NAME).CString());
 	baseView->AddChild(nameLabelView);
 	
 	// NameText
-	item = dialogDesign->FindItem(ABOUT_CURCOV_DIALOG_VIEW_NAME_TEXT);
-	BTextView* nameTextView = new BTextView(item->GetFrame(BRect(77.0, 11.0, 300.0, 24.0)), ABOUT_CURCOV_DIALOG_VIEW_NAME_TEXT, BRect(0, 0, 0, 0),
+	BTextView* nameTextView = new BTextView(dch.GetItemRect(ALITERAL("IDC_EDIT_NAME"), ITEMNAME_WINDOW), ABOUT_CURCOV_DIALOG_VIEW_NAME_TEXT, BRect(0, 0, 0, 0),
 								B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW);
 	baseView->AddChild(nameTextView);
 	
@@ -127,14 +118,12 @@ void BeAboutCurrentCoverDialog::createViews()
 	nameTextView->MakeEditable(false);
 	
 	// DescLabel
-	item = dialogDesign->FindItem(ABOUT_CURCOV_DIALOG_VIEW_DESC_LABEL);
-	BStringView* descLabelView = new BStringView(item->GetFrame(BRect(12.0, 30.0, 74.0, 42.0)), ABOUT_CURCOV_DIALOG_VIEW_DESC_LABEL,
-									LT(item->GetLabel(STR_DESCRIPTION)));
+	BStringView* descLabelView = new BStringView(dch.GetItemRect(ALITERAL("IDC_STATIC_DESCRIPTION"), ITEMNAME_WINDOW), ABOUT_CURCOV_DIALOG_VIEW_DESC_LABEL,
+									nsl->LoadNativeString(IDS_ABOUT_COVER_DESCRIPTION).CString());
 	baseView->AddChild(descLabelView);
 	
 	// DescText
-	item = dialogDesign->FindItem(ABOUT_CURCOV_DIALOG_VIEW_DESC_TEXT);
-	BTextView* descTextView = new BTextView(item->GetFrame(BRect(77.0, 29.0, 300.0, 42.0)), ABOUT_CURCOV_DIALOG_VIEW_DESC_TEXT, BRect(0, 0, 0, 0),
+	BTextView* descTextView = new BTextView(dch.GetItemRect(ALITERAL("IDC_EDIT_DESCRIPTION"), ITEMNAME_WINDOW), ABOUT_CURCOV_DIALOG_VIEW_DESC_TEXT, BRect(0, 0, 0, 0),
 								B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW);
 	baseView->AddChild(descTextView);
 	
@@ -145,14 +134,12 @@ void BeAboutCurrentCoverDialog::createViews()
 	descTextView->MakeEditable(false);
 	
 	// AboutCoverLabel
-	item = dialogDesign->FindItem(ABOUT_CURCOV_DIALOG_VIEW_ABOUT_COVER_LABEL);
-	BStringView* aboutCoverLabelView = new BStringView(item->GetFrame(BRect(12.0, 54.0, 100.0, 66.0)), ABOUT_CURCOV_DIALOG_VIEW_ABOUT_COVER_LABEL,
-										LT(item->GetLabel(STR_COVER_AUTHOR_INFO)));
+	BStringView* aboutCoverLabelView = new BStringView(dch.GetItemRect(ALITERAL("IDC_STATIC_ABOUT"), ITEMNAME_WINDOW), ABOUT_CURCOV_DIALOG_VIEW_ABOUT_COVER_LABEL,
+										nsl->LoadNativeString(IDS_ABOUT_COVER_ABOUT));
 	baseView->AddChild(aboutCoverLabelView);
 	
 	// AboutCoverText
-	item = dialogDesign->FindItem(ABOUT_CURCOV_DIALOG_VIEW_ABOUT_COVER_TEXT);
-	BRect frameRect = item->GetFrame(BRect(12.0, 69.0, 300.0, 182.0));
+	BRect frameRect = dch.GetItemRect(ALITERAL("IDC_EDIT_ABOUT"), ITEMNAME_WINDOW);
 	int32 borderSize = 2;
 	frameRect.OffsetBy(borderSize, borderSize);
 	frameRect.right = frameRect.right - (B_V_SCROLL_BAR_WIDTH + borderSize * 2);
@@ -171,9 +158,8 @@ void BeAboutCurrentCoverDialog::createViews()
 	aboutCoverTextView->MakeEditable(false);
 	
 	// OKButton
-	item = dialogDesign->FindItem(ABOUT_CURCOV_DIALOG_VIEW_OK);
-	BButton* okButton = new BButton(item->GetFrame(BRect(220.0, 194.0, 300.0, 218.0)), ABOUT_CURCOV_DIALOG_VIEW_OK,
-								LT(item->GetLabel(STR_OK)), new BMessage(ID_DIALOG_OK));
+	BButton* okButton = new BButton(dch.GetItemRect(ALITERAL("IDOK"), ITEMNAME_WINDOW), ABOUT_CURCOV_DIALOG_VIEW_OK,
+								nsl->LoadNativeString(IDS_ABOUT_COVER_OK).CString(), new BMessage(ID_DIALOG_OK));
 	baseView->AddChild(okButton);
 	
 	SetDefaultButton(okButton);
@@ -185,41 +171,37 @@ void BeAboutCurrentCoverDialog::createViews()
  */
 void BeAboutCurrentCoverDialog::languageChanged()
 {
-	const BeDialogDesignItem* item;
+	NativeStringLoader* nsl = CoveredCalcApp::GetInstance();
 
 	// dialog title
-	SetTitle(LT(dialogDesign->GetTitle(STR_COVER_INFO)));
+	SetTitle(nsl->LoadNativeString(IDS_ABOUT_COVER_TITLE).CString());
 
 	// NameLabel
-	item = dialogDesign->FindItem(ABOUT_CURCOV_DIALOG_VIEW_NAME_LABEL);
 	BStringView* nameLabelView = dynamic_cast<BStringView*>(FindView(ABOUT_CURCOV_DIALOG_VIEW_NAME_LABEL));
 	if (NULL != nameLabelView)
 	{
-		nameLabelView->SetText(LT(item->GetLabel(STR_NAME)));
+		nameLabelView->SetText(nls->LoadNativeString(IDS_ABOUT_COVER_NAME).CString());
 	}		
 
 	// DescLabel
-	item = dialogDesign->FindItem(ABOUT_CURCOV_DIALOG_VIEW_DESC_LABEL);
 	BStringView* descLabelView = dynamic_cast<BStringView*>(FindView(ABOUT_CURCOV_DIALOG_VIEW_DESC_LABEL));
 	if (NULL != descLabelView)
 	{
-		descLabelView->SetText(LT(item->GetLabel(STR_DESCRIPTION)));
+		descLabelView->SetText(nls->LoadNativeString(IDS_ABOUT_COVER_DESCRIPTION).CString());
 	}
 
 	// AboutCoverLabel
-	item = dialogDesign->FindItem(ABOUT_CURCOV_DIALOG_VIEW_ABOUT_COVER_LABEL);
 	BStringView* aboutCoverLabelView = dynamic_cast<BStringView*>(FindView(ABOUT_CURCOV_DIALOG_VIEW_ABOUT_COVER_LABEL));
 	if (NULL != aboutCoverLabelView)
 	{
-		aboutCoverLabelView->SetText(LT(item->GetLabel(STR_COVER_AUTHOR_INFO)));
+		aboutCoverLabelView->SetText(nls->LoadNativeString(IDS_ABOUT_COVER_ABOUT).CString());
 	}
 
 	// OKButton
-	item = dialogDesign->FindItem(ABOUT_CURCOV_DIALOG_VIEW_OK);
 	BButton* okButton = dynamic_cast<BButton*>(FindView(ABOUT_CURCOV_DIALOG_VIEW_OK));
 	if (NULL != okButton)
 	{
-		okButton->SetLabel(LT(item->GetLabel(STR_OK)));
+		okButton->SetLabel(nls->LoadNativeString(IDS_ABOUT_COVER_OK).CString());
 	}
 }
 #endif
@@ -227,10 +209,9 @@ void BeAboutCurrentCoverDialog::languageChanged()
 // ---------------------------------------------------------------------
 //! Initialize.
 // ---------------------------------------------------------------------
-void BeAboutCurrentCoverDialog::Init()
+void BeAboutCurrentCoverDialog::initDialog()
 {
 	createViews();
-	baseWindow::Init();	
 	moveToCenterOfScreen();
 
 	// invoke thread in invisible.

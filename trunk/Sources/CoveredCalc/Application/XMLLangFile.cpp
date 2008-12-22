@@ -44,6 +44,13 @@
 #include "XMLLangFileException.h"
 #include "DOMUtils.h"
 #include "CoveredCalcApp.h"
+#include "DialogLayout.h"
+
+#if defined (WIN32)
+	UTF8Char	SUITABLE_VERSION[] = "7";
+#elif defined (BEOS)
+	UTF8Char	SUITABLE_VERSION[] = "7";
+#endif
 
 /**
  *	@brief	Constructor
@@ -119,7 +126,7 @@ void XMLLangFile::validateFirst()
 	rootElement->getNodeName(rootName);
 	if (0 != UTF8Utils::UTF8StrCmp(rootName, TypeConv::AsUTF8("localeDef")))
 	{
-		throw new XMLLangFileExceptions::ValidationFailed(rootElement->getSourceLine(), rootElement->getSourceColumn(), "Not a locale definition file.");
+		throw new XMLLangFileExceptions::ValidationFailed(rootElement->getSourceLine(), rootElement->getSourceColumn(), ALITERAL("Not a locale definition file."));
 	}
 
 	// check platform target.
@@ -138,7 +145,7 @@ void XMLLangFile::validateFirst()
 	if (!platformOK)
 	{
 		NCDNode* errorNode = (NULL != platformElement) ? platformElement : rootElement;
-		throw new XMLLangFileExceptions::ValidationFailed(errorNode->getSourceLine(), errorNode->getSourceColumn(), "Target platform is not suitable.");
+		throw new XMLLangFileExceptions::ValidationFailed(errorNode->getSourceLine(), errorNode->getSourceColumn(), ALITERAL("Target platform is not suitable."));
 	}
 
 	// check version.
@@ -146,8 +153,18 @@ void XMLLangFile::validateFirst()
 	rootElement->getAttribute(TypeConv::AsUTF8("version"), versionString);
 	if (!checkVersion(versionString))
 	{
-		throw new XMLLangFileExceptions::ValidationFailed(rootElement->getSourceLine(), rootElement->getSourceColumn(), "Version mismatch.");
+		throw new XMLLangFileExceptions::ValidationFailed(rootElement->getSourceLine(), rootElement->getSourceColumn(), ALITERAL("Version mismatch."));
 	}
+}
+
+/**
+ *	@brief		Checks the version is suitable for this implementation.
+ *	@param[in]	version		version string.
+ *	@return		true if the version is suitable.
+ */
+bool XMLLangFile::checkVersion(ConstUTF8Str version)
+{
+	return (0 == UTF8Utils::UTF8StrCmpI(SUITABLE_VERSION, version));
 }
 
 /**
@@ -200,11 +217,11 @@ void XMLLangFile::validateSecond()
 {
 	if (langCode.IsEmpty())
 	{
-		throw new XMLLangFileExceptions::ValidationFailed("Language code is not specified.");
+		throw new XMLLangFileExceptions::ValidationFailed(ALITERAL("Language code is not specified."));
 	}
 	if (langName.IsEmpty())
 	{
-		throw new XMLLangFileExceptions::ValidationFailed("Language name is not specified.");	
+		throw new XMLLangFileExceptions::ValidationFailed(ALITERAL("Language name is not specified."));
 	}
 }
 
@@ -258,17 +275,53 @@ const NCDElement* XMLLangFile::GetStringElement(ConstUTF8Str name) const
  *	@brief		Loads string.
  *	@param[in]	name	string name.
  *	@param[out]	message		loaded text is returned.
+ *	@return		true when success. or false if failed.
  */
-void XMLLangFile::LoadString(ConstUTF8Str name, MBCString& message) const
+bool XMLLangFile::LoadString(ConstUTF8Str name, MBCString& message) const
 {
 	const NCDElement* stringElem = GetStringElement(name);
 	if (NULL == stringElem)
 	{
-		throw new XMLLangFileExceptions::StringNotDefined(TypeConv::AsASCII(name));
+		return false;
 	}
 	UTF8String value;
 	DOMUtils::ReadTextNode(stringElem, true, value);
 	UTF8Conv::ToMultiByteWithLineEnding(message, value);
+	return true;
+}
+
+/**
+ *	@brief	Append dialog layout information to specified DialogLayout object.
+ *	@param[in]	name	dialog name.
+ *	@param[out]	layout	layout information is appended to this object.
+ */
+void XMLLangFile::LoadDialogLayout(ConstUTF8Str name, DialogLayout& layout) const
+{
+	const NCDElement* dialogElem = GetDialogElement(name);
+	if (NULL != dialogElem)
+	{
+		ConstUTF8Str NAME_POSITION = TypeConv::AsUTF8("position");
+		NCDElement* positionElem = DOMUtils::SearchElementNext(dialogElem->getFirstChild(), NAME_POSITION, false);
+		while (NULL != positionElem)
+		{
+			UTF8String attrValue;
+			MBCString name, offsetFrom, value;
+			positionElem->getAttribute(TypeConv::AsUTF8("name"), attrValue);
+			UTF8Conv::ToMultiByte(name, attrValue.CString());
+			if (!name.IsEmpty())
+			{
+				positionElem->getAttribute(TypeConv::AsUTF8("offset-from"), attrValue);
+				UTF8Conv::ToMultiByte(offsetFrom, attrValue.CString());
+				positionElem->getAttribute(TypeConv::AsUTF8("value"), attrValue);
+				UTF8Conv::ToMultiByte(value, attrValue.CString());
+
+				DLValue dlValue = ttoi(value);
+				layout.SetLayoutItem(name, offsetFrom, dlValue);
+			}
+
+			positionElem = DOMUtils::SearchElementNext(positionElem->getNextSibling(), NAME_POSITION, false);
+		}
+	}
 }
 
 /**
@@ -298,3 +351,59 @@ void XMLLangFile::GetLanguageCode(MBCString& langCode) const
 	}
 	langCode = this->langCode;
 }
+
+#if defined (WIN32)
+/**
+ *	@brief Converts access mnemonic escape character (from '~' to '&')
+ *	@param[in]	srcString	soruce string.
+ *	@return	converted string.
+ */
+MBCString XMLLangFile::ConvertAccessMnemonic(const MBCString& srcString)
+{
+	MBCString result = srcString;
+	SInt32 length = result.Length();
+	SInt32 index;
+	for (index = 0; index < length; ++index)
+	{
+		if (ALITERAL('~') == result.GetAt(index))
+		{
+			result.SetAt(index, ALITERAL('&'));
+		}
+	}
+	return result;
+}
+
+/**
+ *	@brief	Loads dialog font informations.
+ *	@param[out]	outDialogFonts	dialog font informations are returned (in document order).
+ */
+void XMLLangFile::LoadDialogFont(DialogFontVector& outDialogFonts) const
+{
+	outDialogFonts.clear();
+
+	NCDElement* rootElement = document->getDocumentElement();
+	ConstUTF8Str NAME_DIALOGFONT = TypeConv::AsUTF8("dialogFont");
+	NCDElement* dialogFontElem = DOMUtils::SearchElementNext(rootElement->getFirstChild(), NAME_DIALOGFONT, false);
+	while (NULL != dialogFontElem)
+	{
+		DialogFont df;
+		UTF8String value;
+
+		dialogFontElem->getAttribute(TypeConv::AsUTF8("targetOSVer"), value);
+		UTF8Conv::ToMultiByte(df.TargetOSVersion, value.CString());
+
+		dialogFontElem->getAttribute(TypeConv::AsUTF8("charset"), value);
+		df.Charset = static_cast<BYTE>(atoi(TypeConv::AsASCII(value.CString())));
+
+		dialogFontElem->getAttribute(TypeConv::AsUTF8("typeface"), value);
+		df.Typeface = value;
+
+		dialogFontElem->getAttribute(TypeConv::AsUTF8("size"), value);
+		df.PointSize = static_cast<WORD>(atoi(TypeConv::AsASCII(value.CString())));
+
+		outDialogFonts.push_back(df);
+
+		dialogFontElem = DOMUtils::SearchElementNext(dialogFontElem->getNextSibling(), NAME_DIALOGFONT, false);
+	}
+}
+#endif

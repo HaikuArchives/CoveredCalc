@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -52,6 +52,9 @@ protected:
 private:
 	LRESULT				onInitDialog(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT				onDestroy(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+private:
+	void				createControls();
 };
 
 #endif // _WINABOUTCURRENTCOVERDLG_H_

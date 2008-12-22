@@ -37,7 +37,6 @@
 #include "PreferencesDlg.h"
 #include <List.h>
 
-class BeDialogDesign;
 class BMenu;
 
 /**
@@ -46,12 +45,11 @@ class BMenu;
 class BePreferencesDlg : public BeDialog, public PreferencesDlg
 {
 public:
-								BePreferencesDlg(BeDialogDesign* dialogDesign);
+								BePreferencesDlg();
 	virtual						~BePreferencesDlg();
 	
-	void						Init();
-	
 protected:
+	virtual void				initDialog();
 	virtual void				MessageReceived(BMessage *message);
 #if defined (ZETA)
 	virtual void				languageChanged();
@@ -81,7 +79,6 @@ private:
 	void						createViews();
 
 private:
-	BeDialogDesign*				dialogDesign;		///< dialog design
 	BMenu*						langMenu;			///< language popup menu
 	BList						langMenuItemInfo;	///< informations of each language popup menu item
 	BMenu*						keyMappingMenu;		///< key-mapping popup menu

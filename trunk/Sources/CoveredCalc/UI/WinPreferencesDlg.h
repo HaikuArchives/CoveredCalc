@@ -73,6 +73,9 @@ private:
 	LRESULT							onDestroy(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
+	void							createControls();
+
+private:
 	const LangFileInfoCollection*	langComboInfos;		///< 言語コンボボックスに格納されたアイテムの情報
 	WinComboListSeparators			keyMappingSeparators;	///< キーマッピングコンボボックスのセパレータ
 };

@@ -1,6 +1,6 @@
 # CoveredCalc
 #
-# Copyright (c) 2008 CoveredCalc Project Contributors
+# Copyright (c) 2004-2008 CoveredCalc Project Contributors
 # 
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -56,13 +56,14 @@ endif
 SRCS= \
 	../Application/AppSettings.cpp \
 	../Application/BeCoveredCalcApp.cpp \
-	../Application/BeXMLLangFile.cpp \
 	../Application/CommandLineParam.cpp \
 	../Application/Copyright.cpp \
 	../Application/CoveredCalcAppBase.cpp \
+	../Application/DialogID.cpp \
 	../Application/KeyMappings.cpp \
 	../Application/LangFileInfo.cpp \
 	../Application/SettingValue.cpp \
+	../Application/StringID.cpp \
 	../Application/XMLLangFile.cpp \
 	../Bitmap/BMPFileLoader.cpp \
 	../Bitmap/BMPFileStore.cpp \
@@ -116,12 +117,13 @@ SRCS= \
 	../UI/PreferencesDlg.cpp \
 	../UI/UIManager.cpp \
 	../UI/UITaskManager.cpp \
-	../UI/Message/BeUIMessageProvider.cpp \
 	../UI/Message/ExceptionMessageGenerator.cpp \
 	../UI/Control/BeBitmapView.cpp \
 	../UI/Control/BeCCColumnListView.cpp \
 	../UI/Control/BeKeyInputEdit.cpp \
 	../UI/Control/BeToolTipWindow.cpp \
+	../UI/Dialog/BeDialogControlHelper.cpp \
+	../UI/Dialog/DialogLayout.cpp \
 	../UI/UIComponent/BeControlAdapter.cpp \
 	../UI/UIComponent/BeKeyInputAdapter.cpp \
 	../UI/UIComponent/BeLabeledControlAdapter.cpp \

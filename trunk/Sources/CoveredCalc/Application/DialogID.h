@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -24,37 +24,48 @@
  */
 
 /*!
-	@file		BeUIMessageProvider.h
-	@brief		Definition of BeUIMessageProvider class
+	@file		DialogID.h
+	@brief		Definition of dialog ID
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2004.02.16 created
+	@date		2007.01.07 Created
 */
 
-#ifndef _BEUIMESSAGEPROVIDER_H_
-#define _BEUIMESSAGEPROVIDER_H_
+#ifdef IMPLEMENT_DIALOGID_CONVERSION
+#undef _DIALOGID_H_
+#endif
 
-#include "MBCString.h"
+#ifndef _DIALOGID_H_
+#define _DIALOGID_H_
 
-class BResources;
+ConstUTF8Str ConvertDialogID(SInt32 id);
 
-// ---------------------------------------------------------------------
-//! This class provides message string for user interface for BeOS.
-// ---------------------------------------------------------------------
-class BeUIMessageProvider
-{
-public:
-						BeUIMessageProvider();
-	virtual				~BeUIMessageProvider();
+#ifdef IMPLEMENT_DIALOGID_CONVERSION
+	#define DIALOG_ID(name, num)	case num: return TypeConv::AsUTF8(#name);
+	ConstUTF8Str ConvertDialogID(SInt32 id)
+	{
+		switch (id)
+		{
+#else
+	#define DIALOG_ID(name, num)	name = num,
+	enum
+	{
+#endif
 
-	void				Init();
-	
-	bool				GetMessage(SInt32 messageId, MBCString& message);
-	bool				GetNFormatMessage(MBCString& message, SInt32 messageId, ...);
+	DIALOG_ID(IDD_ABOUT,			5000)
+	DIALOG_ID(IDD_COVER_BROWSER,	5001)
+	DIALOG_ID(IDD_ABOUT_COVER,		5002)
+	DIALOG_ID(IDD_PREFERENCES,		5003)
+	DIALOG_ID(IDD_EDIT_KEYMAP,		5004)
 
-private:
-	void				getMessage(SInt32 messageId, MBCString& message);
-	bool				getMessageWithoutLangFile(SInt32 messageId, MBCString& message);
-	void				getStringNotDefinedMessage(ConstAStr name, MBCString& message);
-};
 
-#endif // _BEUIMESSAGEPROVIDER_H_
+#undef DIALOG_ID
+#ifdef IMPLEMENT_DIALOGID_CONVERSION
+		default:
+			throw new XMLLangFileExceptions::InvalidDialogID(id);
+		}
+	}
+#else
+	};
+#endif
+
+#endif // _DIALOGID_H_

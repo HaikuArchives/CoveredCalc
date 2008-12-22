@@ -34,6 +34,8 @@
 #define _BEDIALOG_H_
 
 #include <Window.h>
+#include "DialogLayout.h"
+#include "MBCString.h"
 
 // ---------------------------------------------------------------------
 //! Dialog class on BeOS
@@ -41,15 +43,17 @@
 class BeDialog : public BWindow
 {
 public:
-						BeDialog(BRect frame, const char* title, window_type type, uint32 flags, uint32 workspaces = B_CURRENT_WORKSPACE);
-						BeDialog(BRect frame, const char* title, window_look look, window_feel feel, uint32 flags, uint32 workspaces = B_CURRENT_WORKSPACE);
+						BeDialog(SInt32 dialogID, window_type type, uint32 flags, uint32 workspaces = B_CURRENT_WORKSPACE);
+						BeDialog(SInt32 dialogID, window_look look, window_feel feel, uint32 flags, uint32 workspaces = B_CURRENT_WORKSPACE);
 	virtual				~BeDialog();
 	
 	void				Init();
 
 protected:
-	virtual void		initView(BView* view);
+	virtual void		initDialog() = 0;
 	void				moveToCenterOfScreen();
+	DialogLayout*		getDialogLayout() { return &dialogLayout; }
+
 #if defined (ZETA)
 	virtual void		languageChanged();
 #endif
@@ -58,6 +62,13 @@ protected:
 
 private:
 	void				onCommandActivate(BMessage* message);
+
+private:
+	SInt32				dialogID;			///< dialog ID
+	DialogLayout		dialogLayout;		///< dialog layout object.
+
+public:
+	static const MBCString	ITEMNAME_WINDOW;
 };
 
 #endif // _BEDIALOG_H_

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -24,43 +24,24 @@
  */
 
 /*!
-	@file		WinLangFile.h
-	@brief		WinLangFile クラスの定義
+	@file		NativeStringLoader.h
+	@brief		Definition of NativeStringLoader interface
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2005.12.18 created
+	@date		2008.10.18 created
 */
 
-#ifndef _WINLANGFILE_H_
-#define _WINLANGFILE_H_
+#ifndef _NATIVESTRINGLOADER_H_
+#define _NATIVESTRINGLOADER_H_
 
 #include "MBCString.h"
-#include "Exception.h"
 
-class Path;
-
-/**
- *	@brief	Windows 用言語ファイルを表します。
- */
-class WinLangFile
+class NativeStringLoader
 {
 public:
-								WinLangFile();
-	virtual						~WinLangFile();
-	
-	void						Load(const Path& langFilePath);
-	void						Unload();
-	
-	bool						CheckVersion();
-	
-	HINSTANCE					GetHandle() const	{ return hInstance; }
+						NativeStringLoader() {}
+	virtual				~NativeStringLoader() {}
 
-	DWORD						GetVersion();
-	void						GetLanguageCode(MBCString& langCode);
-	void						GetLanguageName(MBCString& langName);
-	LANGID						GetLangID();
-	
-private:
-	HINSTANCE					hInstance;		///< インスタンスハンドル
+	virtual MBCString	LoadNativeString(SInt32 stringId) = 0;
 };
 
-#endif // _WINLANGFILE_H_
+#endif // _NATIVESTRINGLOADER_H_

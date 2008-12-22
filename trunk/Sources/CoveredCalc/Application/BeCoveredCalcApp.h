@@ -35,7 +35,6 @@
 
 #include <app/Application.h>
 #include "CoveredCalcAppBase.h"
-#include "BeXMLLangFile.h"
 
 class BeMainWindow;
 class BeCoverBrowser;
@@ -68,10 +67,9 @@ public:
 								BeCoveredCalcApp();
 	virtual						~BeCoveredCalcApp();
 
-	const BeXMLLangFile*		GetLangFile() { return &langFile; }
-
 #if defined(ZETA)
 	bool						IsLocaleKitAvailable() const { return isLocaleKitAvailable; }
+	virtual MBCString			LoadNativeString(SInt32 stringId);
 #endif // defined(ZETA)
 
 private:
@@ -85,7 +83,6 @@ protected:
 	virtual const Path&			getUserSettingsPath();
 
 private:
-	void						loadLangFile(const Path& path);
 	void						loadKeyMappingsOnInit();
 	void						loadKeyNameDB();
 
@@ -95,7 +92,6 @@ private:
 	BeMainWindow*				mainWindow;			//!< main window
 	BeCoverBrowser*				coverBrowser;		//!< cover browser	
 	bool						commandLineParamProcessed;	///< whether command line parameter is already processed.
-	BeXMLLangFile				langFile;			///< language file
 #if defined(ZETA)
 	bool						isLocaleKitAvailable;	///< whether uses locale kit.
 #endif // defined(ZETA)

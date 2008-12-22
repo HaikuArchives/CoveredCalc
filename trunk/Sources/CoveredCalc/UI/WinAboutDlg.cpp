@@ -35,10 +35,12 @@
 #include "Exception.h"
 #include "ExceptionMessageUtils.h"
 #include "WinCoveredCalcApp.h"
-#include "UIMessageProvider.h"
 #include "MemoryException.h"
 #include "WinAboutDlg.h"
 #include "Copyright.h"
+#include "WinDialogControlCreator.h"
+#include "StringID.h"
+#include "DialogID.h"
 
 ////////////////////////////////////////
 #define base	WinDialog
@@ -111,6 +113,33 @@ LRESULT WinAboutDlg::wndProc(
 	return 0;
 }
 
+/**
+ *	@brief	Creates dialog controls.
+ */
+void WinAboutDlg::createControls()
+{
+	NativeStringLoader* stringLoader = CoveredCalcApp::GetInstance();
+	WinDialogControlCreator dcc(m_hWnd, getDialogLayout());
+	MBCString label;
+	HWND hControl;
+	
+	// "OK" button
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_ABOUT_OK));
+	hControl = dcc.CreateButton(ALITERAL("IDOK"), IDOK, label, WS_GROUP | BS_DEFPUSHBUTTON, BS_PUSHBUTTON, 0, 0);
+
+	// Icon
+	hControl = dcc.CreateStatic(ALITERAL("IDC_ICON64"), IDC_ICON64, ALITERAL(""), WS_GROUP | SS_BITMAP | SS_CENTERIMAGE | SS_REALSIZEIMAGE, SS_LEFT, 0, 0);
+
+	// Application name
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STC_APPNAME"), IDC_STC_APPNAME, ALITERAL(""), WS_GROUP, 0, 0, 0);
+
+	// Version
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STC_VERSION"), IDC_STC_VERSION, ALITERAL(""), WS_GROUP, 0, 0, 0);
+
+	// Copyright
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STC_COPYRIGHT1"), IDC_STC_COPYRIGHT1, ALITERAL(""), WS_GROUP, 0, 0, 0);
+}
+
 // ---------------------------------------------------------------------
 //! WM_INITDIALOG ハンドラ
 /*!
@@ -126,6 +155,15 @@ LRESULT WinAboutDlg::onInitDialog(
 )
 {
 	base::wndProc(hWnd, uMsg, wParam, lParam);
+
+	// create controls
+	createControls();
+
+	// set dialog title
+	NativeStringLoader* stringLoader = CoveredCalcApp::GetInstance();
+	SetWindowText(m_hWnd, stringLoader->LoadNativeString(IDS_ABOUT_TITLE).CString());
+
+	// TODO: フォーカス
 
 	// 背景ブラシを作成
 	backBrush = ::CreateSolidBrush(BACK_COLOR);

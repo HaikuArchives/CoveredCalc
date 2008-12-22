@@ -35,6 +35,7 @@
 
 #include "HrnDlg.h"
 #include "MessageBoxProvider.h"
+#include "DialogLayout.h"
 
 // ---------------------------------------------------------------------
 //! Windows 版ダイアログクラス
@@ -42,7 +43,7 @@
 class WinDialog : public CHrnDlg, virtual public MessageBoxProvider
 {
 public:
-						WinDialog(UINT uTemplateID) : CHrnDlg(uTemplateID) { }
+						WinDialog(SInt32 dialogID);
 
 	int					DoModal( HWND hParent );
 	BOOL				Create( HWND hParent );
@@ -51,11 +52,25 @@ public:
 	virtual Button		DoMessageBox(ConstAStr message, ButtonType buttonType, AlertType alertType, Button defaultButton = Button_None);
 	virtual Button		DoMessageBox(SInt32 messageId, ButtonType buttonType, AlertType alertType, Button defaultButton = Button_None);
 
+
+protected:
+	virtual DWORD		getDialogStyle();
+	virtual	DWORD		getDialogExStyle();
+
+protected:
+	DialogLayout*		getDialogLayout() { return &dialogLayout; }
+
 protected:
 	virtual LRESULT		wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
+	void				readyDialogLayout();
+	BYTE*				createDialogTemplate();
 	LRESULT				onInitDialog(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+private:
+	SInt32				dialogID;			///< dialog ID
+	DialogLayout		dialogLayout;		///< dialog layout object.
 };
 
 #endif // _WINDIALOG_H_

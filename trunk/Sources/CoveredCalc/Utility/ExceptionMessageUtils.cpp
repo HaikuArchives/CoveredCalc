@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -33,7 +33,6 @@
 #include "Prefix.h"
 #include "Exception.h"
 #include "ExceptionMessageGenerator.h"
-#include "UIMessageProvider.h"
 #include "CoveredCalcApp.h"
 #include "ExceptionMessageUtils.h"
 

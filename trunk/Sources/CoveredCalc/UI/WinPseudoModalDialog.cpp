@@ -53,18 +53,28 @@ INT_PTR WinPseudoModalDialog::DoModal(HWND hParent)
 {
 	// disables parent window
 	EnableWindow(hParent, FALSE);
-	
-	// creates modeless dialog
-	if (!Create(hParent))
+
+	try
 	{
-		EnableWindow(hParent, TRUE);
-		return -1;
+		// creates modeless dialog
+		if (!Create(hParent))
+		{
+			EnableWindow(hParent, TRUE);
+			return -1;
+		}
+	
+		// runs message loop
+		isContinueModal = true;
+		messageLoop();
 	}
-	
-	// runs message loop
-	isContinueModal = true;
-	messageLoop();
-	
+	catch (...)
+	{
+		ShowWindow(m_hWnd, SW_HIDE);
+		EnableWindow(hParent, TRUE);
+		DestroyWindow(m_hWnd);
+		throw;
+	}
+
 	ShowWindow(m_hWnd, SW_HIDE);
 	
 	// enables parent window.

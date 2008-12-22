@@ -44,7 +44,6 @@
 #include "ButtonUITask.h"
 #include "MouseHoverUITask.h"
 #include "AppSettings.h"
-#include "UIMessageProvider.h"
 #include "ExceptionMessageUtils.h"
 #include "MainUIManager.h"
 #include "UTF8Conv.h"
@@ -52,6 +51,7 @@
 #include "BMPFileStore.h"
 #include "UITaskClass.h"
 #include "MainUIController.h"
+#include "StringID.h"
 
 ////////////////////////////////////////
 #define base	UIManager

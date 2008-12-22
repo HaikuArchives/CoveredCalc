@@ -38,6 +38,7 @@
 #include "BeCoveredCalcApp.h"
 #include "DialogID.h"
 #include "CommandID.h"
+#include "StringID.h"
 #include "BeAboutDialog.h"
 #include "UIControllerException.h"
 #include "BeAboutCurrentCoverDialog.h"
@@ -150,23 +151,23 @@ void BeMainView::ShowMainUIContextMenu(Point32 menuPos)
 {
 	BMenu* subMenu;
 	BPopUpMenu* popupMenu = new BPopUpMenu("context menu", false, false, B_ITEMS_IN_COLUMN);
-	popupMenu->AddItem(createMenuItem(TypeConv::AsUTF8("ID_COVER_BROWSER"), ID_COVER_BROWSER, 0, 0));
+	popupMenu->AddItem(createMenuItem(IDS_MENU_COVER_BROWSER, ID_COVER_BROWSER, 0, 0));
 	popupMenu->AddSeparatorItem();
-	subMenu = createSubMenu(TypeConv::AsUTF8("ID_RADIX"));
+	subMenu = createSubMenu(IDS_MENU_RADIX);
 	popupMenu->AddItem(subMenu);
-		subMenu->AddItem(createMenuItem(TypeConv::AsUTF8("ID_RADIX_HEX"), ID_RADIX_HEX, 0, 0));
-		subMenu->AddItem(createMenuItem(TypeConv::AsUTF8("ID_RADIX_DECIMAL"), ID_RADIX_DECIMAL, 0, 0));
-		subMenu->AddItem(createMenuItem(TypeConv::AsUTF8("ID_RADIX_OCTAL"), ID_RADIX_OCTAL, 0, 0));
-		subMenu->AddItem(createMenuItem(TypeConv::AsUTF8("ID_RADIX_BINARY"), ID_RADIX_BINARY, 0, 0));
-	popupMenu->AddItem(createMenuItem(TypeConv::AsUTF8("ID_MAIN_ALWAYS_ON_TOP"), ID_MAIN_ALWAYS_ON_TOP, 0, 0));
-	popupMenu->AddItem(createMenuItem(TypeConv::AsUTF8("ID_MAIN_LOCK_POS"), ID_MAIN_LOCK_POS, 0, 0));
+		subMenu->AddItem(createMenuItem(IDS_MENU_RADIX_HEX, ID_RADIX_HEX, 0, 0));
+		subMenu->AddItem(createMenuItem(IDS_MENU_RADIX_DECIMAL, ID_RADIX_DECIMAL, 0, 0));
+		subMenu->AddItem(createMenuItem(IDS_MENU_RADIX_OCTAL, ID_RADIX_OCTAL, 0, 0));
+		subMenu->AddItem(createMenuItem(IDS_MENU_RADIX_BINARY, ID_RADIX_BINARY, 0, 0));
+	popupMenu->AddItem(createMenuItem(IDS_MENU_MAIN_ALWAYS_ON_TOP, ID_MAIN_ALWAYS_ON_TOP, 0, 0));
+	popupMenu->AddItem(createMenuItem(IDS_MENU_MAIN_LOCK_POS, ID_MAIN_LOCK_POS, 0, 0));
 	popupMenu->AddSeparatorItem();
-	popupMenu->AddItem(createMenuItem(TypeConv::AsUTF8("ID_PREFERENCES"), ID_PREFERENCES, 0, 0));
-	popupMenu->AddItem(createMenuItem(TypeConv::AsUTF8("ID_MAIN_ABOUT_COVER"), ID_MAIN_ABOUT_COVER, 0, 0));
-	popupMenu->AddItem(createMenuItem(TypeConv::AsUTF8("ID_ABOUT"), ID_ABOUT, 0, 0));
+	popupMenu->AddItem(createMenuItem(IDS_MENU_PREFERENCES, ID_PREFERENCES, 0, 0));
+	popupMenu->AddItem(createMenuItem(IDS_MENU_MAIN_ABOUT_COVER, ID_MAIN_ABOUT_COVER, 0, 0));
+	popupMenu->AddItem(createMenuItem(IDS_MENU_ABOUT, ID_ABOUT, 0, 0));
 	popupMenu->AddSeparatorItem();
-	popupMenu->AddItem(createMenuItem(TypeConv::AsUTF8("ID_MAIN_MINIMIZE"), ID_MAIN_MINIMIZE, 0, 0));
-	popupMenu->AddItem(createMenuItem(TypeConv::AsUTF8("ID_MAIN_CLOSE"), ID_MAIN_CLOSE, 0, 0));
+	popupMenu->AddItem(createMenuItem(IDS_MENU_MAIN_MINIMIZE, ID_MAIN_MINIMIZE, 0, 0));
+	popupMenu->AddItem(createMenuItem(IDS_MENU_MAIN_CLOSE, ID_MAIN_CLOSE, 0, 0));
 
 	try
 	{
@@ -234,27 +235,10 @@ void BeMainView::ShowAboutDialog()
 		aboutDialogMessenger = NULL;
 	}
 
-	const BeXMLLangFile* langFile = BeCoveredCalcApp::GetInstance()->GetLangFile();
-	if (NULL == langFile)
-	{
-		throw new UIControllerExceptions::FailedToShowDialog(IDD_ABOUT);
-	}
-	
-	BeDialogDesign* dialogDesign = langFile->LoadDialogDesign(IDD_ABOUT);
-	try
-	{
-		BeAboutDialog* aboutDialog = new BeAboutDialog(dialogDesign);
-		dialogDesign = NULL;
-		aboutDialog->Init();
-		aboutDialog->Show();
-		aboutDialogMessenger = new BMessenger(aboutDialog);
-	}
-	catch (...)
-	{
-		if (NULL != dialogDesign)
-			delete dialogDesign;
-		throw;
-	}
+	BeAboutDialog* aboutDialog = new BeAboutDialog();
+	aboutDialog->Init();
+	aboutDialog->Show();
+	aboutDialogMessenger = new BMessenger(aboutDialog);
 }
 
 /**
@@ -274,27 +258,10 @@ void BeMainView::ShowAboutCurrentCoverDialog()
 		aboutCCDialogMessenger = NULL;
 	}
 
-	const BeXMLLangFile* langFile = BeCoveredCalcApp::GetInstance()->GetLangFile();
-	if (NULL == langFile)
-	{
-		throw new UIControllerExceptions::FailedToShowDialog(IDD_ABOUT_COVER);
-	}
-	
-	BeDialogDesign* dialogDesign = langFile->LoadDialogDesign(IDD_ABOUT_COVER);
-	try
-	{
-		BeAboutCurrentCoverDialog* aboutCCDialog = new BeAboutCurrentCoverDialog(dialogDesign);
-		dialogDesign = NULL;
-		aboutCCDialog->Init();
-		aboutCCDialog->Show();
-		aboutCCDialogMessenger = new BMessenger(aboutCCDialog);
-	}
-	catch (...)
-	{
-		if (NULL != dialogDesign)
-			delete dialogDesign;
-		throw;
-	}
+	BeAboutCurrentCoverDialog* aboutCCDialog = new BeAboutCurrentCoverDialog();
+	aboutCCDialog->Init();
+	aboutCCDialog->Show();
+	aboutCCDialogMessenger = new BMessenger(aboutCCDialog);
 }
 
 /**
@@ -314,27 +281,18 @@ void BeMainView::ShowPreferencesDialog()
 		prefDialogMessenger = NULL;
 	}
 	
-	const BeXMLLangFile* langFile = BeCoveredCalcApp::GetInstance()->GetLangFile();
-	if (NULL == langFile)
-	{
-		throw new UIControllerExceptions::FailedToShowDialog(IDD_PREFERENCES);
-	}
-	
-	BeDialogDesign* dialogDesign = langFile->LoadDialogDesign(IDD_PREFERENCES);
+	BePreferencesDlg* prefDialog = new BePreferencesDlg();
 	try
 	{
-		BePreferencesDlg* prefDialog = new BePreferencesDlg(dialogDesign);
-		dialogDesign = NULL;
 		prefDialog->Init();
-		prefDialog->Show();
-		prefDialogMessenger = new BMessenger(prefDialog);		
 	}
 	catch (...)
 	{
-		if (NULL != dialogDesign)
-			delete dialogDesign;
+		delete prefDialog;
 		throw;
 	}
+	prefDialog->Show();
+	prefDialogMessenger = new BMessenger(prefDialog);		
 }
 
 /**

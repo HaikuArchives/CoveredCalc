@@ -93,8 +93,8 @@ protected:
 
 	virtual SInt32			getMenuCommand(uint32 menuCommand) = 0;
 	void					showContextMenu(BPopUpMenu* popupMenu, Point32 menuPos);
-	BMenuItem*				createMenuItem(ConstUTF8Str name, uint32 command, int8 shortcut, uint32 modifiers);
-	BMenu*					createSubMenu(ConstUTF8Str name);
+	BMenuItem*				createMenuItem(SInt32 nameId, uint32 command, int8 shortcut, uint32 modifiers);
+	BMenu*					createSubMenu(SInt32 nameId);
 
 	UIManager*				getUIManager() { return uiManager; }
 

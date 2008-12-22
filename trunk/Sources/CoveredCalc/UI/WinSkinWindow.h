@@ -97,10 +97,9 @@ protected:
 
 protected:
 	UIManager*				getUIManager() { return uiManager; }
-	void					showContextMenu(WORD resourceID, Point32 menuPos);
+	void					updateMenuItemStates(HMENU menu);
 
 private:
-	void					updateMenuItemStates(HMENU menu);
 	UINT_PTR				timerIdToWinTimerId(UIController::TimerID timerId);
 	UIController::TimerID	winTimerIdToTimerId(UINT_PTR winTimerId);
 	void					readyMousePosition() const;

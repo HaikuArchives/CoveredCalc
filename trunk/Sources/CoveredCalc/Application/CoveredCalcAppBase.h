@@ -33,16 +33,17 @@
 #ifndef _COVEREDCALCAPPBASE_H_
 #define _COVEREDCALCAPPBASE_H_
 
+#include <vector>
 #include "CoveredCalcApp.h"
 #include "CoverManager.h"
 #include "AppSettings.h"
 #include "CoverChangeEventHandler.h"
-#include "UIMessageProvider.h"
 #include "ExceptionMessageGenerator.h"
 #include "CommandLineParam.h"
 #include "LangFileInfo.h"
 #include "KeyMappingManager.h"
 #include "KeyNameDB.h"
+#include "XMLLangFile.h"
 
 // ---------------------------------------------------------------------
 //! The base class of application class in each OS.
@@ -57,12 +58,11 @@ public:
 											CoveredCalcAppBase();
 	virtual									~CoveredCalcAppBase();
 
-	void									init();
+	bool									init();
 	
 	// implementations of CoveredCalcApp interface
 	virtual CoverManager*					GetCoverManager() { return &coverManager; }
 	virtual AppSettings*					GetAppSettings() { return &appSettings; }
-	virtual UIMessageProvider*				GetMessageProvider() { return &uiMessageProvider; }
 	virtual ExceptionMessageGenerator*		GetExceptionMessageGenerator() { return &exMessageGenerator; }
 	virtual CommandLineParam*				GetCommandLineParam() { return &commandLineParam; }
 	virtual void							GetCurrentLanguageCode(MBCString& outLanguage);
@@ -73,7 +73,9 @@ public:
 	virtual Path							MakeVirtualPath(const Path& absolutePath, ConstAStr virtualPathName);
 	virtual void							LoadKeyMappings(const Path& keymapFile);
 	virtual const KeyNameDB*				GetKeyNameDB() const { return &keyNameDB; }
-	
+	virtual MBCString						LoadNativeString(SInt32 stringId);
+	virtual void							LoadDialogLayout(SInt32 dialogId, DialogLayout& outLayout);
+	virtual void							LoadDialogFont(SInt32 /* dialogId */, DialogFont& /* outFont */) { } 
 	virtual KeyMappingManager*				GetKeyMappingManagerForMainWindow() { return &mainWindowKeyMappingManager; }
 
 	// implementations of CoverChangeEventHandler interface
@@ -81,6 +83,7 @@ public:
 	virtual void							CurrentCoverChanged();	
 
 protected:
+	virtual void							loadLangFile(const Path& path);
 	void									loadSettings(const Path& settingFile);
 	void									loadCoverDef(const Path& basePath, const Path& relativeCoverDefPath, SInt32 coverNo);
 	bool									restoreByDefaultCoverDef();
@@ -89,6 +92,7 @@ protected:
 	virtual Path							resolveVirtualPathName(const MBCString& virtualPathName);
 	void 									readyDefaultSettingFilePath(Path& settingFilePath);
 	void									loadKeyNameDB(const Path& keyNameDefFile);
+	MBCString								loadNativeStringSub(SInt32 stringId);
 
 protected:
 
@@ -109,11 +113,18 @@ protected:
 	virtual Path							makeAbsoluteCoverDefPath(const Path& basePath, const Path& relativePath);
 	virtual Path							makeRelativeCoverDefPath(const Path& basePath, const Path& absolutePath);
 
-private:
+protected:
+	struct LoadedLangFile
+	{
+		Path				path;		///< path of the language file.
+		XMLLangFile			langFile;	///< language file object.
+	};
+	typedef std::vector<LoadedLangFile*>	LoadedLangFilePtrVector;
+
+protected:
 	AppSettings								appSettings;					//!< current application settings
 	CoverManager							coverManager;					//!< object which manages current cover
 	bool									isIgnoreCoverChangeEvent;		//!< whether ignores CoverChangeEvent
-	UIMessageProvider						uiMessageProvider;				//!< message provider for user interface
 	ExceptionMessageGenerator				exMessageGenerator;				//!< message generator for an exception.
 	CommandLineParam						commandLineParam;				///< command line parameters
 	LangFileInfoCollection					langFileInfos;					///< informations about installed language files.
@@ -121,6 +132,7 @@ private:
 	MBCString								currentLangCode;				///< current language code.
 	KeyMappingManager						mainWindowKeyMappingManager;	///< key-mapping manager for main window.
 	KeyNameDB								keyNameDB;						///< key name database.
+	LoadedLangFilePtrVector					langFiles;						///< loaded language files.
 };
 
 #endif // _COVEREDCALCAPPBASE_H_

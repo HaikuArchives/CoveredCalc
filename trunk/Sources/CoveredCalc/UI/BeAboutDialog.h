@@ -36,20 +36,17 @@
 #include "BeDialog.h"
 #include "MBCString.h"
 
-class BeDialogDesign;
-
 // ---------------------------------------------------------------------
 //! About dialog on BeOS.
 // ---------------------------------------------------------------------
 class BeAboutDialog : public BeDialog
 {
 public:
-								BeAboutDialog(BeDialogDesign* dialogDesign);
+								BeAboutDialog();
 	virtual						~BeAboutDialog();
 	
-	void						Init();
-
 protected:
+	virtual void				initDialog();
 	virtual void				MessageReceived(BMessage *message);
 
 #if defined (ZETA)
@@ -60,9 +57,6 @@ private:
 	void						createViews();
 	void						doCloseDialog();
 	void						makeVersionString(MBCString& versionString);
-
-private:
-	BeDialogDesign*				dialogDesign;			///< this dialog's design information.
 };
 
 #endif // _BEABOUTDIALOG_H_

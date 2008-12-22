@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<localeDef version="7" xmlns="http://hironytic.1st-shrine.net/schema/CoveredCalc-LocaleDefinition">
+	<platform target="Windows"/>
+	
+	<langName>English (US)</langName>
+	<langCode>enUS</langCode>
+	
+	<!-- dialog font -->
+	<dialogFont targetOSVer="2.6.*.*" charset="1" typeface="Segoe UI" size="9" />
+	<dialogFont targetOSVer="*.*.*.*" charset="1" typeface="MS Shell Dlg" size="8" />
+	
+	<!-- About dialog -->
+	<dialog name="IDD_ABOUT">
+		<!-- Window -->
+		<position name="Window.left" value="0" />
+		<position name="Window.top" value="0" />
+		<position name="Window.right" offset-from="Content.right" value="7" />
+		<position name="Window.bottom" offset-from="Content.bottom" value="7" />
+		
+		<!-- Content -->
+		<position name="Content.left" offset-from="Window.left" value="7" />
+		<position name="Content.top" offset-from="Window.top" value="7" />
+		<position name="Content.right" offset-from="IDC_STC_COPYRIGHT1.right" value="0" />
+		<position name="Content.bottom" offset-from="IDOK.bottom" value="0" />
+		
+		<!-- Icon -->
+		<position name="IDC_ICON64.left" offset-from="Content.left" value="0" />
+		<position name="IDC_ICON64.top" offset-from="Content.top" value="0" />
+		<position name="IDC_ICON64.right" offset-from="IDC_ICON64.left" value="48" />
+		<position name="IDC_ICON64.bottom" offset-from="IDC_ICON64.top" value="48" />
+		
+		<!-- left side of strings -->
+		<position name="Strings.left" offset-from="IDC_ICON64.right" value="10" />
+		
+		<!-- "CoveredCalc for Windows" -->
+		<position name="IDC_STC_APPNAME.left" offset-from="Strings.left" value="0" />
+		<position name="IDC_STC_APPNAME.top" offset-from="Content.top" value="5" />
+		<position name="IDC_STC_APPNAME.right" offset-from="Content.right" value="0" />
+		<position name="IDC_STC_APPNAME.bottom" offset-from="IDC_STC_APPNAME.top" value="8" />
+		
+		<!-- "Version" -->
+		<position name="IDC_STC_VERSION.left" offset-from="Strings.left" value="0" />
+		<position name="IDC_STC_VERSION.top" offset-from="IDC_STC_APPNAME.bottom" value="4" />
+		<position name="IDC_STC_VERSION.right" offset-from="Content.right" value="0" />
+		<position name="IDC_STC_VERSION.bottom" offset-from="IDC_STC_VERSION.top" value="8" />
+		
+		<!-- "Copyright" -->
+		<position name="IDC_STC_COPYRIGHT1.left" offset-from="Strings.left" value="0" />
+		<position name="IDC_STC_COPYRIGHT1.top" offset-from="IDC_STC_VERSION.bottom" value="8" />
+		<position name="IDC_STC_COPYRIGHT1.right" offset-from="IDC_STC_COPYRIGHT1.left" value="203" />
+		<position name="IDC_STC_COPYRIGHT1.bottom" offset-from="IDC_STC_COPYRIGHT1.top" value="8" />
+		
+		<!-- "OK" button -->
+		<position name="IDOK.left" offset-from="IDOK.right" value="-50" />
+		<position name="IDOK.top" offset-from="IDC_STC_COPYRIGHT1.bottom" value="8" />
+		<position name="IDOK.right" offset-from="Content.right" value="0" />
+		<position name="IDOK.bottom" offset-from="IDOK.top" value="14" />
+	</dialog>
+	<string name="IDS_ABOUT_TITLE">About CoveredCalc</string>
+	<string name="IDS_ABOUT_OK">OK</string>
+	
+	<!-- Cover Browser -->
+	<dialog name="IDD_COVER_BROWSER">
+		<!-- Window -->
+		<position name="Window.left" value="0" />
+		<position name="Window.top" value="0" />
+		<position name="Window.right" value="226" />
+		<position name="Window.bottom" value="195" />
+		
+		<!-- Content -->
+		<position name="Content.left" offset-from="Window.left" value="7" />
+		<position name="Content.top" offset-from="Window.top" value="7" />
+		<position name="Content.right" offset-from="Window.right" value="-7" />
+		<position name="Content.bottom" offset-from="Window.bottom" value="-7" />
+		
+		<!-- "Select Cover" label -->
+		<position name="IDC_SELECT_COVER.left" offset-from="Content.left" value="0" />
+		<position name="IDC_SELECT_COVER.top" offset-from="Content.top" value="0" />
+		<position name="IDC_SELECT_COVER.right" offset-from="Content.right" value="0" />
+		<position name="IDC_SELECT_COVER.bottom" offset-from="IDC_SELECT_COVER.top" value="8" />
+		
+		<!-- Cover List -->
+		<position name="IDC_COVER_LIST.left" offset-from="Content.left" value="0" />
+		<position name="IDC_COVER_LIST.top" offset-from="IDC_SELECT_COVER.bottom" value="2" />
+		<position name="IDC_COVER_LIST.right" offset-from="Content.right" value="0" />
+		<position name="IDC_COVER_LIST.bottom" offset-from="Buttons.top" value="-4" />
+		
+		<position name="Buttons.top" offset-from="IDCLOSE.top" value="0" />
+		
+		<!-- "Refresh" button -->
+		<position name="IDC_RELOAD.left" offset-from="Content.left" value="0" />
+		<position name="IDC_RELOAD.top" offset-from="IDC_RELOAD.bottom" value="-14" />
+		<position name="IDC_RELOAD.right" offset-from="IDC_RELOAD.left" value="50" />
+		<position name="IDC_RELOAD.bottom" offset-from="Content.bottom" value="0" />
+		
+		<!-- "Apply" button -->
+		<position name="IDC_APPLY.left" offset-from="IDC_APPLY.right" value="-50" />
+		<position name="IDC_APPLY.top" offset-from="IDC_APPLY.bottom" value="-14" />
+		<position name="IDC_APPLY.right" offset-from="IDCLOSE.left" value="-4" />
+		<position name="IDC_APPLY.bottom" offset-from="Content.bottom" value="0" />
+		
+		<!-- "Close" button -->
+		<position name="IDCLOSE.left" offset-from="IDCLOSE.right" value="-50" />
+		<position name="IDCLOSE.top" offset-from="IDCLOSE.bottom" value="-14" />
+		<position name="IDCLOSE.right" offset-from="Content.right" value="0" />
+		<position name="IDCLOSE.bottom" offset-from="Content.bottom" value="0" />
+	</dialog>
+	<string name="IDS_COVER_BROWSER_TITLE">Cover Browser - CoveredCalc</string>
+	<string name="IDS_COVER_BROWSER_SELECT_COVER">~Select Cover:</string>
+	<string name="IDS_COVER_BROWSER_COLUMN_NAME">Name</string>
+	<string name="IDS_COVER_BROWSER_COLUMN_DESCRIPTION">Description</string>
+	<string name="IDS_COVER_BROWSER_RELOAD">~Refresh</string>
+	<string name="IDS_COVER_BROWSER_APPLY">~Apply</string>
+	<string name="IDS_COVER_BROWSER_CLOSE">~Close</string>
+	
+	<!-- About Cover dialog -->
+	<dialog name="IDD_ABOUT_COVER">
+		<!-- Window -->
+		<position name="Window.left" value="0" />
+		<position name="Window.top" value="0" />
+		<position name="Window.right" value="187" />
+		<position name="Window.bottom" value="130" />
+		
+		<!-- Content -->
+		<position name="Content.left" offset-from="Window.left" value="7" />
+		<position name="Content.top" offset-from="Window.top" value="7" />
+		<position name="Content.right" offset-from="Window.right" value="-7" />
+		<position name="Content.bottom" offset-from="Window.bottom" value="-7" />
+		
+		<!-- left side of name edit and description edit -->
+		<position name="SingleLineEdits.left" offset-from="Content.left" value="49" />
+		
+		<!-- "Name" label -->
+		<position name="IDC_STATIC_NAME.left" offset-from="Content.left" value="0" />
+		<position name="IDC_STATIC_NAME.top" offset-from="Content.top" value="0" />
+		<position name="IDC_STATIC_NAME.right" offset-from="SingleLineEdits.left" value="-4" />
+		<position name="IDC_STATIC_NAME.bottom" offset-from="IDC_STATIC_NAME.top" value="8" />
+		
+		<!-- "Name" edit -->
+		<position name="IDC_EDIT_NAME.left" offset-from="SingleLineEdits.left" value="0" />
+		<position name="IDC_EDIT_NAME.top" offset-from="Content.top" value="0" />
+		<position name="IDC_EDIT_NAME.right" offset-from="Content.right" value="0" />
+		<position name="IDC_EDIT_NAME.bottom" offset-from="IDC_EDIT_NAME.top" value="12" />
+		
+		<!-- top of description label and description edit -->
+		<position name="Description.top" offset-from="IDC_EDIT_NAME.bottom" value="2" />
+		
+		<!-- "Description" label -->
+		<position name="IDC_STATIC_DESCRIPTION.left" offset-from="Content.left" value="0" />
+		<position name="IDC_STATIC_DESCRIPTION.top" offset-from="Description.top" value="0" />
+		<position name="IDC_STATIC_DESCRIPTION.right" offset-from="SingleLineEdits.left" value="-4" />
+		<position name="IDC_STATIC_DESCRIPTION.bottom" offset-from="IDC_STATIC_DESCRIPTION.top" value="8" />
+		
+		<!-- "Description" edit -->
+		<position name="IDC_EDIT_DESCRIPTION.left" offset-from="SingleLineEdits.left" value="0" />
+		<position name="IDC_EDIT_DESCRIPTION.top" offset-from="Description.top" value="0" />
+		<position name="IDC_EDIT_DESCRIPTION.right" offset-from="Content.right" value="0" />
+		<position name="IDC_EDIT_DESCRIPTION.bottom" offset-from="IDC_EDIT_DESCRIPTION.top" value="12" />
+		
+		<!-- "Cover Author Info" label -->
+		<position name="IDC_STATIC_ABOUT.left" offset-from="Content.left" value="0" />
+		<position name="IDC_STATIC_ABOUT.top" offset-from="IDC_EDIT_DESCRIPTION.bottom" value="2" />
+		<position name="IDC_STATIC_ABOUT.right" offset-from="Content.right" value="0" />
+		<position name="IDC_STATIC_ABOUT.bottom" offset-from="IDC_STATIC_ABOUT.top" value="8" />
+		
+		<!-- "Cover Author Info" edit -->
+		<position name="IDC_EDIT_ABOUT.left" offset-from="Content.left" value="0" />
+		<position name="IDC_EDIT_ABOUT.top" offset-from="IDC_STATIC_ABOUT.bottom" value="2" />
+		<position name="IDC_EDIT_ABOUT.right" offset-from="Content.right" value="0" />
+		<position name="IDC_EDIT_ABOUT.bottom" offset-from="IDOK.top" value="-8" />
+		
+		<!-- "OK" button -->
+		<position name="IDOK.left" offset-from="IDOK.right" value="-50" />
+		<position name="IDOK.top" offset-from="IDOK.bottom" value="-14" />
+		<position name="IDOK.right" offset-from="Content.right" value="0" />
+		<position name="IDOK.bottom" offset-from="Content.bottom" value="0" />
+	</dialog>
+	<string name="IDS_ABOUT_COVER_TITLE">Cover Info</string>
+	<string name="IDS_ABOUT_COVER_NAME">Name:</string>
+	<string name="IDS_ABOUT_COVER_DESCRIPTION">Description:</string>
+	<string name="IDS_ABOUT_COVER_ABOUT">Cover Author Info:</string>
+	<string name="IDS_ABOUT_COVER_OK">OK</string>
+	
+	<!-- Preferences dialog -->
+	<dialog name="IDD_PREFERENCES">
+		<!-- Window -->
+		<position name="Window.left" value="0" />
+		<position name="Window.top" value="0" />
+		<position name="Window.right" offset-from="Content.right" value="7" />
+		<position name="Window.bottom" offset-from="Content.bottom" value="7" />
+		
+		<!-- Content -->
+		<position name="Content.left" offset-from="Window.left" value="7" />
+		<position name="Content.top" offset-from="Window.top" value="7" />
+		<position name="Content.right" offset-from="IDC_GROUP_TRANSPARENCY.right" value="0" />
+		<position name="Content.bottom" offset-from="IDOK.bottom" value="0" />
+		
+		<!-- "Transparency" group box -->
+		<position name="IDC_GROUP_TRANSPARENCY.left" offset-from="Content.left" value="0" />
+		<position name="IDC_GROUP_TRANSPARENCY.top" offset-from="Content.top" value="0" />
+		<position name="IDC_GROUP_TRANSPARENCY.right" offset-from="IDC_STATIC_TRANSPARENCY_MESSAGE.right" value="8" />
+		<position name="IDC_GROUP_TRANSPARENCY.bottom" offset-from="IDC_STATIC_TRANSPARENCY_MESSAGE.bottom" value="8" />
+		
+			<position name="TransparencyItem.left" offset-from="IDC_GROUP_TRANSPARENCY.left" value="102" />
+			
+			<!-- "Opacity" label -->
+			<position name="IDC_STATIC_OPACITY.left" offset-from="IDC_GROUP_TRANSPARENCY.left" value="8" />
+			<position name="IDC_STATIC_OPACITY.top" offset-from="IDC_GROUP_TRANSPARENCY.top" value="15" />
+			<position name="IDC_STATIC_OPACITY.right" offset-from="TransparencyItem.left" value="-4" />
+			<position name="IDC_STATIC_OPACITY.bottom" offset-from="IDC_STATIC_OPACITY.top" value="8" />
+			
+			<!-- "Opacyity" slider -->
+			<position name="IDC_SLDR_OPACITY.left" offset-from="TransparencyItem.left" value="0" />
+			<position name="IDC_SLDR_OPACITY.top" offset-from="IDC_GROUP_TRANSPARENCY.top" value="12" />
+			<position name="IDC_SLDR_OPACITY.right" offset-from="IDC_SLDR_OPACITY.left" value="70" />
+			<position name="IDC_SLDR_OPACITY.bottom" offset-from="IDC_SLDR_OPACITY.top" value="24" />
+			
+			<!-- "Opacity" slider left label -->
+			<position name="IDC_STC_TRANSPARENT.left" offset-from="IDC_STC_TRANSPARENT.right" value="-42" />
+			<position name="IDC_STC_TRANSPARENT.top" offset-from="IDC_SLDR_OPACITY.top" value="5" />
+			<position name="IDC_STC_TRANSPARENT.right" offset-from="IDC_SLDR_OPACITY.left" value="0" />
+			<position name="IDC_STC_TRANSPARENT.bottom" offset-from="IDC_STC_TRANSPARENT.top" value="8" />
+			
+			<!-- "Opacity" slider right label -->
+			<position name="IDC_STC_OPAQUE.left" offset-from="IDC_SLDR_OPACITY.right" value="0" />
+			<position name="IDC_STC_OPAQUE.top" offset-from="IDC_SLDR_OPACITY.top" value="5" />
+			<position name="IDC_STC_OPAQUE.right" offset-from="IDC_STC_OPAQUE.left" value="29" />
+			<position name="IDC_STC_OPAQUE.bottom" offset-from="IDC_STC_OPAQUE.top" value="8" />
+			
+			<!-- "Cover Edge Smoothing" label -->
+			<position name="IDC_STATIC_SMOOTHING.left" offset-from="IDC_GROUP_TRANSPARENCY.left" value="8" />
+			<position name="IDC_STATIC_SMOOTHING.top" offset-from="IDC_SLDR_OPACITY.bottom" value="5" />
+			<position name="IDC_STATIC_SMOOTHING.right" offset-from="TransparencyItem.left" value="-4" />
+			<position name="IDC_STATIC_SMOOTHING.bottom" offset-from="IDC_STATIC_SMOOTHING.top" value="8" />
+			
+			<!-- "Cover Edge Smoothing" slider -->
+			<position name="IDC_SLDR_EDGE_SMOOTHING.left" offset-from="TransparencyItem.left" value="0" />
+			<position name="IDC_SLDR_EDGE_SMOOTHING.top" offset-from="IDC_SLDR_OPACITY.bottom" value="2" />
+			<position name="IDC_SLDR_EDGE_SMOOTHING.right" offset-from="IDC_SLDR_EDGE_SMOOTHING.left" value="70" />
+			<position name="IDC_SLDR_EDGE_SMOOTHING.bottom" offset-from="IDC_SLDR_EDGE_SMOOTHING.top" value="24" />
+			
+			<!-- "Cover Edge Smoothing" slider left label -->
+			<position name="IDC_STC_LOW.left" offset-from="IDC_STC_LOW.right" value="-17" />
+			<position name="IDC_STC_LOW.top" offset-from="IDC_SLDR_EDGE_SMOOTHING.top" value="5" />
+			<position name="IDC_STC_LOW.right" offset-from="IDC_SLDR_EDGE_SMOOTHING.left" value="0" />
+			<position name="IDC_STC_LOW.bottom" offset-from="IDC_STC_LOW.top" value="8" />
+			
+			<!-- "Cover Edge Smoothing" slider right label -->
+			<position name="IDC_STC_HIGH.left" offset-from="IDC_SLDR_EDGE_SMOOTHING.right" value="0" />
+			<position name="IDC_STC_HIGH.top" offset-from="IDC_SLDR_EDGE_SMOOTHING.top" value="5" />
+			<position name="IDC_STC_HIGH.right" offset-from="IDC_STC_HIGH.left" value="20" />
+			<position name="IDC_STC_HIGH.bottom" offset-from="IDC_STC_HIGH.top" value="8" />
+			
+			<!-- Message in "Transpacenry" group box -->
+			<position name="IDC_STATIC_TRANSPARENCY_MESSAGE.left" offset-from="IDC_GROUP_TRANSPARENCY.left" value="8" />
+			<position name="IDC_STATIC_TRANSPARENCY_MESSAGE.top" offset-from="IDC_SLDR_EDGE_SMOOTHING.bottom" value="2" />
+			<position name="IDC_STATIC_TRANSPARENCY_MESSAGE.right" offset-from="IDC_STATIC_TRANSPARENCY_MESSAGE.left" value="193" />
+			<position name="IDC_STATIC_TRANSPARENCY_MESSAGE.bottom" offset-from="IDC_STATIC_TRANSPARENCY_MESSAGE.top" value="16" />
+		
+		<!-- "Language" group box -->
+		<position name="IDC_GROUP_LANGUAGE.left" offset-from="Content.left" value="0" />
+		<position name="IDC_GROUP_LANGUAGE.top" offset-from="IDC_GROUP_TRANSPARENCY.bottom" value="4" />
+		<position name="IDC_GROUP_LANGUAGE.right" offset-from="Content.right" value="0" />
+		<position name="IDC_GROUP_LANGUAGE.bottom" offset-from="IDC_STATIC_LANGUAGE_MESSAGE.bottom" value="8" />
+		
+			<position name="LanguageItem.left" offset-from="IDC_STATIC_LANGUAGE.left" value="59" />
+			
+			<!-- "Language" label -->
+			<position name="IDC_STATIC_LANGUAGE.left" offset-from="IDC_GROUP_LANGUAGE.left" value="8" />
+			<position name="IDC_STATIC_LANGUAGE.top" offset-from="IDC_GROUP_LANGUAGE.top" value="14" />
+			<position name="IDC_STATIC_LANGUAGE.right" offset-from="LanguageItem.left" value="-4" />
+			<position name="IDC_STATIC_LANGUAGE.bottom" offset-from="IDC_STATIC_LANGUAGE.top" value="8" />
+			
+			<!-- "Language" combo box -->
+			<position name="IDC_CMB_LANGUAGE.left" offset-from="LanguageItem.left" value="0" />
+			<position name="IDC_CMB_LANGUAGE.top" offset-from="IDC_GROUP_LANGUAGE.top" value="12" />
+			<position name="IDC_CMB_LANGUAGE.right" offset-from="IDC_GROUP_LANGUAGE.right" value="-8" />
+			<position name="IDC_CMB_LANGUAGE.bottom" offset-from="IDC_CMB_LANGUAGE.top" value="110" />
+			<position name="IDC_CMB_LANGUAGE.apparentBottom" offset-from="IDC_CMB_LANGUAGE.top" value="12" />
+			
+			<!-- Message in "Language" group box -->
+			<position name="IDC_STATIC_LANGUAGE_MESSAGE.left" offset-from="IDC_GROUP_LANGUAGE.left" value="8" />
+			<position name="IDC_STATIC_LANGUAGE_MESSAGE.top" offset-from="IDC_CMB_LANGUAGE.apparentBottom" value="8" />
+			<position name="IDC_STATIC_LANGUAGE_MESSAGE.right" offset-from="IDC_GROUP_LANGUAGE.right" value="-8" />
+			<position name="IDC_STATIC_LANGUAGE_MESSAGE.bottom" offset-from="IDC_STATIC_LANGUAGE_MESSAGE.top" value="16" />
+		
+		<!-- "Keymap" group box -->
+		<position name="IDC_GROUP_KEYMAP.left" offset-from="Content.left" value="0" />
+		<position name="IDC_GROUP_KEYMAP.top" offset-from="IDC_GROUP_LANGUAGE.bottom" value="4" />
+		<position name="IDC_GROUP_KEYMAP.right" offset-from="Content.right" value="0" />
+		<position name="IDC_GROUP_KEYMAP.bottom" offset-from="IDC_EDIT_KEYMAPPING.bottom" value="8" />
+		
+			<position name="KeymapItem.left" offset-from="LanguageItem.left" value="0" />
+			
+			<!-- "Keymap" label -->
+			<position name="IDC_STATIC_KEYMAP.left" offset-from="IDC_GROUP_KEYMAP.left" value="8" />
+			<position name="IDC_STATIC_KEYMAP.top" offset-from="IDC_GROUP_KEYMAP.top" value="14" />
+			<position name="IDC_STATIC_KEYMAP.right" offset-from="KeymapItem.left" value="-4" />
+			<position name="IDC_STATIC_KEYMAP.bottom" offset-from="IDC_STATIC_KEYMAP.top" value="8" />
+			
+			<!-- "Keymap" combo box -->
+			<position name="IDC_CMB_KEYMAPPINGS.left" offset-from="KeymapItem.left" value="0" />
+			<position name="IDC_CMB_KEYMAPPINGS.top" offset-from="IDC_GROUP_KEYMAP.top" value="12" />
+			<position name="IDC_CMB_KEYMAPPINGS.right" offset-from="IDC_GROUP_KEYMAP.right" value="-8" />
+			<position name="IDC_CMB_KEYMAPPINGS.bottom" offset-from="IDC_CMB_KEYMAPPINGS.top" value="110" />
+			<position name="IDC_CMB_KEYMAPPINGS.apparentBottom" offset-from="IDC_CMB_KEYMAPPINGS.top" value="12" />
+			
+			<position name="KeymapButtons.top" offset-from="IDC_CMB_KEYMAPPINGS.apparentBottom" value="8" />
+			
+			<!-- "Edit" button -->
+			<position name="IDC_EDIT_KEYMAPPING.left" offset-from="IDC_EDIT_KEYMAPPING.right" value="-50" />
+			<position name="IDC_EDIT_KEYMAPPING.top" offset-from="KeymapButtons.top" value="0" />
+			<position name="IDC_EDIT_KEYMAPPING.right" offset-from="IDC_DUPLICATE_KEYMAPPING.left" value="-4" />
+			<position name="IDC_EDIT_KEYMAPPING.bottom" offset-from="IDC_EDIT_KEYMAPPING.top" value="14" />
+			
+			<!-- "Duplicate" button -->
+			<position name="IDC_DUPLICATE_KEYMAPPING.left" offset-from="IDC_DUPLICATE_KEYMAPPING.right" value="-50" />
+			<position name="IDC_DUPLICATE_KEYMAPPING.top" offset-from="KeymapButtons.top" value="0" />
+			<position name="IDC_DUPLICATE_KEYMAPPING.right" offset-from="IDC_DELETE_KEYMAPPING.left" value="-4" />
+			<position name="IDC_DUPLICATE_KEYMAPPING.bottom" offset-from="IDC_DUPLICATE_KEYMAPPING.top" value="14" />
+			
+			<!-- "Delete" button -->
+			<position name="IDC_DELETE_KEYMAPPING.left" offset-from="IDC_DELETE_KEYMAPPING.right" value="-50" />
+			<position name="IDC_DELETE_KEYMAPPING.top" offset-from="KeymapButtons.top" value="0" />
+			<position name="IDC_DELETE_KEYMAPPING.right" offset-from="IDC_GROUP_KEYMAP.right" value="-8" />
+			<position name="IDC_DELETE_KEYMAPPING.bottom" offset-from="IDC_DELETE_KEYMAPPING.top" value="14" />
+		
+		<position name="OKCancelButtons.top" offset-from="IDC_GROUP_KEYMAP.bottom" value="8" />
+		
+		<!-- "OK" button -->
+		<position name="IDOK.left" offset-from="IDOK.right" value="-50" />
+		<position name="IDOK.top" offset-from="OKCancelButtons.top" value="0" />
+		<position name="IDOK.right" offset-from="IDCANCEL.left" value="-4" />
+		<position name="IDOK.bottom" offset-from="IDOK.top" value="14" />
+		
+		<!-- "Cancel" button -->
+		<position name="IDCANCEL.left" offset-from="IDCANCEL.right" value="-50" />
+		<position name="IDCANCEL.top" offset-from="OKCancelButtons.top" value="0" />
+		<position name="IDCANCEL.right" offset-from="Content.right" value="0" />
+		<position name="IDCANCEL.bottom" offset-from="IDCANCEL.top" value="14" />
+	</dialog>
+	<string name="IDS_PREFERENCES_TITLE">Preferences</string>
+	<string name="IDS_PREFERENCES_GROUP_TRANSPARENCY">Transparency</string>
+	<string name="IDS_PREFERENCES_OPACITY">~Opacity:</string>
+	<string name="IDS_PREFERENCES_TRANSPARENT">Transparent</string>
+	<string name="IDS_PREFERENCES_OPAQUE">Opaque</string>
+	<string name="IDS_PREFERENCES_SMOTHING">Cover ~Edge Smoothing:</string>
+	<string name="IDS_PREFERENCES_LOW">Low</string>
+	<string name="IDS_PREFERENCES_HIGH">High</string>
+	<string name="IDS_PREFERENCES_TRANSPARENCY_MESSAGE">You can set Opacity and Cover Edge Smoothing only on Windows 2000, Windows XP or Windows Vista.</string>
+	<string name="IDS_PREFERENCES_GROUP_LANGUAGE">Language</string>
+	<string name="IDS_PREFERENCES_LANGUAGE">~Language:</string>
+	<string name="IDS_PREFERENCES_LANGUAGE_MESSAGE">Change of language will take effect after you restart CoveredCalc application.</string>
+	<string name="IDS_PREFERENCES_GROUP_KEYMAP">Keymap</string>
+	<string name="IDS_PREFERENCES_KEYMAP">~Keymap:</string>
+	<string name="IDS_PREFERENCES_EDIT_KEYMAP">Ed~it</string>
+	<string name="IDS_PREFERENCES_DUPLICATE_KEYMAP">D~uplicate</string>
+	<string name="IDS_PREFERENCES_DELETE_KEYMAP">~Delete</string>
+	<string name="IDS_PREFERENCES_OK">OK</string>
+	<string name="IDS_PREFERENCES_CANCEL">Cancel</string>
+	
+	<!-- Edit Keyboard dialog -->
+	<dialog name="IDD_EDIT_KEYMAP">
+		<!-- Window -->
+		<position name="Window.left" value="0" />
+		<position name="Window.top" value="0" />
+		<position name="Window.right" offset-from="Content.right" value="7" />
+		<position name="Window.bottom" offset-from="Content.bottom" value="7" />
+		
+		<!-- Content -->
+		<position name="Content.left" offset-from="Window.left" value="7" />
+		<position name="Content.top" offset-from="Window.top" value="7" />
+		<position name="Content.right" offset-from="IDC_GROUP_KEY.right" value="0" />
+		<position name="Content.bottom" offset-from="IDOK.bottom" value="0" />
+		
+		<!-- "Keymap Name" label -->
+		<position name="IDC_STATIC_NAME.left" offset-from="Content.left" value="0" />
+		<position name="IDC_STATIC_NAME.top" offset-from="IDC_EDIT_NAME.top" value="2" />
+		<position name="IDC_STATIC_NAME.right" offset-from="IDC_STATIC_NAME.left" value="58" />
+		<position name="IDC_STATIC_NAME.bottom" offset-from="IDC_STATIC_NAME.top" value="8" />
+		
+		<!-- "Keymap Name" edit -->
+		<position name="IDC_EDIT_NAME.left" offset-from="IDC_STATIC_NAME.right" value="4" />
+		<position name="IDC_EDIT_NAME.top" offset-from="Content.top" value="0" />
+		<position name="IDC_EDIT_NAME.right" offset-from="Content.right" value="0" />
+		<position name="IDC_EDIT_NAME.bottom" offset-from="IDC_EDIT_NAME.top" value="12" />
+		
+		<position name="GroupBox.top" offset-from="IDC_EDIT_NAME.bottom" value="8" />
+		<position name="GroupBox.bottom" offset-from="IDC_LIST_CURRENT_KEY.bottom" value="8" />
+		
+		<!-- "Function" group box -->
+		<position name="IDC_GROUP_FUNCTION.left" offset-from="Content.left" value="0" />
+		<position name="IDC_GROUP_FUNCTION.top" offset-from="GroupBox.top" value="0" />
+		<position name="IDC_GROUP_FUNCTION.right" offset-from="IDC_GROUP_FUNCTION.left" value="102" />
+		<position name="IDC_GROUP_FUNCTION.bottom" offset-from="GroupBox.bottom" value="0" />
+		
+			<!-- "Function" label -->
+			<position name="IDC_STATIC_FUNCTION.left" offset-from="IDC_GROUP_FUNCTION.left" value="8" />
+			<position name="IDC_STATIC_FUNCTION.top" offset-from="IDC_GROUP_FUNCTION.top" value="12" />
+			<position name="IDC_STATIC_FUNCTION.right" offset-from="IDC_GROUP_FUNCTION.right" value="-8" />
+			<position name="IDC_STATIC_FUNCTION.bottom" offset-from="IDC_STATIC_FUNCTION.top" value="8" />
+			
+			<!-- "Function" list box -->
+			<position name="IDC_LIST_FUNCTION.left" offset-from="IDC_GROUP_FUNCTION.left" value="8" />
+			<position name="IDC_LIST_FUNCTION.top" offset-from="IDC_STATIC_FUNCTION.bottom" value="2" />
+			<position name="IDC_LIST_FUNCTION.right" offset-from="IDC_GROUP_FUNCTION.right" value="-8" />
+			<position name="IDC_LIST_FUNCTION.bottom" offset-from="IDC_LIST_FUNCTION.top" value="64" />
+			
+			<!-- "Current Key" label -->
+			<position name="IDC_STATIC_CURRENT_KEY.left" offset-from="IDC_GROUP_FUNCTION.left" value="8" />
+			<position name="IDC_STATIC_CURRENT_KEY.top" offset-from="IDC_LIST_FUNCTION.bottom" value="8" />
+			<position name="IDC_STATIC_CURRENT_KEY.right" offset-from="IDC_GROUP_FUNCTION.right" value="-8" />
+			<position name="IDC_STATIC_CURRENT_KEY.bottom" offset-from="IDC_STATIC_CURRENT_KEY.top" value="8" />
+			
+			<!-- "Current Key" list box -->
+			<position name="IDC_LIST_CURRENT_KEY.left" offset-from="IDC_GROUP_FUNCTION.left" value="8" />
+			<position name="IDC_LIST_CURRENT_KEY.top" offset-from="IDC_STATIC_CURRENT_KEY.bottom" value="2" />
+			<position name="IDC_LIST_CURRENT_KEY.right" offset-from="IDC_GROUP_FUNCTION.right" value="-8" />
+			<position name="IDC_LIST_CURRENT_KEY.bottom" offset-from="IDC_LIST_CURRENT_KEY.top" value="40" />
+		
+		<position name="CenterButtons.left" offset-from="IDC_GROUP_FUNCTION.right" value="8" />
+		<position name="CenterButtons.right" offset-from="CenterButtons.left" value="50" />
+		
+		<!-- "Assign" button -->
+		<position name="IDC_ASSIGN.left" offset-from="CenterButtons.left" value="0" />
+		<position name="IDC_ASSIGN.top" offset-from="IDC_LIST_FUNCTION.top" value="0" />
+		<position name="IDC_ASSIGN.right" offset-from="CenterButtons.right" value="0" />
+		<position name="IDC_ASSIGN.bottom" offset-from="IDC_ASSIGN.top" value="14" />
+		
+		<!-- "Remove" button -->
+		<position name="IDC_REMOVE.left" offset-from="CenterButtons.left" value="0" />
+		<position name="IDC_REMOVE.top" offset-from="IDC_LIST_CURRENT_KEY.top" value="0" />
+		<position name="IDC_REMOVE.right" offset-from="CenterButtons.right" value="0" />
+		<position name="IDC_REMOVE.bottom" offset-from="IDC_REMOVE.top" value="14" />
+		
+		<!-- "Key" group box -->
+		<position name="IDC_GROUP_KEY.left" offset-from="CenterButtons.right" value="8" />
+		<position name="IDC_GROUP_KEY.top" offset-from="GroupBox.top" value="0" />
+		<position name="IDC_GROUP_KEY.right" offset-from="IDC_GROUP_KEY.left" value="102" />
+		<position name="IDC_GROUP_KEY.bottom" offset-from="GroupBox.bottom" value="0" />
+		
+			<!-- "Key" label -->
+			<position name="IDC_STATIC_KEY.left" offset-from="IDC_GROUP_KEY.left" value="8" />
+			<position name="IDC_STATIC_KEY.top" offset-from="IDC_GROUP_KEY.top" value="12" />
+			<position name="IDC_STATIC_KEY.right" offset-from="IDC_GROUP_KEY.right" value="-8" />
+			<position name="IDC_STATIC_KEY.bottom" offset-from="IDC_STATIC_KEY.top" value="8" />
+			
+			<!-- "Key" edit (key input) -->
+			<position name="IDC_EDIT_KEY.left" offset-from="IDC_GROUP_KEY.left" value="8" />
+			<position name="IDC_EDIT_KEY.top" offset-from="IDC_STATIC_KEY.bottom" value="2" />
+			<position name="IDC_EDIT_KEY.right" offset-from="IDC_GROUP_KEY.right" value="-8" />
+			<position name="IDC_EDIT_KEY.bottom" offset-from="IDC_EDIT_KEY.top" value="12" />
+			
+			<!-- "Assigned Function" label -->
+			<position name="IDC_STATIC_ASSIGNED_FUNCTION.left" offset-from="IDC_GROUP_KEY.left" value="8" />
+			<position name="IDC_STATIC_ASSIGNED_FUNCTION.top" offset-from="IDC_EDIT_KEY.bottom" value="8" />
+			<position name="IDC_STATIC_ASSIGNED_FUNCTION.right" offset-from="IDC_GROUP_KEY.right" value="-8" />
+			<position name="IDC_STATIC_ASSIGNED_FUNCTION.bottom" offset-from="IDC_STATIC_ASSIGNED_FUNCTION.top" value="8" />
+			
+			<!-- "Assigned Function" edit -->
+			<position name="IDC_EDIT_ASSIGNED_FUNCTION.left" offset-from="IDC_GROUP_KEY.left" value="8" />
+			<position name="IDC_EDIT_ASSIGNED_FUNCTION.top" offset-from="IDC_STATIC_ASSIGNED_FUNCTION.bottom" value="2" />
+			<position name="IDC_EDIT_ASSIGNED_FUNCTION.right" offset-from="IDC_GROUP_KEY.right" value="-8" />
+			<position name="IDC_EDIT_ASSIGNED_FUNCTION.bottom" offset-from="IDC_EDIT_ASSIGNED_FUNCTION.top" value="12" />
+		
+		<position name="BelowButtons.top" offset-from="GroupBox.bottom" value="8" />
+		
+		<!-- "OK" button -->
+		<position name="IDOK.left" offset-from="IDOK.right" value="-50" />
+		<position name="IDOK.top" offset-from="BelowButtons.top" value="0" />
+		<position name="IDOK.right" offset-from="IDCANCEL.left" value="-4" />
+		<position name="IDOK.bottom" offset-from="IDOK.top" value="14" />
+		
+		<!-- "Cancel" button -->
+		<position name="IDCANCEL.left" offset-from="IDCANCEL.right" value="-50" />
+		<position name="IDCANCEL.top" offset-from="BelowButtons.top" value="0" />
+		<position name="IDCANCEL.right" offset-from="Content.right" value="0" />
+		<position name="IDCANCEL.bottom" offset-from="IDCANCEL.top" value="14" />
+	</dialog>
+	<string name="IDS_EDIT_KEYMAP_TITLE">Edit Keymap</string>
+	<string name="IDS_EDIT_KEYMAP_NAME">Keymap ~Name:</string>
+	<string name="IDS_EDIT_KEYMAP_GROUP_FUNCTION">Function</string>
+	<string name="IDS_EDIT_KEYMAP_FUNCTION">~Function:</string>
+	<string name="IDS_EDIT_KEYMAP_CURRENT_KEY">~Current Key:</string>
+	<string name="IDS_EDIT_KEYMAP_REMOVE">~Remove</string>
+	<string name="IDS_EDIT_KEYMAP_GROUP_KEY">Key</string>
+	<string name="IDS_EDIT_KEYMAP_KEY">~Key:</string>
+	<string name="IDS_EDIT_KEYMAP_ASSIGNED_FUNCTION">Assigned Function:</string>
+	<string name="IDS_EDIT_KEYMAP_ASSIGN">~Assign</string>
+	<string name="IDS_EDIT_KEYMAP_OK">OK</string>
+	<string name="IDS_EDIT_KEYMAP_CANCEL">Cancel</string>
+	
+	<!-- menu items -->
+	<!-- main context menu -->
+	<string name="IDS_MENU_COVER_BROWSER">Cover ~Browser</string>
+	<string name="IDS_MENU_RADIX">~Radix</string>
+	<string name="IDS_MENU_RADIX_HEX">~Hex</string>
+	<string name="IDS_MENU_RADIX_DECIMAL">~Decimal</string>
+	<string name="IDS_MENU_RADIX_OCTAL">~Octal</string>
+	<string name="IDS_MENU_RADIX_BINARY">~Binary</string>
+	<string name="IDS_MENU_MAIN_ALWAYS_ON_TOP">Always ~On Top</string>
+	<string name="IDS_MENU_MAIN_LOCK_POS">~Lock Window Position</string>
+	<string name="IDS_MENU_PREFERENCES">~Preferences...</string>
+	<string name="IDS_MENU_MAIN_ABOUT_COVER">Abou~t this Cover</string>
+	<string name="IDS_MENU_ABOUT">~About CoveredCalc</string>
+	<string name="IDS_MENU_MAIN_MINIMIZE">~Minimize</string>
+	<string name="IDS_MENU_MAIN_CLOSE">~Close</string>
+	
+	<!-- strings -->
+	<string name="IDS_APPNAME">CoveredCalc</string>
+	<string name="IDS_KEYMAPPINGS_COPY"> (Copy)</string>
+	
+	<!-- keymap function names -->
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_0">0 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_1">1 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_2">2 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_3">3 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_4">4 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_5">5 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_6">6 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_7">7 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_8">8 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_9">9 Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_A">A Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_B">B Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_C">C Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_D">D Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_E">E Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_F">F Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_POINT">Point</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_CLEAR">Clear</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_BS">BackSpace</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_EQUAL">= Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_PLUS">+ Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_MINUS">- Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_TIMES">× Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_DIV">÷ Button</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_NEGATE">Negate</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_HEX">Hex</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_DEC">Decimal</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_OCT">Octal</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_BIN">Binary</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_MINIMIZE">Minimize</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_CLOSE">Close</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_COVER_BROWSER">Cover Browser</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_ALWAYS_ON_TOP">Always On Top</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_LOCK_POS">Lock Window Position</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_PREFERENCES">Preferences</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_ABOUT_COVER">About this Cover</string>
+	<string name="IDS_MAIN_WINDOW_KEYFUNC_ABOUT">About CoveredCalc</string>
+	
+	<!-- messages -->
+	<string name="IDS_QMSG_EDITED_KEYMAP_DISCARDING">Are you sure you want to discard all your changes?</string>
+	<string name="IDS_EMSG_EMPTY_KEYMAP_NAME">Enter keymap name.</string>
+	<string name="IDS_EMSG_DELETE_KEYMAPPINGS_IN_USE">Active keymap: "%0:s%"&#10;&#10;Hint:&#10;To delete this keymap, select another keymap&#10;and close this window by clicking [OK].</string>
+	<string name="IDS_QMSG_DELETE_KEYMAPPINGS">Are you sure you want to delete the keymap "%0:s%"?</string>
+	<string name="IDS_EMSG_INVALID_KEYMAPPINGS">Invalid keymap selection. Please, choose a valid keymap.</string>
+	<string name="IDS_EMSG_GET_KEYMAPPINGS">Error obtaining the keymap selection.</string>
+	<string name="IDS_EMSG_LOAD_KEYMAPPINGS">Failed to load keymap.</string>
+	<string name="IDS_EMSG_INVALID_LANGUAGE">Invalid language selection. Please, choose a valid language.</string>
+	<string name="IDS_EMSG_GET_LANGUAGE">Error obtaining the language selection.</string>
+	<string name="IDS_EMSG_CREATE_COVER_BROWSER">Could not create the Cover Browser window.</string>
+	<string name="IDS_EMSG_LOAD_SETTING">Failed to load settings.</string>
+	<string name="IDS_EMSG_READY_DEFAULT_SETTING_FILE">Failed to prepare the settings file folder.</string>
+	<string name="IDS_EMSG_CREATE_MAIN_WINDOW">Failed to create the main application window.</string>
+	<string name="IDS_EMSG_SAVE_SETTING">An error ocurred. The settings were not saved.</string>
+	<string name="IDS_EMSG_GENERIC">An error ocurred.</string>
+	<string name="IDS_EMSG_XML_LINE_COLUMN"> [Line:%0:d%, Column:%1:d%]</string>
+	<string name="IDS_EMSG_XML_PARSE">Error during analysis of XML file.&#10;</string>
+	<string name="IDS_EMSG_NO_MATCH_START_TAG">Tag "%0:s%" is not opened.</string>
+	<string name="IDS_EMSG_INVALID_PARENT_ENTITY">Tag "%0:s%" cannot be a child element of tag "%1:s%".</string>
+	<string name="IDS_EMSG_MISSING_ATTRIBUTE">Attribute "%1:s%" not specified for tag "%0:s%".</string>
+	<string name="IDS_EMSG_UNKNOWN_TAG">An unsupported tag "%0:s%" is being used.</string>
+	<string name="IDS_EMSG_COVERDEF_PARSE">An error ocurred during analysis of cover definition file.&#10;</string>
+	<string name="IDS_EMSG_UNKNOWN_ID">The id "%0:s%" is not defined.</string>
+	<string name="IDS_EMSG_UNKNOWN_CLASS">Unsupported class "%0:s%" has been specified.</string>
+	<string name="IDS_EMSG_UNKNOWN_TYPE">Unsupported type "%0:s%" has been specified.</string>
+	<string name="IDS_EMSG_VALIDATION_FAILED">A valid cover definition file cannot be found.&#10;(%0:s%)</string>
+	<string name="IDS_EMSG_COLOR_STRING_NOT_UNDERSTOOD">Color specification "%0:s%" could not be interpreted.</string>
+	<string name="IDS_EMSG_UNSUPPORTED_COVERDEF_VERSION">Cover definition file version "%0:s%" not supported. &#10;To use this cover, please use the latest CoveredCalc release with support for this version.</string>
+	<string name="IDS_EMSG_INVALID_COVERDEF">This does not seem to be a cover definition file.</string>
+	<string name="IDS_EMSG_COLOR_CODED_SKIN">An unspecified error has ocurred during processing of cover information.</string>
+	<string name="IDS_EMSG_INIT_SKIN">Failed to initialize the cover.</string>
+	<string name="IDS_EMSG_FILE_OPERATION">Failed file operation.</string>
+	<string name="IDS_EMSG_FILE_FILENAME">&#10;Filename: %0:s%</string>
+	<string name="IDS_EMSG_FILE_ACCESS_DENIED">Cannot access file.</string>
+	<string name="IDS_EMSG_FILE_DEVICE_FULL">Unable to write file: there is not enough space on the disk.</string>
+	<string name="IDS_EMSG_FILE_ALREADY_EXISTS">This file already exists. Unable to execute operation.</string>
+	<string name="IDS_EMSG_FILE_NOT_FOUND">Could not find file.</string>
+	<string name="IDS_EMSG_FILE_IO_ERROR">A disk error ocurred.</string>
+	<string name="IDS_EMSG_FILE_SHARING_VIOLATION">File busy. This files is being used by another program.</string>
+	<string name="IDS_EMSG_DIBFILE_LOAD">Failed to load the bitmap file.</string>
+	<string name="IDS_EMSG_DIBFILE_BROKEN_FILE">The bitmap file appears to be corrupt.</string>
+	<string name="IDS_EMSG_DIBFILE_UNKNOWN_FORMAT">Bitmap file type not supported.</string>
+	<string name="IDS_EMSG_MEMORY">Unsufficient memory.</string>
+	<string name="IDS_EMSG_PATH_OPERATION">Failed path operation.</string>
+	<string name="IDS_EMSG_PATH_MAKE_RELATIVE">Cannot express&#10;path "%0:s%"&#10;as a relative path from &#10;path "%1:s%".</string>
+	<string name="IDS_EMSG_UI_CONTROL">Unable to execute operation.</string>
+	<string name="IDS_EMSG_UI_SHOW_MENU">Unable to display menu. &#10;Menu ID: %0:d%</string>
+	<string name="IDS_EMSG_UI_SHOW_DIALOG">Unable to display dialog box. &#10;Dialog ID: %0:d%</string>
+	<string name="IDS_EMSG_LANG_VALIDATION_FAILED">Invalid language file.&#10;(%0:s%)</string>
+	<string name="IDS_EMSG_LANG_STRING_NOT_DEFINED">[[The string "%0:s%" is not defined in the language file.]]</string>
+	<string name="IDS_EMSG_DIALOG_LAYOUT_COMPUTE">ダイアログレイアウト値 "%0:s%" を計算できませんでした。&#10;%1:s%&#10;&#10;計算の過程：%2:s%</string>
+	<string name="IDS_EMSG_DIALOG_LAYOUT_NOT_FOUND">ダイアログレイアウト値 "%0:s%" が定義されていません。</string>
+	<string name="IDS_EMSG_DIALOG_LAYOUT_CIRCULAR_REF">ダイアログレイアウト値の参照が循環しています。</string>
+</localeDef>

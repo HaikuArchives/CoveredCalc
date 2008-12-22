@@ -32,7 +32,6 @@
 
 #include "Prefix.h"
 #include "FileException.h"
-#include "UIMessageProvider.h"
 #include "ExceptionMessageUtils.h"
 #include "CoveredCalcAppBase.h"
 #include "KeyMappings.h"
@@ -42,10 +41,21 @@
 #include "PathException.h"
 #include "StorageUtils.h"
 #include "VirtualPathNames.h"
+#include "XMLLangFile.h"
+#include "XMLLangFileException.h"
+#include "UTF8Conv.h"
+#include "StringID.h"
+#include "DialogID.h"
+#include "MessageFormatter.h"
+#include "DialogLayout.h"
+
+static const AChar	ApplicationName[] = ALITERAL("CoveredCalc");
 
 static const AChar	LangFileFolderName[] = ALITERAL("NLS");				///< the folder which contains language files
 static const AChar	KeymapsFolderName[] = ALITERAL("Keymaps");			///< the folder which contains key-mapping files
 static const AChar	UserKeymapsFolderName[] = ALITERAL("UserKeymaps");	///< the folder which contains user-defined key-mapping files
+
+static const AChar STR_STRING_NOT_DEFINED[] = ALITERAL("[[The string \"%0:s%\" is not defined in the language file.]]");
 
 // ---------------------------------------------------------------------
 //! Constructor
@@ -64,6 +74,12 @@ CoveredCalcAppBase::CoveredCalcAppBase()
 CoveredCalcAppBase::~CoveredCalcAppBase()
 {
 	coverManager.UnregisterCoverChangeEventHandler(this);
+
+	LoadedLangFilePtrVector::iterator itr;
+	for (itr = langFiles.begin(); itr != langFiles.end(); itr++)
+	{
+		delete *itr;
+	}
 }
 
 // ---------------------------------------------------------------------
@@ -300,13 +316,36 @@ void CoveredCalcAppBase::LoadKeyMappings(const Path& keymapFile)
 	}		
 }
 
-// ---------------------------------------------------------------------
-//! Initializes the object
-// ---------------------------------------------------------------------
-void CoveredCalcAppBase::init()
+/**
+ *	@brief	Initializes the object.
+ *	@return false when the initialization is failed.
+ */
+bool CoveredCalcAppBase::init()
 {
-	uiMessageProvider.Init();
-	exMessageGenerator.Init(&uiMessageProvider);
+	// load default language file
+	const LangFileInfoCollection* infoCollection = GetLangFileInfos();
+	SInt32 defaultLangFileIndex = infoCollection->GetDefaultLangFileIndex();
+	if (defaultLangFileIndex < 0 || defaultLangFileIndex >= infoCollection->GetCount())
+	{
+		DoMessageBox(IDS_EMSG_LOAD_DEFAULT_LANGFILE, ButtonType_OK, AlertType_Stop);
+		return false;
+	}
+	try
+	{
+		const LangFileInfo& langFileInfo = infoCollection->GetAt(defaultLangFileIndex);
+		loadLangFile(langFileInfo.GetPath());
+	}
+	catch (Exception* ex)
+	{
+		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_LOAD_DEFAULT_LANGFILE, ButtonType_OK, AlertType_Stop); 
+		ex->Delete();
+		return false;
+	}
+
+	// ready ExceptionMessageGenerator object
+	exMessageGenerator.Init(this);
+
+	return true;
 }
 
 // ---------------------------------------------------------------------
@@ -487,4 +526,133 @@ void CoveredCalcAppBase::CurrentCoverChanged()
 void CoveredCalcAppBase::loadKeyNameDB(const Path& keyNameDefFile)
 {
 	keyNameDB.Init(keyNameDefFile);
+}
+
+/**
+ *	@brief	Loads a language file.
+ *	@param[in]	path	path of language file
+ */
+void CoveredCalcAppBase::loadLangFile(const Path& path)
+{
+	// check if same language file has been already loaded.
+	LoadedLangFilePtrVector::const_iterator itr;
+	for (itr = langFiles.begin(); itr != langFiles.end(); itr++)
+	{
+		if (0 == path.Compare((*itr)->path))
+		{
+			// already loaded
+			return;
+		}
+	}
+
+	LoadedLangFile* llf = new LoadedLangFile();
+	try
+	{
+		llf->path = path;
+		llf->langFile.Load(path);
+
+		MBCString langCode;
+		llf->langFile.GetLanguageCode(langCode);
+		setCurrentLanguageCode(langCode);
+	}
+	catch (Exception*)
+	{
+		delete llf;
+		throw;
+	}
+	langFiles.push_back(llf);
+}
+
+/**
+ *	@brief	Loads native string
+ *	@param[in] stringId	string ID.
+ *	@return	loaded string
+ *	@throw XMLLangFileExceptions::StringNotDefined when the string is not defined in language file.
+ */
+MBCString CoveredCalcAppBase::loadNativeStringSub(SInt32 stringId)
+{
+	switch (stringId)
+	{
+	case IDS_EMSG_LOAD_COMMANDLINE_LANGFILE:
+		return ALITERAL("Failed to load the language file specified as a command line parameter.\nThe parameter is ignored.");
+		break;
+	case IDS_EMSG_LOAD_SETTING_LANGFILE:
+		return ALITERAL("Failed to load the language file specified in your settings.");
+		break;
+	case IDS_EMSG_LOAD_DEFAULT_LANGFILE:
+		return ALITERAL("Failed to load the default language file.");
+		break;
+	default:
+		ConstUTF8Str name = ConvertStringID(stringId);	
+		MBCString retString;
+
+		LoadedLangFilePtrVector::const_reverse_iterator itr;
+		for (itr = langFiles.rbegin(); itr != static_cast<LoadedLangFilePtrVector::const_reverse_iterator>(langFiles.rend()); ++itr)
+		{
+			const XMLLangFile& langFile = (*itr)->langFile;
+			if (langFile.LoadString(name, retString))
+			{
+				return retString;
+			}
+		}
+
+		MBCString mbcName;
+		UTF8Conv::ToMultiByte(mbcName, name);
+		throw new XMLLangFileExceptions::StringNotDefined(mbcName.CString());
+	}
+}
+
+/**
+ *	@brief	Loads native string
+ *	@param[in] stringId	string ID.
+ *	@return	loaded string
+ */
+MBCString CoveredCalcAppBase::LoadNativeString(SInt32 stringId)
+{
+	try
+	{
+		return loadNativeStringSub(stringId);
+	}
+	catch (XMLLangFileExceptions::StringNotDefined* ex)
+	{
+		// handle special case.
+		if (IDS_APPNAME == stringId)
+		{
+			ex->Delete();
+			return ApplicationName;
+		}
+
+		MBCString errorFormat;
+		try
+		{
+			errorFormat = loadNativeStringSub(IDS_EMSG_LANG_STRING_NOT_DEFINED);
+		}
+		catch (XMLLangFileExceptions::StringNotDefined* ex2)
+		{
+			ex2->Delete();
+			errorFormat = STR_STRING_NOT_DEFINED;
+		}
+		MBCString message;
+		MessageFormatter::Format(message, errorFormat, ex->GetName());
+		ex->Delete();
+		return message;
+	}
+}
+
+/**
+ *	@brief	Loads dialog layout
+ *	@param[in] dialogId	dialog ID.
+ *	@param[out] outLayout the loaded layout is stored to this object.
+ */
+void CoveredCalcAppBase::LoadDialogLayout(SInt32 dialogId, DialogLayout& outLayout)
+{
+	outLayout.ClearAllLayoutItems();
+
+	ConstUTF8Str name = ConvertDialogID(dialogId);
+	LoadedLangFilePtrVector::const_iterator itr;
+	for (itr = langFiles.begin(); itr != langFiles.end(); itr++)
+	{
+		const XMLLangFile& langFile = (*itr)->langFile;
+		langFile.LoadDialogLayout(name, outLayout);
+	}
 }

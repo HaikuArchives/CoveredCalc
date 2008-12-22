@@ -41,7 +41,11 @@
 #include "ColorCodedSkinException.h"
 #include "PathException.h"
 #include "XMLLangFileException.h"
+#include "DialogLayoutException.h"
 #include "UTF8Conv.h"
+#include "NativeStringLoader.h"
+#include "MessageFormatter.h"
+#include "StringID.h"
 
 // ---------------------------------------------------------------------
 //! Constructor
@@ -61,10 +65,10 @@ ExceptionMessageGenerator::~ExceptionMessageGenerator()
 //! Initializes the object.
 // ---------------------------------------------------------------------
 void ExceptionMessageGenerator::Init(
-	UIMessageProvider* uiMessageProvider		//!< message provider object.
+	NativeStringLoader* stringLoader		//!< string loader object.
 )
 {
-	this->uiMessageProvider = uiMessageProvider;
+	this->stringLoader = stringLoader;
 }
 
 // ---------------------------------------------------------------------
@@ -92,12 +96,12 @@ void ExceptionMessageGenerator::GetMessageString(
 		{
 			try
 			{
-				uiMessageProvider->GetMessage(IDS_EMSG_GENERIC, message);
+				message = stringLoader->LoadNativeString(IDS_EMSG_GENERIC);
 			}
 			catch (Exception* ex3)
 			{
 				ex3->Delete();
-				message = ALITERAL("An error has occurred.");			
+				message = ALITERAL("An error has occurred.");
 			}
 
 			ConstAStr errorMessage = ex->GetErrorMessage();
@@ -139,6 +143,9 @@ void ExceptionMessageGenerator::processException(
 	
 	if (processPathException(ex, message))
 		return;
+
+	if (processDialogLayoutException(ex, message))
+		return;
 	
 	message.Empty();
 }
@@ -163,7 +170,7 @@ bool ExceptionMessageGenerator::processMemoryException(
 
 	try
 	{
-		uiMessageProvider->GetMessage(IDS_EMSG_MEMORY, message);
+		message = stringLoader->LoadNativeString(IDS_EMSG_MEMORY);
 	}
 	catch (MemoryException* mex1)
 	{
@@ -216,7 +223,7 @@ bool ExceptionMessageGenerator::processXMLParseException(
 		{
 			MBCString name;
 			UTF8Conv::ToMultiByte(name, myExceptionNMST->GetName());
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_NO_MATCH_START_TAG, name.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_NO_MATCH_START_TAG), name.CString());
 			resolved = true;
 		}
 	}
@@ -230,7 +237,7 @@ bool ExceptionMessageGenerator::processXMLParseException(
 			MBCString name, parentName;
 			UTF8Conv::ToMultiByte(name, myExceptionIPE->GetName());
 			UTF8Conv::ToMultiByte(parentName, myExceptionIPE->GetParentName());
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_INVALID_PARENT_ENTITY, name.CString(), parentName.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_INVALID_PARENT_ENTITY), name.CString(), parentName.CString());
 			resolved = true;
 		}
 	}
@@ -244,7 +251,7 @@ bool ExceptionMessageGenerator::processXMLParseException(
 			MBCString tagName, attrName;
 			UTF8Conv::ToMultiByte(tagName, myExceptionMA->GetTagName());
 			UTF8Conv::ToMultiByte(attrName, myExceptionMA->GetAttributeName());
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_MISSING_ATTRIBUTE, tagName.CString(), attrName.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_MISSING_ATTRIBUTE), tagName.CString(), attrName.CString());
 			resolved = true;
 		}
 	}
@@ -257,7 +264,7 @@ bool ExceptionMessageGenerator::processXMLParseException(
 		{
 			MBCString name;
 			UTF8Conv::ToMultiByte(name, myExceptionUT->GetName());
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_UNKNOWN_TAG, name.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_UNKNOWN_TAG), name.CString());
 			resolved = true;
 		}
 	}
@@ -267,14 +274,13 @@ bool ExceptionMessageGenerator::processXMLParseException(
 		eachMessage.Empty();
 	}
 	
-	MBCString preMessage;
-	uiMessageProvider->GetMessage(IDS_EMSG_XML_PARSE, preMessage);
+	MBCString preMessage = stringLoader->LoadNativeString(IDS_EMSG_XML_PARSE);
 	message = preMessage + eachMessage;
 	
 	if (-1 != myException->GetLine())
 	{
 		MBCString lineColumn;
-		uiMessageProvider->GetNFormatMessage(lineColumn, IDS_EMSG_XML_LINE_COLUMN, myException->GetLine(), myException->GetColumn());
+		MessageFormatter::Format(lineColumn, stringLoader->LoadNativeString(IDS_EMSG_XML_LINE_COLUMN), myException->GetLine(), myException->GetColumn());
 		message += lineColumn;
 	}
 	return true;
@@ -309,7 +315,7 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		{
 			MBCString id;
 			UTF8Conv::ToMultiByte(id, myExceptionUID->GetID());
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_UNKNOWN_ID, id.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_UNKNOWN_ID), id.CString());
 			resolved = true;
 		}
 	}
@@ -322,7 +328,7 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		{
 			MBCString classStr;
 			UTF8Conv::ToMultiByte(classStr, myExceptionUC->GetClass());
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_UNKNOWN_CLASS, classStr.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_UNKNOWN_CLASS), classStr.CString());
 			resolved = true;
 		}
 	}
@@ -335,7 +341,7 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		{
 			MBCString typeStr;
 			UTF8Conv::ToMultiByte(typeStr, myExceptionUT->GetType());
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_UNKNOWN_TYPE, typeStr.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_UNKNOWN_TYPE), typeStr.CString());
 			resolved = true;
 		}
 	}
@@ -347,7 +353,7 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		if (NULL != myExceptionVF)
 		{
 			Exception* innerException = ex->GetInnerException();
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_VALIDATION_FAILED, (NULL != innerException) ? innerException->GetErrorMessage() : ALITERAL(""));
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_VALIDATION_FAILED), (NULL != innerException) ? innerException->GetErrorMessage() : ALITERAL(""));
 			resolved = true;
 		}
 	}
@@ -360,7 +366,7 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		{
 			MBCString color;
 			UTF8Conv::ToMultiByte(color, myExceptionCSNU->GetColorString());
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_COLOR_STRING_NOT_UNDERSTOOD, color.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_COLOR_STRING_NOT_UNDERSTOOD), color.CString());
 			resolved = true;
 		}
 	}
@@ -373,7 +379,7 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		{
 			MBCString version;
 			UTF8Conv::ToMultiByte(version, myExceptionUCDV->GetVersionString());
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_UNSUPPORTED_COVERDEF_VERSION, version.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_UNSUPPORTED_COVERDEF_VERSION), version.CString());
 			resolved = true;
 		}		
 	}
@@ -384,7 +390,7 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		CoverDefParseExceptions::InvalidDocumentElement* myExceptionIDE = dynamic_cast<CoverDefParseExceptions::InvalidDocumentElement*>(ex);
 		if (NULL != myExceptionIDE)
 		{
-			uiMessageProvider->GetMessage(IDS_EMSG_INVALID_COVERDEF, eachMessage);
+			eachMessage = stringLoader->LoadNativeString(IDS_EMSG_INVALID_COVERDEF);
 			resolved = true;
 		}
 	}
@@ -394,14 +400,13 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		eachMessage.Empty();
 	}
 
-	MBCString preMessage;
-	uiMessageProvider->GetMessage(IDS_EMSG_COVERDEF_PARSE, preMessage);
+	MBCString preMessage = stringLoader->LoadNativeString(IDS_EMSG_COVERDEF_PARSE);
 	message = preMessage + eachMessage;
 
 	if (-1 != myException->GetLine())
 	{
 		MBCString lineColumn;
-		uiMessageProvider->GetNFormatMessage(lineColumn, IDS_EMSG_XML_LINE_COLUMN, myException->GetLine(), myException->GetColumn());
+		MessageFormatter::Format(lineColumn, stringLoader->LoadNativeString(IDS_EMSG_XML_LINE_COLUMN), myException->GetLine(), myException->GetColumn());
 		message += lineColumn;
 	}
 	return true;	
@@ -436,7 +441,7 @@ bool ExceptionMessageGenerator::processFileException(
 		FileExceptions::AccessDenied* myExceptionAD = dynamic_cast<FileExceptions::AccessDenied*>(ex);
 		if (NULL != myExceptionAD)
 		{
-			uiMessageProvider->GetMessage(IDS_EMSG_FILE_ACCESS_DENIED, message);
+			message = stringLoader->LoadNativeString(IDS_EMSG_FILE_ACCESS_DENIED);
 			resolved = true;
 		}
 	}
@@ -447,7 +452,7 @@ bool ExceptionMessageGenerator::processFileException(
 		FileExceptions::DeviceFull* myExceptionDF = dynamic_cast<FileExceptions::DeviceFull*>(ex);
 		if (NULL != myExceptionDF)
 		{
-			uiMessageProvider->GetMessage(IDS_EMSG_FILE_DEVICE_FULL, message);
+			message = stringLoader->LoadNativeString(IDS_EMSG_FILE_DEVICE_FULL);
 			resolved = true;
 		}
 	}
@@ -458,7 +463,7 @@ bool ExceptionMessageGenerator::processFileException(
 		FileExceptions::FileAlreadyExists* myExceptionFAE = dynamic_cast<FileExceptions::FileAlreadyExists*>(ex);
 		if (NULL != myExceptionFAE)
 		{
-			uiMessageProvider->GetMessage(IDS_EMSG_FILE_ALREADY_EXISTS, message);
+			message = stringLoader->LoadNativeString(IDS_EMSG_FILE_ALREADY_EXISTS);
 			resolved = true;
 		}
 	}
@@ -469,7 +474,7 @@ bool ExceptionMessageGenerator::processFileException(
 		FileExceptions::FileNotFound* myExceptionFNF = dynamic_cast<FileExceptions::FileNotFound*>(ex);
 		if (NULL != myExceptionFNF)
 		{
-			uiMessageProvider->GetMessage(IDS_EMSG_FILE_NOT_FOUND, message);
+			message = stringLoader->LoadNativeString(IDS_EMSG_FILE_NOT_FOUND);
 			resolved = true;
 		}
 	}
@@ -480,7 +485,7 @@ bool ExceptionMessageGenerator::processFileException(
 		FileExceptions::IOError* myExceptionIOE = dynamic_cast<FileExceptions::IOError*>(ex);
 		if (NULL != myExceptionIOE)
 		{
-			uiMessageProvider->GetMessage(IDS_EMSG_FILE_IO_ERROR, message);
+			message = stringLoader->LoadNativeString(IDS_EMSG_FILE_IO_ERROR);
 			resolved = true;
 		}
 	}
@@ -491,21 +496,21 @@ bool ExceptionMessageGenerator::processFileException(
 		FileExceptions::SharingViolation* myExceptionSV = dynamic_cast<FileExceptions::SharingViolation*>(ex);
 		if (NULL != myExceptionSV)
 		{
-			uiMessageProvider->GetMessage(IDS_EMSG_FILE_SHARING_VIOLATION, message);
+			message = stringLoader->LoadNativeString(IDS_EMSG_FILE_SHARING_VIOLATION);
 			resolved = true;
 		}
 	}
 	
 	if (!resolved)
 	{
-		uiMessageProvider->GetMessage(IDS_EMSG_FILE_OPERATION, message);
+		message = stringLoader->LoadNativeString(IDS_EMSG_FILE_OPERATION);
 	}
 	
 	const Path& fileName = myException->GetFileName();
 	if (!fileName.IsEmpty())
 	{
 		MBCString fileNameMessage;
-		uiMessageProvider->GetNFormatMessage(fileNameMessage, IDS_EMSG_FILE_FILENAME, fileName.GetPathString());
+		MessageFormatter::Format(fileNameMessage, stringLoader->LoadNativeString(IDS_EMSG_FILE_FILENAME), fileName.GetPathString());
 		message += fileNameMessage;
 	}
 
@@ -538,7 +543,7 @@ bool ExceptionMessageGenerator::processDIBFileLoaderException(
 		DIBFileLoaderExceptions::BrokenFile* myExceptionBF = dynamic_cast<DIBFileLoaderExceptions::BrokenFile*>(ex);
 		if (NULL != myExceptionBF)
 		{
-			uiMessageProvider->GetMessage(IDS_EMSG_DIBFILE_BROKEN_FILE, message);
+			message = stringLoader->LoadNativeString(IDS_EMSG_DIBFILE_BROKEN_FILE);
 			resolved = true;
 		}
 	}
@@ -549,21 +554,21 @@ bool ExceptionMessageGenerator::processDIBFileLoaderException(
 		DIBFileLoaderExceptions::UnknownFileFormat* myExceptionUFF = dynamic_cast<DIBFileLoaderExceptions::UnknownFileFormat*>(ex);
 		if (NULL != myExceptionUFF)
 		{
-			uiMessageProvider->GetMessage(IDS_EMSG_DIBFILE_UNKNOWN_FORMAT, message);
+			message = stringLoader->LoadNativeString(IDS_EMSG_DIBFILE_UNKNOWN_FORMAT);
 			resolved = true;
 		}
 	}
 	
 	if (!resolved)
 	{
-		uiMessageProvider->GetMessage(IDS_EMSG_DIBFILE_LOAD, message);
+		message = stringLoader->LoadNativeString(IDS_EMSG_DIBFILE_LOAD);
 	}
 	
 	const Path& fileName = myException->GetFileName();
 	if (!fileName.IsEmpty())
 	{
 		MBCString fileNameMessage;
-		uiMessageProvider->GetNFormatMessage(fileNameMessage, IDS_EMSG_FILE_FILENAME, fileName.GetPathString());
+		MessageFormatter::Format(fileNameMessage, stringLoader->LoadNativeString(IDS_EMSG_FILE_FILENAME), fileName.GetPathString());
 		message += fileNameMessage;
 	}
 
@@ -597,7 +602,7 @@ bool ExceptionMessageGenerator::processUIControllerException(
 		if (NULL != myExceptionFTSCM)
 		{
 			SInt32 menuId = myExceptionFTSCM->GetMenuID();
-			uiMessageProvider->GetNFormatMessage(message, IDS_EMSG_UI_SHOW_MENU, menuId);
+			MessageFormatter::Format(message, stringLoader->LoadNativeString(IDS_EMSG_UI_SHOW_MENU), menuId);
 			resolved = true;
 		}
 	}
@@ -609,14 +614,14 @@ bool ExceptionMessageGenerator::processUIControllerException(
 		if (NULL != myExceptionFTSD)
 		{
 			SInt32 dialogId = myExceptionFTSD->GetDialogID();
-			uiMessageProvider->GetNFormatMessage(message, IDS_EMSG_UI_SHOW_DIALOG, dialogId);
+			MessageFormatter::Format(message, stringLoader->LoadNativeString(IDS_EMSG_UI_SHOW_DIALOG), dialogId);
 			resolved = true;
 		}
 	}
 	
 	if (!resolved)
 	{
-		uiMessageProvider->GetMessage(IDS_EMSG_UI_CONTROL, message);	
+		message = stringLoader->LoadNativeString(IDS_EMSG_UI_CONTROL);	
 	}
 	
 	return true;
@@ -648,14 +653,14 @@ bool ExceptionMessageGenerator::processColorCodedSkinException(
 		ColorCodedSkinExceptions::BadInitParams* myExceptionBIP = dynamic_cast<ColorCodedSkinExceptions::BadInitParams*>(ex);
 		if (NULL != myExceptionBIP)
 		{
-			uiMessageProvider->GetMessage(IDS_EMSG_INIT_SKIN, message);
+			message = stringLoader->LoadNativeString(IDS_EMSG_INIT_SKIN);
 			resolved = true;
 		}
 	}
 	
 	if (!resolved)
 	{
-		uiMessageProvider->GetMessage(IDS_EMSG_COLOR_CODED_SKIN, message);
+		message = stringLoader->LoadNativeString(IDS_EMSG_COLOR_CODED_SKIN);
 	}
 	
 	return true;
@@ -690,7 +695,8 @@ bool ExceptionMessageGenerator::processPathException(
 			ConstAStr target = myExceptionRPNE->GetTarget();
 			ConstAStr basePath = myExceptionRPNE->GetBase();
 
-			uiMessageProvider->GetNFormatMessage(message, IDS_EMSG_PATH_MAKE_RELATIVE,
+			MessageFormatter::Format(message,
+											stringLoader->LoadNativeString(IDS_EMSG_PATH_MAKE_RELATIVE),
 											(target) ? target : ALITERAL(""),
 											(basePath) ? basePath : ALITERAL(""));
 			resolved = true;
@@ -699,7 +705,7 @@ bool ExceptionMessageGenerator::processPathException(
 	
 	if (!resolved)
 	{
-		uiMessageProvider->GetMessage(IDS_EMSG_PATH_OPERATION, message);
+		message = stringLoader->LoadNativeString(IDS_EMSG_PATH_OPERATION);
 	}
 	
 	return true;
@@ -732,7 +738,7 @@ bool ExceptionMessageGenerator::processXMLLangFileException(
 		XMLLangFileExceptions::ValidationFailed* myExceptionVF = dynamic_cast<XMLLangFileExceptions::ValidationFailed*>(ex);
 		if (NULL != myExceptionVF)
 		{
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_LANG_VALIDATION_FAILED, myExceptionVF->GetErrorMessage());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_LANG_VALIDATION_FAILED), myExceptionVF->GetErrorMessage());
 			resolved = true;
 		}
 	}
@@ -743,7 +749,7 @@ bool ExceptionMessageGenerator::processXMLLangFileException(
 		XMLLangFileExceptions::StringNotDefined* myExceptionSND = dynamic_cast<XMLLangFileExceptions::StringNotDefined*>(ex);
 		if (NULL != myExceptionSND)
 		{
-			uiMessageProvider->GetNFormatMessage(eachMessage, IDS_EMSG_LANG_STRING_NOT_DEFINED, myExceptionSND->GetName());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_LANG_STRING_NOT_DEFINED), myExceptionSND->GetName());
 			resolved = true;
 		}
 	}
@@ -761,8 +767,94 @@ bool ExceptionMessageGenerator::processXMLLangFileException(
 	if (-1 != myException->GetLine())
 	{
 		MBCString lineColumn;
-		uiMessageProvider->GetNFormatMessage(lineColumn, IDS_EMSG_XML_LINE_COLUMN, myException->GetLine(), myException->GetColumn());
+		MessageFormatter::Format(lineColumn, stringLoader->LoadNativeString(IDS_EMSG_XML_LINE_COLUMN), myException->GetLine(), myException->GetColumn());
 		message += lineColumn;
 	}
 	return true;	
+}
+
+/**
+ *	@brief	Generates a message string about DialogLayoutException.
+ *	@retval	true	processed.
+ *	@retval	false	not processed.
+ */
+bool ExceptionMessageGenerator::processDialogLayoutException(Exception* ex, MBCString& message) const
+{
+	DialogLayoutException* myException = dynamic_cast<DialogLayoutException*>(ex);
+	if (NULL == myException)
+	{
+		return false;
+	}
+
+	bool resolved = false;
+
+	// DialogLayoutExceptions::FailedToCompute
+	if (!resolved)
+	{
+		DialogLayoutExceptions::FailedToCompute* myExceptionFTC = dynamic_cast<DialogLayoutExceptions::FailedToCompute*>(ex);
+		if (NULL != myExceptionFTC)
+		{
+			ConstAStr arrow = ALITERAL(" -> ");
+			MBCString leafMessage;
+			MBCString itemName = myExceptionFTC->GetItemName();
+			MBCString itemRefPath;
+			MBCString itemRefPathLine = itemName;
+			Exception* iex = myExceptionFTC->GetInnerException();
+			while (NULL != iex)
+			{
+				DialogLayoutExceptions::FailedToCompute* ftcInner = dynamic_cast<DialogLayoutExceptions::FailedToCompute*>(iex);
+				if (NULL != ftcInner)
+				{
+					itemRefPathLine += arrow;
+					MBCString innerItemName = ftcInner->GetItemName();
+					if (itemRefPathLine.Length() + innerItemName.Length() >= 80)
+					{
+						itemRefPath += itemRefPathLine;
+						itemRefPathLine = ALITERAL("\n  ");
+					}
+					itemRefPathLine += innerItemName;
+					iex = ftcInner->GetInnerException();
+				}
+				else
+				{
+					GetMessageString(iex, leafMessage);
+					break;
+				}
+			}
+
+			itemRefPath += itemRefPathLine;
+			MessageFormatter::Format(message, stringLoader->LoadNativeString(IDS_EMSG_DIALOG_LAYOUT_COMPUTE), itemName.CString(), leafMessage.CString(), itemRefPath.CString());
+			resolved = true;
+		}
+	}
+
+	// DialogLayoutExceptions::ItemNotFound
+	if (!resolved)
+	{
+		DialogLayoutExceptions::ItemNotFound* myExceptionINF = dynamic_cast<DialogLayoutExceptions::ItemNotFound*>(ex);
+		if (NULL != myExceptionINF)
+		{
+			MessageFormatter::Format(message, stringLoader->LoadNativeString(IDS_EMSG_DIALOG_LAYOUT_NOT_FOUND), myExceptionINF->GetItemName().CString());
+			resolved = true;
+		}
+	}
+
+	// DialogLayoutExceptions::CircularReference
+	if (!resolved)
+	{
+		DialogLayoutExceptions::CircularReference* myExceptionCR = dynamic_cast<DialogLayoutExceptions::CircularReference*>(ex);
+		if (NULL != myExceptionCR)
+		{
+			message = stringLoader->LoadNativeString(IDS_EMSG_DIALOG_LAYOUT_CIRCULAR_REF);
+			resolved = true;
+		}
+	}
+
+	// DialogLayoutExceptions::ItemNotComputed
+	if (!resolved)
+	{
+		// This must be a bug of the application. It must not be occured in end-user environment.
+	}
+
+	return true;
 }
