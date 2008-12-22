@@ -58,6 +58,8 @@ private:
 	LRESULT							onDestroy(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT							onCommand(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+	void							createControls();
+
 protected:
 	virtual MessageBoxProvider*		getMessageBoxProvider()			{ return this; }
 	

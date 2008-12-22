@@ -36,16 +36,26 @@
 class NCDDocument;
 class NCDElement;
 class Path;
+class DialogLayout;
 
 #include <map>
+#include <vector>
 #include "UTF8String.h"
 #include "MBCString.h"
+#if defined (WIN32)
+#include "DialogFont.h"
+#endif
 
 /**
  *	@brief	Language file written in XML.
  */
 class XMLLangFile
 {
+public:
+#if defined (WIN32)
+	typedef std::vector<DialogFont>	DialogFontVector;
+#endif
+
 public:
 								XMLLangFile();
 	virtual						~XMLLangFile();
@@ -57,18 +67,25 @@ public:
 
 	const NCDElement*			GetDialogElement(ConstUTF8Str name) const;
 	const NCDElement*			GetStringElement(ConstUTF8Str name) const;
+
 	void						GetLanguageName(MBCString& langName) const;
 	void						GetLanguageCode(MBCString& langCode) const;
 
-	virtual void				LoadString(ConstUTF8Str name, MBCString& message) const;
+	bool						LoadString(ConstUTF8Str name, MBCString& message) const;
+	void						LoadDialogLayout(ConstUTF8Str name, DialogLayout& layout) const;
+#if defined (WIN32)
+	void						LoadDialogFont(DialogFontVector& outDialogFonts) const;
+#endif
+
+#if defined (WIN32)
+	static MBCString			ConvertAccessMnemonic(const MBCString& srcString);
+#endif
 
 private:
 	void						validateFirst();
 	void						makeTables();
 	void						validateSecond();
-
-protected:
-	virtual bool				checkVersion(ConstUTF8Str version) = 0;
+	bool						checkVersion(ConstUTF8Str version);
 
 private:
 	typedef std::map<UTF8String, const NCDElement*>	NameToElementMap;

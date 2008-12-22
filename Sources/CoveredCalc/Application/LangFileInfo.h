@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -43,31 +43,18 @@
 class LangFileInfo
 {
 public:
-								LangFileInfo() {
-#if defined(WIN32)
-									langID = 0;
-#endif
-								}
+								LangFileInfo() {}
 	virtual						~LangFileInfo() {}
 
 	void						SetPath(const Path& path)				{ this->path = path; }
 	void						SetLanguageName(ConstAStr languageName)	{ this->languageName = languageName; }
-#if defined(WIN32)
-	void						SetLangID(LANGID langID)				{ this->langID = langID; }
-#endif
 
 	const Path&					GetPath() const			{ return path; }
 	const MBCString&			GetLanguageName() const	{ return languageName; }
-#if defined(WIN32)
-	LANGID						GetLangID() const		{ return langID; }
-#endif
 
 private:
 	Path						path;			///< a path of the language file.
 	MBCString					languageName;	///< a name of the language.
-#if defined(WIN32)
-	LANGID						langID;			///< a language identifier of this language file.
-#endif
 };
 
 /**
@@ -84,12 +71,15 @@ public:
 	SInt32						GetCount() const			{ return langFileInfos.size(); }
 	const LangFileInfo&			GetAt(SInt32 index) const	{ return *langFileInfos[index]; }
 
+	SInt32						GetDefaultLangFileIndex() const { return defaultLangFileIndex; }
+
 private:
 	void						removeAllInfos();
 
 private:
 	typedef std::vector<LangFileInfo*> LangFileInfoPtrVector;
 	LangFileInfoPtrVector		langFileInfos;	///< informations about language file.
+	SInt32						defaultLangFileIndex;	///< index of default language file.
 };
 
 #endif // _LANGFILEINFO_H_

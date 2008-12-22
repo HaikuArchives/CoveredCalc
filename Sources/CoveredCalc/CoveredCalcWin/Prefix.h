@@ -73,3 +73,5 @@
 #include "DebugSupport.h"
 #include "PortDefs.h"
 
+// FIXME: ç≈å„Ç…ÇÕè¡ÇµÇ‹Ç∑ÅB
+#include "resource.h"

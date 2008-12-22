@@ -37,9 +37,11 @@
 #include "CoveredCalcApp.h"
 #include "UTF8Conv.h"
 #include "CoverListItem.h"
-#include "UIMessageProvider.h"
 #include "WinCoveredCalcApp.h"
 #include "WinCoverBrowser.h"
+#include "StringID.h"
+#include "WinDialogControlCreator.h"
+#include "DialogID.h"
 
 ////////////////////////////////////////
 #define baseWnd			WinDialog
@@ -182,6 +184,14 @@ const CoverListItem* WinCoverBrowser::getSelectedItem()
 	return reinterpret_cast<const CoverListItem*>(item.lParam);
 }
 
+/**
+ *	@brief	Returns style of this dialog.
+ */
+DWORD WinCoverBrowser::getDialogStyle()
+{
+	return DS_SETFONT | DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU;
+}
+
 // ---------------------------------------------------------------------
 //! ウィンドウプロシージャ
 /*!
@@ -234,6 +244,36 @@ LRESULT WinCoverBrowser::wndProc(
 	return 0;
 }
 
+/**
+ *	@brief	Creates controls on dialog.
+ */
+void WinCoverBrowser::createControls()
+{
+	NativeStringLoader* stringLoader = CoveredCalcApp::GetInstance();
+	WinDialogControlCreator dcc(m_hWnd, getDialogLayout());
+	MBCString label;
+	HWND hControl;
+
+	// Select Cover label
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_COVER_BROWSER_SELECT_COVER));
+	hControl = dcc.CreateStatic(ALITERAL("IDC_SELECT_COVER"), IDC_STATIC, label.CString(), WS_GROUP, 0, 0, 0);
+
+	// Cover list
+	hControl = dcc.CreateListView(ALITERAL("IDC_COVER_LIST"), IDC_COVER_LIST, LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | LVS_NOSORTHEADER, 0, 0, 0);
+
+	// Reflesh button
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_COVER_BROWSER_RELOAD));
+	hControl = dcc.CreateButton(ALITERAL("IDC_RELOAD"), IDC_RELOAD, label, WS_GROUP, 0, 0, 0);
+
+	// Apply button
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_COVER_BROWSER_APPLY));
+	hControl = dcc.CreateButton(ALITERAL("IDC_APPLY"), IDC_APPLY, label, WS_GROUP, 0, 0, 0);
+
+	// Close button
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_COVER_BROWSER_CLOSE));
+	hControl = dcc.CreateButton(ALITERAL("IDCLOSE"), IDCLOSE, label, 0, 0, 0, 0);
+}
+
 // ---------------------------------------------------------------------
 //! WM_INITDIALOG ハンドラ
 /*!
@@ -248,7 +288,15 @@ LRESULT WinCoverBrowser::onInitDialog(
 	LPARAM lParam		//!< additional initialization data
 )
 {
+	NativeStringLoader* stringLoader = CoveredCalcApp::GetInstance();
+
 	baseWnd::wndProc(hWnd, uMsg, wParam, lParam);
+
+	// create controls
+	createControls();
+
+	// set dialog title
+	SetWindowText(m_hWnd, stringLoader->LoadNativeString(IDS_COVER_BROWSER_TITLE).CString());
 
 	// アイコンのロード
 	smallIcon = reinterpret_cast<HICON>(::LoadImage(CHrnApp::GetAppObject()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_APPICON), IMAGE_ICON,
@@ -280,7 +328,6 @@ LRESULT WinCoverBrowser::onInitDialog(
 		ListView_SetExtendedListViewStyle(listWnd, exStyle);
 	
 		// カラムを追加
-		UIMessageProvider* messageProvider = CoveredCalcApp::GetInstance()->GetMessageProvider();
 		MBCString columnName;
 		LVCOLUMN column;
 		ZeroMemory(&column, sizeof(column));
@@ -288,12 +335,12 @@ LRESULT WinCoverBrowser::onInitDialog(
 		column.fmt = LVCFMT_LEFT;
 		
 		// -- 名前
-		messageProvider->GetMessage(IDS_COVER_BROWSER_COLUMN_NAME, columnName);
+		columnName = stringLoader->LoadNativeString(IDS_COVER_BROWSER_COLUMN_NAME);
 		column.pszText = const_cast<LPTSTR>(columnName.CString());
 		ListView_InsertColumn(listWnd, 0, &column);
 		
 		// -- 説明
-		messageProvider->GetMessage(IDS_COVER_BROWSER_COLUMN_DESCRIPTION, columnName);
+		columnName = stringLoader->LoadNativeString(IDS_COVER_BROWSER_COLUMN_DESCRIPTION);
 		column.pszText = const_cast<LPTSTR>(columnName.CString());
 		ListView_InsertColumn(listWnd, 1, &column);
 
@@ -313,6 +360,7 @@ LRESULT WinCoverBrowser::onInitDialog(
 		}
 	}
 
+	// FIXME: ここで先頭のコントロールにフォーカスを与えて return FALSE
 	return TRUE;
 }
 

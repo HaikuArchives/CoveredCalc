@@ -40,21 +40,20 @@
 #include "DefaultUICButton.h"
 #include "DefaultUICKeyInput.h"
 
-class BeDialogDesign;
-
 /**
  *	@brief	Edit-Keymapping dialog on BeOS.
  */
 class BeEditKeymapDlg : public BeDialog, public EditKeymapDlg
 {
 public:
-								BeEditKeymapDlg(BeDialogDesign* dialogDesign);
+								BeEditKeymapDlg();
 	virtual						~BeEditKeymapDlg();
 	
 	void						Init(BWindow* parent, sem_id semDialog, bool isReadOnly, const KeyNameDB* keyNameDB);
 	bool						IsDialogClosedByOK() { return isDialogOK; }
 	
 protected:
+	virtual void				initDialog();
 	virtual void				MessageReceived(BMessage *message);
 	virtual bool				QuitRequested();
 #if defined (ZETA)
@@ -77,7 +76,6 @@ private:
 	void						createViews();
 
 private:
-	BeDialogDesign*				dialogDesign;		///< dialog design
 	sem_id						semDialog;			///< this semaphore is released when dialog is closed.
 	bool						isDialogOK;			///< whether dialog is closed by OK button.
 	

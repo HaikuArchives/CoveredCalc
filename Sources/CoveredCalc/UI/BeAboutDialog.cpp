@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -38,15 +38,16 @@
 #include <translation/TranslationUtils.h>
 #include "BeAboutDialog.h"
 #include "DialogID.h"
+#include "StringID.h"
 #include "CommandID.h"
 #include "GenericException.h"
 #include "BeBitmapView.h"
 #include "ResourceID.h"
 #include "Copyright.h"
-#include "BeDialogDesign.h"
 #include "Exception.h"
 #include "ExceptionMessageUtils.h"
 #include "CoveredCalcApp.h"
+#include "BeDialogControlHelper.h"
 
 ////////////////////////////////////////
 #define base	BeDialog
@@ -65,15 +66,11 @@ static const char STR_OK[]					= "OK";
 /**
  *	@brief	Constructor
  */
-BeAboutDialog::BeAboutDialog(
-	BeDialogDesign* dialogDesign		///< dialog design information
-)
-	: BeDialog(dialogDesign->GetFrame(BRect(0.0, 0.0, 392.0, 111.0)),
-				LT(dialogDesign->GetTitle(STR_ABOUT_COVERED_CALC)),
+BeAboutDialog::BeAboutDialog()
+	: BeDialog(IDD_ABOUT,
 				B_TITLED_WINDOW,
 				B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_MINIMIZABLE)
 {
-	this->dialogDesign = dialogDesign;
 }
 
 // ---------------------------------------------------------------------
@@ -81,8 +78,6 @@ BeAboutDialog::BeAboutDialog(
 // ---------------------------------------------------------------------
 BeAboutDialog::~BeAboutDialog()
 {
-	if (NULL != dialogDesign)
-		delete dialogDesign;
 }
 
 /**
@@ -90,13 +85,17 @@ BeAboutDialog::~BeAboutDialog()
  */
 void BeAboutDialog::createViews()
 {
-	const BeDialogDesignItem* item;
+	BeDialogControlHelper dch(getDialogLayout());
+	NativeStringLoader* nsl = CoveredCalcApp::GetInstance();
 
 	rgb_color highColor;
 	highColor.red = 0x00;
 	highColor.green = 0x40;
 	highColor.blue = 0x80;
 	highColor.alpha = 0xff;
+
+	// dialog title
+	SetTitle(nsl->LoadNativeString(IDS_ABOUT_TITLE).CString());
 
 	// BaseView
 	BView* baseView = new BView(Bounds(), ABOUT_DIALOG_VIEW_BASE_VIEW,
@@ -106,8 +105,7 @@ void BeAboutDialog::createViews()
 	baseView->SetViewColor(0xff, 0xff, 0xff, 0xff);
 	
 	// LogoIcon
-	item = dialogDesign->FindItem(ABOUT_DIALOG_VIEW_LOGO_ICON);
-	BeBitmapView* logoView = new BeBitmapView(item->GetFrame(BRect(12.0, 12.0, 76.0, 76.0)), ABOUT_DIALOG_VIEW_LOGO_ICON,
+	BeBitmapView* logoView = new BeBitmapView(dch.GetItemRect(ALITERAL("IDC_ICON64"), ITEMNAME_WINDOW), ABOUT_DIALOG_VIEW_LOGO_ICON,
 								B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW);
 	baseView->AddChild(logoView);
 	BBitmap* bitmap = BTranslationUtils::GetBitmap('PNG ', IDB_APPICON64);
@@ -124,8 +122,7 @@ void BeAboutDialog::createViews()
 	}
 	
 	// AppNameLabel
-	item = dialogDesign->FindItem(ABOUT_DIALOG_VIEW_APP_NAME_LABEL);
-	BStringView* appNameLabelView = new BStringView(item->GetFrame(BRect(88.0, 12.0, 380.0, 24.0)),
+	BStringView* appNameLabelView = new BStringView(dch.GetItemRect(ALITERAL("IDC_STC_APPNAME"), ITEMNAME_WINDOW),
 										ABOUT_DIALOG_VIEW_APP_NAME_LABEL, "");
 	baseView->AddChild(appNameLabelView);
 	
@@ -133,8 +130,7 @@ void BeAboutDialog::createViews()
 	appNameLabelView->SetText(ApplicationTitleString);
 
 	// VersionLabel
-	item = dialogDesign->FindItem(ABOUT_DIALOG_VIEW_VERSION_LABEL);
-	BStringView* versionView = new BStringView(item->GetFrame(BRect(88.0, 30.0, 380.0, 42.0)),
+	BStringView* versionView = new BStringView(dch.GetItemRect(ALITERAL("IDC_STC_VERSION"), ITEMNAME_WINDOW),
 										ABOUT_DIALOG_VIEW_VERSION_LABEL, "");
 	baseView->AddChild(versionView);
 
@@ -145,8 +141,7 @@ void BeAboutDialog::createViews()
 	versionView->SetText(versionString);
 	
 	// CopyrightLabel
-	item = dialogDesign->FindItem(ABOUT_DIALOG_VIEW_COPYRIGHT_LABEL);
-	BStringView* copyLabelView = new BStringView(item->GetFrame(BRect(88.0, 48.0, 380.0, 60.0)),
+	BStringView* copyLabelView = new BStringView(dch.GetItemRect(ALITERAL("IDC_STC_COPYRIGHT1"), ITEMNAME_WINDOW),
 										ABOUT_DIALOG_VIEW_COPYRIGHT_LABEL, "");
 	baseView->AddChild(copyLabelView);
 	
@@ -154,9 +149,8 @@ void BeAboutDialog::createViews()
 	copyLabelView->SetText(CopyrightString1);
 	
 	// OKButton
-	item = dialogDesign->FindItem(ABOUT_DIALOG_VIEW_OK);
-	BButton* okButton = new BButton(item->GetFrame(BRect(300.0, 75.0, 380.0, 99.0)), ABOUT_DIALOG_VIEW_OK,
-								LT(item->GetLabel(STR_OK)), new BMessage(ID_DIALOG_OK));
+	BButton* okButton = new BButton(dch.GetItemRect(ALITERAL("IDOK"), ITEMNAME_WINDOW), ABOUT_DIALOG_VIEW_OK,
+								nsl->LoadNativeString(IDS_ABOUT_OK).CString(), new BMessage(ID_DIALOG_OK));
 	baseView->AddChild(okButton);
 	
 	SetDefaultButton(okButton);
@@ -168,17 +162,16 @@ void BeAboutDialog::createViews()
  */
 void BeAboutDialog::languageChanged()
 {
-	const BeDialogDesignItem* item;
+	NativeStringLoader* nsl = CoveredCalcApp::GetInstance();
 
 	// dialog title
-	SetTitle(LT(dialogDesign->GetTitle(STR_ABOUT_COVERED_CALC)));
+	SetTitle(nsl->LoadNativeString(IDS_ABOUT_TITLE).CString());
 
 	// OKButton
-	item = dialogDesign->FindItem(ABOUT_DIALOG_VIEW_OK);
 	BButton* applyButton = dynamic_cast<BButton*>(FindView(ABOUT_DIALOG_VIEW_OK));
 	if (NULL != applyButton)
 	{
-		applyButton->SetLabel(LT(item->GetLabel(STR_OK)));
+		applyButton->SetLabel(nls->LoadNativeString(IDS_ABOUT_OK).CString());
 	}
 }
 #endif
@@ -186,11 +179,9 @@ void BeAboutDialog::languageChanged()
 // ---------------------------------------------------------------------
 //! Initialize.
 // ---------------------------------------------------------------------
-void BeAboutDialog::Init()
+void BeAboutDialog::initDialog()
 {
 	createViews();
-	base::Init();
-	
 	moveToCenterOfScreen();	
 }
 

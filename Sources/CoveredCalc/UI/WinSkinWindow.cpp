@@ -378,40 +378,6 @@ void WinSkinWindow::Restore()
 	::ShowWindow(m_hWnd, SW_RESTORE);
 }
 
-/**
- *	@brief	Shows context menu. This utility function is called by derived classes.
- *	@param[in] resourceID	resource ID of menu.
- *	@param[in] menuPos		position of menu (in screen coordinates)
- */
-void WinSkinWindow::showContextMenu(WORD resourceID, Point32 menuPos)
-{
-	HMENU menu = ::LoadMenu(WinCoveredCalcApp::GetInstance()->GetLangResHandle(), MAKEINTRESOURCE(resourceID));
-	if (NULL == menu)
-	{
-		throw new UIControllerExceptions::FailedToShowContextMenu(resourceID);
-	}
-
-	try
-	{
-		HMENU subMenu = ::GetSubMenu(menu, 0);
-		if (NULL != subMenu)
-		{
-			// メニューアイテムの状態を設定
-			updateMenuItemStates(subMenu);
-			
-			// メニューを表示		
-			::TrackPopupMenu(subMenu, TPM_RIGHTBUTTON, menuPos.x, menuPos.y, 0, m_hWnd, NULL);
-		}
-		
-		::DestroyMenu(menu);
-	}
-	catch (...)
-	{
-		::DestroyMenu(menu);
-		throw;
-	}
-}
-
 // ---------------------------------------------------------------------
 //! 指定したメニュー内の各アイテムの状態を更新します。
 /*!

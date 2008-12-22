@@ -36,20 +36,17 @@
 #include "BeDialog.h"
 #include "AboutCurrentCoverDlg.h"
 
-class BeDialogDesign;
-
 // ---------------------------------------------------------------------
 //! About current cover dialog on BeOS.
 // ---------------------------------------------------------------------
 class BeAboutCurrentCoverDialog : public BeDialog, public AboutCurrentCoverDlg
 {
 public:
-								BeAboutCurrentCoverDialog(BeDialogDesign* dialogDesign);
+								BeAboutCurrentCoverDialog();
 	virtual						~BeAboutCurrentCoverDialog();
 	
-	void						Init();
-
 protected:
+	virtual void				initDialog();
 	virtual void				MessageReceived(BMessage *message);
 	virtual bool				QuitRequested();
 
@@ -61,9 +58,6 @@ protected:
 private:
 	void						createViews();
 	void						setDataToDialogInThisThread(const CoverDef* coverDef);
-
-private:
-	BeDialogDesign*				dialogDesign;
 };
 
 #endif // _BEABOUTCURRENTCOVERDIALOG_H_

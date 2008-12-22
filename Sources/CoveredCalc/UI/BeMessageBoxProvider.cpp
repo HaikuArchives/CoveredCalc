@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -35,7 +35,7 @@
 #include "MBCString.h"
 #include "CoveredCalcApp.h"
 #include "BeMessageBoxProvider.h"
-#include "Copyright.h"
+#include "StringID.h"
 
 // ---------------------------------------------------------------------
 //! Constructor
@@ -146,11 +146,7 @@ MessageBoxProvider::Button BeMessageBoxProvider::DoMessageBox(
 		ASSERT(false);
 	}
 
-	MBCString title;
-	if (!CoveredCalcApp::GetInstance()->GetMessageProvider()->GetMessage(IDS_APPNAME, title))
-	{
-		title = ApplicationTitleString;
-	}
+	MBCString title = CoveredCalcApp::GetInstance()->LoadNativeString(IDS_APPNAME);
 
 	BAlert* alert = new BAlert(title, message,
 							button0Label, button1Label, button2Label,
@@ -239,8 +235,6 @@ MessageBoxProvider::Button BeMessageBoxProvider::DoMessageBox(
 	Button defaultButton /* = Button_None */	//!< default button
 )
 {
-	MBCString message;
-	CoveredCalcApp::GetInstance()->GetMessageProvider()->GetMessage(messageId, message);
-	
+	MBCString message = CoveredCalcApp::GetInstance()->LoadNativeString(messageId);		
 	return DoMessageBox(message, buttonType, alertType, defaultButton);
 }

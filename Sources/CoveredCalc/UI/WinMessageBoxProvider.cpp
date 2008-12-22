@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -31,9 +31,9 @@
 */
 
 #include "Prefix.h"
-#include "UIMessageProvider.h"
 #include "CoveredCalcApp.h"
 #include "WinMessageBoxProvider.h"
+#include "StringID.h"
 
 // ---------------------------------------------------------------------
 //! Constructor
@@ -130,8 +130,7 @@ MessageBoxProvider::Button WinMessageBoxProvider::DoMessageBox(
 		break;
 	}
 	
-	MBCString title;
-	CoveredCalcApp::GetInstance()->GetMessageProvider()->GetMessage(IDS_APPNAME, title);
+	MBCString title = CoveredCalcApp::GetInstance()->LoadNativeString(IDS_APPNAME);
 	
 	int result = ::MessageBox(hWnd, message, title, uType);
 
@@ -168,8 +167,6 @@ MessageBoxProvider::Button WinMessageBoxProvider::DoMessageBox(
 	Button defaultButton /* = Button_None */	//!< default button
 )
 {
-	MBCString message;
-	CoveredCalcApp::GetInstance()->GetMessageProvider()->GetMessage(messageId, message);
-	
+	MBCString message = CoveredCalcApp::GetInstance()->LoadNativeString(messageId);	
 	return DoMessageBox(message, buttonType, alertType, defaultButton);
 }

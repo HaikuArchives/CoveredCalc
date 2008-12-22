@@ -47,8 +47,8 @@
 #include "UTF8Utils.h"
 #include "VirtualPathNames.h"
 #include "WinMessageFilter.h"
-
-static const AChar LANG_CODE_JAJP[] = ALITERAL("jaJP");		///< language code for Japanese.
+#include "StringID.h"
+#include "MemoryException.h"
 
 static const UTF8Char STR_PLATFORM_WINDOWS[] = "Windows";	///< keymap platform for Windows.
 
@@ -96,6 +96,7 @@ WinCoveredCalcApp::WinCoveredCalcApp()
 	originalCursor = NULL;
 	waitingUICount = 0;
 	isInEnableCoveredCalcWindows = false;
+	dialogFont = NULL;
 }
 
 // ---------------------------------------------------------------------
@@ -103,6 +104,10 @@ WinCoveredCalcApp::WinCoveredCalcApp()
 // ---------------------------------------------------------------------
 WinCoveredCalcApp::~WinCoveredCalcApp()
 {
+	if (NULL != dialogFont)
+	{
+		delete dialogFont;
+	}
 }
 
 // ---------------------------------------------------------------------
@@ -319,20 +324,136 @@ bool WinCoveredCalcApp::IsCoverBrowserVisible()
 }
 
 /**
- *	@brief	現在の言語ファイルのインスタンスハンドルを取得します。
- *	@return	インスタンスハンドル
+ *	@brief	Loads a language file.
+ *	@param[in]	path	path of language file
  */
-HINSTANCE WinCoveredCalcApp::GetLangResHandle() const
+void WinCoveredCalcApp::loadLangFile(const Path& path)
 {
-	HINSTANCE hResHandle = langFile.GetHandle();
-	if (NULL == hResHandle)		// 言語ファイルを読み込んでいない場合
+	CoveredCalcAppBase::loadLangFile(path);
+
+	if (NULL != dialogFont)
 	{
-		return GetInstanceHandle();
+		delete dialogFont;
+		dialogFont = NULL;
 	}
-	else
+}
+
+static bool isMatchTargetOSVersion(const OSVERSIONINFO& osv, const MBCString& target)
+{
+	const MBCString wildcard = ALITERAL('*');
+	enum Phase
 	{
-		return hResHandle;
+		Phase_Platform = 0,
+		Phase_Major,
+		Phase_Minor,
+		Phase_BuildNo,
+		Phase_End
+	};
+	SInt32 phase = Phase_Platform;
+	SInt32 ix = 0;
+	while (phase < Phase_End)
+	{
+		if (ix >= target.Length())
+		{
+			return false;
+		}
+
+		MBCString elem;
+		SInt32 sep = target.Find(ALITERAL('.'), ix);
+		if (0 > sep)
+		{
+			elem = target.SubString(ix);
+			ix = target.Length();
+		}
+		else
+		{
+			elem = target.SubString(ix, sep - ix);
+			ix = sep + 1;
+		}
+		
+		if (0 != elem.Compare(wildcard))
+		{
+			DWORD num = ttoi(elem.CString());
+			DWORD cmp = 0xffffffff;
+			switch (phase)
+			{
+			case Phase_Platform:
+				cmp = osv.dwPlatformId;
+				break;
+			case Phase_Major:
+				cmp = osv.dwMajorVersion;
+				break;
+			case Phase_Minor:
+				cmp = osv.dwMinorVersion;
+				break;
+			case Phase_BuildNo:
+				cmp = osv.dwBuildNumber;
+				break;
+			}
+			if (num != cmp)
+			{
+				return false;
+			}
+		}
+		++phase;
 	}
+
+	return true;
+}
+
+/**
+ *	@brief	Loads dialog font.
+ *	@param[in]	dialogId	dialog ID.
+ *	@param[out]	outFont		font information is returned.
+ */
+void WinCoveredCalcApp::LoadDialogFont(SInt32 /*dialogId*/, DialogFont& outFont)
+{
+	if (NULL == dialogFont)
+	{
+		OSVERSIONINFO osv;
+		ZeroMemory(&osv, sizeof(OSVERSIONINFO));
+		osv.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+		GetVersionEx(&osv);
+
+		XMLLangFile::DialogFontVector dfVector;
+		LoadedLangFilePtrVector::const_reverse_iterator itr;
+		for (itr = langFiles.rbegin(); NULL == dialogFont && itr != langFiles.rend(); ++itr)
+		{
+			const XMLLangFile& langFile = (*itr)->langFile;
+			langFile.LoadDialogFont(dfVector);
+			XMLLangFile::DialogFontVector::const_iterator dfItr;
+			for (dfItr = dfVector.begin(); dfItr != dfVector.end(); ++dfItr)
+			{
+				const DialogFont& df = *dfItr;
+				if (isMatchTargetOSVersion(osv, df.TargetOSVersion))
+				{
+					dialogFont = new DialogFont;
+					if (NULL == dialogFont)
+					{
+						MemoryException::Throw();
+					}
+					*dialogFont = df;
+					break;
+				}
+			}
+		}
+
+		// catch for a rainy day
+		if (NULL == dialogFont)
+		{
+			dialogFont = new DialogFont;
+			if (NULL == dialogFont)
+			{
+				MemoryException::Throw();
+			}
+			dialogFont->Charset = DEFAULT_CHARSET;
+			dialogFont->PointSize = 8;
+			dialogFont->Typeface = TypeConv::AsUTF8("MS Shell Dlg");
+		}
+	}
+
+	outFont = *dialogFont;
+	return;
 }
 
 // ---------------------------------------------------------------------
@@ -395,68 +516,6 @@ const Path& WinCoveredCalcApp::getUserSettingsPath()
 }
 
 /**
- *	@brief	言語ファイルを読み込みます。
- */
-void WinCoveredCalcApp::loadLangFile(
-	const Path& path		///< 言語ファイルのパス
-)
-{
-	langFile.Load(path);
-	
-	if (!langFile.CheckVersion())
-	{
-		langFile.Unload();
-		throw new Exception();	// TODO: 適切な例外を投げる
-	}
-	
-	// 言語コードを求める
-	MBCString langCode;
-	langFile.GetLanguageCode(langCode);
-	setCurrentLanguageCode(langCode);
-}
-
-/**
- *	@brief	langFileInfos にある言語ファイルの中から自動的に適切な言語ファイルを選択します。
- *	@return	langFileInfos のインデックス (-1ならexe埋め込みを使う)
- */
-SInt32 WinCoveredCalcApp::autoSelectLangFile()
-{
-	LANGID userLangID = GetUserDefaultLangID();
-	LANGID englishUSLangID = MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US);
-
-	const LangFileInfoCollection* infoCollection = GetLangFileInfos();
-
-	// システムの言語と同じものを探す
-	SInt32 count = infoCollection->GetCount();
-	SInt32 englishUSIndex = -1;
-	SInt32 index;
-	for (index=0; index<count; index++)
-	{
-		const LangFileInfo& info = infoCollection->GetAt(index);
-		LANGID infoLangID = info.GetLangID();
-		if (userLangID == infoLangID)
-		{
-			return index;
-		}
-		else if (englishUSLangID == infoLangID)
-		{
-			englishUSIndex = index;
-		}
-	}
-	
-	// 同じものが見つからなければ、英語（US）を選択する
-	if (-1 != englishUSIndex)
-	{
-		return englishUSIndex;
-	}
-	// 英語（US）も見つからなければ、exe埋め込みを利用
-	else
-	{
-		return -1;
-	}
-}
-
-/**
  *	@brief	Checks the platform string is suitable for this app.
  *	@return	true is suitable.
  */
@@ -483,6 +542,9 @@ void WinCoveredCalcApp::loadKeyNameDB()
 		ex->Delete();
 	}
 }
+
+// FIXME: 下のトリックのためにいる トリック自体がいるかなあ？
+static const AChar LANG_CODE_JAJP[] = ALITERAL("jaJP");		///< language code for Japanese.
 
 /**
  *	@brief	キーマップ定義を読み込みます。initInstance の処理で呼ばれます。
@@ -523,7 +585,7 @@ void WinCoveredCalcApp::loadKeyMappingsOnInit()
 	{
 		// キーマッピング定義が読み込めませんでした。
 		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_LOAD_KEYMAPPINGS,
-																MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+									MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 		ex->Delete();
 	}	
 }
@@ -557,8 +619,10 @@ BOOL WinCoveredCalcApp::initInstance()
 	monitorInfo.Update();
 
 	// ベースクラス初期化
-	init();
-	setCurrentLanguageCode(LANG_CODE_JAJP);
+	if (!init())
+	{
+		return FALSE;
+	}
 
 	// コマンドラインパラメータ解析
 	CommandLineParam* clParam = GetCommandLineParam();
@@ -577,9 +641,7 @@ BOOL WinCoveredCalcApp::initInstance()
 			ex->Delete();
 
 			// コマンドラインパラメータで指定された言語ファイルが読み込めなかったので無視します。
-			MBCString message;
-			GetMessageProvider()->GetMessage(GetInstanceHandle(), IDS_EMSG_LOAD_COMMANDLINE_LANGFILE, message);
-			DoMessageBox(message, MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+			DoMessageBox(IDS_EMSG_LOAD_COMMANDLINE_LANGFILE, MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 		}
 	}
 
@@ -603,7 +665,7 @@ BOOL WinCoveredCalcApp::initInstance()
 		catch (Exception* ex)
 		{
 			ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_READY_DEFAULT_SETTING_FILE,
-																	MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
+											MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
 			ex->Delete();
 			return FALSE;
 		}
@@ -638,23 +700,18 @@ BOOL WinCoveredCalcApp::initInstance()
 				{
 					ex->Delete();
 
-					// 言語ファイルが読めません。最適な言語を自動的に判別して起動します。
-					MBCString message;
-					GetMessageProvider()->GetMessage(GetInstanceHandle(), IDS_EMSG_LOAD_SETTING_LANGFILE, message);
-					DoMessageBox(message, MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+					// 設定ファイルに書かれた言語ファイルが読めません。
+					DoMessageBox(IDS_EMSG_LOAD_SETTING_LANGFILE, MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 				}
-			}
-			else
-			{
-				// built-in
-				langFileLoaded = true;
 			}
 		}
 	}
 	
 	if (!langFileLoaded)
 	{
-		// 設定に保存されていなければ、LangID から適切なものを選択する。
+		// 設定に保存されていなければ、ユーザーに問い合わせる？
+		// FIXME:
+#if 0
 		SInt32 langFileInfoIndex = autoSelectLangFile();
 		if (-1 != langFileInfoIndex)
 		{
@@ -680,8 +737,10 @@ BOOL WinCoveredCalcApp::initInstance()
 				}
 			}
 		}
+#endif
 	}
 
+	// FIXME: ビルトインってのはないはずなのでどーにかせんといかん！
 	if (!langFileLoaded)
 	{
 		GetAppSettings()->SetLanguageFilePath(AppSettings::Value_LangFileBuiltIn);
@@ -767,9 +826,6 @@ BOOL WinCoveredCalcApp::initInstance()
 // ---------------------------------------------------------------------
 void WinCoveredCalcApp::exitInstance()
 {
-	// 言語ファイルを読み込んでいたら解放する。
-	langFile.Unload();
-
 	// レイヤードウィンドウ関連の API
 	apiLayeredWindow.Terminate();
 

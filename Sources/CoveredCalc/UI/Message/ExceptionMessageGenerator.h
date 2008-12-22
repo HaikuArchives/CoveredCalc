@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -34,8 +34,8 @@
 #define _EXCEPTIONMESSAGEGENERATOR_H_
 
 #include "MBCString.h"
-#include "UIMessageProvider.h"
 
+class NativeStringLoader;
 class Exception;
 
 // ---------------------------------------------------------------------
@@ -47,7 +47,7 @@ public:
 								ExceptionMessageGenerator();
 	virtual						~ExceptionMessageGenerator();
 	
-	void						Init(UIMessageProvider* uiMessageProvider);
+	void						Init(NativeStringLoader* stringLoader);
 	void						GetMessageString(Exception* ex, MBCString& message) const;
 
 private:
@@ -61,9 +61,10 @@ private:
 	bool						processColorCodedSkinException(Exception* ex, MBCString& message) const;
 	bool						processPathException(Exception* ex, MBCString& message) const;
 	bool						processXMLLangFileException(Exception* ex, MBCString& message) const;
+	bool						processDialogLayoutException(Exception* ex, MBCString& message) const;
 
 private:
-	UIMessageProvider*			uiMessageProvider;
+	NativeStringLoader*			stringLoader;
 };
 
 #endif // _EXCEPTIONMESSAGEGENERATOR_H_

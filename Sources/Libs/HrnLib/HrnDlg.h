@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -62,7 +62,7 @@ protected:
 	LPCTSTR		m_szTemplate;
 	BOOL		m_bModal;
 
-private:
+protected:
 	static INT_PTR CALLBACK cbHrnDlgProc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam );
 };
 

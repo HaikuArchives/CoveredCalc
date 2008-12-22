@@ -40,6 +40,9 @@
 #include "LangFileInfo.h"
 #include "WinCoveredCalcApp.h"
 #include "WinEditKeymapDlg.h"
+#include "StringID.h"
+#include "WinDialogControlCreator.h"
+#include "DialogID.h"
 
 ////////////////////////////////////////
 #define baseDialog	WinDialog
@@ -127,6 +130,101 @@ LRESULT WinPreferencesDlg::wndProc(
 }
 
 /**
+ *	@brief	Creates dialog controls.
+ */
+void WinPreferencesDlg::createControls()
+{
+	NativeStringLoader* stringLoader = CoveredCalcApp::GetInstance();
+	WinDialogControlCreator dcc(m_hWnd, getDialogLayout());
+	MBCString label;
+	HWND hControl;
+	
+	// "Transparency" group box
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_GROUP_TRANSPARENCY));
+	hControl = dcc.CreateGroupBox(ALITERAL("IDC_GROUP_TRANSPARENCY"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
+
+	// "Opacity" label
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_OPACITY));
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_OPACITY"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
+
+	// "Opacity" slider left label ("Transparent")
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_TRANSPARENT));
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STC_TRANSPARENT"), IDC_STC_TRANSPARENT, label, SS_RIGHT, SS_LEFT | SS_CENTER, 0, 0);
+
+	// "Opacity" slider
+	hControl = dcc.CreateTrackbar(ALITERAL("IDC_SLDR_OPACITY"), IDC_SLDR_OPACITY, 0, 0, 0, 0);
+
+	// "Opacity" slider right label ("Opaque")
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_OPAQUE));
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STC_OPAQUE"), IDC_STC_OPAQUE, label, SS_LEFT, SS_RIGHT | SS_CENTER, 0, 0);
+
+	// "Cover Edge Smoothing" label
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_SMOTHING));
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_SMOOTHING"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
+
+	// "Cover Edge Smoothing" slider left label ("Low")
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_LOW));
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STC_LOW"), IDC_STC_LOW, label, SS_RIGHT, SS_LEFT | SS_CENTER, 0, 0);
+
+	// "Cover Edge Smoothing" slider
+	hControl = dcc.CreateTrackbar(ALITERAL("IDC_SLDR_EDGE_SMOOTHING"), IDC_SLDR_EDGE_SMOOTHING, 0, 0, 0, 0);
+
+	// "Cover Edge Smoothing" slider right label ("High")
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_HIGH));
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STC_HIGH"), IDC_STC_HIGH, label, SS_LEFT, SS_RIGHT | SS_CENTER, 0, 0);
+
+	// message
+	label = stringLoader->LoadNativeString(IDS_PREFERENCES_TRANSPARENCY_MESSAGE);
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_TRANSPARENCY_MESSAGE"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
+
+	// "Language" group box
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_GROUP_LANGUAGE));
+	hControl = dcc.CreateGroupBox(ALITERAL("IDC_GROUP_LANGUAGE"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
+
+	// "Language" label
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_LANGUAGE));
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_LANGUAGE"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
+
+	// "Language" combo box
+	hControl = dcc.CreateComboBox(ALITERAL("IDC_CMB_LANGUAGE"), IDC_CMB_LANGUAGE, WS_VSCROLL | CBS_DROPDOWNLIST | CBS_SORT, 0, 0, 0);
+
+	// message
+	label = stringLoader->LoadNativeString(IDS_PREFERENCES_LANGUAGE_MESSAGE);
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_LANGUAGE_MESSAGE"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
+
+	// "Keymap" group box
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_GROUP_KEYMAP));
+	hControl = dcc.CreateGroupBox(ALITERAL("IDC_GROUP_KEYMAP"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
+
+	// "Keymap" label
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_KEYMAP));
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_KEYMAP"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
+
+	// "Keymap" combo box
+	hControl = dcc.CreateComboBox(ALITERAL("IDC_CMB_KEYMAPPINGS"), IDC_CMB_KEYMAPPINGS, WS_VSCROLL | CBS_DROPDOWNLIST, 0, 0, 0);
+
+	// "Edit" button
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_EDIT_KEYMAP));
+	hControl = dcc.CreateButton(ALITERAL("IDC_EDIT_KEYMAPPING"), IDC_EDIT_KEYMAPPING, label, WS_GROUP, 0, 0, 0);
+
+	// "Duplicate" button
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_DUPLICATE_KEYMAP));
+	hControl = dcc.CreateButton(ALITERAL("IDC_DUPLICATE_KEYMAPPING"), IDC_DUPLICATE_KEYMAPPING, label, 0, 0, 0, 0);
+
+	// "Delete" button
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_DELETE_KEYMAP));
+	hControl = dcc.CreateButton(ALITERAL("IDC_DELETE_KEYMAPPING"), IDC_DELETE_KEYMAPPING, label, 0, 0, 0, 0);
+
+	// "OK" button
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_OK));
+	hControl = dcc.CreateButton(ALITERAL("IDOK"), IDOK, label, WS_GROUP | BS_DEFPUSHBUTTON, BS_PUSHBUTTON, 0, 0);
+	
+	// "Cancel" button
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_CANCEL));
+	hControl = dcc.CreateButton(ALITERAL("IDCANCEL"), IDCANCEL, label, 0, 0, 0, 0);
+}
+
+/**
  *	@brief	WM_INITDIALOG ハンドラ
  *	@retval TRUE wParam で指定されたコントロールにフォーカスを与えてください。
  *	@retval FALSE フォーカスを与えないでください。
@@ -139,6 +237,15 @@ LRESULT WinPreferencesDlg::onInitDialog(
 )
 {
 	baseDialog::wndProc(hWnd, uMsg, wParam, lParam);
+
+	// create controls
+	createControls();
+
+	// set dialog title
+	NativeStringLoader* stringLoader = CoveredCalcApp::GetInstance();
+	SetWindowText(m_hWnd, stringLoader->LoadNativeString(IDS_PREFERENCES_TITLE).CString());
+
+	// FIXME: フォーカス
 
 	HWND hComboKeymappings = GetDlgItem(hWnd, IDC_CMB_KEYMAPPINGS);
 	keyMappingSeparators.Attach(hComboKeymappings);
@@ -287,7 +394,7 @@ void WinPreferencesDlg::setLanguage(
 	}
 	else
 	{
-		comboIndex = ComboBox_AddString(hWndLangCombo, "# invalid language #");
+		comboIndex = ComboBox_AddString(hWndLangCombo, ALITERAL("# invalid language #"));
 		if (CB_ERR != comboIndex)
 		{
 			ComboBox_SetItemData(hWndLangCombo, comboIndex, -1);
@@ -386,7 +493,7 @@ void WinPreferencesDlg::setKeyMapping(const KeyMappingsInfoPtrVector& keyMapping
 	// 現在の選択値を選択
 	if (CB_ERR == comboIndex)
 	{
-		comboIndex = ComboBox_AddString(hWndKeyMappingCombo, "# invalid key-mapping #");
+		comboIndex = ComboBox_AddString(hWndKeyMappingCombo, ALITERAL("# invalid key-mapping #"));
 		if (CB_ERR != comboIndex)
 		{
 			ComboBox_SetItemData(hWndKeyMappingCombo, comboIndex, NULL);

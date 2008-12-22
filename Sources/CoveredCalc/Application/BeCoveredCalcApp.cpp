@@ -53,6 +53,7 @@
 #include "MainWindowKeyFunc.h"
 #include "UTF8Utils.h"
 #include "VirtualPathNames.h"
+#include "StringID.h"
 
 static const UTF8Char STR_PLATFORM_BEOS[] = "BeOS";			///< keymap platform for BeOS.
 static const UTF8Char STR_CATEGORY_MAIN_WINDOW[] = "MainWindow";	///< keymap category of main window.
@@ -236,21 +237,6 @@ const Path& BeCoveredCalcApp::getUserSettingsPath()
 	return userSettingsPath;
 }
 
-/**
- *	@brief	Loads language file.
- */
-void BeCoveredCalcApp::loadLangFile(
-	const Path& path		///< path of the lang file.
-)
-{
-	langFile.Load(path);
-	
-	// load current language code.
-	MBCString langCode;
-	langFile.GetLanguageCode(langCode);
-	setCurrentLanguageCode(langCode);
-}
-
 #if defined(ZETA)
 /**
  *	@brief	Retrieves the language code of current language.
@@ -330,6 +316,19 @@ void BeCoveredCalcApp::loadKeyMappingsOnInit()
 	}	
 }
 
+#if defined(ZETA)
+/**
+ *	@brief	Loads native string
+ *	@param[in] stringId	string ID.
+ *	@return	loaded string
+ */
+MBCString BeCoveredCalcApp::LoadNativeString(SInt32 stringId)
+{
+	MBCString ret = CoveredCalcAppBase::LoadNativeString();
+	return ZetaLocaleString(ret.CString());
+}
+#endif
+
 // ---------------------------------------------------------------------
 //! Called to ready application before running.
 // ---------------------------------------------------------------------
@@ -342,7 +341,11 @@ void BeCoveredCalcApp::ReadyToRun()
 	bool langFileLoaded = false;
 
 	// ベースクラス初期化
-	init();
+	if (!init())
+	{
+		be_app->PostMessage(B_QUIT_REQUESTED, be_app);
+		return;
+	}
 
 	CommandLineParam* clParam = GetCommandLineParam();
 	
@@ -436,6 +439,9 @@ void BeCoveredCalcApp::ReadyToRun()
 	
 	if (!langFileLoaded)
 	{
+// FIXME: ユーザーにどの言語にするかを尋ねる？
+//        あと、ZETA の LocaleKit をどういう扱いにするか決める必要がある。
+#if 0
 		Path builtInLangFileFullPath = MakeAbsoluteLangFilePath(Path("enUS.cclxb"));
 		try
 		{
@@ -466,6 +472,7 @@ void BeCoveredCalcApp::ReadyToRun()
 		}
 	
 		GetAppSettings()->SetLanguageFilePath(AppSettings::Value_LangFileBuiltIn);
+#endif // FIXME: ここまでどうするか決める
 	}
 
 	// キー定義名 DB のロード
@@ -498,8 +505,7 @@ void BeCoveredCalcApp::ReadyToRun()
 	// そもそも、アプリケーション起動中はウィンドウが削除されることを想定していないし。
 	
 	// メインウィンドウ生成
-	MBCString appName;
-	GetMessageProvider()->GetMessage(IDS_APPNAME, appName);
+	MBCString appName = LoadNativeString(IDS_APPNAME);
 	const Point32& lastMainWindowPos = GetAppSettings()->GetLastMainWindowPos();
 	bool isAlwaysOnTop = GetAppSettings()->IsMainWindowAlwaysOnTop();
 	mainWindow = new BeMainWindow(BRect(lastMainWindowPos.x, lastMainWindowPos.y, lastMainWindowPos.x, lastMainWindowPos.y), appName, B_CURRENT_WORKSPACE, isAlwaysOnTop);
@@ -545,17 +551,7 @@ void BeCoveredCalcApp::ReadyToRun()
 			baseFolderPath = getAppFolderPath();
 		}
 	
-		BeDialogDesign* dialogDesign = GetLangFile()->LoadDialogDesign(IDD_COVER_BROWSER);
-		try
-		{
-			coverBrowser = new BeCoverBrowser(dialogDesign);
-			dialogDesign = NULL;
-		}
-		catch (...)
-		{
-			delete dialogDesign;
-			throw;
-		}
+		coverBrowser = new BeCoverBrowser();
 		coverBrowser->SetCoversFolderPath(baseFolderPath.Append("Covers"));
 		coverBrowser->Init();
 	}

@@ -40,11 +40,12 @@
 #include "VirtualPathNames.h"
 #include <vector>
 #include <algorithm>
-#include "UIMessageProvider.h"
 #include "ExceptionMessageUtils.h"
 #include "FileException.h"
 #include <time.h>
 #include "StorageUtils.h"
+#include "MessageFormatter.h"
+#include "StringID.h"
 
 #if defined (WIN32)
 #include "WinCoveredCalcApp.h"
@@ -411,8 +412,7 @@ void PreferencesDlg::doDuplicateKeyMapping()
 		// change title
 		UTF8String title;
 		keyMappings.GetTitle(title);
-		MBCString postStr;
-		CoveredCalcApp::GetInstance()->GetMessageProvider()->GetMessage(IDS_KEYMAPPINGS_COPY, postStr);
+		MBCString postStr = CoveredCalcApp::GetInstance()->LoadNativeString(IDS_KEYMAPPINGS_COPY);
 		UTF8String utf8PostStr;
 		UTF8Conv::FromMultiByte(utf8PostStr, postStr);
 		title += utf8PostStr;
@@ -506,7 +506,9 @@ void PreferencesDlg::doDeleteKeyMapping()
 	MBCString message;
 	if (0 == CoveredCalcApp::GetInstance()->GetAppSettings()->GetKeymapFilePath().Compare(currentInfo->keyMapFilePath))
 	{
-		CoveredCalcApp::GetInstance()->GetMessageProvider()->GetNFormatMessage(message, IDS_EMSG_DELETE_KEYMAPPINGS_IN_USE, currentInfo->title.CString());
+		MessageFormatter::Format(message, 
+			CoveredCalcApp::GetInstance()->LoadNativeString(IDS_EMSG_DELETE_KEYMAPPINGS_IN_USE),
+			currentInfo->title.CString());
 		getMessageBoxProvider()->DoMessageBox(
 			message,
 			MessageBoxProvider::ButtonType_OK,
@@ -514,7 +516,9 @@ void PreferencesDlg::doDeleteKeyMapping()
 		return;
 	}
 
-	CoveredCalcApp::GetInstance()->GetMessageProvider()->GetNFormatMessage(message, IDS_QMSG_DELETE_KEYMAPPINGS, currentInfo->title.CString());
+	MessageFormatter::Format(message,
+		CoveredCalcApp::GetInstance()->LoadNativeString(IDS_QMSG_DELETE_KEYMAPPINGS),
+		currentInfo->title.CString());
 	MessageBoxProvider::Button button = getMessageBoxProvider()->DoMessageBox(
 			message,
 			MessageBoxProvider::ButtonType_YesNo,

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -24,32 +24,14 @@
  */
 
 /*!
-	@file		WinUIMessageProvider.h
-	@brief		Definition of WinUIMessageProvider class
+	@file		StringID.cpp
+	@brief		Implementation of ConvertStringID function.
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2004.01.12 created
+	@date		2008.11.09 Created
 */
 
-#ifndef _WINUIMESSAGEPROVIDER_H_
-#define _WINUIMESSAGEPROVIDER_H_
+#include "Prefix.h"
+#include "XMLLangFileException.h"
 
-#include "MBCString.h"
-
-// ---------------------------------------------------------------------
-//! This class provides message string for user interface for Windows.
-// ---------------------------------------------------------------------
-class WinUIMessageProvider
-{
-public:
-						WinUIMessageProvider();
-	virtual				~WinUIMessageProvider();
-
-	void				Init();
-	
-	void				GetMessage(SInt32 messageId, MBCString& message);
-	void				GetNFormatMessage(MBCString& message, SInt32 messageId, ...);
-
-	void				GetMessage(HINSTANCE hInstance, SInt32 messageId, MBCString& message);
-};
-
-#endif // _WINUIMESSAGEPROVIDER_H_
+#define IMPLEMENT_STRINGID_CONVERSION
+#include "StringID.h"

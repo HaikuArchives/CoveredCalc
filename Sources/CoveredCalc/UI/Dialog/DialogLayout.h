@@ -24,41 +24,61 @@
  */
 
 /*!
-	@file		WinAboutDlg.h
-	@brief		Definition of WinAboutDlg class
-	@author		ICHIMIYA Hironori (Hiron)
-	@date		2004.3.20 created
+	@file		DialogLayout.h
+	@brief		Definition of DialogLayout class.
+	@author 	ICHIMIYA Hironori (Hiron)
+	@date		2008.10.28 created
 */
 
-#ifndef _WINABOUTDLG_H_
-#define _WINABOUTDLG_H_
+#ifndef _DIALOGLAYOUT_H_
+#define _DIALOGLAYOUT_H_
 
-#include "WinDialog.h"
+#include <map>
+#include "MBCString.h"
+#include "Exception.h"
 
-// ---------------------------------------------------------------------
-//! バージョン情報ダイアログ for Windows
-// ---------------------------------------------------------------------
-class WinAboutDlg : public WinDialog
+typedef int		DLValue;
+
+/**
+ * @brief This class holds informations about dialog control layouts.
+ */
+class DialogLayout
 {
 public:
-						WinAboutDlg();
-	virtual				~WinAboutDlg();
-
-protected:
-	virtual LRESULT		wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-private:
-	LRESULT				onInitDialog(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	LRESULT				onDestroy(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	LRESULT				onEraseBkGnd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	LRESULT				onCtlColorStatic(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-	void				createControls();
-	void				makeVersionString(MBCString& versionString);
+							DialogLayout();
+	virtual					~DialogLayout();
+	
+	void					SetLayoutItem(const MBCString& name, const MBCString& offsetFrom, DLValue value);
+	bool					GetLayoutItem(const MBCString& name, MBCString& outOffsetFrom, DLValue& outValue) const;
+	void					ClearAllLayoutItems();
+	
+	void					Compute();
+	
+	DLValue					GetComputedValue(const MBCString& name) const;
 
 private:
-	HBRUSH				backBrush;	///< 背景ブラシ
-	HBITMAP				iconImage;	///< アイコン画像
+	enum ItemState
+	{
+		ItemState_Uncomputed = 0,
+		ItemState_Computing,
+		ItemState_Computed
+	};
+
+	struct DLItem
+	{
+		MBCString			offsetFrom;			///< if value is relative, name of the base value is specified.
+		DLValue				value;				///< value
+		DLValue				computedValue;		///< computed value
+		ItemState			state;				///< item state
+	};
+
+	typedef std::map<MBCString, DLItem> DLItemMap;
+
+private:
+	void					computeOneItem(DLItem& item);	
+
+private:
+	DLItemMap				itemMap;
 };
 
-#endif // _WINABOUTDLG_H_
+#endif // _DIALOGLAYOUT_H_

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -35,6 +35,8 @@
 #include <support/Autolock.h>
 #include "BeDialog.h"
 #include "CommandID.h"
+#include "CoveredCalcApp.h"
+#include "BeDialogControlHelper.h"
 #if defined(ZETA)
 #include "BeCoveredCalcApp.h"
 #endif // defined(ZETA)
@@ -43,33 +45,32 @@
 #define base	BWindow
 ////////////////////////////////////////
 
+const MBCString BeDialog::ITEMNAME_WINDOW = ALITERAL("Window");
+
 /**
  *	@brief	Constructor
+ *	@param[in]	dialogID
+ *	@param[in]	type		window type
+ *	@param[in]	workspaces	displayed workspaces mask
  */
-BeDialog::BeDialog(
-	BRect frame,									///< window's content area rectangle given in screen coordinates
-	const char* title,								///< window title
-	window_type type,								///< window type
-	uint32 flags,									///< window flags
-	uint32 workspaces /* = B_CURRENT_WORKSPACE */	///< displayed workspaces mask
-) 
-	: BWindow(frame, title, type, flags, workspaces)
+BeDialog::BeDialog(SInt32 dialogID, window_type type, uint32 flags, uint32 workspaces /* = B_CURRENT_WORKSPACE */)
+	: BWindow(BRect(0, 0, 0, 0), ALITERAL(""), type, flags, workspaces)
 {
+	this->dialogID = dialogID;
 }
 
 /**
  *	@brief	Constructor
+ *	@param[in]	dialogID
+ *	@param[in]	look		window look
+ *	@param[in]	feel		window feel
+ *	@param[in]	flags		window flags
+ *	@param[in]	workspaces	displayed workspaces mask
  */
-BeDialog::BeDialog(
-	BRect frame,									///< window's content area rectangle given in screen coordinates
-	const char *title,								///< window title
-	window_look look, 								///< window look
-	window_feel feel, 								///< window feel
-	uint32 flags, 									///< window flags
-	uint32 workspaces /* = B_CURRENT_WORKSPACE */	///< displayed workspaces mask
-)
-	: BWindow(frame, title, look, feel, flags, workspaces)
+BeDialog::BeDialog(SInt32 dialogID, window_look look, window_feel feel, uint32 flags, uint32 workspaces /* = B_CURRENT_WORKSPACE */)
+	: BWindow(BRect(0, 0, 0, 0), ALITERAL(""), look, feel, flags, workspaces)
 {
+	this->dialogID = dialogID;
 }
 
 // ---------------------------------------------------------------------
@@ -80,34 +81,20 @@ BeDialog::~BeDialog()
 }
 
 // ---------------------------------------------------------------------
-//! Initialize view.
-// ---------------------------------------------------------------------
-void BeDialog::initView(
-	BView* view					///< this view is initialized.
-)
-{
-	// initialize child views.
-	int32 childCount = view->CountChildren();
-	int childIndex;
-	for (childIndex=0; childIndex<childCount; childIndex++)
-	{
-		initView(view->ChildAt(childIndex));
-	}	
-}
-
-// ---------------------------------------------------------------------
 //! Initialize.
 // ---------------------------------------------------------------------
 void BeDialog::Init(
 )
 {
-	// initialize each view.
-	int32 childCount = CountChildren();
-	int childIndex;
-	for (childIndex=0; childIndex<childCount; childIndex++)
-	{
-		initView(ChildAt(childIndex));
-	}
+	CoveredCalcApp::GetInstance()->LoadDialogLayout(dialogID, dialogLayout);
+	dialogLayout.Compute();
+
+	BeDialogControlHelper dch(&dialogLayout);
+	BRect windowRect = dch.GetItemRect(ALITERAL("Window"), MBCString());
+	MoveTo(windowRect.left, windowRect.top);
+	ResizeTo(windowRect.Width(), windowRect.Height());
+	
+	initDialog();
 }
 
 // ---------------------------------------------------------------------

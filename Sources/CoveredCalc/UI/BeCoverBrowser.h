@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -37,7 +37,6 @@
 #include "BeDialog.h"
 #include "CoverBrowser.h"
 
-class BeDialogDesign;
 class BColumnListView;
 
 // ---------------------------------------------------------------------
@@ -46,10 +45,9 @@ class BColumnListView;
 class BeCoverBrowser : public BeDialog, public CoverBrowser
 {
 public:
-									BeCoverBrowser(BeDialogDesign* dialogDesign);
+									BeCoverBrowser();
 	virtual							~BeCoverBrowser();
 
-	void							Init();
 	virtual void					Quit();
 	
 	virtual void					GetUIRect(Rect32& rect) const;
@@ -59,6 +57,7 @@ protected:
 	virtual	bool					QuitRequested();
 	
 protected:
+	virtual void					initDialog();
 	void							createViews();
 	virtual void					clearListUI();
 	virtual	void					setDataToListUI();
@@ -75,7 +74,6 @@ private:
 	void							onClose();
 
 private:
-	BeDialogDesign*					dialogDesign;		///< dialog design information
 	BColumnListView*				coverList;			///< cover list
 };
 

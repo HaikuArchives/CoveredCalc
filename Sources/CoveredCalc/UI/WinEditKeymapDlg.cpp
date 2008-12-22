@@ -31,8 +31,12 @@
 */
 
 #include "Prefix.h"
-#include "WinEditKeymapDlg.h."
+#include "WinEditKeymapDlg.h"
 #include "CoveredCalcApp.h"
+#include "WinDialogControlCreator.h"
+#include "XMLLangFile.h"
+#include "StringID.h"
+#include "DialogID.h"
 
 ////////////////////////////////////////
 #define baseDialog	WinPseudoModalDialog
@@ -76,6 +80,76 @@ LRESULT WinEditKeymapDlg::wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 }
 
 /**
+ *	@brief	Creates dialog controls.
+ */
+void WinEditKeymapDlg::createControls()
+{
+	NativeStringLoader* stringLoader = CoveredCalcApp::GetInstance();
+	WinDialogControlCreator dcc(m_hWnd, getDialogLayout());
+	MBCString label;
+	HWND hControl;
+
+	// "Name" label
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_EDIT_KEYMAP_NAME));
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_NAME"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
+
+	// "Name" edit
+	hControl = dcc.CreateEdit(ALITERAL("IDC_EDIT_NAME"), IDC_EDIT_NAME, ALITERAL(""), 0, 0, 0, 0);
+
+	// "Function" group box
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_EDIT_KEYMAP_GROUP_FUNCTION));
+	hControl = dcc.CreateGroupBox(ALITERAL("IDC_GROUP_FUNCTION"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
+
+	// "Function" label
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_EDIT_KEYMAP_FUNCTION));
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_FUNCTION"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
+
+	// Function listbox
+	hControl = dcc.CreateListBox(ALITERAL("IDC_LIST_FUNCTION"), IDC_LIST_FUNCTION, WS_VSCROLL | LBS_NOTIFY, 0, 0, 0);
+
+	// "Current Key" label
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_EDIT_KEYMAP_CURRENT_KEY));
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_CURRENT_KEY"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
+
+	// "Current Key listbox
+	hControl = dcc.CreateListBox(ALITERAL("IDC_LIST_CURRENT_KEY"), IDC_LIST_CURRENT_KEY, WS_VSCROLL | LBS_NOTIFY, 0, 0, 0);
+
+	// "Remove" button
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_EDIT_KEYMAP_REMOVE));
+	hControl = dcc.CreateButton(ALITERAL("IDC_REMOVE"), IDC_REMOVE, label, WS_GROUP, 0, 0, 0);
+
+	// "Key" group box
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_EDIT_KEYMAP_GROUP_KEY));
+	hControl = dcc.CreateGroupBox(ALITERAL("IDC_GROUP_KEY"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
+
+	// "Key" label
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_EDIT_KEYMAP_KEY));
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_KEY"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
+
+	// Key edit
+	hControl = dcc.CreateEdit(ALITERAL("IDC_EDIT_KEY"), IDC_EDIT_KEY, ALITERAL(""), 0, 0, 0, 0);
+
+	// "Assigned Function" label
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_EDIT_KEYMAP_ASSIGNED_FUNCTION));
+	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_ASSIGNED_FUNCTION"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
+
+	// Assigned function edit
+	hControl = dcc.CreateEdit(ALITERAL("IDC_EDIT_ASSIGNED_FUNCTION"), IDC_EDIT_ASSIGNED_FUNCTION, ALITERAL(""), ES_READONLY, 0, 0, 0);
+
+	// "Assign" button
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_EDIT_KEYMAP_ASSIGN));
+	hControl = dcc.CreateButton(ALITERAL("IDC_ASSIGN"), IDC_ASSIGN, label, WS_GROUP, 0, 0, 0);
+
+	// OK button
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_EDIT_KEYMAP_OK));
+	hControl = dcc.CreateButton(ALITERAL("IDOK"), IDOK, label, WS_GROUP | BS_DEFPUSHBUTTON, BS_PUSHBUTTON, 0, 0);
+
+	// Cancel button
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_EDIT_KEYMAP_CANCEL));
+	hControl = dcc.CreateButton(ALITERAL("IDCANCEL"), IDCANCEL, label, 0, 0, 0, 0);
+}
+
+/**
  *	@brief	WM_INITDIALOG handler.
  *	@param[in]	hWnd	window handle.
  *	@param[in]	uMsg	WM_INITDIALOG
@@ -86,6 +160,13 @@ LRESULT WinEditKeymapDlg::wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 LRESULT WinEditKeymapDlg::onInitDialog(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	baseDialog::wndProc(hWnd, uMsg, wParam, lParam);
+
+	// create controls
+	createControls();
+
+	// set dialog title
+	NativeStringLoader* stringLoader = CoveredCalcApp::GetInstance();
+	SetWindowText(m_hWnd, stringLoader->LoadNativeString(IDS_EDIT_KEYMAP_TITLE).CString());
 
 	// initialize key-input control
 	HWND hEditKey = GetDlgItem(m_hWnd, IDC_EDIT_KEY);

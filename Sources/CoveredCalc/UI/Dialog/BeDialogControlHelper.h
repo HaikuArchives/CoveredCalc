@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -24,22 +24,37 @@
  */
 
 /*!
-	@file		DialogID.h
-	@brief		Definition of dialog ID
-	@author		ICHIMIYA Hironori (Hiron)
-	@date		2007.01.07 Created
+	@file		BeDialogControlHelper.h
+	@brief		Definition of BeDialogControlHelper class.
+	@author 	ICHIMIYA Hironori (Hiron)
+	@date		2008.11.29 created
 */
 
-#ifndef _DIALOGID_H_
-#define _DIALOGID_H_
+#ifndef _BEDIALOGCONTROLHELPER_H_
+#define _BEDIALOGCONTROLHELPER_H_
 
-enum
+#include <Rect.h>
+#include "MBCString.h"
+
+class DialogLayout;
+
+/**
+ *	@brief	This is a utility class to deal with dialog controls.
+ */
+class BeDialogControlHelper
 {
-	IDD_ABOUT								= 5000,
-	IDD_COVER_BROWSER						= 5001,
-	IDD_ABOUT_COVER							= 5002,
-	IDD_PREFERENCES							= 5003,
-	IDD_EDIT_KEYMAP							= 5004,
+public:
+						BeDialogControlHelper(const DialogLayout* layout);
+	virtual				~BeDialogControlHelper();
+
+	float				ConvertDLUToPixel(bool isHorizontal, float dlu);
+	float				GetItemPos(bool isHorizontal, const MBCString& layoutName, const MBCString& baseLayoutName);
+	BRect				GetItemRect(const MBCString& layoutName, const MBCString& baseLayoutName);
+
+private:
+	const DialogLayout*	layout;				///< DialogLayout object
+	int					fontAverageWidth;	///< average width of the dialog font
+	int					fontAverageHeight;	///< average height of the dialog font
 };
 
-#endif // _DIALOGID_H_
+#endif _BEDIALOGCONTROLHELPER_H_

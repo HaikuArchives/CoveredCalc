@@ -34,10 +34,8 @@
 #include "LangFileInfo.h"
 #include "Exception.h"
 #include "AppSettings.h"
-#if defined (WIN32)
-#include "WinLangFile.h"
-#elif defined (BEOS)
-#include "BeXMLLangFile.h"
+#include "XMLLangFile.h"
+#if defined (BEOS)
 #include <StorageKit.h>
 #endif
 
@@ -46,6 +44,7 @@
  */
 LangFileInfoCollection::LangFileInfoCollection()
 {
+	defaultLangFileIndex = -1;
 }
 
 /**
@@ -70,15 +69,8 @@ void LangFileInfoCollection::Load(
 	removeAllInfos();
 
 #if defined (WIN32)
-	// add Japanese resource (default)
-	LangFileInfo* japaneseInfo = new LangFileInfo();
-	japaneseInfo->SetPath(Path());
-	japaneseInfo->SetLanguageName(ALITERAL("Japanese"));
-	japaneseInfo->SetLangID(MAKELANGID(LANG_JAPANESE, SUBLANG_DEFAULT));
-	langFileInfos.push_back(japaneseInfo);
-	
 	// add information of language files.
-	Path findPath = langFileFolder.Append(ALITERAL("*.cclw"));
+	Path findPath = langFileFolder.Append(ALITERAL("*.cclxw"));
 	WIN32_FIND_DATA findData;
 	HANDLE hFind = ::FindFirstFile(findPath.GetPathString(), &findData);
 	if (NULL != hFind)
@@ -90,41 +82,37 @@ void LangFileInfoCollection::Load(
 				continue;
 			}
 
-			Path langFilePath = langFileFolder.Append(findData.cFileName);
+			Path fileName(findData.cFileName);
+			Path langFilePath = langFileFolder.Append(fileName);
 			try
 			{
-				WinLangFile langFile;
+				XMLLangFile langFile;
 				langFile.Load(langFilePath);
-				if (langFile.CheckVersion())
-				{
-					MBCString languageName;
-					langFile.GetLanguageName(languageName);
-					LANGID langID = langFile.GetLangID();
+				MBCString languageName;
+				langFile.GetLanguageName(languageName);
 
-					LangFileInfo* newInfo = new LangFileInfo();
-					newInfo->SetPath(langFilePath);
-					newInfo->SetLanguageName(languageName);
-					newInfo->SetLangID(langID);
-					langFileInfos.push_back(newInfo);
-				}
+				LangFileInfo* newInfo = new LangFileInfo();
+				newInfo->SetPath(langFilePath);
+				newInfo->SetLanguageName(languageName);
+				langFileInfos.push_back(newInfo);
+
 				langFile.Unload();
+
+				if (0 == fileName.Compare(Path(ALITERAL("enUS.cclxw"))))
+				{
+					defaultLangFileIndex = langFileInfos.size() - 1;
+				}
 			}
 			catch (Exception* ex)
 			{
 				// ignore
 				ex->Delete();
-			}			
+			}
 		}
 		while (::FindNextFile(hFind, &findData));
 		::FindClose(hFind);
 	}
 #elif defined (BEOS)
-	// add English resource (default)
-	LangFileInfo* englishInfo = new LangFileInfo();
-	englishInfo->SetPath(Path());
-	englishInfo->SetLanguageName("English (US)");
-	langFileInfos.push_back(englishInfo);
-	
 	// add information of language files.
 	BDirectory findDir(langFileFolder.GetPathString());
 	if (B_OK == findDir.InitCheck())
@@ -141,30 +129,32 @@ void LangFileInfoCollection::Load(
 				SInt32 length = strlen(filename);
 				if (6 < length && 0 == strcmp(filename + length - 6, ALITERAL(".cclxb")))
 				{
-					if (0 != strcmp(filename, "enUS.cclxb"))	// built-in language file is already added
+					BPath bpath;
+					entry.GetPath(&bpath);
+					Path langFilePath(bpath.Path());
+					try
 					{
-						BPath bpath;
-						entry.GetPath(&bpath);
-						Path langFilePath(bpath.Path());
-						try
+						XMLLangFile langFile;
+						langFile.Load(langFilePath);
+						MBCString languageName;
+						langFile.GetLanguageName(languageName);
+						
+						LangFileInfo* newInfo = new LangFileInfo();
+						newInfo->SetPath(langFilePath);
+						newInfo->SetLanguageName(languageName);
+						langFileInfos.push_back(newInfo);
+
+						langFile.Unload();
+
+						if (0 == strcmp(filename, "enUS.cclxb"))
 						{
-							BeXMLLangFile langFile;
-							langFile.Load(langFilePath);
-							MBCString languageName;
-							langFile.GetLanguageName(languageName);
-							
-							LangFileInfo* newInfo = new LangFileInfo();
-							newInfo->SetPath(langFilePath);
-							newInfo->SetLanguageName(languageName);
-							langFileInfos.push_back(newInfo);
-	
-							langFile.Unload();
+							defaultLangFileIndex = langFileInfos.size() - 1;
 						}
-						catch (Exception* ex)
-						{
-							// ignore
-							ex->Delete();
-						}
+					}
+					catch (Exception* ex)
+					{
+						// ignore
+						ex->Delete();
 					}
 				}
 			}
@@ -185,4 +175,5 @@ void LangFileInfoCollection::removeAllInfos()
 		delete info;
 	}
 	langFileInfos.clear();
+	defaultLangFileIndex = -1;
 }

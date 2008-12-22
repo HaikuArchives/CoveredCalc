@@ -33,17 +33,17 @@
 #include "Prefix.h"
 #include "BePreferencesDlg.h"
 #include <InterfaceKit.h>
-#include "BeDialogDesign.h"
 #include "CommandID.h"
 #include "LangFileInfo.h"
 #include "CoveredCalcApp.h"
 #include "Exception.h"
 #include "ExceptionMessageUtils.h"
 #include "BeDataMenuItem.h"
-#include "BeXMLLangFile.h"
 #include "BeCoveredCalcApp.h"
 #include "DialogID.h"
+#include "StringID.h"
 #include "BeEditKeymapDlg.h"
+#include "BeDialogControlHelper.h"
 #if defined(ZETA)
 #include <locale/Locale.h>
 #endif // defined(ZETA)
@@ -86,15 +86,11 @@ static const char STR_OK[]				= "OK";
 /**
  *	@brief	Constructor
  */
-BePreferencesDlg::BePreferencesDlg(
-	BeDialogDesign* dialogDesign	///< dialog design information
-)
-	: BeDialog(dialogDesign->GetFrame(BRect(0.0, 0.0, 300.0, 246.0)),
-				LT(dialogDesign->GetTitle(STR_PREFERENCES)),
+BePreferencesDlg::BePreferencesDlg()
+	: BeDialog(IDD_PREFERENCES,
 				B_TITLED_WINDOW,
 				B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_MINIMIZABLE)
 {
-	this->dialogDesign = dialogDesign;
 	langMenu = NULL;
 	keyMappingMenu = NULL;
 }
@@ -111,10 +107,14 @@ BePreferencesDlg::~BePreferencesDlg()
  */
 void BePreferencesDlg::createViews()
 {
-	const BeDialogDesignItem* item;
+	BeDialogControlHelper dch(getDialogLayout());
+	NativeStringLoader* nsl = CoveredCalcApp::GetInstance();
 
 	rgb_color viewColor = { 216, 216, 216, 255 };
 	rgb_color highColor = { 0, 0, 0, 255 };
+
+	// dialog title
+	SetTitle(nsl->LoadNativeString(IDS_PREFERENCES_TITLE));
 
 	// BaseView
 	BView* baseView = new BView(Bounds(), PREFERENCES_DIALOG_VIEW_BASE_VIEW,
@@ -124,84 +124,76 @@ void BePreferencesDlg::createViews()
 	baseView->SetViewColor(viewColor);
 	
 	// LangBox
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_LANG_BOX);
-	BBox* langBox = new BBox(item->GetFrame(BRect(12.0, 12.0, 288.0, 100.0)), PREFERENCES_DIALOG_VIEW_LANG_BOX);
+	MBCString itemnameLangBox = ALITERAL("IDC_GROUP_LANGUAGE");
+	BBox* langBox = new BBox(dch.GetItemRect(itemnameLangBox, ITEMNAME_WINDOW), PREFERENCES_DIALOG_VIEW_LANG_BOX);
 	baseView->AddChild(langBox);
 	
-	langBox->SetLabel(LT(item->GetLabel(STR_LANGUAGE_BOX)));
+	langBox->SetLabel(nsl->LoadNativeString(IDS_PREFERENCES_GROUP_LANGUAGE));
 	
 	// LangPopup
 	langMenu = new BMenu("");
 	langMenu->SetLabelFromMarked(true);
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_LANG_POPUP);
-	BMenuField* langPopup = new BMenuField(item->GetFrame(BRect(12.0, 16.0, 264.0, 38.0)), PREFERENCES_DIALOG_VIEW_LANG_POPUP,
-									LT(item->GetLabel(STR_LANGUAGE)), langMenu);
+	BMenuField* langPopup = new BMenuField(dch.GetItemRect(ALITERAL("IDC_CMB_LANGUAGE"), itemnameLangBox), PREFERENCES_DIALOG_VIEW_LANG_POPUP,
+									nsl->LoadNativeString(IDS_PREFERENCES_LANGUAGE), langMenu);
 	langBox->AddChild(langPopup);
 	
-	langPopup->SetDivider(item->GetDivider(64.0));
+	langPopup->SetDivider(dch.GetItemPos(true, ALITERAL("IDC_CMB_LANGUAGE.divider"), ALITERAL("IDC_CMB_LANGUAGE.left")));
 	langPopup->SetAlignment(B_ALIGN_LEFT);
 	
 	// LangNotice
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_LANG_NOTICE);
-	BRect frameRect = item->GetFrame(BRect(12.0, 50.0, 264.0, 76.0));
+	BRect frameRect = dch.GetItemRect(ALITERAL("IDC_STATIC_LANGUAGE_MESSAGE"), itemnameLangBox);
 	BRect textRect = frameRect;
 	textRect.OffsetTo(0, 0);
 	BTextView* langNotice = new BTextView(frameRect, PREFERENCES_DIALOG_VIEW_LANG_NOTICE,
 									textRect, B_FOLLOW_LEFT | B_FOLLOW_TOP);
 	langBox->AddChild(langNotice);
 	
-	const char* text = LT(item->GetLabel(STR_LANG_NOTICE));
+	const char* text = nsl->LoadNativeString(IDS_PREFERENCES_LANGUAGE_MESSAGE);
 	langNotice->SetText(text);
 	langNotice->SetFontAndColor(0, strlen(text), be_plain_font, B_FONT_ALL, &highColor);
 	langNotice->SetViewColor(viewColor);
 	langNotice->MakeEditable(false);
 
 	// KeyMappingBox
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_KEYMAPPING_BOX);
-	BBox* keyMappingBox = new BBox(item->GetFrame(BRect(12.0, 112.0, 288.0, 198.0)), PREFERENCES_DIALOG_VIEW_KEYMAPPING_BOX);
+	MBCString itemnameKeyMappingBox = ALITERAL("IDC_GROUP_KEYMAP");
+	BBox* keyMappingBox = new BBox(dch.GetItemRect(itemnameKeyMappingBox, ITEMNAME_WINDOW), PREFERENCES_DIALOG_VIEW_KEYMAPPING_BOX);
 	baseView->AddChild(keyMappingBox);
 
-	keyMappingBox->SetLabel(LT(item->GetLabel(STR_KEYMAPPING_BOX)));
+	keyMappingBox->SetLabel(nsl->LoadNativeString(IDS_PREFERENCES_GROUP_KEYMAP));
 
 	// KeyMappingPopup
 	keyMappingMenu = new BMenu("");
 	keyMappingMenu->SetLabelFromMarked(true);
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_KEYMAPPING_POPUP);
-	BMenuField* keyMappingPopup = new BMenuField(item->GetFrame(BRect(12.0, 16.0, 264.0, 38.0)), PREFERENCES_DIALOG_VIEW_KEYMAPPING_POPUP,
-										LT(item->GetLabel(STR_KEYMAPPING)), keyMappingMenu);
+	BMenuField* keyMappingPopup = new BMenuField(dch.GetItemRect(ALITERAL("IDC_CMB_KEYMAPPINGS"), itemnameKeyMappingBox), PREFERENCES_DIALOG_VIEW_KEYMAPPING_POPUP,
+										nsl->LoadNativeString(IDS_PREFERENCES_KEYMAP), keyMappingMenu);
 	keyMappingBox->AddChild(keyMappingPopup);
 	
-	keyMappingPopup->SetDivider(item->GetDivider(64.0));
+	keyMappingPopup->SetDivider(dch.GetItemPos(true, ALITERAL("IDC_CMB_KEYMAPPINGS.divider"), ALITERAL("IDC_CMB_KEYMAPPINGS.left")));
 	keyMappingPopup->SetAlignment(B_ALIGN_LEFT);
 
 	// EditKeyMappingButton
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_EDIT_KEYMAPPING_BUTTON);
-	BButton* editKeymapButton = new BButton(item->GetFrame(BRect(12.0, 50.0, 92.0, 74.0)), PREFERENCES_DIALOG_VIEW_EDIT_KEYMAPPING_BUTTON,
-								LT(item->GetLabel(STR_EDIT)), new BMessage(ID_PREF_EDIT_KEYMAP));
+	BButton* editKeymapButton = new BButton(dch.GetItemRect(ALITERAL("IDC_EDIT_KEYMAPPING"), itemnameKeyMappingBox), PREFERENCES_DIALOG_VIEW_EDIT_KEYMAPPING_BUTTON,
+								nsl->LoadNativeString(IDS_PREFERENCES_EDIT_KEYMAP), new BMessage(ID_PREF_EDIT_KEYMAP));
 	keyMappingBox->AddChild(editKeymapButton);
 								
 	// DuplicateKeyMappingButton
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_DUPLICATE_KEYMAPPING_BUTTON);
-	BButton* dupKeymapButton = new BButton(item->GetFrame(BRect(98.0, 50.0, 178.0, 74.0)), PREFERENCES_DIALOG_VIEW_DUPLICATE_KEYMAPPING_BUTTON,
-								LT(item->GetLabel(STR_DUPLICATE)), new BMessage(ID_PREF_DUPLICATE_KEYMAP));
+	BButton* dupKeymapButton = new BButton(dch.GetItemRect(ALITERAL("IDC_DUPLICATE_KEYMAPPING"), itemnameKeyMappingBox), PREFERENCES_DIALOG_VIEW_DUPLICATE_KEYMAPPING_BUTTON,
+								nsl->LoadNativeString(IDS_PREFERENCES_DUPLICATE_KEYMAP), new BMessage(ID_PREF_DUPLICATE_KEYMAP));
 	keyMappingBox->AddChild(dupKeymapButton);
 
 	// DeleteKeyMappingButton
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_DELETE_KEYMAPPING_BUTTON);
-	BButton* delKeymapButton = new BButton(item->GetFrame(BRect(184.0, 50.0, 264.0, 74.0)), PREFERENCES_DIALOG_VIEW_DELETE_KEYMAPPING_BUTTON,
-								LT(item->GetLabel(STR_DELETE)), new BMessage(ID_PREF_DELETE_KEYMAP));
+	BButton* delKeymapButton = new BButton(dch.GetItemRect(ALITERAL("IDC_DELETE_KEYMAPPING"), itemnameKeyMappingBox), PREFERENCES_DIALOG_VIEW_DELETE_KEYMAPPING_BUTTON,
+								nsl->LoadNativeString(IDS_PREFERENCES_DELETE_KEYMAP), new BMessage(ID_PREF_DELETE_KEYMAP));
 	keyMappingBox->AddChild(delKeymapButton);
 
 	// CancelButton
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_CANCEL);
-	BButton* cancelButton = new BButton(item->GetFrame(BRect(122.0, 210.0, 202.0, 234.0)), PREFERENCES_DIALOG_VIEW_CANCEL,
-								LT(item->GetLabel(STR_CANCEL)), new BMessage(ID_DIALOG_CANCEL));
+	BButton* cancelButton = new BButton(dch.GetItemRect(ALITERAL("IDCANCEL"), ITEMNAME_WINDOW), PREFERENCES_DIALOG_VIEW_CANCEL,
+								nsl->LoadNativeString(IDS_PREFERENCES_CANCEL), new BMessage(ID_DIALOG_CANCEL));
 	baseView->AddChild(cancelButton);
 
 	// OKButton
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_OK);
-	BButton* okButton = new BButton(item->GetFrame(BRect(208.0, 210.0, 288.0, 234.0)), PREFERENCES_DIALOG_VIEW_OK,
-								LT(item->GetLabel(STR_OK)), new BMessage(ID_DIALOG_OK));
+	BButton* okButton = new BButton(dch.GetItemRect(ALITERAL("IDOK"), ITEMNAME_WINDOW), PREFERENCES_DIALOG_VIEW_OK,
+								nsl->LoadNativeString(IDS_PREFERENCES_OK), new BMessage(ID_DIALOG_OK));
 	baseView->AddChild(okButton);
 	
 	SetDefaultButton(okButton);
@@ -213,16 +205,17 @@ void BePreferencesDlg::createViews()
  */
 void BePreferencesDlg::languageChanged()
 {
-	const BeDialogDesignItem* item;
+	NativeStringLoader* nsl = CoveredCalcApp::GetInstance();
 	
 	// dialog title
-	SetTitle(LT(dialogDesign->GetTitle(STR_PREFERENCES)));
+	SetTitle(nsl->LoadNativeString(IDS_PREFERENCES_TITLE));
 
 	// LangBox	
 	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_LANG_BOX);
 	BBox* langBox = dynamic_cast<BBox*>(FindView(PREFERENCES_DIALOG_VIEW_LANG_BOX));
 	if (NULL != langBox)
 	{
+		langBox->SetLabel(nsl->LoadNativeString(IDS_PREFERENCES_GROUP_LANGUAGE));
 		langBox->SetLabel(LT(item->GetLabel(STR_LANGUAGE_BOX)));
 	}
 	
@@ -231,7 +224,7 @@ void BePreferencesDlg::languageChanged()
 	BMenuField* langPopup = dynamic_cast<BMenuField*>(FindView(PREFERENCES_DIALOG_VIEW_LANG_POPUP));
 	if (NULL != langPopup)
 	{
-		langPopup->SetLabel(LT(item->GetLabel(STR_LANGUAGE)));
+		langPopup->SetLabel(nsl->LoadNativeString(IDS_PREFERENCES_LANGUAGE));
 	}
 	
 	// LangNotice
@@ -239,7 +232,7 @@ void BePreferencesDlg::languageChanged()
 	BTextView* langNotice = dynamic_cast<BTextView*>(FindView(PREFERENCES_DIALOG_VIEW_LANG_NOTICE));
 	if (NULL != langNotice)
 	{
-		langNotice->SetText(LT(item->GetLabel(STR_LANG_NOTICE)));
+		langNotice->SetText(nsl->LoadNativeString(IDS_PREFERENCES_LANGUAGE_MESSAGE));
 	}
 	
 	// KeyMappingBox
@@ -247,7 +240,7 @@ void BePreferencesDlg::languageChanged()
 	BBox* keyMappingBox = dynamic_cast<BBox*>(FindView(PREFERENCES_DIALOG_VIEW_KEYMAPPING_BOX));
 	if (NULL != keyMappingBox)
 	{
-		keyMappingBox->SetLabel(LT(item->GetLabel(STR_KEYMAPPING_BOX)));
+		keyMappingBox->SetLabel(nsl->LoadNativeString(IDS_PREFERENCES_GROUP_KEYMAP));
 	}
 	
 	// KeyMappingPopup
@@ -255,7 +248,7 @@ void BePreferencesDlg::languageChanged()
 	BMenuField* keyMappingPopup = dynamic_cast<BMenuField*>(FindView(PREFERENCES_DIALOG_VIEW_KEYMAPPING_POPUP));
 	if (NULL != keyMappingPopup)
 	{
-		keyMappingPopup->SetLabel(LT(item->GetLabel(STR_KEYMAPPING)));
+		keyMappingPopup->SetLabel(nsl->LoadNativeString(IDS_PREFERENCES_KEYMAP));
 	}
 
 	// EditKeyMappingButton
@@ -263,7 +256,7 @@ void BePreferencesDlg::languageChanged()
 	BButton* editKeymapButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_EDIT_KEYMAPPING_BUTTON));
 	if (NULL != editKeymapButton)
 	{
-		editKeymapButton->SetLabel(LT(item->GetLabel(STR_EDIT)));
+		editKeymapButton->SetLabel(nsl->LoadNativeString(IDS_PREFERENCES_EDIT_KEYMAP));
 	}
 	
 	// DuplicateKeyMappingButton
@@ -271,7 +264,7 @@ void BePreferencesDlg::languageChanged()
 	BButton* dupKeymapButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_DUPLICATE_KEYMAPPING_BUTTON));
 	if (NULL != dupKeymapButton)
 	{
-		dupKeymapButton->SetLabel(LT(item->GetLabel(STR_DUPLICATE)));
+		dupKeymapButton->SetLabel(nsl->LoadNativeString(IDS_PREFERENCES_DUPLICATE_KEYMAP));
 	}
 
 	// DeleteKeyMappingButton
@@ -279,7 +272,7 @@ void BePreferencesDlg::languageChanged()
 	BButton* delKeymapButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_DELETE_KEYMAPPING_BUTTON));
 	if (NULL != delKeymapButton)
 	{
-		delKeymapButton->SetLabel(LT(item->GetLabel(STR_DELETE)));
+		delKeymapButton->SetLabel(nsl->LoadNativeString(IDS_PREFERENCES_DELETE_KEYMAP));
 	}
 	
 	// CancelButton
@@ -287,7 +280,7 @@ void BePreferencesDlg::languageChanged()
 	BButton* cancelButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_CANCEL));
 	if (NULL != cancelButton)
 	{
-		cancelButton->SetLabel(LT(item->GetLabel(STR_CANCEL)));
+		cancelButton->SetLabel(nsl->LoadNativeString(IDS_PREFERENCES_OK));
 	}
 	
 	// OKButton
@@ -295,7 +288,7 @@ void BePreferencesDlg::languageChanged()
 	BButton* okButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_OK));
 	if (NULL != okButton)
 	{
-		okButton->SetLabel(LT(item->GetLabel(STR_OK)));
+		okButton->SetLabel(nsl->LoadNativeString(IDS_PREFERENCES_CANCEL));
 	}
 }
 #endif
@@ -304,10 +297,9 @@ void BePreferencesDlg::languageChanged()
 /**
  *	@brief	Initialize.
  */
-void BePreferencesDlg::Init()
+void BePreferencesDlg::initDialog()
 {
 	createViews();
-	baseWindow::Init();
 	moveToCenterOfScreen();
 	
 	loadToDialog();
@@ -324,31 +316,41 @@ MessageBoxProvider*	BePreferencesDlg::getMessageBoxProvider()
 
 bool BePreferencesDlg::showEditKeyMapDialog(bool isReadOnly, KeyMappings& keyMappings)
 {
-	const BeXMLLangFile* langFile = BeCoveredCalcApp::GetInstance()->GetLangFile();
-	if (NULL == langFile)
-	{
-		return false;
-	}
-
 	sem_id semDialog = create_sem(0, "BeEditKeymapDlg");
 	if (semDialog < B_NO_ERROR)
 	{
 		return false;
 	}
 
-	BeDialogDesign* dialogDesign = langFile->LoadDialogDesign(IDD_EDIT_KEYMAP);
-	BeEditKeymapDlg* dlg = new BeEditKeymapDlg(dialogDesign);
-	dlg->SetKeyMappings(&keyMappings);
-	dlg->Init(this, semDialog, isReadOnly, CoveredCalcApp::GetInstance()->GetKeyNameDB());
-	dlg->Show();
-	
-	status_t acquireResult;
-	do
+	BeEditKeymapDlg* dlg;
+	try
 	{
-		acquireResult = acquire_sem_etc(semDialog, 1, B_RELATIVE_TIMEOUT, MODAL_POLLING_WAIT);
-		UpdateIfNeeded();
+		dlg = new BeEditKeymapDlg();
+		dlg->SetKeyMappings(&keyMappings);
+		try
+		{
+			dlg->Init(this, semDialog, isReadOnly, CoveredCalcApp::GetInstance()->GetKeyNameDB());
+		}
+		catch (...)
+		{
+			delete dlg;
+			throw;
+		}
+		dlg->Show();
+		
+		status_t acquireResult;
+		do
+		{
+			acquireResult = acquire_sem_etc(semDialog, 1, B_RELATIVE_TIMEOUT, MODAL_POLLING_WAIT);
+			UpdateIfNeeded();
+		}
+		while (B_NO_ERROR != acquireResult);
 	}
-	while (B_NO_ERROR != acquireResult);
+	catch (...)
+	{
+		delete_sem(semDialog);
+		throw;
+	}
 
 	delete_sem(semDialog);	
 	

@@ -38,7 +38,6 @@
 #include "WinMainWindow.h"
 #include "WinCoverBrowser.h"
 #include "WinMonitorInfo.h"
-#include "WinLangFile.h"
 #include "WinLayeredWindowAPI.h"
 
 class WinMessageFilter;
@@ -71,7 +70,7 @@ public:
 	WinMonitorInfo*					GetMonitorInformation()			{ return &monitorInfo; }
 	const WinMonitorInfo*			GetMonitorInformation() const	{ return &monitorInfo; }
 
-	HINSTANCE						GetLangResHandle() const;
+	virtual void					LoadDialogFont(SInt32 dialogId, DialogFont& outFont);
 
 	const WinLayeredWindowAPI*		GetLayeredWindowAPI() const		{ return &apiLayeredWindow; }
 
@@ -89,6 +88,9 @@ public:
 	virtual void					BeginWaitingUI();
 	virtual void					EndWaitingUI();
 
+protected:
+	virtual void					loadLangFile(const Path& path);
+
 private:
 									WinCoveredCalcApp();
 									~WinCoveredCalcApp();
@@ -102,8 +104,6 @@ protected:
 	virtual const Path&				getUserSettingsPath();
 	
 private:
-	void							loadLangFile(const Path& path);
-	SInt32							autoSelectLangFile();
 	void							loadKeyMappingsOnInit();
 	void							loadKeyNameDB();
 	
@@ -118,8 +118,8 @@ private:
 	SInt32							waitingUICount;		//!< 次の EndWaitingUI() の前に BeginWaitingUI() が呼び出された回数
 	bool							isInEnableCoveredCalcWindows;	//!< EnableCoveredCalcWindows の処理中かどうか
 	WinMonitorInfo					monitorInfo;		//!< モニタ情報
-	WinLangFile						langFile;			///< 言語ファイル
 	WinLayeredWindowAPI				apiLayeredWindow;	///< レイヤードウィンドウ関連の API ラッパー
+	DialogFont*						dialogFont;			///< Dialog font.
 
 private:
 	class MessageFilterManager

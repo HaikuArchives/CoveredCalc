@@ -371,11 +371,10 @@ char BeSkinView::parseMenuItemTrigger(
 }
 
 /// helper function to create menu item.
-BMenuItem* BeSkinView::createMenuItem(ConstUTF8Str name, uint32 command, int8 shortcut, uint32 modifiers)
+BMenuItem* BeSkinView::createMenuItem(SInt32 nameId, uint32 command, int8 shortcut, uint32 modifiers)
 {
-	const BeXMLLangFile* langFile = BeCoveredCalcApp::GetInstance()->GetLangFile();
-	MBCString sourceLabel;
-	langFile->LoadString(name, sourceLabel);
+	NativeStringLoader* nsl = CoveredCalcApp::GetInstance();
+	MBCString sourceLabel = nsl->LoadNativeString(nameId);
 	BString label;
 	char trigger = parseMenuItemTrigger(sourceLabel, label);
 	BMenuItem* newItem = new BMenuItem(label.String(), new BMessage(command), shortcut, modifiers);
@@ -400,11 +399,10 @@ BMenuItem* BeSkinView::createMenuItem(ConstUTF8Str name, uint32 command, int8 sh
 }
 
 /// helper function to create sub menu.
-BMenu* BeSkinView::createSubMenu(ConstUTF8Str name)
+BMenu* BeSkinView::createSubMenu(SInt32 nameId)
 {
-	const BeXMLLangFile* langFile = BeCoveredCalcApp::GetInstance()->GetLangFile();
-	MBCString sourceLabel;
-	langFile->LoadString(name, sourceLabel);
+	NativeStringLoader* nsl = CoveredCalcApp::GetInstance();
+	MBCString sourceLabel = nsl->LoadNativeString(nameId);
 	BString label;
 	parseMenuItemTrigger(sourceLabel, label);
 	return new BMenu(label.String(), B_ITEMS_IN_COLUMN);

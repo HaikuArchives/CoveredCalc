@@ -23,32 +23,32 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/**
-	@file		BeXMLLangFile.h
-	@brief		Definition of BeXMLLangFile class
-	@author		ICHIMIYA Hironori (Hiron)
-	@date		2006.12.31 created
+/*!
+	@file		DialogFont.h
+	@brief		Definition of DialogFont class.
+	@author 	ICHIMIYA Hironori (Hiron)
+	@date		2008.11.3 created
 */
 
-#ifndef _BEXMLLANGFILE_H_
-#define _BEXMLLANGFILE_H_
+#ifndef _DIALOGFONT_H_
+#define _DIALOGFONT_H_
 
-#include "XMLLangFile.h"
+#if defined (WIN32)
+#include "MBCString.h"
+#include "UTF8String.h"
+#endif
 
-class BeDialogDesign;
-
-class BeXMLLangFile : public XMLLangFile
+/**
+ *	@brief	This class holds dialog font information.
+ */
+class DialogFont
 {
+#if defined (WIN32)
 public:
-						BeXMLLangFile();
-						~BeXMLLangFile();
-
-	virtual void		LoadString(ConstUTF8Str name, MBCString& message) const;
-	void				LoadStringFromID(SInt32 stringID, MBCString& message) const;
-	BeDialogDesign*		LoadDialogDesign(SInt32 dialogID) const;
-
-protected:
-	virtual bool		checkVersion(ConstUTF8Str version);
+	MBCString			TargetOSVersion;
+	BYTE				Charset;
+	UTF8String			Typeface;
+	WORD				PointSize;
+#endif
 };
-
-#endif // _BEXMLLANGFILE_H_
+#endif // _DIALOGFONT_H_
