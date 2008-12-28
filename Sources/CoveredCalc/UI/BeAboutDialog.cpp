@@ -95,7 +95,7 @@ void BeAboutDialog::createViews()
 	highColor.alpha = 0xff;
 
 	// dialog title
-	SetTitle(nsl->LoadNativeString(IDS_ABOUT_TITLE).CString());
+	SetTitle(nsl->LoadNativeString(NSID_ABOUT_TITLE).CString());
 
 	// BaseView
 	BView* baseView = new BView(Bounds(), ABOUT_DIALOG_VIEW_BASE_VIEW,
@@ -150,7 +150,7 @@ void BeAboutDialog::createViews()
 	
 	// OKButton
 	BButton* okButton = new BButton(dch.GetItemRect(ALITERAL("IDOK"), ITEMNAME_WINDOW), ABOUT_DIALOG_VIEW_OK,
-								nsl->LoadNativeString(IDS_ABOUT_OK).CString(), new BMessage(ID_DIALOG_OK));
+								nsl->LoadNativeString(NSID_ABOUT_OK).CString(), new BMessage(ID_DIALOG_OK));
 	baseView->AddChild(okButton);
 	
 	SetDefaultButton(okButton);
@@ -165,13 +165,13 @@ void BeAboutDialog::languageChanged()
 	NativeStringLoader* nsl = CoveredCalcApp::GetInstance();
 
 	// dialog title
-	SetTitle(nsl->LoadNativeString(IDS_ABOUT_TITLE).CString());
+	SetTitle(nsl->LoadNativeString(NSID_ABOUT_TITLE).CString());
 
 	// OKButton
 	BButton* applyButton = dynamic_cast<BButton*>(FindView(ABOUT_DIALOG_VIEW_OK));
 	if (NULL != applyButton)
 	{
-		applyButton->SetLabel(nls->LoadNativeString(IDS_ABOUT_OK).CString());
+		applyButton->SetLabel(nls->LoadNativeString(NSID_ABOUT_OK).CString());
 	}
 }
 #endif

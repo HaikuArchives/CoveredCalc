@@ -584,7 +584,7 @@ void WinCoveredCalcApp::loadKeyMappingsOnInit()
 	catch (Exception* ex)
 	{
 		// キーマッピング定義が読み込めませんでした。
-		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_LOAD_KEYMAPPINGS,
+		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, NSID_EMSG_LOAD_KEYMAPPINGS,
 									MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 		ex->Delete();
 	}	
@@ -641,7 +641,7 @@ BOOL WinCoveredCalcApp::initInstance()
 			ex->Delete();
 
 			// コマンドラインパラメータで指定された言語ファイルが読み込めなかったので無視します。
-			DoMessageBox(IDS_EMSG_LOAD_COMMANDLINE_LANGFILE, MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+			DoMessageBox(NSID_EMSG_LOAD_COMMANDLINE_LANGFILE, MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 		}
 	}
 
@@ -664,7 +664,7 @@ BOOL WinCoveredCalcApp::initInstance()
 		}
 		catch (Exception* ex)
 		{
-			ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_READY_DEFAULT_SETTING_FILE,
+			ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, NSID_EMSG_READY_DEFAULT_SETTING_FILE,
 											MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
 			ex->Delete();
 			return FALSE;
@@ -701,7 +701,7 @@ BOOL WinCoveredCalcApp::initInstance()
 					ex->Delete();
 
 					// 設定ファイルに書かれた言語ファイルが読めません。
-					DoMessageBox(IDS_EMSG_LOAD_SETTING_LANGFILE, MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+					DoMessageBox(NSID_EMSG_LOAD_SETTING_LANGFILE, MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 				}
 			}
 		}
@@ -792,7 +792,7 @@ BOOL WinCoveredCalcApp::initInstance()
 		
 		if (!restored)
 		{
-			DoMessageBox(IDS_EMSG_CREATE_MAIN_WINDOW, MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
+			DoMessageBox(NSID_EMSG_CREATE_MAIN_WINDOW, MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
 			return FALSE;
 		}
 	}
@@ -807,7 +807,7 @@ BOOL WinCoveredCalcApp::initInstance()
 	coverBrowser.SetCoversFolderPath(baseFolderPath.Append(ALITERAL("Covers")));
 	if (!coverBrowser.Create(NULL))
 	{
-		DoMessageBox(IDS_EMSG_CREATE_COVER_BROWSER, MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
+		DoMessageBox(NSID_EMSG_CREATE_COVER_BROWSER, MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
 	}
 
 	::ShowWindow(mainWindow.m_hWnd, SW_SHOW);

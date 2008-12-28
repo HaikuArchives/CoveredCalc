@@ -137,7 +137,7 @@ void CoverBrowser::onDestroy()
 	}
 	catch (Exception* ex)
 	{
-		ExceptionMessageUtils::DoExceptionMessageBoxWithText(app, ex, IDS_EMSG_SAVE_SETTING);
+		ExceptionMessageUtils::DoExceptionMessageBoxWithText(app, ex, NSID_EMSG_SAVE_SETTING);
 		ex->Delete();		
 	}	
 }

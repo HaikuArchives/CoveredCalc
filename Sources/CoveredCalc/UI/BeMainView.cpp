@@ -42,7 +42,6 @@
 #include "BeAboutDialog.h"
 #include "UIControllerException.h"
 #include "BeAboutCurrentCoverDialog.h"
-#include "BeDialogDesign.h"
 #include "BePreferencesDlg.h"
 #include <support/Autolock.h>
 
@@ -61,9 +60,6 @@ BeMainView::BeMainView(
 )
 	: BeSkinView(frame, name)
 {
-	aboutDialogMessenger = NULL;
-	aboutCCDialogMessenger = NULL;
-	prefDialogMessenger = NULL;
 	deskbarWindow = NULL;
 }
 
@@ -72,11 +68,6 @@ BeMainView::BeMainView(
 // ---------------------------------------------------------------------
 BeMainView::~BeMainView()
 {
-	if (NULL != aboutDialogMessenger)
-		delete aboutDialogMessenger;
-	
-	if (NULL != aboutCCDialogMessenger)
-		delete aboutCCDialogMessenger;
 }
 
 /**
@@ -151,23 +142,23 @@ void BeMainView::ShowMainUIContextMenu(Point32 menuPos)
 {
 	BMenu* subMenu;
 	BPopUpMenu* popupMenu = new BPopUpMenu("context menu", false, false, B_ITEMS_IN_COLUMN);
-	popupMenu->AddItem(createMenuItem(IDS_MENU_COVER_BROWSER, ID_COVER_BROWSER, 0, 0));
+	popupMenu->AddItem(createMenuItem(NSID_MENU_COVER_BROWSER, ID_COVER_BROWSER, 0, 0));
 	popupMenu->AddSeparatorItem();
-	subMenu = createSubMenu(IDS_MENU_RADIX);
+	subMenu = createSubMenu(NSID_MENU_RADIX);
 	popupMenu->AddItem(subMenu);
-		subMenu->AddItem(createMenuItem(IDS_MENU_RADIX_HEX, ID_RADIX_HEX, 0, 0));
-		subMenu->AddItem(createMenuItem(IDS_MENU_RADIX_DECIMAL, ID_RADIX_DECIMAL, 0, 0));
-		subMenu->AddItem(createMenuItem(IDS_MENU_RADIX_OCTAL, ID_RADIX_OCTAL, 0, 0));
-		subMenu->AddItem(createMenuItem(IDS_MENU_RADIX_BINARY, ID_RADIX_BINARY, 0, 0));
-	popupMenu->AddItem(createMenuItem(IDS_MENU_MAIN_ALWAYS_ON_TOP, ID_MAIN_ALWAYS_ON_TOP, 0, 0));
-	popupMenu->AddItem(createMenuItem(IDS_MENU_MAIN_LOCK_POS, ID_MAIN_LOCK_POS, 0, 0));
+		subMenu->AddItem(createMenuItem(NSID_MENU_RADIX_HEX, ID_RADIX_HEX, 0, 0));
+		subMenu->AddItem(createMenuItem(NSID_MENU_RADIX_DECIMAL, ID_RADIX_DECIMAL, 0, 0));
+		subMenu->AddItem(createMenuItem(NSID_MENU_RADIX_OCTAL, ID_RADIX_OCTAL, 0, 0));
+		subMenu->AddItem(createMenuItem(NSID_MENU_RADIX_BINARY, ID_RADIX_BINARY, 0, 0));
+	popupMenu->AddItem(createMenuItem(NSID_MENU_MAIN_ALWAYS_ON_TOP, ID_MAIN_ALWAYS_ON_TOP, 0, 0));
+	popupMenu->AddItem(createMenuItem(NSID_MENU_MAIN_LOCK_POS, ID_MAIN_LOCK_POS, 0, 0));
 	popupMenu->AddSeparatorItem();
-	popupMenu->AddItem(createMenuItem(IDS_MENU_PREFERENCES, ID_PREFERENCES, 0, 0));
-	popupMenu->AddItem(createMenuItem(IDS_MENU_MAIN_ABOUT_COVER, ID_MAIN_ABOUT_COVER, 0, 0));
-	popupMenu->AddItem(createMenuItem(IDS_MENU_ABOUT, ID_ABOUT, 0, 0));
+	popupMenu->AddItem(createMenuItem(NSID_MENU_PREFERENCES, ID_PREFERENCES, 0, 0));
+	popupMenu->AddItem(createMenuItem(NSID_MENU_MAIN_ABOUT_COVER, ID_MAIN_ABOUT_COVER, 0, 0));
+	popupMenu->AddItem(createMenuItem(NSID_MENU_ABOUT, ID_ABOUT, 0, 0));
 	popupMenu->AddSeparatorItem();
-	popupMenu->AddItem(createMenuItem(IDS_MENU_MAIN_MINIMIZE, ID_MAIN_MINIMIZE, 0, 0));
-	popupMenu->AddItem(createMenuItem(IDS_MENU_MAIN_CLOSE, ID_MAIN_CLOSE, 0, 0));
+	popupMenu->AddItem(createMenuItem(NSID_MENU_MAIN_MINIMIZE, ID_MAIN_MINIMIZE, 0, 0));
+	popupMenu->AddItem(createMenuItem(NSID_MENU_MAIN_CLOSE, ID_MAIN_CLOSE, 0, 0));
 
 	try
 	{
@@ -219,26 +210,27 @@ SInt32 BeMainView::getMenuCommand(uint32 menuCommand)
 }
 
 /**
+ *	@brief	creates a new "About" dialog object.
+ */
+BeDialog* BeMainView::BeAboutDialogManager::newDialogObject()
+{
+	return new BeAboutDialog();
+}
+
+/**
  *	@brief	Shows "About" dialog.
  */
 void BeMainView::ShowAboutDialog()
 {
-	if (NULL != aboutDialogMessenger && aboutDialogMessenger->IsValid())
-	{
-		aboutDialogMessenger->SendMessage(ID_DIALOG_ACTIVATE);
-		return;
-	}
-	
-	if (NULL != aboutDialogMessenger)
-	{
-		delete aboutDialogMessenger;
-		aboutDialogMessenger = NULL;
-	}
+	aboutDialogManager.ShowDialog();
+}
 
-	BeAboutDialog* aboutDialog = new BeAboutDialog();
-	aboutDialog->Init();
-	aboutDialog->Show();
-	aboutDialogMessenger = new BMessenger(aboutDialog);
+/**
+ *	@brief	creates a new "About Current Cover" dialog object.
+ */
+BeDialog* BeMainView::BeAboutCCDialogManager::newDialogObject()
+{
+	return new BeAboutCurrentCoverDialog();
 }
 
 /**
@@ -246,22 +238,15 @@ void BeMainView::ShowAboutDialog()
  */
 void BeMainView::ShowAboutCurrentCoverDialog()
 {
-	if (NULL != aboutCCDialogMessenger && aboutCCDialogMessenger->IsValid())
-	{
-		aboutCCDialogMessenger->SendMessage(ID_DIALOG_ACTIVATE);
-		return;
-	}
+	aboutCCDialogManager.ShowDialog();
+}
 
-	if (NULL != aboutCCDialogMessenger)
-	{
-		delete aboutCCDialogMessenger;
-		aboutCCDialogMessenger = NULL;
-	}
-
-	BeAboutCurrentCoverDialog* aboutCCDialog = new BeAboutCurrentCoverDialog();
-	aboutCCDialog->Init();
-	aboutCCDialog->Show();
-	aboutCCDialogMessenger = new BMessenger(aboutCCDialog);
+/**
+ *	@brief	creates a new "Preferences" dialog object.
+ */
+BeDialog* BeMainView::BePrefDialogManager::newDialogObject()
+{
+	return new BePreferencesDlg();
 }
 
 /**
@@ -269,30 +254,7 @@ void BeMainView::ShowAboutCurrentCoverDialog()
  */
 void BeMainView::ShowPreferencesDialog()
 {
-	if (NULL != prefDialogMessenger && prefDialogMessenger->IsValid())
-	{
-		prefDialogMessenger->SendMessage(ID_DIALOG_ACTIVATE);
-		return;
-	}
-
-	if (NULL != prefDialogMessenger)
-	{
-		delete prefDialogMessenger;
-		prefDialogMessenger = NULL;
-	}
-	
-	BePreferencesDlg* prefDialog = new BePreferencesDlg();
-	try
-	{
-		prefDialog->Init();
-	}
-	catch (...)
-	{
-		delete prefDialog;
-		throw;
-	}
-	prefDialog->Show();
-	prefDialogMessenger = new BMessenger(prefDialog);		
+	prefDialogManager.ShowDialog();
 }
 
 /**

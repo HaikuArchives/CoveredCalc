@@ -327,7 +327,7 @@ bool CoveredCalcAppBase::init()
 	SInt32 defaultLangFileIndex = infoCollection->GetDefaultLangFileIndex();
 	if (defaultLangFileIndex < 0 || defaultLangFileIndex >= infoCollection->GetCount())
 	{
-		DoMessageBox(IDS_EMSG_LOAD_DEFAULT_LANGFILE, ButtonType_OK, AlertType_Stop);
+		DoMessageBox(NSID_EMSG_LOAD_DEFAULT_LANGFILE, ButtonType_OK, AlertType_Stop);
 		return false;
 	}
 	try
@@ -337,7 +337,7 @@ bool CoveredCalcAppBase::init()
 	}
 	catch (Exception* ex)
 	{
-		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_LOAD_DEFAULT_LANGFILE, ButtonType_OK, AlertType_Stop); 
+		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, NSID_EMSG_LOAD_DEFAULT_LANGFILE, ButtonType_OK, AlertType_Stop); 
 		ex->Delete();
 		return false;
 	}
@@ -369,13 +369,13 @@ void CoveredCalcAppBase::loadSettings(
 		}
 		catch (Exception* ex)
 		{
-			ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_SAVE_SETTING);
+			ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, NSID_EMSG_SAVE_SETTING);
 			ex->Delete();
 		}
 	}
 	catch (Exception *ex)
 	{
-		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_LOAD_SETTING);
+		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, NSID_EMSG_LOAD_SETTING);
 		throw;
 	}
 }
@@ -422,7 +422,7 @@ bool CoveredCalcAppBase::restoreByDefaultCoverDef()
 	}
 	catch (Exception* exSave)
 	{
-		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, exSave, IDS_EMSG_SAVE_SETTING);
+		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, exSave, NSID_EMSG_SAVE_SETTING);
 		exSave->Delete();
 	}
 	
@@ -493,7 +493,7 @@ void CoveredCalcAppBase::CoverDefChanged()
 	}
 	catch (Exception* ex)
 	{
-		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_SAVE_SETTING);
+		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, NSID_EMSG_SAVE_SETTING);
 		ex->Delete();
 	}
 }
@@ -515,7 +515,7 @@ void CoveredCalcAppBase::CurrentCoverChanged()
 	}
 	catch (Exception* ex)
 	{
-		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_SAVE_SETTING);
+		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, NSID_EMSG_SAVE_SETTING);
 		ex->Delete();		
 	}	
 }
@@ -573,13 +573,13 @@ MBCString CoveredCalcAppBase::loadNativeStringSub(SInt32 stringId)
 {
 	switch (stringId)
 	{
-	case IDS_EMSG_LOAD_COMMANDLINE_LANGFILE:
+	case NSID_EMSG_LOAD_COMMANDLINE_LANGFILE:
 		return ALITERAL("Failed to load the language file specified as a command line parameter.\nThe parameter is ignored.");
 		break;
-	case IDS_EMSG_LOAD_SETTING_LANGFILE:
+	case NSID_EMSG_LOAD_SETTING_LANGFILE:
 		return ALITERAL("Failed to load the language file specified in your settings.");
 		break;
-	case IDS_EMSG_LOAD_DEFAULT_LANGFILE:
+	case NSID_EMSG_LOAD_DEFAULT_LANGFILE:
 		return ALITERAL("Failed to load the default language file.");
 		break;
 	default:
@@ -616,7 +616,7 @@ MBCString CoveredCalcAppBase::LoadNativeString(SInt32 stringId)
 	catch (XMLLangFileExceptions::StringNotDefined* ex)
 	{
 		// handle special case.
-		if (IDS_APPNAME == stringId)
+		if (NSID_APPNAME == stringId)
 		{
 			ex->Delete();
 			return ApplicationName;
@@ -625,7 +625,7 @@ MBCString CoveredCalcAppBase::LoadNativeString(SInt32 stringId)
 		MBCString errorFormat;
 		try
 		{
-			errorFormat = loadNativeStringSub(IDS_EMSG_LANG_STRING_NOT_DEFINED);
+			errorFormat = loadNativeStringSub(NSID_EMSG_LANG_STRING_NOT_DEFINED);
 		}
 		catch (XMLLangFileExceptions::StringNotDefined* ex2)
 		{

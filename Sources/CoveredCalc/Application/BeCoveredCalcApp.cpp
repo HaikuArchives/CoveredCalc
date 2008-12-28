@@ -46,7 +46,6 @@
 #include "DialogID.h"
 #include "CommandID.h"
 #include "BeCoveredCalcApp.h"
-#include "BeDialogDesign.h"
 #include "KeyMappings.h"
 #include "KeyMappingManager.h"
 #include "KeyMappingsException.h"
@@ -310,7 +309,7 @@ void BeCoveredCalcApp::loadKeyMappingsOnInit()
 	catch (Exception* ex)
 	{
 		// Failed to load keymapping file.
-		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_LOAD_KEYMAPPINGS,
+		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, NSID_EMSG_LOAD_KEYMAPPINGS,
 																MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 		ex->Delete();
 	}	
@@ -363,7 +362,7 @@ void BeCoveredCalcApp::ReadyToRun()
 		catch (Exception* ex)
 		{
 			// コマンドラインパラメータで指定された言語ファイルが読み込めなかったので無視します。
-			ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_LOAD_COMMANDLINE_LANGFILE,
+			ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, NSID_EMSG_LOAD_COMMANDLINE_LANGFILE,
 																	MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 			ex->Delete();
 		}
@@ -385,7 +384,7 @@ void BeCoveredCalcApp::ReadyToRun()
 		}
 		catch (Exception* ex)
 		{
-			ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_READY_DEFAULT_SETTING_FILE,
+			ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, NSID_EMSG_READY_DEFAULT_SETTING_FILE,
 																	MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
 			ex->Delete();
 			be_app->PostMessage(B_QUIT_REQUESTED, be_app);
@@ -429,7 +428,7 @@ void BeCoveredCalcApp::ReadyToRun()
 				catch (Exception* ex)
 				{
 					// 言語ファイルが読めません。
-					ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_LOAD_SETTING_LANGFILE,
+					ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, NSID_EMSG_LOAD_SETTING_LANGFILE,
 																	MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 					ex->Delete();
 				}
@@ -464,7 +463,7 @@ void BeCoveredCalcApp::ReadyToRun()
 		catch (Exception* ex)
 		{
 			// デフォルトの言語ファイルが読めません。
-			ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_LOAD_DEFAULT_LANGFILE,
+			ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, NSID_EMSG_LOAD_DEFAULT_LANGFILE,
 															MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 			ex->Delete();
 			be_app->PostMessage(B_QUIT_REQUESTED, be_app);
@@ -505,7 +504,7 @@ void BeCoveredCalcApp::ReadyToRun()
 	// そもそも、アプリケーション起動中はウィンドウが削除されることを想定していないし。
 	
 	// メインウィンドウ生成
-	MBCString appName = LoadNativeString(IDS_APPNAME);
+	MBCString appName = LoadNativeString(NSID_APPNAME);
 	const Point32& lastMainWindowPos = GetAppSettings()->GetLastMainWindowPos();
 	bool isAlwaysOnTop = GetAppSettings()->IsMainWindowAlwaysOnTop();
 	mainWindow = new BeMainWindow(BRect(lastMainWindowPos.x, lastMainWindowPos.y, lastMainWindowPos.x, lastMainWindowPos.y), appName, B_CURRENT_WORKSPACE, isAlwaysOnTop);
@@ -536,7 +535,7 @@ void BeCoveredCalcApp::ReadyToRun()
 		
 		if (!restored)
 		{
-			DoMessageBox(IDS_EMSG_CREATE_MAIN_WINDOW, MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
+			DoMessageBox(NSID_EMSG_CREATE_MAIN_WINDOW, MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
 			be_app->PostMessage(B_QUIT_REQUESTED, be_app);
 			return;
 		}
@@ -557,7 +556,7 @@ void BeCoveredCalcApp::ReadyToRun()
 	}
 	catch (Exception* ex)
 	{
-		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, IDS_EMSG_CREATE_COVER_BROWSER,
+		ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, NSID_EMSG_CREATE_COVER_BROWSER,
 																MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
 		ex->Delete();
 	}

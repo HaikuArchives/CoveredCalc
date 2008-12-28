@@ -97,6 +97,7 @@ SRCS= \
 	../UI/BeCoverBrowser.cpp \
 	../UI/BeDeskbarPseudoWindow.cpp \
 	../UI/BeDialog.cpp \
+	../UI/BeDialogManager.cpp \
 	../UI/BeEditKeymapDlg.cpp \
 	../UI/BeKeyEventFilter.cpp \
 	../UI/BeMainView.cpp \
@@ -130,7 +131,6 @@ SRCS= \
 	../UI/UIComponent/BeListViewAdapter.cpp \
 	../UI/UIComponent/BeTextControlAdapter.cpp \
 	../UI/UIComponent/BeViewAdapter.cpp \
-	../Utility/BeDialogDesign.cpp \
 	../Utility/ExceptionMessageUtils.cpp \
 	../Utility/MessageFormatter.cpp \
 	../Utility/PathUtils.cpp \

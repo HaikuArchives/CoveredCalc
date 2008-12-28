@@ -133,25 +133,25 @@ void WinAboutCurrentCoverDlg::createControls()
 	HWND hControl;
 	
 	// "OK" button
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_ABOUT_COVER_OK));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_ABOUT_COVER_OK));
 	hControl = dcc.CreateButton(ALITERAL("IDOK"), IDOK, label, WS_GROUP | BS_DEFPUSHBUTTON, BS_PUSHBUTTON, 0, 0);
 
 	// "Name" label
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_ABOUT_COVER_NAME));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_ABOUT_COVER_NAME));
 	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_NAME"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
 
 	// "Name" edit (read-only)
 	hControl = dcc.CreateEdit(ALITERAL("IDC_EDIT_NAME"), IDC_EDIT_NAME, ALITERAL(""), ES_READONLY, 0, 0, WS_EX_CLIENTEDGE);
 
 	// "Description" label
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_ABOUT_COVER_DESCRIPTION));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_ABOUT_COVER_DESCRIPTION));
 	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_DESCRIPTION"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
 
 	// "Description" edit (read-only)
 	hControl = dcc.CreateEdit(ALITERAL("IDC_EDIT_DESCRIPTION"), IDC_EDIT_DESCRIPTION, ALITERAL(""), ES_READONLY, 0, 0, WS_EX_CLIENTEDGE);
 
 	// "Cover Author Info" label
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_ABOUT_COVER_ABOUT));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_ABOUT_COVER_ABOUT));
 	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_ABOUT"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
 
 	// "Cover Authro Info" edit (read-only)
@@ -179,7 +179,7 @@ LRESULT WinAboutCurrentCoverDlg::onInitDialog(
 
 	// set dialog title
 	NativeStringLoader* stringLoader = CoveredCalcApp::GetInstance();
-	SetWindowText(m_hWnd, stringLoader->LoadNativeString(IDS_ABOUT_COVER_TITLE).CString());
+	SetWindowText(m_hWnd, stringLoader->LoadNativeString(NSID_ABOUT_COVER_TITLE).CString());
 
 	// TODO: フォーカス
 

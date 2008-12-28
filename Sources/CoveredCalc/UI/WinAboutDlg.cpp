@@ -124,7 +124,7 @@ void WinAboutDlg::createControls()
 	HWND hControl;
 	
 	// "OK" button
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_ABOUT_OK));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_ABOUT_OK));
 	hControl = dcc.CreateButton(ALITERAL("IDOK"), IDOK, label, WS_GROUP | BS_DEFPUSHBUTTON, BS_PUSHBUTTON, 0, 0);
 
 	// Icon
@@ -161,7 +161,7 @@ LRESULT WinAboutDlg::onInitDialog(
 
 	// set dialog title
 	NativeStringLoader* stringLoader = CoveredCalcApp::GetInstance();
-	SetWindowText(m_hWnd, stringLoader->LoadNativeString(IDS_ABOUT_TITLE).CString());
+	SetWindowText(m_hWnd, stringLoader->LoadNativeString(NSID_ABOUT_TITLE).CString());
 
 	// TODO: フォーカス
 

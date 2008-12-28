@@ -140,87 +140,87 @@ void WinPreferencesDlg::createControls()
 	HWND hControl;
 	
 	// "Transparency" group box
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_GROUP_TRANSPARENCY));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_PREFERENCES_GROUP_TRANSPARENCY));
 	hControl = dcc.CreateGroupBox(ALITERAL("IDC_GROUP_TRANSPARENCY"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
 
 	// "Opacity" label
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_OPACITY));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_PREFERENCES_OPACITY));
 	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_OPACITY"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
 
 	// "Opacity" slider left label ("Transparent")
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_TRANSPARENT));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_PREFERENCES_TRANSPARENT));
 	hControl = dcc.CreateStatic(ALITERAL("IDC_STC_TRANSPARENT"), IDC_STC_TRANSPARENT, label, SS_RIGHT, SS_LEFT | SS_CENTER, 0, 0);
 
 	// "Opacity" slider
 	hControl = dcc.CreateTrackbar(ALITERAL("IDC_SLDR_OPACITY"), IDC_SLDR_OPACITY, 0, 0, 0, 0);
 
 	// "Opacity" slider right label ("Opaque")
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_OPAQUE));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_PREFERENCES_OPAQUE));
 	hControl = dcc.CreateStatic(ALITERAL("IDC_STC_OPAQUE"), IDC_STC_OPAQUE, label, SS_LEFT, SS_RIGHT | SS_CENTER, 0, 0);
 
 	// "Cover Edge Smoothing" label
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_SMOTHING));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_PREFERENCES_SMOTHING));
 	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_SMOOTHING"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
 
 	// "Cover Edge Smoothing" slider left label ("Low")
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_LOW));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_PREFERENCES_LOW));
 	hControl = dcc.CreateStatic(ALITERAL("IDC_STC_LOW"), IDC_STC_LOW, label, SS_RIGHT, SS_LEFT | SS_CENTER, 0, 0);
 
 	// "Cover Edge Smoothing" slider
 	hControl = dcc.CreateTrackbar(ALITERAL("IDC_SLDR_EDGE_SMOOTHING"), IDC_SLDR_EDGE_SMOOTHING, 0, 0, 0, 0);
 
 	// "Cover Edge Smoothing" slider right label ("High")
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_HIGH));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_PREFERENCES_HIGH));
 	hControl = dcc.CreateStatic(ALITERAL("IDC_STC_HIGH"), IDC_STC_HIGH, label, SS_LEFT, SS_RIGHT | SS_CENTER, 0, 0);
 
 	// message
-	label = stringLoader->LoadNativeString(IDS_PREFERENCES_TRANSPARENCY_MESSAGE);
+	label = stringLoader->LoadNativeString(NSID_PREFERENCES_TRANSPARENCY_MESSAGE);
 	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_TRANSPARENCY_MESSAGE"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
 
 	// "Language" group box
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_GROUP_LANGUAGE));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_PREFERENCES_GROUP_LANGUAGE));
 	hControl = dcc.CreateGroupBox(ALITERAL("IDC_GROUP_LANGUAGE"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
 
 	// "Language" label
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_LANGUAGE));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_PREFERENCES_LANGUAGE));
 	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_LANGUAGE"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
 
 	// "Language" combo box
 	hControl = dcc.CreateComboBox(ALITERAL("IDC_CMB_LANGUAGE"), IDC_CMB_LANGUAGE, WS_VSCROLL | CBS_DROPDOWNLIST | CBS_SORT, 0, 0, 0);
 
 	// message
-	label = stringLoader->LoadNativeString(IDS_PREFERENCES_LANGUAGE_MESSAGE);
+	label = stringLoader->LoadNativeString(NSID_PREFERENCES_LANGUAGE_MESSAGE);
 	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_LANGUAGE_MESSAGE"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
 
 	// "Keymap" group box
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_GROUP_KEYMAP));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_PREFERENCES_GROUP_KEYMAP));
 	hControl = dcc.CreateGroupBox(ALITERAL("IDC_GROUP_KEYMAP"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
 
 	// "Keymap" label
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_KEYMAP));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_PREFERENCES_KEYMAP));
 	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_KEYMAP"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
 
 	// "Keymap" combo box
 	hControl = dcc.CreateComboBox(ALITERAL("IDC_CMB_KEYMAPPINGS"), IDC_CMB_KEYMAPPINGS, WS_VSCROLL | CBS_DROPDOWNLIST, 0, 0, 0);
 
 	// "Edit" button
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_EDIT_KEYMAP));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_PREFERENCES_EDIT_KEYMAP));
 	hControl = dcc.CreateButton(ALITERAL("IDC_EDIT_KEYMAPPING"), IDC_EDIT_KEYMAPPING, label, WS_GROUP, 0, 0, 0);
 
 	// "Duplicate" button
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_DUPLICATE_KEYMAP));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_PREFERENCES_DUPLICATE_KEYMAP));
 	hControl = dcc.CreateButton(ALITERAL("IDC_DUPLICATE_KEYMAPPING"), IDC_DUPLICATE_KEYMAPPING, label, 0, 0, 0, 0);
 
 	// "Delete" button
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_DELETE_KEYMAP));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_PREFERENCES_DELETE_KEYMAP));
 	hControl = dcc.CreateButton(ALITERAL("IDC_DELETE_KEYMAPPING"), IDC_DELETE_KEYMAPPING, label, 0, 0, 0, 0);
 
 	// "OK" button
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_OK));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_PREFERENCES_OK));
 	hControl = dcc.CreateButton(ALITERAL("IDOK"), IDOK, label, WS_GROUP | BS_DEFPUSHBUTTON, BS_PUSHBUTTON, 0, 0);
 	
 	// "Cancel" button
-	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(IDS_PREFERENCES_CANCEL));
+	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_PREFERENCES_CANCEL));
 	hControl = dcc.CreateButton(ALITERAL("IDCANCEL"), IDCANCEL, label, 0, 0, 0, 0);
 }
 
@@ -243,7 +243,7 @@ LRESULT WinPreferencesDlg::onInitDialog(
 
 	// set dialog title
 	NativeStringLoader* stringLoader = CoveredCalcApp::GetInstance();
-	SetWindowText(m_hWnd, stringLoader->LoadNativeString(IDS_PREFERENCES_TITLE).CString());
+	SetWindowText(m_hWnd, stringLoader->LoadNativeString(NSID_PREFERENCES_TITLE).CString());
 
 	// FIXME: フォーカス
 
@@ -421,7 +421,7 @@ bool WinPreferencesDlg::getLanguage(
 	ASSERT(NULL != langComboInfos);
 	if (NULL == hWndLangCombo || NULL == langComboInfos)
 	{
-		DoMessageBox(IDS_EMSG_GET_LANGUAGE,
+		DoMessageBox(NSID_EMSG_GET_LANGUAGE,
 				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);	
 		return false;
 	}
@@ -429,7 +429,7 @@ bool WinPreferencesDlg::getLanguage(
 	int comboIndex = ComboBox_GetCurSel(hWndLangCombo);
 	if (CB_ERR == comboIndex)
 	{
-		DoMessageBox(IDS_EMSG_GET_LANGUAGE,
+		DoMessageBox(NSID_EMSG_GET_LANGUAGE,
 				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 		SetFocus(hWndLangCombo);	
 		return false;
@@ -437,7 +437,7 @@ bool WinPreferencesDlg::getLanguage(
 	SInt32 itemIndex = ComboBox_GetItemData(hWndLangCombo, comboIndex);
 	if (itemIndex < 0 || itemIndex >= langComboInfos->GetCount())
 	{
-		DoMessageBox(IDS_EMSG_INVALID_LANGUAGE,
+		DoMessageBox(NSID_EMSG_INVALID_LANGUAGE,
 				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 		SetFocus(hWndLangCombo);	
 		return false;
@@ -523,7 +523,7 @@ const PreferencesDlg::KeyMappingsInfo* WinPreferencesDlg::getKeyMapping(bool doE
 	{
 		if (doErrorProcessing)
 		{
-			DoMessageBox(IDS_EMSG_GET_KEYMAPPINGS,
+			DoMessageBox(NSID_EMSG_GET_KEYMAPPINGS,
 					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
 		}
 		return NULL;
@@ -534,7 +534,7 @@ const PreferencesDlg::KeyMappingsInfo* WinPreferencesDlg::getKeyMapping(bool doE
 	{
 		if (doErrorProcessing)
 		{
-			DoMessageBox(IDS_EMSG_GET_KEYMAPPINGS,
+			DoMessageBox(NSID_EMSG_GET_KEYMAPPINGS,
 					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 			SetFocus(hWndKeyMappingCombo);
 		}
@@ -545,7 +545,7 @@ const PreferencesDlg::KeyMappingsInfo* WinPreferencesDlg::getKeyMapping(bool doE
 	{
 		if (doErrorProcessing)
 		{
-			DoMessageBox(IDS_EMSG_INVALID_KEYMAPPINGS,
+			DoMessageBox(NSID_EMSG_INVALID_KEYMAPPINGS,
 					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 			SetFocus(hWndKeyMappingCombo);
 		}

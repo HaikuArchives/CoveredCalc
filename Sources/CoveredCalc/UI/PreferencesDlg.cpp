@@ -412,7 +412,7 @@ void PreferencesDlg::doDuplicateKeyMapping()
 		// change title
 		UTF8String title;
 		keyMappings.GetTitle(title);
-		MBCString postStr = CoveredCalcApp::GetInstance()->LoadNativeString(IDS_KEYMAPPINGS_COPY);
+		MBCString postStr = CoveredCalcApp::GetInstance()->LoadNativeString(NSID_KEYMAPPINGS_COPY);
 		UTF8String utf8PostStr;
 		UTF8Conv::FromMultiByte(utf8PostStr, postStr);
 		title += utf8PostStr;
@@ -507,7 +507,7 @@ void PreferencesDlg::doDeleteKeyMapping()
 	if (0 == CoveredCalcApp::GetInstance()->GetAppSettings()->GetKeymapFilePath().Compare(currentInfo->keyMapFilePath))
 	{
 		MessageFormatter::Format(message, 
-			CoveredCalcApp::GetInstance()->LoadNativeString(IDS_EMSG_DELETE_KEYMAPPINGS_IN_USE),
+			CoveredCalcApp::GetInstance()->LoadNativeString(NSID_EMSG_DELETE_KEYMAPPINGS_IN_USE),
 			currentInfo->title.CString());
 		getMessageBoxProvider()->DoMessageBox(
 			message,
@@ -517,7 +517,7 @@ void PreferencesDlg::doDeleteKeyMapping()
 	}
 
 	MessageFormatter::Format(message,
-		CoveredCalcApp::GetInstance()->LoadNativeString(IDS_QMSG_DELETE_KEYMAPPINGS),
+		CoveredCalcApp::GetInstance()->LoadNativeString(NSID_QMSG_DELETE_KEYMAPPINGS),
 		currentInfo->title.CString());
 	MessageBoxProvider::Button button = getMessageBoxProvider()->DoMessageBox(
 			message,

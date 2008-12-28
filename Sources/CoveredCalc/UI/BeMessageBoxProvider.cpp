@@ -146,7 +146,7 @@ MessageBoxProvider::Button BeMessageBoxProvider::DoMessageBox(
 		ASSERT(false);
 	}
 
-	MBCString title = CoveredCalcApp::GetInstance()->LoadNativeString(IDS_APPNAME);
+	MBCString title = CoveredCalcApp::GetInstance()->LoadNativeString(NSID_APPNAME);
 
 	BAlert* alert = new BAlert(title, message,
 							button0Label, button1Label, button2Label,
