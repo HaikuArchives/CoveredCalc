@@ -96,7 +96,7 @@ void ExceptionMessageGenerator::GetMessageString(
 		{
 			try
 			{
-				message = stringLoader->LoadNativeString(IDS_EMSG_GENERIC);
+				message = stringLoader->LoadNativeString(NSID_EMSG_GENERIC);
 			}
 			catch (Exception* ex3)
 			{
@@ -170,7 +170,7 @@ bool ExceptionMessageGenerator::processMemoryException(
 
 	try
 	{
-		message = stringLoader->LoadNativeString(IDS_EMSG_MEMORY);
+		message = stringLoader->LoadNativeString(NSID_EMSG_MEMORY);
 	}
 	catch (MemoryException* mex1)
 	{
@@ -223,7 +223,7 @@ bool ExceptionMessageGenerator::processXMLParseException(
 		{
 			MBCString name;
 			UTF8Conv::ToMultiByte(name, myExceptionNMST->GetName());
-			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_NO_MATCH_START_TAG), name.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(NSID_EMSG_NO_MATCH_START_TAG), name.CString());
 			resolved = true;
 		}
 	}
@@ -237,7 +237,7 @@ bool ExceptionMessageGenerator::processXMLParseException(
 			MBCString name, parentName;
 			UTF8Conv::ToMultiByte(name, myExceptionIPE->GetName());
 			UTF8Conv::ToMultiByte(parentName, myExceptionIPE->GetParentName());
-			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_INVALID_PARENT_ENTITY), name.CString(), parentName.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(NSID_EMSG_INVALID_PARENT_ENTITY), name.CString(), parentName.CString());
 			resolved = true;
 		}
 	}
@@ -251,7 +251,7 @@ bool ExceptionMessageGenerator::processXMLParseException(
 			MBCString tagName, attrName;
 			UTF8Conv::ToMultiByte(tagName, myExceptionMA->GetTagName());
 			UTF8Conv::ToMultiByte(attrName, myExceptionMA->GetAttributeName());
-			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_MISSING_ATTRIBUTE), tagName.CString(), attrName.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(NSID_EMSG_MISSING_ATTRIBUTE), tagName.CString(), attrName.CString());
 			resolved = true;
 		}
 	}
@@ -264,7 +264,7 @@ bool ExceptionMessageGenerator::processXMLParseException(
 		{
 			MBCString name;
 			UTF8Conv::ToMultiByte(name, myExceptionUT->GetName());
-			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_UNKNOWN_TAG), name.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(NSID_EMSG_UNKNOWN_TAG), name.CString());
 			resolved = true;
 		}
 	}
@@ -274,13 +274,13 @@ bool ExceptionMessageGenerator::processXMLParseException(
 		eachMessage.Empty();
 	}
 	
-	MBCString preMessage = stringLoader->LoadNativeString(IDS_EMSG_XML_PARSE);
+	MBCString preMessage = stringLoader->LoadNativeString(NSID_EMSG_XML_PARSE);
 	message = preMessage + eachMessage;
 	
 	if (-1 != myException->GetLine())
 	{
 		MBCString lineColumn;
-		MessageFormatter::Format(lineColumn, stringLoader->LoadNativeString(IDS_EMSG_XML_LINE_COLUMN), myException->GetLine(), myException->GetColumn());
+		MessageFormatter::Format(lineColumn, stringLoader->LoadNativeString(NSID_EMSG_XML_LINE_COLUMN), myException->GetLine(), myException->GetColumn());
 		message += lineColumn;
 	}
 	return true;
@@ -315,7 +315,7 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		{
 			MBCString id;
 			UTF8Conv::ToMultiByte(id, myExceptionUID->GetID());
-			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_UNKNOWN_ID), id.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(NSID_EMSG_UNKNOWN_ID), id.CString());
 			resolved = true;
 		}
 	}
@@ -328,7 +328,7 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		{
 			MBCString classStr;
 			UTF8Conv::ToMultiByte(classStr, myExceptionUC->GetClass());
-			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_UNKNOWN_CLASS), classStr.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(NSID_EMSG_UNKNOWN_CLASS), classStr.CString());
 			resolved = true;
 		}
 	}
@@ -341,7 +341,7 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		{
 			MBCString typeStr;
 			UTF8Conv::ToMultiByte(typeStr, myExceptionUT->GetType());
-			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_UNKNOWN_TYPE), typeStr.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(NSID_EMSG_UNKNOWN_TYPE), typeStr.CString());
 			resolved = true;
 		}
 	}
@@ -353,7 +353,7 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		if (NULL != myExceptionVF)
 		{
 			Exception* innerException = ex->GetInnerException();
-			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_VALIDATION_FAILED), (NULL != innerException) ? innerException->GetErrorMessage() : ALITERAL(""));
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(NSID_EMSG_VALIDATION_FAILED), (NULL != innerException) ? innerException->GetErrorMessage() : ALITERAL(""));
 			resolved = true;
 		}
 	}
@@ -366,7 +366,7 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		{
 			MBCString color;
 			UTF8Conv::ToMultiByte(color, myExceptionCSNU->GetColorString());
-			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_COLOR_STRING_NOT_UNDERSTOOD), color.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(NSID_EMSG_COLOR_STRING_NOT_UNDERSTOOD), color.CString());
 			resolved = true;
 		}
 	}
@@ -379,7 +379,7 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		{
 			MBCString version;
 			UTF8Conv::ToMultiByte(version, myExceptionUCDV->GetVersionString());
-			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_UNSUPPORTED_COVERDEF_VERSION), version.CString());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(NSID_EMSG_UNSUPPORTED_COVERDEF_VERSION), version.CString());
 			resolved = true;
 		}		
 	}
@@ -390,7 +390,7 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		CoverDefParseExceptions::InvalidDocumentElement* myExceptionIDE = dynamic_cast<CoverDefParseExceptions::InvalidDocumentElement*>(ex);
 		if (NULL != myExceptionIDE)
 		{
-			eachMessage = stringLoader->LoadNativeString(IDS_EMSG_INVALID_COVERDEF);
+			eachMessage = stringLoader->LoadNativeString(NSID_EMSG_INVALID_COVERDEF);
 			resolved = true;
 		}
 	}
@@ -400,13 +400,13 @@ bool ExceptionMessageGenerator::processCoverDefParseException(
 		eachMessage.Empty();
 	}
 
-	MBCString preMessage = stringLoader->LoadNativeString(IDS_EMSG_COVERDEF_PARSE);
+	MBCString preMessage = stringLoader->LoadNativeString(NSID_EMSG_COVERDEF_PARSE);
 	message = preMessage + eachMessage;
 
 	if (-1 != myException->GetLine())
 	{
 		MBCString lineColumn;
-		MessageFormatter::Format(lineColumn, stringLoader->LoadNativeString(IDS_EMSG_XML_LINE_COLUMN), myException->GetLine(), myException->GetColumn());
+		MessageFormatter::Format(lineColumn, stringLoader->LoadNativeString(NSID_EMSG_XML_LINE_COLUMN), myException->GetLine(), myException->GetColumn());
 		message += lineColumn;
 	}
 	return true;	
@@ -441,7 +441,7 @@ bool ExceptionMessageGenerator::processFileException(
 		FileExceptions::AccessDenied* myExceptionAD = dynamic_cast<FileExceptions::AccessDenied*>(ex);
 		if (NULL != myExceptionAD)
 		{
-			message = stringLoader->LoadNativeString(IDS_EMSG_FILE_ACCESS_DENIED);
+			message = stringLoader->LoadNativeString(NSID_EMSG_FILE_ACCESS_DENIED);
 			resolved = true;
 		}
 	}
@@ -452,7 +452,7 @@ bool ExceptionMessageGenerator::processFileException(
 		FileExceptions::DeviceFull* myExceptionDF = dynamic_cast<FileExceptions::DeviceFull*>(ex);
 		if (NULL != myExceptionDF)
 		{
-			message = stringLoader->LoadNativeString(IDS_EMSG_FILE_DEVICE_FULL);
+			message = stringLoader->LoadNativeString(NSID_EMSG_FILE_DEVICE_FULL);
 			resolved = true;
 		}
 	}
@@ -463,7 +463,7 @@ bool ExceptionMessageGenerator::processFileException(
 		FileExceptions::FileAlreadyExists* myExceptionFAE = dynamic_cast<FileExceptions::FileAlreadyExists*>(ex);
 		if (NULL != myExceptionFAE)
 		{
-			message = stringLoader->LoadNativeString(IDS_EMSG_FILE_ALREADY_EXISTS);
+			message = stringLoader->LoadNativeString(NSID_EMSG_FILE_ALREADY_EXISTS);
 			resolved = true;
 		}
 	}
@@ -474,7 +474,7 @@ bool ExceptionMessageGenerator::processFileException(
 		FileExceptions::FileNotFound* myExceptionFNF = dynamic_cast<FileExceptions::FileNotFound*>(ex);
 		if (NULL != myExceptionFNF)
 		{
-			message = stringLoader->LoadNativeString(IDS_EMSG_FILE_NOT_FOUND);
+			message = stringLoader->LoadNativeString(NSID_EMSG_FILE_NOT_FOUND);
 			resolved = true;
 		}
 	}
@@ -485,7 +485,7 @@ bool ExceptionMessageGenerator::processFileException(
 		FileExceptions::IOError* myExceptionIOE = dynamic_cast<FileExceptions::IOError*>(ex);
 		if (NULL != myExceptionIOE)
 		{
-			message = stringLoader->LoadNativeString(IDS_EMSG_FILE_IO_ERROR);
+			message = stringLoader->LoadNativeString(NSID_EMSG_FILE_IO_ERROR);
 			resolved = true;
 		}
 	}
@@ -496,21 +496,21 @@ bool ExceptionMessageGenerator::processFileException(
 		FileExceptions::SharingViolation* myExceptionSV = dynamic_cast<FileExceptions::SharingViolation*>(ex);
 		if (NULL != myExceptionSV)
 		{
-			message = stringLoader->LoadNativeString(IDS_EMSG_FILE_SHARING_VIOLATION);
+			message = stringLoader->LoadNativeString(NSID_EMSG_FILE_SHARING_VIOLATION);
 			resolved = true;
 		}
 	}
 	
 	if (!resolved)
 	{
-		message = stringLoader->LoadNativeString(IDS_EMSG_FILE_OPERATION);
+		message = stringLoader->LoadNativeString(NSID_EMSG_FILE_OPERATION);
 	}
 	
 	const Path& fileName = myException->GetFileName();
 	if (!fileName.IsEmpty())
 	{
 		MBCString fileNameMessage;
-		MessageFormatter::Format(fileNameMessage, stringLoader->LoadNativeString(IDS_EMSG_FILE_FILENAME), fileName.GetPathString());
+		MessageFormatter::Format(fileNameMessage, stringLoader->LoadNativeString(NSID_EMSG_FILE_FILENAME), fileName.GetPathString());
 		message += fileNameMessage;
 	}
 
@@ -543,7 +543,7 @@ bool ExceptionMessageGenerator::processDIBFileLoaderException(
 		DIBFileLoaderExceptions::BrokenFile* myExceptionBF = dynamic_cast<DIBFileLoaderExceptions::BrokenFile*>(ex);
 		if (NULL != myExceptionBF)
 		{
-			message = stringLoader->LoadNativeString(IDS_EMSG_DIBFILE_BROKEN_FILE);
+			message = stringLoader->LoadNativeString(NSID_EMSG_DIBFILE_BROKEN_FILE);
 			resolved = true;
 		}
 	}
@@ -554,21 +554,21 @@ bool ExceptionMessageGenerator::processDIBFileLoaderException(
 		DIBFileLoaderExceptions::UnknownFileFormat* myExceptionUFF = dynamic_cast<DIBFileLoaderExceptions::UnknownFileFormat*>(ex);
 		if (NULL != myExceptionUFF)
 		{
-			message = stringLoader->LoadNativeString(IDS_EMSG_DIBFILE_UNKNOWN_FORMAT);
+			message = stringLoader->LoadNativeString(NSID_EMSG_DIBFILE_UNKNOWN_FORMAT);
 			resolved = true;
 		}
 	}
 	
 	if (!resolved)
 	{
-		message = stringLoader->LoadNativeString(IDS_EMSG_DIBFILE_LOAD);
+		message = stringLoader->LoadNativeString(NSID_EMSG_DIBFILE_LOAD);
 	}
 	
 	const Path& fileName = myException->GetFileName();
 	if (!fileName.IsEmpty())
 	{
 		MBCString fileNameMessage;
-		MessageFormatter::Format(fileNameMessage, stringLoader->LoadNativeString(IDS_EMSG_FILE_FILENAME), fileName.GetPathString());
+		MessageFormatter::Format(fileNameMessage, stringLoader->LoadNativeString(NSID_EMSG_FILE_FILENAME), fileName.GetPathString());
 		message += fileNameMessage;
 	}
 
@@ -602,7 +602,7 @@ bool ExceptionMessageGenerator::processUIControllerException(
 		if (NULL != myExceptionFTSCM)
 		{
 			SInt32 menuId = myExceptionFTSCM->GetMenuID();
-			MessageFormatter::Format(message, stringLoader->LoadNativeString(IDS_EMSG_UI_SHOW_MENU), menuId);
+			MessageFormatter::Format(message, stringLoader->LoadNativeString(NSID_EMSG_UI_SHOW_MENU), menuId);
 			resolved = true;
 		}
 	}
@@ -614,14 +614,14 @@ bool ExceptionMessageGenerator::processUIControllerException(
 		if (NULL != myExceptionFTSD)
 		{
 			SInt32 dialogId = myExceptionFTSD->GetDialogID();
-			MessageFormatter::Format(message, stringLoader->LoadNativeString(IDS_EMSG_UI_SHOW_DIALOG), dialogId);
+			MessageFormatter::Format(message, stringLoader->LoadNativeString(NSID_EMSG_UI_SHOW_DIALOG), dialogId);
 			resolved = true;
 		}
 	}
 	
 	if (!resolved)
 	{
-		message = stringLoader->LoadNativeString(IDS_EMSG_UI_CONTROL);	
+		message = stringLoader->LoadNativeString(NSID_EMSG_UI_CONTROL);	
 	}
 	
 	return true;
@@ -653,14 +653,14 @@ bool ExceptionMessageGenerator::processColorCodedSkinException(
 		ColorCodedSkinExceptions::BadInitParams* myExceptionBIP = dynamic_cast<ColorCodedSkinExceptions::BadInitParams*>(ex);
 		if (NULL != myExceptionBIP)
 		{
-			message = stringLoader->LoadNativeString(IDS_EMSG_INIT_SKIN);
+			message = stringLoader->LoadNativeString(NSID_EMSG_INIT_SKIN);
 			resolved = true;
 		}
 	}
 	
 	if (!resolved)
 	{
-		message = stringLoader->LoadNativeString(IDS_EMSG_COLOR_CODED_SKIN);
+		message = stringLoader->LoadNativeString(NSID_EMSG_COLOR_CODED_SKIN);
 	}
 	
 	return true;
@@ -696,7 +696,7 @@ bool ExceptionMessageGenerator::processPathException(
 			ConstAStr basePath = myExceptionRPNE->GetBase();
 
 			MessageFormatter::Format(message,
-											stringLoader->LoadNativeString(IDS_EMSG_PATH_MAKE_RELATIVE),
+											stringLoader->LoadNativeString(NSID_EMSG_PATH_MAKE_RELATIVE),
 											(target) ? target : ALITERAL(""),
 											(basePath) ? basePath : ALITERAL(""));
 			resolved = true;
@@ -705,7 +705,7 @@ bool ExceptionMessageGenerator::processPathException(
 	
 	if (!resolved)
 	{
-		message = stringLoader->LoadNativeString(IDS_EMSG_PATH_OPERATION);
+		message = stringLoader->LoadNativeString(NSID_EMSG_PATH_OPERATION);
 	}
 	
 	return true;
@@ -738,7 +738,7 @@ bool ExceptionMessageGenerator::processXMLLangFileException(
 		XMLLangFileExceptions::ValidationFailed* myExceptionVF = dynamic_cast<XMLLangFileExceptions::ValidationFailed*>(ex);
 		if (NULL != myExceptionVF)
 		{
-			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_LANG_VALIDATION_FAILED), myExceptionVF->GetErrorMessage());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(NSID_EMSG_LANG_VALIDATION_FAILED), myExceptionVF->GetErrorMessage());
 			resolved = true;
 		}
 	}
@@ -749,7 +749,7 @@ bool ExceptionMessageGenerator::processXMLLangFileException(
 		XMLLangFileExceptions::StringNotDefined* myExceptionSND = dynamic_cast<XMLLangFileExceptions::StringNotDefined*>(ex);
 		if (NULL != myExceptionSND)
 		{
-			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(IDS_EMSG_LANG_STRING_NOT_DEFINED), myExceptionSND->GetName());
+			MessageFormatter::Format(eachMessage, stringLoader->LoadNativeString(NSID_EMSG_LANG_STRING_NOT_DEFINED), myExceptionSND->GetName());
 			resolved = true;
 		}
 	}
@@ -767,7 +767,7 @@ bool ExceptionMessageGenerator::processXMLLangFileException(
 	if (-1 != myException->GetLine())
 	{
 		MBCString lineColumn;
-		MessageFormatter::Format(lineColumn, stringLoader->LoadNativeString(IDS_EMSG_XML_LINE_COLUMN), myException->GetLine(), myException->GetColumn());
+		MessageFormatter::Format(lineColumn, stringLoader->LoadNativeString(NSID_EMSG_XML_LINE_COLUMN), myException->GetLine(), myException->GetColumn());
 		message += lineColumn;
 	}
 	return true;	
@@ -823,7 +823,7 @@ bool ExceptionMessageGenerator::processDialogLayoutException(Exception* ex, MBCS
 			}
 
 			itemRefPath += itemRefPathLine;
-			MessageFormatter::Format(message, stringLoader->LoadNativeString(IDS_EMSG_DIALOG_LAYOUT_COMPUTE), itemName.CString(), leafMessage.CString(), itemRefPath.CString());
+			MessageFormatter::Format(message, stringLoader->LoadNativeString(NSID_EMSG_DIALOG_LAYOUT_COMPUTE), itemName.CString(), leafMessage.CString(), itemRefPath.CString());
 			resolved = true;
 		}
 	}
@@ -834,7 +834,7 @@ bool ExceptionMessageGenerator::processDialogLayoutException(Exception* ex, MBCS
 		DialogLayoutExceptions::ItemNotFound* myExceptionINF = dynamic_cast<DialogLayoutExceptions::ItemNotFound*>(ex);
 		if (NULL != myExceptionINF)
 		{
-			MessageFormatter::Format(message, stringLoader->LoadNativeString(IDS_EMSG_DIALOG_LAYOUT_NOT_FOUND), myExceptionINF->GetItemName().CString());
+			MessageFormatter::Format(message, stringLoader->LoadNativeString(NSID_EMSG_DIALOG_LAYOUT_NOT_FOUND), myExceptionINF->GetItemName().CString());
 			resolved = true;
 		}
 	}
@@ -845,7 +845,7 @@ bool ExceptionMessageGenerator::processDialogLayoutException(Exception* ex, MBCS
 		DialogLayoutExceptions::CircularReference* myExceptionCR = dynamic_cast<DialogLayoutExceptions::CircularReference*>(ex);
 		if (NULL != myExceptionCR)
 		{
-			message = stringLoader->LoadNativeString(IDS_EMSG_DIALOG_LAYOUT_CIRCULAR_REF);
+			message = stringLoader->LoadNativeString(NSID_EMSG_DIALOG_LAYOUT_CIRCULAR_REF);
 			resolved = true;
 		}
 	}

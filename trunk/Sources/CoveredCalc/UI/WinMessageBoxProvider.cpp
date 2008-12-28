@@ -130,7 +130,7 @@ MessageBoxProvider::Button WinMessageBoxProvider::DoMessageBox(
 		break;
 	}
 	
-	MBCString title = CoveredCalcApp::GetInstance()->LoadNativeString(IDS_APPNAME);
+	MBCString title = CoveredCalcApp::GetInstance()->LoadNativeString(NSID_APPNAME);
 	
 	int result = ::MessageBox(hWnd, message, title, uType);
 

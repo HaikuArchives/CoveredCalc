@@ -94,7 +94,7 @@ void BeCoverBrowser::createViews()
 	rgb_color viewColor = { 216, 216, 216, 255 };
 	
 	// dialog title
-	SetTitle(nsl->LoadNativeString(IDS_COVER_BROWSER_TITLE).CString());
+	SetTitle(nsl->LoadNativeString(NSID_COVER_BROWSER_TITLE).CString());
 
 	// BaseView
 	BView* baseView = new BView(Bounds(), COVER_BROWSER_VIEW_BASE_VIEW,
@@ -105,7 +105,7 @@ void BeCoverBrowser::createViews()
 	
 	// CoverListLabel
 	BStringView* coverListLabelView = new BStringView(dch.GetItemRect(ALITERAL("IDC_SELECT_COVER"), ITEMNAME_WINDOW),
-									COVER_BROWSER_VIEW_COVER_LIST_LABEL, nsl->LoadNativeString(IDS_COVER_BROWSER_SELECT_COVER));
+									COVER_BROWSER_VIEW_COVER_LIST_LABEL, nsl->LoadNativeString(NSID_COVER_BROWSER_SELECT_COVER));
 	baseView->AddChild(coverListLabelView);
 	
 	// CoverList
@@ -115,8 +115,8 @@ void BeCoverBrowser::createViews()
 	baseView->AddChild(coverList);
 	
 	// initialize the cover list.
-	coverList->AddColumn(new BStringColumn(nsl->LoadNativeString(IDS_COVER_BROWSER_COLUMN_NAME), 150, 50, INT_MAX, B_TRUNCATE_END, B_ALIGN_LEFT), 0);
-	coverList->AddColumn(new BStringColumn(nsl->LoadNativeString(IDS_COVER_BROWSER_COLUMN_DESCRIPTION), 200, 50, INT_MAX, B_TRUNCATE_END, B_ALIGN_LEFT), 1);	
+	coverList->AddColumn(new BStringColumn(nsl->LoadNativeString(NSID_COVER_BROWSER_COLUMN_NAME), 150, 50, INT_MAX, B_TRUNCATE_END, B_ALIGN_LEFT), 0);
+	coverList->AddColumn(new BStringColumn(nsl->LoadNativeString(NSID_COVER_BROWSER_COLUMN_DESCRIPTION), 200, 50, INT_MAX, B_TRUNCATE_END, B_ALIGN_LEFT), 1);	
 	coverList->SetColumnFlags(B_ALLOW_COLUMN_RESIZE);
 	coverList->SetSelectionMode(B_SINGLE_SELECTION_LIST);
 	coverList->SetInvocationMessage(new BMessage(ID_COVERBROWSER_APPLY));
@@ -124,19 +124,19 @@ void BeCoverBrowser::createViews()
 	// Reload
 	BButton* reloadButton = new BButton(dch.GetItemRect(ALITERAL("IDC_RELOAD"), ITEMNAME_WINDOW),
 									COVER_BROWSER_VIEW_RELOAD_BUTTON,
-									nsl->LoadNativeString(IDS_COVER_BROWSER_RELOAD).CString(), new BMessage(ID_COVERBROWSER_RELOAD));
+									nsl->LoadNativeString(NSID_COVER_BROWSER_RELOAD).CString(), new BMessage(ID_COVERBROWSER_RELOAD));
 	baseView->AddChild(reloadButton);
 	
 	// Apply
 	BButton* applyButton = new BButton(dch.GetItemRect(ALITERAL("IDC_APPLY"), ITEMNAME_WINDOW),
 									COVER_BROWSER_VIEW_APPLY_BUTTON,
-									nsl->LoadNativeString(IDS_COVER_BROWSER_APPLY).CString(), new BMessage(ID_COVERBROWSER_APPLY));
+									nsl->LoadNativeString(NSID_COVER_BROWSER_APPLY).CString(), new BMessage(ID_COVERBROWSER_APPLY));
 	baseView->AddChild(applyButton);
 	
 	// Close
 	BButton* closeButton = new BButton(dch.GetItemRect(ALITERAL("IDCLOSE"), ITEMNAME_WINDOW),
 									COVER_BROWSER_VIEW_CLOSE_BUTTON,
-									nsl->LoadNativeString(IDS_COVER_BROWSER_CLOSE).CString(), new BMessage(ID_COVERBROWSER_CLOSE));
+									nsl->LoadNativeString(NSID_COVER_BROWSER_CLOSE).CString(), new BMessage(ID_COVERBROWSER_CLOSE));
 	baseView->AddChild(closeButton);
 }
 
@@ -149,13 +149,13 @@ void BeCoverBrowser::languageChanged()
 	NativeStringLoader* nsl = CoveredCalcApp::GetInstance();
 
 	// dialog title
-	SetTitle(nsl->LoadNativeString(IDS_COVER_BROWSER_TITLE).CString());
+	SetTitle(nsl->LoadNativeString(NSID_COVER_BROWSER_TITLE).CString());
 	
 	// CoverListLabel
 	BStringView* coverListLabelView = dynamic_cast<BStringView*>(FindView(COVER_BROWSER_VIEW_COVER_LIST_LABEL));
 	if (NULL != coverListLabelView)
 	{
-		coverListLabelView->SetText(nsl->LoadNativeString(IDS_COVER_BROWSER_SELECT_COVER));
+		coverListLabelView->SetText(nsl->LoadNativeString(NSID_COVER_BROWSER_SELECT_COVER));
 	}
 	
 	// CoverList
@@ -163,12 +163,12 @@ void BeCoverBrowser::languageChanged()
 	column = dynamic_cast<BStringColumn*>(coverList->ColumnAt(0));
 	if (NULL != column)
 	{
-		column->SetTitle(nsl->LoadNativeString(IDS_COVER_BROWSER_COLUMN_NAME).CString());
+		column->SetTitle(nsl->LoadNativeString(NSID_COVER_BROWSER_COLUMN_NAME).CString());
 	}
 	column = dynamic_cast<BStringColumn*>(coverList->ColumnAt(1));
 	if (NULL != column)
 	{
-		column->SetTitle(nsl->LoadNativeString(IDS_COVER_BROWSER_COLUMN_DESCRIPTION).CString());
+		column->SetTitle(nsl->LoadNativeString(NSID_COVER_BROWSER_COLUMN_DESCRIPTION).CString());
 	}
 	coverList->Hide();	// reflesh coverList's title
 	coverList->Show();
@@ -177,21 +177,21 @@ void BeCoverBrowser::languageChanged()
 	BButton* reloadButton = dynamic_cast<BButton*>(FindView(COVER_BROWSER_VIEW_RELOAD_BUTTON));
 	if (NULL != reloadButton)
 	{
-		reloadButton->SetLabel(nsl->LoadNativeString(IDS_COVER_BROWSER_RELOAD).CString());
+		reloadButton->SetLabel(nsl->LoadNativeString(NSID_COVER_BROWSER_RELOAD).CString());
 	}
 
 	// Apply
 	BButton* applyButton = dynamic_cast<BButton*>(FindView(COVER_BROWSER_VIEW_APPLY_BUTTON));
 	if (NULL != applyButton)
 	{
-		applyButton->SetLabel(nsl->LoadNativeString(IDS_COVER_BROWSER_APPLY).CString());
+		applyButton->SetLabel(nsl->LoadNativeString(NSID_COVER_BROWSER_APPLY).CString());
 	}
 
 	// Close
 	BButton* closeButton = dynamic_cast<BButton*>(FindView(COVER_BROWSER_VIEW_CLOSE_BUTTON));
 	if (NULL != closeButton)
 	{
-		closeButton->SetLabel(nsl->LoadNativeString(IDS_COVER_BROWSER_CLOSE).CString());
+		closeButton->SetLabel(nsl->LoadNativeString(NSID_COVER_BROWSER_CLOSE).CString());
 	}	
 }
 #endif

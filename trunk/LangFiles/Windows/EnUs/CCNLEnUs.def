@@ -1,8 +1,0 @@
-LIBRARY		"enUS"
-DESCRIPTION	"CoveredCalc Language File for English (US)"
-
-EXPORTS
-	CCNLGetVersion			@1
-	CCNLGetLanguageCode		@2
-	CCNLGetLanguageName		@3
-	CCNLGetLangID			@4

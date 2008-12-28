@@ -36,6 +36,7 @@
 #include "BeSkinView.h"
 #include "MainUIController.h"
 #include "BeDeskbarPseudoWindow.h"
+#include "BeDialogManager.h"
 
 class BeXMLLangFile;
 class BPopUpMenu;
@@ -71,10 +72,29 @@ protected:
 	virtual SInt32			getMenuCommand(uint32 menuCommand);
 
 private:
-	BMessenger*				aboutDialogMessenger;	//!< messenger to existing about dialog object
-	BMessenger*				aboutCCDialogMessenger;	//!< messenger to about current cover dialog object.
-	BMessenger*				prefDialogMessenger;	///< messenger to preferences dialog object.
 	BeDeskbarPseudoWindow*	deskbarWindow;		///< pseudo window for main window.
+
+private:
+	class BeAboutDialogManager : public BeGenericDialogManager
+	{
+	protected:
+		virtual BeDialog*	newDialogObject();
+	};
+	BeAboutDialogManager	aboutDialogManager;	//!< About dialog manager object.
+
+	class BeAboutCCDialogManager : public BeGenericDialogManager
+	{
+	protected:
+		virtual BeDialog*	newDialogObject();
+	};
+	BeAboutCCDialogManager	aboutCCDialogManager;	//!< About Current Cover dialog manager object.
+	
+	class BePrefDialogManager : public BeGenericDialogManager
+	{
+	protected:
+		virtual BeDialog*	newDialogObject();
+	};
+	BePrefDialogManager		prefDialogManager;	//!< Preferences dialog manager object.
 };
 
 #endif // _BEMAINVIEW_H_

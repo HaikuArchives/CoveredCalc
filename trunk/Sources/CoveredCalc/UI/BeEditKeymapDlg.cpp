@@ -105,7 +105,7 @@ void BeEditKeymapDlg::createViews()
 	BRect frameRect;
 
 	// dialog title
-	SetTitle(nsl->LoadNativeString(IDS_EDIT_KEYMAP_TITLE).CString());
+	SetTitle(nsl->LoadNativeString(NSID_EDIT_KEYMAP_TITLE).CString());
 
 	// BaseView
 	BView* baseView = new BView(Bounds(), EDITKEYMAP_DIALOG_VIEW_BASE_VIEW,
@@ -116,7 +116,7 @@ void BeEditKeymapDlg::createViews()
 	
 	// NameText
 	BTextControl* nameText = new BTextControl(dch.GetItemRect(ALITERAL("IDC_EDIT_NAME"), ITEMNAME_WINDOW), EDITKEYMAP_DIALOG_VIEW_NAME_NAME_TEXT,
-							nsl->LoadNativeString(IDS_EDIT_KEYMAP_NAME).CString(), "", NULL);
+							nsl->LoadNativeString(NSID_EDIT_KEYMAP_NAME).CString(), "", NULL);
 	baseView->AddChild(nameText);
 	
 	nameText->SetDivider(dch.GetItemPos(true, ALITERAL("IDC_EDIT_NAME.divider"), ALITERAL("IDC_EDIT_NAME.left")));
@@ -128,11 +128,11 @@ void BeEditKeymapDlg::createViews()
 	BBox* functionBox = new BBox(dch.GetItemRect(itemnameFunctionBox, ITEMNAME_WINDOW), EDITKEYMAP_DIALOG_VIEW_FUNCTION_BOX);
 	baseView->AddChild(functionBox);
 	
-	functionBox->SetLabel(nsl->LoadNativeString(IDS_EDIT_KEYMAP_GROUP_FUNCTION));
+	functionBox->SetLabel(nsl->LoadNativeString(NSID_EDIT_KEYMAP_GROUP_FUNCTION));
 	
 	// FunctionLabel
 	BStringView* functionLabel = new BStringView(dch.GetItemRect(ALITERAL("IDC_STATIC_FUNCTION"), itemnameFunctionBox), EDITKEYMAP_DIALOG_VIEW_FUNCTION_LABEL,
-							nsl->LoadNativeString(IDS_EDIT_KEYMAP_FUNCTION));
+							nsl->LoadNativeString(NSID_EDIT_KEYMAP_FUNCTION));
 	functionBox->AddChild(functionLabel);
 	
 	// FunctionList
@@ -150,7 +150,7 @@ void BeEditKeymapDlg::createViews()
 	
 	// CurrentKeyLabel
 	BStringView* currentKeyLabel = new BStringView(dch.GetItemRect(ALITERAL("IDC_STATIC_CURRENT_KEY"), itemnameFunctionBox),
-							EDITKEYMAP_DIALOG_VIEW_CURRENT_KEY_LABEL, nsl->LoadNativeString(IDS_EDIT_KEYMAP_CURRENT_KEY));
+							EDITKEYMAP_DIALOG_VIEW_CURRENT_KEY_LABEL, nsl->LoadNativeString(NSID_EDIT_KEYMAP_CURRENT_KEY));
 	functionBox->AddChild(currentKeyLabel);
 	
 	// CurrentKeyList
@@ -168,7 +168,7 @@ void BeEditKeymapDlg::createViews()
 	
 	// RemoveButton
 	BButton* removeButton = new BButton(dch.GetItemRect(ALITERAL("IDC_REMOVE"), ITEMNAME_WINDOW), EDITKEYMAP_DIALOG_VIEW_REMOVE_BUTTON,
-							nsl->LoadNativeString(IDS_EDIT_KEYMAP_REMOVE), new BMessage(ID_EDITKEYMAP_REMOVE));
+							nsl->LoadNativeString(NSID_EDIT_KEYMAP_REMOVE), new BMessage(ID_EDITKEYMAP_REMOVE));
 	baseView->AddChild(removeButton);
 	uicRemoveButton.Init(removeButton);
 	
@@ -177,11 +177,11 @@ void BeEditKeymapDlg::createViews()
 	BBox* keyBox = new BBox(dch.GetItemRect(itemnameKeyBox, ITEMNAME_WINDOW), EDITKEYMAP_DIALOG_VIEW_KEY_BOX);
 	baseView->AddChild(keyBox);
 	
-	keyBox->SetLabel(nsl->LoadNativeString(IDS_EDIT_KEYMAP_GROUP_KEY));
+	keyBox->SetLabel(nsl->LoadNativeString(NSID_EDIT_KEYMAP_GROUP_KEY));
 	
 	// KeyLabel
 	BStringView* keyLabel = new BStringView(dch.GetItemRect(ALITERAL("IDC_STATIC_KEY"), itemnameKeyBox),
-							EDITKEYMAP_DIALOG_VIEW_KEY_LABEL, nsl->LoadNativeString(IDS_EDIT_KEYMAP_KEY));
+							EDITKEYMAP_DIALOG_VIEW_KEY_LABEL, nsl->LoadNativeString(NSID_EDIT_KEYMAP_KEY));
 	keyBox->AddChild(keyLabel);
 	
 	// KeyInput
@@ -196,7 +196,7 @@ void BeEditKeymapDlg::createViews()
 	
 	// AssignedFuncLabel
 	BStringView* assignedFuncLabel = new BStringView(dch.GetItemRect(ALITERAL("IDC_STATIC_ASSIGNED_FUNCTION"), itemnameKeyBox),
-							EDITKEYMAP_DIALOG_VIEW_ASSIGNED_FUNC_LABEL, nsl->LoadNativeString(IDS_EDIT_KEYMAP_ASSIGNED_FUNCTION));
+							EDITKEYMAP_DIALOG_VIEW_ASSIGNED_FUNC_LABEL, nsl->LoadNativeString(NSID_EDIT_KEYMAP_ASSIGNED_FUNCTION));
 	keyBox->AddChild(assignedFuncLabel);
 	
 	// AssignedFuncText
@@ -210,19 +210,19 @@ void BeEditKeymapDlg::createViews()
 	
 	// AssignButton
 	BButton* assignButton = new BButton(dch.GetItemRect(ALITERAL("IDC_ASSIGN"), ITEMNAME_WINDOW), EDITKEYMAP_DIALOG_VIEW_ASSIGN_BUTTON,
-							nsl->LoadNativeString(IDS_EDIT_KEYMAP_ASSIGN), new BMessage(ID_EDITKEYMAP_ASSIGN));
+							nsl->LoadNativeString(NSID_EDIT_KEYMAP_ASSIGN), new BMessage(ID_EDITKEYMAP_ASSIGN));
 	baseView->AddChild(assignButton);
 	uicAssignButton.Init(assignButton);
 	
 	// CancelButton
 	BButton* cancelButton = new BButton(dch.GetItemRect(ALITERAL("IDCANCEL"), ITEMNAME_WINDOW), EDITKEYMAP_DIALOG_VIEW_CANCEL,
-								nsl->LoadNativeString(IDS_EDIT_KEYMAP_CANCEL), new BMessage(ID_DIALOG_CANCEL));
+								nsl->LoadNativeString(NSID_EDIT_KEYMAP_CANCEL), new BMessage(ID_DIALOG_CANCEL));
 	baseView->AddChild(cancelButton);
 	uicCancelButton.Init(cancelButton);
 
 	// OKButton
 	BButton* okButton = new BButton(dch.GetItemRect(ALITERAL("IDOK"), ITEMNAME_WINDOW), EDITKEYMAP_DIALOG_VIEW_OK,
-								nsl->LoadNativeString(IDS_EDIT_KEYMAP_OK), new BMessage(ID_DIALOG_OK));
+								nsl->LoadNativeString(NSID_EDIT_KEYMAP_OK), new BMessage(ID_DIALOG_OK));
 	baseView->AddChild(okButton);
 	
 	SetDefaultButton(okButton);
@@ -238,27 +238,27 @@ void BeEditKeymapDlg::languageChanged()
 	NativeStringLoader* nsl = CoveredCalcApp::GetInstance();
 
 	// dialog title
-	SetTitle(nsl->LoadNativeString(IDS_EDIT_KEYMAP_TITLE).CString());
+	SetTitle(nsl->LoadNativeString(NSID_EDIT_KEYMAP_TITLE).CString());
 	
 	// NameText
 	BTextControl* nameText = dynamic_cast<BTextControl*>(FindView(EDITKEYMAP_DIALOG_VIEW_NAME_NAME_TEXT));
 	if (NULL != nameText)
 	{
-		nameText->SetLabel(nsl->LoadNativeString(IDS_EDIT_KEYMAP_NAME));
+		nameText->SetLabel(nsl->LoadNativeString(NSID_EDIT_KEYMAP_NAME));
 	}
 	
 	// FunctionBox
 	BBox* functionBox = dynamic_cast<BBox*>(FindView(EDITKEYMAP_DIALOG_VIEW_FUNCTION_BOX));
 	if (NULL != functionBox)
 	{
-		functionBox->SetLabel(nsl->LoadNativeString(IDS_EDIT_KEYMAP_GROUP_FUNCTION));
+		functionBox->SetLabel(nsl->LoadNativeString(NSID_EDIT_KEYMAP_GROUP_FUNCTION));
 	}
 
 	// FunctionLabel
 	BStringView* functionLabel = dynamic_cast<BStringView*>(FindView(EDITKEYMAP_DIALOG_VIEW_FUNCTION_LABEL));
 	if (NULL != functionLabel)
 	{
-		functionLabel->SetText(nsl->LoadNativeString(IDS_EDIT_KEYMAP_FUNCTION));
+		functionLabel->SetText(nsl->LoadNativeString(NSID_EDIT_KEYMAP_FUNCTION));
 	}
 	
 	// FunctionList
@@ -284,7 +284,7 @@ void BeEditKeymapDlg::languageChanged()
 	BStringView* currentKeyLabel = dynamic_cast<BStringView*>(FindView(EDITKEYMAP_DIALOG_VIEW_CURRENT_KEY_LABEL));
 	if (NULL != currentKeyLabel)
 	{
-		currentKeyLabel->SetText(nsl->LoadNativeString(IDS_EDIT_KEYMAP_CURRENT_KEY));
+		currentKeyLabel->SetText(nsl->LoadNativeString(NSID_EDIT_KEYMAP_CURRENT_KEY));
 	}
 
 	// CurrentKeyList
@@ -311,21 +311,21 @@ void BeEditKeymapDlg::languageChanged()
 	BButton* removeButton = dynamic_cast<BButton*>(FindView(EDITKEYMAP_DIALOG_VIEW_REMOVE_BUTTON));
 	if (NULL != removeButton)
 	{
-		removeButton->SetLabel(nsl->LoadNativeString(IDS_EDIT_KEYMAP_REMOVE));
+		removeButton->SetLabel(nsl->LoadNativeString(NSID_EDIT_KEYMAP_REMOVE));
 	}
 	
 	// KeyBox
 	BBox* keyBox = dynamic_cast<BBox*>(FindView(EDITKEYMAP_DIALOG_VIEW_KEY_BOX));
 	if (NULL != keyBox)
 	{
-		keyBox->SetLabel(nsl->LoadNativeString(IDS_EDIT_KEYMAP_GROUP_KEY));
+		keyBox->SetLabel(nsl->LoadNativeString(NSID_EDIT_KEYMAP_GROUP_KEY));
 	}
 	
 	// KeyLabel
 	BStringView* keyLabel = dynamic_cast<BStringView*>(FindView(EDITKEYMAP_DIALOG_VIEW_KEY_LABEL));
 	if (NULL != keyLabel)
 	{
-		keyLabel->SetText(nsl->LoadNativeString(IDS_EDIT_KEYMAP_KEY));
+		keyLabel->SetText(nsl->LoadNativeString(NSID_EDIT_KEYMAP_KEY));
 	}
 	
 	// AssignedFuncLabel
@@ -333,7 +333,7 @@ void BeEditKeymapDlg::languageChanged()
 	BStringView* assignedFuncLabel = dynamic_cast<BStringView*>(FindView(EDITKEYMAP_DIALOG_VIEW_ASSIGNED_FUNC_LABEL));
 	if (NULL != assignedFuncLabel)
 	{
-		assignedFuncLabel->SetText(nsl->LoadNativeString(IDS_EDIT_KEYMAP_ASSIGNED_FUNCTION));
+		assignedFuncLabel->SetText(nsl->LoadNativeString(NSID_EDIT_KEYMAP_ASSIGNED_FUNCTION));
 	}
 
 	// AssignedFuncText
@@ -344,7 +344,7 @@ void BeEditKeymapDlg::languageChanged()
 	BButton* assignButton = dynamic_cast<BButton*>(FindView(EDITKEYMAP_DIALOG_VIEW_ASSIGN_BUTTON));
 	if (NULL != assignButton)
 	{
-		assignButton->SetLabel(nsl->LoadNativeString(IDS_EDIT_KEYMAP_ASSIGN));
+		assignButton->SetLabel(nsl->LoadNativeString(NSID_EDIT_KEYMAP_ASSIGN));
 	}
 	
 	// CancelButton
@@ -352,7 +352,7 @@ void BeEditKeymapDlg::languageChanged()
 	BButton* cancelButton = dynamic_cast<BButton*>(FindView(EDITKEYMAP_DIALOG_VIEW_CANCEL));
 	if (NULL != cancelButton)
 	{
-		cancelButton->SetLabel(nsl->LoadNativeString(IDS_EDIT_KEYMAP_CANCEL));
+		cancelButton->SetLabel(nsl->LoadNativeString(NSID_EDIT_KEYMAP_CANCEL));
 	}
 	
 	// OKButton
@@ -360,7 +360,7 @@ void BeEditKeymapDlg::languageChanged()
 	BButton* okButton = dynamic_cast<BButton*>(FindView(EDITKEYMAP_DIALOG_VIEW_OK));
 	if (NULL != okButton)
 	{
-		okButton->SetLabel(nsl->LoadNativeString(IDS_EDIT_KEYMAP_OK));
+		okButton->SetLabel(nsl->LoadNativeString(NSID_EDIT_KEYMAP_OK));
 	}
 }
 #endif 
