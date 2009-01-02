@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -48,7 +48,7 @@ class MainUIController;
 // ---------------------------------------------------------------------
 //! This class manages user interface of a main window
 // ---------------------------------------------------------------------
-class MainUIManager : public UIManager, public ButtonUITaskEventHandler, public CalcDisplay, public CoverChangeEventHandler
+class MainUIManager : public UIManager, public ButtonUITaskEventHandler, public CalcDisplay
 {
 public:
 								MainUIManager();
@@ -80,10 +80,6 @@ public:
 	virtual void				DisplayOperator(CalcCore::Operator /*op*/) { }
 	virtual	void				DisplayDigitForm(CalcCore::DigitForm form);
 	virtual	void				DisplayError(CalcCore::Error error);
-
-	// implementations of CoverChangeEventHandler interface
-	virtual void				CoverDefChanged();
-	virtual void				CurrentCoverChanged();
 
 	MainUIController*			GetMainUIController() { return mainUIController; }
 	const MainUIController*		GetMainUIController() const { return mainUIController; }

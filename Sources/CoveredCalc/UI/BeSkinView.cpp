@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -44,8 +44,10 @@
 #include "BeCCSAppearance.h"
 #include "MemoryException.h"
 #include "ExceptionMessageUtils.h"
+#include "CommandID.h"
 
 #define MSG_TIMER_MOUSEHOVER	'tmmh'
+#define MSG_REREAD_SKIN			'rrsk'
 
 ////////////////////////////////////////
 #define base	BView
@@ -107,6 +109,10 @@ void BeSkinView::Init()
 	}
 	
 	uiManager = createUIManager();
+
+	// register CoverChangedEventHandler
+	CoverManager* manager = CoveredCalcApp::GetInstance()->GetCoverManager();
+	manager->RegisterCoverChangeEventHandler(this);
 }
 
 // ---------------------------------------------------------------------
@@ -114,6 +120,10 @@ void BeSkinView::Init()
 // ---------------------------------------------------------------------
 void BeSkinView::Quit()
 {
+	// unregister CoverChangedEventHandler
+	CoverManager* manager = CoveredCalcApp::GetInstance()->GetCoverManager();
+	manager->UnregisterCoverChangeEventHandler(this);
+	
 	if (NULL != uiManager)
 	{
 		deleteUIManager(uiManager);
@@ -729,6 +739,36 @@ void BeSkinView::KeyUp(
 }
 
 /**
+ *	@brief	Called when cover definition is changed.
+ */
+void BeSkinView::CoverDefChanged()
+{
+	if (Window()->Thread() == find_thread(NULL))
+	{
+		uiManager->RereadSkin();
+	}
+	else
+	{
+		BMessenger(this).SendMessage(MSG_REREAD_SKIN);
+	}
+}
+
+/**
+ *	@brief	Called when current cover number is changed.
+ */
+void BeSkinView::CurrentCoverChanged()
+{
+	if (Window()->Thread() == find_thread(NULL))
+	{
+		uiManager->RereadSkin();
+	}
+	else
+	{
+		BMessenger(this).SendMessage(MSG_REREAD_SKIN);
+	}
+}
+
+/**
  *	@brief	message handler.
  */
 void BeSkinView::MessageReceived(BMessage *message)
@@ -738,6 +778,10 @@ void BeSkinView::MessageReceived(BMessage *message)
 		if (MSG_TIMER_MOUSEHOVER == message->what)
 		{
 			timerCommandReceived(message->what);
+		}
+		else if (MSG_REREAD_SKIN == message->what)
+		{
+			uiManager->RereadSkin();
 		}
 		else
 		{

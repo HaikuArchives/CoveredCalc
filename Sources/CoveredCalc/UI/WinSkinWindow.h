@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -37,6 +37,7 @@
 #include "UIController.h"
 #include "WinCCSAppearance.h"
 #include "WinMessageFilter.h"
+#include "CoverChangeEventHandler.h"
 
 class UIManager;
 class WinDialog;
@@ -48,7 +49,7 @@ class WinDialog;
 	このクラスを継承します。
 */
 // ---------------------------------------------------------------------
-class WinSkinWindow : public CHrnWnd, public UIController, public WinMessageFilter
+class WinSkinWindow : public CHrnWnd, public UIController, public WinMessageFilter, public CoverChangeEventHandler
 {
 public:
 	/// ユーザ定義メッセージ
@@ -87,6 +88,10 @@ public:
 
 	// WinMessageFilter クラスの実装
 	virtual bool			FilterMessage(MSG* msg);
+
+	// CoverChangeEventHandler interface
+	virtual void			CoverDefChanged();
+	virtual void			CurrentCoverChanged();
 
 protected:
 	virtual UIManager*		createUIManager() = 0;

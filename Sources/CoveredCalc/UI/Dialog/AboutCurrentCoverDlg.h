@@ -24,40 +24,45 @@
  */
 
 /*!
-	@file		BeAboutCurrentCoverDialog.h
-	@brief		Definition of BeAboutCurrentCoverDialog class
+	@file		AboutCurrentCoverDlg.h
+	@brief		Definition of AboutCurrentCoverDlg class
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2005.02.24 created
+	@date		2005.02.02 created
 */
 
-#ifndef _BEABOUTCURRENTCOVERDIALOG_H_
-#define _BEABOUTCURRENTCOVERDIALOG_H_
+#ifndef _ABOUTCURRENTCOVERDLG_H_
+#define _ABOUTCURRENTCOVERDLG_H_
 
-#include "BeDialog.h"
-#include "AboutCurrentCoverDlg.h"
+#include "CoverChangeEventHandler.h"
+
+class CoverDef;
+class UICTextEdit;
 
 // ---------------------------------------------------------------------
-//! About current cover dialog on BeOS.
+//! This dialog shows informations about the current cover.
 // ---------------------------------------------------------------------
-class BeAboutCurrentCoverDialog : public BeDialog, public AboutCurrentCoverDlg
+class AboutCurrentCoverDlg : public CoverChangeEventHandler
 {
 public:
-								BeAboutCurrentCoverDialog();
-	virtual						~BeAboutCurrentCoverDialog();
-	
-protected:
-	virtual void				initDialog();
-	virtual void				MessageReceived(BMessage *message);
-	virtual bool				QuitRequested();
+								AboutCurrentCoverDlg();
+	virtual						~AboutCurrentCoverDlg();
 
-	virtual	void				setDataToDialog(const CoverDef* coverDef);
-#if defined (ZETA)
-	virtual void				languageChanged();
-#endif
+	// implementations of CoverChangeEventHandler interface
+	virtual void				CoverDefChanged();
+	virtual void				CurrentCoverChanged();
+
+protected:
+	virtual UICTextEdit*		getNameTextEdit() = 0;
+	virtual UICTextEdit*		getDescriptionTextEdit() = 0;
+	virtual UICTextEdit*		getAboutTextEdit() = 0;
+
+protected:
+	void						initialize();
+	void						terminate();
+	virtual void				update();
 
 private:
-	void						createViews();
-	void						setDataToDialogInThisThread(const CoverDef* coverDef);
+	void						setDataToDialog(const CoverDef* coverDef);
 };
 
-#endif // _BEABOUTCURRENTCOVERDIALOG_H_
+#endif // _ABOUTCURRENTCOVERDLG_H_

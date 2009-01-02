@@ -90,32 +90,23 @@ SRCS= \
 	../Storage/BeFile.cpp \
 	../Storage/FileException.cpp \
 	../Storage/Path.cpp \
-	../UI/AboutCurrentCoverDlg.cpp \
-	../UI/BeAboutCurrentCoverDialog.cpp \
-	../UI/BeAboutDialog.cpp \
 	../UI/BeCCSAppearance.cpp \
 	../UI/BeCoverBrowser.cpp \
 	../UI/BeDeskbarPseudoWindow.cpp \
-	../UI/BeDialog.cpp \
-	../UI/BeDialogManager.cpp \
-	../UI/BeEditKeymapDlg.cpp \
 	../UI/BeKeyEventFilter.cpp \
 	../UI/BeMainView.cpp \
 	../UI/BeMainWindow.cpp \
 	../UI/BeMessageBoxProvider.cpp \
-	../UI/BePreferencesDlg.cpp \
 	../UI/BeSkinView.cpp \
 	../UI/BeSkinWindow.cpp \
 	../UI/ButtonUITask.cpp \
 	../UI/CoverBrowser.cpp \
-	../UI/EditKeymapDlg.cpp \
 	../UI/KeyMappingManager.cpp \
 	../UI/KeyNameDB.cpp \
 	../UI/MainUIManager.cpp \
 	../UI/MainWindowKeyFunc.cpp \
 	../UI/MouseHoverUITask.cpp \
 	../UI/MovingUITask.cpp \
-	../UI/PreferencesDlg.cpp \
 	../UI/UIManager.cpp \
 	../UI/UITaskManager.cpp \
 	../UI/Message/ExceptionMessageGenerator.cpp \
@@ -123,13 +114,23 @@ SRCS= \
 	../UI/Control/BeCCColumnListView.cpp \
 	../UI/Control/BeKeyInputEdit.cpp \
 	../UI/Control/BeToolTipWindow.cpp \
-	../UI/Dialog/BeDialogControlHelper.cpp \
-	../UI/Dialog/DialogLayout.cpp \
+	../UI/Dialog/AboutCurrentCoverDlg.cpp \
+	../UI/Dialog/BeAboutCurrentCoverDialog.cpp \
+	../UI/Dialog/BeAboutDialog.cpp \
+	../UI/Dialog/BeDialog.cpp \
+	../UI/Dialog/BeEditKeymapDlg.cpp \
+	../UI/Dialog/BePreferencesDlg.cpp \
+	../UI/Dialog/EditKeymapDlg.cpp \
+	../UI/Dialog/PreferencesDlg.cpp \
+	../UI/DialogUtility/BeDialogControlHelper.cpp \
+	../UI/DialogUtility/BeDialogManager.cpp \
+	../UI/DialogUtility/DialogLayout.cpp \
 	../UI/UIComponent/BeControlAdapter.cpp \
 	../UI/UIComponent/BeKeyInputAdapter.cpp \
 	../UI/UIComponent/BeLabeledControlAdapter.cpp \
 	../UI/UIComponent/BeListViewAdapter.cpp \
 	../UI/UIComponent/BeTextControlAdapter.cpp \
+	../UI/UIComponent/BeTextViewAdapter.cpp \
 	../UI/UIComponent/BeViewAdapter.cpp \
 	../Utility/ExceptionMessageUtils.cpp \
 	../Utility/MessageFormatter.cpp \

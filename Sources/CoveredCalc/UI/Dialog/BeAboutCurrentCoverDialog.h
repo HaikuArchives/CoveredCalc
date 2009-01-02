@@ -24,37 +24,51 @@
  */
 
 /*!
-	@file		WinAboutCurrentCoverDlg.h
-	@brief		Definition of WinAboutCurrentCoverDlg class
+	@file		BeAboutCurrentCoverDialog.h
+	@brief		Definition of BeAboutCurrentCoverDialog class
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2005.02.05 created
+	@date		2005.02.24 created
 */
 
-#ifndef _WINABOUTCURRENTCOVERDLG_H_
-#define _WINABOUTCURRENTCOVERDLG_H_
+#ifndef _BEABOUTCURRENTCOVERDIALOG_H_
+#define _BEABOUTCURRENTCOVERDIALOG_H_
 
-#include "WinDialog.h"
+#include "BeDialog.h"
 #include "AboutCurrentCoverDlg.h"
+#include "UICTextEditImpl.h"
 
 // ---------------------------------------------------------------------
-//! 現在のカバーについてダイアログ for Windows
+//! About current cover dialog on BeOS.
 // ---------------------------------------------------------------------
-class WinAboutCurrentCoverDlg : public WinDialog, public AboutCurrentCoverDlg
+class BeAboutCurrentCoverDialog : public BeDialog, public AboutCurrentCoverDlg
 {
 public:
-						WinAboutCurrentCoverDlg();
-						~WinAboutCurrentCoverDlg();
+								BeAboutCurrentCoverDialog();
+	virtual						~BeAboutCurrentCoverDialog();
+
 protected:
-	virtual LRESULT		wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual	void				update();	// override AboutCurrentCoverDlg::update()
 
-	virtual	void		setDataToDialog(const CoverDef* coverDef);
+	virtual void				initDialog();
+	virtual void				MessageReceived(BMessage *message);
+	virtual bool				QuitRequested();
+
+#if defined (ZETA)
+	virtual void				languageChanged();
+#endif
+
+	virtual UICTextEdit*		getNameTextEdit() { return &uicNameTextEdit; }
+	virtual UICTextEdit*		getDescriptionTextEdit() { return &uicDescriptionTextEdit; }
+	virtual UICTextEdit*		getAboutTextEdit() { return &uicAboutTextEdit; }
 
 private:
-	LRESULT				onInitDialog(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	LRESULT				onDestroy(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	void						createViews();
+	void						setDataToDialogInThisThread(const CoverDef* coverDef);
 
 private:
-	void				createControls();
+	UICTextEditViewImpl			uicNameTextEdit;
+	UICTextEditViewImpl			uicDescriptionTextEdit;
+	UICTextEditViewImpl			uicAboutTextEdit;
 };
 
-#endif // _WINABOUTCURRENTCOVERDLG_H_
+#endif // _BEABOUTCURRENTCOVERDIALOG_H_

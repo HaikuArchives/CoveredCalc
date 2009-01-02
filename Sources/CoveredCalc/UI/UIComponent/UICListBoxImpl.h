@@ -24,14 +24,14 @@
  */
 
 /*!
-	@file		DefaultUICListBox.h
-	@brief		Definition of DefaultUICListBox class.
+	@file		UICListBoxImpl.h
+	@brief		Definition of UICListBoxImpl class.
 	@author		ICHIMIYA Hironori (Hiron)
 	@date		2008.05.28 created
 */
 
-#ifndef _DEFAULTUICLISTBOX_H_
-#define _DEFAULTUICLISTBOX_H_
+#ifndef _UICLISTBOXIMPL_H_
+#define _UICLISTBOXIMPL_H_
 
 #include "UICListBox.h"
 
@@ -44,11 +44,11 @@
 /**
  *	@brief	List-box component interface.
  */
-class DefaultUICListBox : public UICListBox
+class UICListBoxImpl : public UICListBox
 {
 public:
-						DefaultUICListBox() { }
-	virtual				~DefaultUICListBox() { }
+						UICListBoxImpl() { }
+	virtual				~UICListBoxImpl() { }
 	
 	virtual bool		IsEnabled() { return delegateObj.IsEnabled(); }
 	virtual void		Enable(bool isEnabled) { delegateObj.Enable(isEnabled); }
@@ -84,4 +84,4 @@ private:
 #endif
 };
 
-#endif // _DEFAULTUICLISTBOX_H_
+#endif // _UICLISTBOXIMPL_H_

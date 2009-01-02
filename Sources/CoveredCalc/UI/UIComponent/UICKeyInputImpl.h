@@ -24,53 +24,58 @@
  */
 
 /*!
-	@file		DefaultUICButton.h
-	@brief		Definition of DefaultUICButton class.
+	@file		UICKeyInputImpl.h
+	@brief		Definition of UICKeyInputImpl class.
 	@author		ICHIMIYA Hironori (Hiron)
 	@date		2008.05.28 created
 */
 
-#ifndef _DEFAULTUICBUTTON_H_
-#define _DEFAULTUICBUTTON_H_
+#ifndef _UICKEYINPUTIMPL_H_
+#define _UICKEYINPUTIMPL_H_
 
-#include "UICButton.h"
+#include "UICKeyInput.h"
 
 #if defined (WIN32)
-#include "WinTextControlAdapter.h"
+#include "WinKeyInputAdapter.h"
 #elif defined (BEOS)
-#include "BeLabeledControlAdapter.h"
+#include "BeKeyInputAdapter.h"
 #endif
 
 /**
- *	@brief	Default implementation of UICButton interface.
+ *	@brief	 implementation of UICKeyInputImpl interface.
  */
-class DefaultUICButton : public UICButton
+class UICKeyInputImpl : public UICKeyInput
 {
 public:
-								DefaultUICButton() { }
-	virtual						~DefaultUICButton() { }
+										UICKeyInputImpl() { }
+	virtual								~UICKeyInputImpl() { }
 	
-	virtual bool				IsEnabled() { return delegateObj.IsEnabled(); }
-	virtual void				Enable(bool isEnabled) { delegateObj.Enable(isEnabled); }
+	virtual bool						IsEnabled() { return delegateObj.IsEnabled(); }
+	virtual void						Enable(bool isEnabled) { delegateObj.Enable(isEnabled); }
 	
-	virtual void				MakeFocus() { delegateObj.MakeFocus(); }
+	virtual void						MakeFocus() { delegateObj.MakeFocus(); }
 	
-	virtual void				SetText(ConstAStr text) { delegateObj.SetText(text); }
-	virtual void				GetText(MBCString& text) { delegateObj.GetText(text); }
+	virtual void						SetKeyEventParameter(const KeyEventParameter& param)
+													{ delegateObj.SetKeyEventParameter(param); }
+	virtual const KeyEventParameter&	GetKeyEventParameter()
+													{ return delegateObj.GetKeyEventParameter(); }
+
+	virtual void						StopValueChangedNotification(bool doStop)
+													{ return delegateObj.StopValueChangedNotification(doStop); }
 
 #if defined (WIN32)
 public:
-	void						Init(HWND hControl) { delegateObj.Init(hControl); }
-	WinTextControlAdapter*		GetRawAdapter() { return &delegateObj; }
+	void								Init(WinKeyInputEdit* keyInputEdit) { delegateObj.Init(keyInputEdit); }
+	WinKeyInputAdapter*					GetRawAdapter() { return &delegateObj; }
 private:
-	WinTextControlAdapter		delegateObj;
+	WinKeyInputAdapter					delegateObj;
 #elif defined (BEOS)
 public:
-	void						Init(BControl* view) { delegateObj.Init(view); }
-	BeLabeledControlAdapter*	GetRawAdapter() { return &delegateObj; }
+	void								Init(BeKeyInputEdit* view) { delegateObj.Init(view); }
+	BeKeyInputAdapter*					GetRawAdapter() { return &delegateObj; }
 private:
-	BeLabeledControlAdapter		delegateObj;
+	BeKeyInputAdapter					delegateObj;
 #endif
 };
 
-#endif // _DEFAULTUICBUTTON_H_
+#endif // _UICKEYINPUTIMPL_H_

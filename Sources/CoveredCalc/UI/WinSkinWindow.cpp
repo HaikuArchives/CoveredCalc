@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -568,6 +568,22 @@ void WinSkinWindow::EndTimer(UIController::TimerID timerId)
 	}
 }
 
+/**
+ *	@brief	Called when cover definition is changed.
+ */
+void WinSkinWindow::CoverDefChanged()
+{
+	uiManager->RereadSkin();
+}
+
+/**
+ *	@brief	Called when current cover number is changed.
+ */
+void WinSkinWindow::CurrentCoverChanged()
+{
+	uiManager->RereadSkin();
+}
+
 // ---------------------------------------------------------------------
 //! ウィンドウプロシージャ
 /*!
@@ -734,6 +750,10 @@ LRESULT WinSkinWindow::onCreate(
 	// MessageFilter として自分自身をインストール
 	WinCoveredCalcApp::GetInstance()->InstallMessageFilter(this);
 
+	// register CoverChangedEventHandler
+	CoverManager* manager = CoveredCalcApp::GetInstance()->GetCoverManager();
+	manager->RegisterCoverChangeEventHandler(this);
+
 	return 0;
 }
 
@@ -750,6 +770,10 @@ LRESULT WinSkinWindow::onDestroy(
 	LPARAM lParam	// 利用しないパラメータ
 )
 {
+	// unregister CoverChangedEventHandler
+	CoverManager* manager = CoveredCalcApp::GetInstance()->GetCoverManager();
+	manager->UnregisterCoverChangeEventHandler(this);
+	
 	// MessageFilter としての自分自身を破棄
 	WinCoveredCalcApp::GetInstance()->UninstallMessageFilter(this);
 

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -34,6 +34,9 @@
 #include "AboutCurrentCoverDlg.h"
 #include "CoverManager.h"
 #include "CoveredCalcApp.h"
+#include "UICTextEdit.h"
+#include "UTF8Conv.h"
+#include "CoverDef.h"
 
 // ---------------------------------------------------------------------
 //! Constructor
@@ -96,4 +99,28 @@ void AboutCurrentCoverDlg::CoverDefChanged()
 void AboutCurrentCoverDlg::CurrentCoverChanged()
 {
 	// do nothing.
+}
+
+/**
+ *	@brief	Sets cover data to dailog control.
+ *	@param[in]	coverDef	data to show in dialog.
+ */
+void AboutCurrentCoverDlg::setDataToDialog(const CoverDef* coverDef)
+{
+	if (NULL == coverDef)
+	{
+		getNameTextEdit()->SetText(ALITERAL(""));
+		getDescriptionTextEdit()->SetText(ALITERAL(""));
+		getAboutTextEdit()->SetText(ALITERAL(""));
+	}
+	else
+	{
+		MBCString mbcString;
+		UTF8Conv::ToMultiByte(mbcString, coverDef->GetTitle());
+		getNameTextEdit()->SetText(mbcString);
+		UTF8Conv::ToMultiByte(mbcString, coverDef->GetDescription());
+		getDescriptionTextEdit()->SetText(mbcString);
+		UTF8Conv::ToMultiByteWithLineEnding(mbcString, coverDef->GetAbout());
+		getAboutTextEdit()->SetText(mbcString);
+	}
 }

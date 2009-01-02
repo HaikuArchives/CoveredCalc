@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Dialog&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Dialog&quot;;&quot;$(ProjectDir)\..\UI\DialogUtility&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XML_STATIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -124,7 +124,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Dialog&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Dialog&quot;;&quot;$(ProjectDir)\..\UI\DialogUtility&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XML_STATIC"
 				RuntimeLibrary="0"
 				RuntimeTypeInfo="true"
@@ -205,7 +205,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Dialog&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Dialog&quot;;&quot;$(ProjectDir)\..\UI\DialogUtility&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XML_STATIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -287,7 +287,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Dialog&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\..\Application&quot;;&quot;$(ProjectDir)\..\Bitmap&quot;;&quot;$(ProjectDir)\..\Engine&quot;;&quot;$(ProjectDir)\..\General&quot;;&quot;$(ProjectDir)\..\Skin&quot;;&quot;$(ProjectDir)\..\Storage&quot;;&quot;$(ProjectDir)\..\UI&quot;;&quot;$(ProjectDir)\..\UI\Control&quot;;&quot;$(ProjectDir)\..\UI\Dialog&quot;;&quot;$(ProjectDir)\..\UI\DialogUtility&quot;;&quot;$(ProjectDir)\..\UI\Message&quot;;&quot;$(ProjectDir)\..\UI\UIComponent&quot;;&quot;$(ProjectDir)\..\Utility&quot;;&quot;$(ProjectDir)\..\XML&quot;;&quot;$(ProjectDir)\..\XML\NanchatteDOM&quot;;&quot;$(ProjectDir)\..\..\Libs\HrnLib&quot;;&quot;$(ProjectDir)\..\..\Libs\libexpatWin&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XML_STATIC"
 				RuntimeLibrary="0"
 				RuntimeTypeInfo="true"
@@ -587,19 +587,11 @@
 				Name="UI"
 				>
 				<File
-					RelativePath="..\Ui\AboutCurrentCoverDlg.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\Ui\ButtonUITask.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\Ui\CoverBrowser.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\UI\EditKeymapDlg.cpp"
 					>
 				</File>
 				<File
@@ -627,23 +619,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Ui\PreferencesDlg.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\Ui\UIManager.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\UI\UITaskManager.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Ui\WinAboutCurrentCoverDlg.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Ui\WinAboutDlg.cpp"
 					>
 				</File>
 				<File
@@ -655,19 +635,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Ui\WinDialog.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\UI\WinDIBitmap32DC.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\Ui\WinDIBitmapDC.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\UI\WinEditKeymapDlg.cpp"
 					>
 				</File>
 				<File
@@ -688,14 +660,6 @@
 				</File>
 				<File
 					RelativePath="..\UI\WinNormalAppearance.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Ui\WinPreferencesDlg.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\UI\WinPseudoModalDialog.cpp"
 					>
 				</File>
 				<File
@@ -746,11 +710,51 @@
 					Name="Dialog"
 					>
 					<File
-						RelativePath="..\UI\Dialog\DialogLayout.cpp"
+						RelativePath="..\UI\Dialog\AboutCurrentCoverDlg.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\UI\Dialog\WinDialogControlCreator.cpp"
+						RelativePath="..\UI\Dialog\EditKeymapDlg.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\PreferencesDlg.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\WinAboutCurrentCoverDlg.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\WinAboutDlg.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\WinDialog.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\WinEditKeymapDlg.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\WinPreferencesDlg.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\WinPseudoModalDialog.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="DialogUtility"
+					>
+					<File
+						RelativePath="..\UI\DialogUtility\DialogLayout.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\DialogUtility\WinDialogControlCreator.cpp"
 						>
 					</File>
 				</Filter>
@@ -1165,19 +1169,11 @@
 				Name="UI"
 				>
 				<File
-					RelativePath="..\UI\AboutCurrentCoverDlg.h"
-					>
-				</File>
-				<File
 					RelativePath="..\UI\ButtonUITask.h"
 					>
 				</File>
 				<File
 					RelativePath="..\UI\CoverBrowser.h"
-					>
-				</File>
-				<File
-					RelativePath="..\UI\EditKeymapDlg.h"
 					>
 				</File>
 				<File
@@ -1225,10 +1221,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\UI\PreferencesDlg.h"
-					>
-				</File>
-				<File
 					RelativePath="..\UI\UIController.h"
 					>
 				</File>
@@ -1261,14 +1253,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\UI\WinAboutCurrentCoverDlg.h"
-					>
-				</File>
-				<File
-					RelativePath="..\UI\WinAboutDlg.h"
-					>
-				</File>
-				<File
 					RelativePath="..\UI\WinBitmapDC.h"
 					>
 				</File>
@@ -1285,19 +1269,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\UI\WinDialog.h"
-					>
-				</File>
-				<File
 					RelativePath="..\UI\WinDIBitmap32DC.h"
 					>
 				</File>
 				<File
 					RelativePath="..\UI\WinDIBitmapDC.h"
-					>
-				</File>
-				<File
-					RelativePath="..\UI\WinEditKeymapDlg.h"
 					>
 				</File>
 				<File
@@ -1318,14 +1294,6 @@
 				</File>
 				<File
 					RelativePath="..\UI\WinNormalAppearance.h"
-					>
-				</File>
-				<File
-					RelativePath="..\UI\WinPreferencesDlg.h"
-					>
-				</File>
-				<File
-					RelativePath="..\UI\WinPseudoModalDialog.h"
 					>
 				</File>
 				<File
@@ -1356,23 +1324,11 @@
 					Name="UIComponent"
 					>
 					<File
-						RelativePath="..\UI\UIComponent\DefaultUICButton.h"
-						>
-					</File>
-					<File
-						RelativePath="..\UI\UIComponent\DefaultUICKeyInput.h"
-						>
-					</File>
-					<File
-						RelativePath="..\UI\UIComponent\DefaultUICListBox.h"
-						>
-					</File>
-					<File
-						RelativePath="..\UI\UIComponent\DefaultUICTextEdit.h"
-						>
-					</File>
-					<File
 						RelativePath="..\UI\UIComponent\UICButton.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\UIComponent\UICButtonImpl.h"
 						>
 					</File>
 					<File
@@ -1380,11 +1336,23 @@
 						>
 					</File>
 					<File
+						RelativePath="..\UI\UIComponent\UICKeyInputImpl.h"
+						>
+					</File>
+					<File
 						RelativePath="..\UI\UIComponent\UICListBox.h"
 						>
 					</File>
 					<File
+						RelativePath="..\UI\UIComponent\UICListBoxImpl.h"
+						>
+					</File>
+					<File
 						RelativePath="..\UI\UIComponent\UICTextEdit.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\UIComponent\UICTextEditImpl.h"
 						>
 					</File>
 					<File
@@ -1408,19 +1376,59 @@
 					Name="Dialog"
 					>
 					<File
-						RelativePath="..\UI\Dialog\DialogFont.h"
+						RelativePath="..\UI\Dialog\AboutCurrentCoverDlg.h"
 						>
 					</File>
 					<File
-						RelativePath="..\UI\Dialog\DialogLayout.h"
+						RelativePath="..\UI\Dialog\EditKeymapDlg.h"
 						>
 					</File>
 					<File
-						RelativePath="..\UI\Dialog\DialogLayoutException.h"
+						RelativePath="..\UI\Dialog\PreferencesDlg.h"
 						>
 					</File>
 					<File
-						RelativePath="..\UI\Dialog\WinDialogControlCreator.h"
+						RelativePath="..\UI\Dialog\WinAboutCurrentCoverDlg.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\WinAboutDlg.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\WinDialog.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\WinEditKeymapDlg.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\WinPreferencesDlg.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\WinPseudoModalDialog.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="DialogUtility"
+					>
+					<File
+						RelativePath="..\UI\DialogUtility\DialogFont.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\DialogUtility\DialogLayout.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\DialogUtility\DialogLayoutException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\DialogUtility\WinDialogControlCreator.h"
 						>
 					</File>
 				</Filter>

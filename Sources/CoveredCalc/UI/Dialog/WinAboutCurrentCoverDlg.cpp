@@ -34,8 +34,6 @@
 #include "WinAboutCurrentCoverDlg.h"
 #include "ExceptionMessageUtils.h"
 #include "CoveredCalcApp.h"
-#include "UTF8Conv.h"
-#include "CoverDef.h"
 #include "Exception.h"
 #include "WinDialogControlCreator.h"
 #include "XMLLangFile.h"
@@ -58,31 +56,6 @@ WinAboutCurrentCoverDlg::WinAboutCurrentCoverDlg() : base(IDD_ABOUT_COVER)
 // ---------------------------------------------------------------------
 WinAboutCurrentCoverDlg::~WinAboutCurrentCoverDlg()
 {
-}
-
-// ---------------------------------------------------------------------
-//! カバーデータをダイアログに表示します。
-// ---------------------------------------------------------------------
-void WinAboutCurrentCoverDlg::setDataToDialog(
-	const CoverDef* coverDef			///< 表示するデータ
-)
-{
-	if (NULL == coverDef)
-	{
-		SetDlgItemText(m_hWnd, IDC_EDIT_NAME, ALITERAL(""));
-		SetDlgItemText(m_hWnd, IDC_EDIT_DESCRIPTION, ALITERAL(""));
-		SetDlgItemText(m_hWnd, IDC_EDIT_ABOUT, ALITERAL(""));
-	}
-	else
-	{
-		MBCString mbcString;
-		UTF8Conv::ToMultiByte(mbcString, coverDef->GetTitle());
-		SetDlgItemText(m_hWnd, IDC_EDIT_NAME, mbcString);
-		UTF8Conv::ToMultiByte(mbcString, coverDef->GetDescription());
-		SetDlgItemText(m_hWnd, IDC_EDIT_DESCRIPTION, mbcString);
-		UTF8Conv::ToMultiByteWithLineEnding(mbcString, coverDef->GetAbout());
-		SetDlgItemText(m_hWnd, IDC_EDIT_ABOUT, mbcString);
-	}
 }
 
 // ---------------------------------------------------------------------
@@ -132,6 +105,9 @@ void WinAboutCurrentCoverDlg::createControls()
 	MBCString label;
 	HWND hControl;
 	
+	// set dialog title
+	SetWindowText(m_hWnd, stringLoader->LoadNativeString(NSID_ABOUT_COVER_TITLE).CString());
+
 	// "OK" button
 	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_ABOUT_COVER_OK));
 	hControl = dcc.CreateButton(ALITERAL("IDOK"), IDOK, label, WS_GROUP | BS_DEFPUSHBUTTON, BS_PUSHBUTTON, 0, 0);
@@ -142,6 +118,7 @@ void WinAboutCurrentCoverDlg::createControls()
 
 	// "Name" edit (read-only)
 	hControl = dcc.CreateEdit(ALITERAL("IDC_EDIT_NAME"), IDC_EDIT_NAME, ALITERAL(""), ES_READONLY, 0, 0, WS_EX_CLIENTEDGE);
+	uicNameTextEdit.Init(hControl);
 
 	// "Description" label
 	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_ABOUT_COVER_DESCRIPTION));
@@ -149,6 +126,7 @@ void WinAboutCurrentCoverDlg::createControls()
 
 	// "Description" edit (read-only)
 	hControl = dcc.CreateEdit(ALITERAL("IDC_EDIT_DESCRIPTION"), IDC_EDIT_DESCRIPTION, ALITERAL(""), ES_READONLY, 0, 0, WS_EX_CLIENTEDGE);
+	uicDescriptionTextEdit.Init(hControl);
 
 	// "Cover Author Info" label
 	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_ABOUT_COVER_ABOUT));
@@ -156,6 +134,7 @@ void WinAboutCurrentCoverDlg::createControls()
 
 	// "Cover Authro Info" edit (read-only)
 	hControl = dcc.CreateEdit(ALITERAL("IDC_EDIT_ABOUT"), IDC_EDIT_ABOUT, ALITERAL(""), WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY, 0, 0, 0);
+	uicAboutTextEdit.Init(hControl);
 }
 
 // ---------------------------------------------------------------------
@@ -177,11 +156,8 @@ LRESULT WinAboutCurrentCoverDlg::onInitDialog(
 	// create controls
 	createControls();
 
-	// set dialog title
-	NativeStringLoader* stringLoader = CoveredCalcApp::GetInstance();
-	SetWindowText(m_hWnd, stringLoader->LoadNativeString(NSID_ABOUT_COVER_TITLE).CString());
-
-	// TODO: フォーカス
+	// set focus to OK button
+	SetFocus(GetDlgItem(m_hWnd, IDOK));
 
 	initialize();
 	return ret;

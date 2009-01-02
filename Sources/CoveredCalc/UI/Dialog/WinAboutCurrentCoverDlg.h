@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2008 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -24,38 +24,45 @@
  */
 
 /*!
-	@file		AboutCurrentCoverDlg.h
-	@brief		Definition of AboutCurrentCoverDlg class
+	@file		WinAboutCurrentCoverDlg.h
+	@brief		Definition of WinAboutCurrentCoverDlg class
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2005.02.02 created
+	@date		2005.02.05 created
 */
 
-#ifndef _ABOUTCURRENTCOVERDLG_H_
-#define _ABOUTCURRENTCOVERDLG_H_
+#ifndef _WINABOUTCURRENTCOVERDLG_H_
+#define _WINABOUTCURRENTCOVERDLG_H_
 
-#include "CoverChangeEventHandler.h"
-
-class CoverDef;
+#include "WinDialog.h"
+#include "AboutCurrentCoverDlg.h"
+#include "UICTextEditImpl.h"
 
 // ---------------------------------------------------------------------
-//! This dialog shows informations about the current cover.
+//! 現在のカバーについてダイアログ for Windows
 // ---------------------------------------------------------------------
-class AboutCurrentCoverDlg : public CoverChangeEventHandler
+class WinAboutCurrentCoverDlg : public WinDialog, public AboutCurrentCoverDlg
 {
 public:
-								AboutCurrentCoverDlg();
-	virtual						~AboutCurrentCoverDlg();
-
-	// implementations of CoverChangeEventHandler interface
-	virtual void				CoverDefChanged();
-	virtual void				CurrentCoverChanged();
-
+							WinAboutCurrentCoverDlg();
+							~WinAboutCurrentCoverDlg();
 protected:
-	void						initialize();
-	void						terminate();
-	void						update();
+	virtual LRESULT			wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	virtual	void				setDataToDialog(const CoverDef* coverDef) = 0;
+	virtual UICTextEdit*	getNameTextEdit() { return &uicNameTextEdit; }
+	virtual UICTextEdit*	getDescriptionTextEdit() { return &uicDescriptionTextEdit; }
+	virtual UICTextEdit*	getAboutTextEdit() { return &uicAboutTextEdit; }
+
+private:
+	LRESULT					onInitDialog(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT					onDestroy(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+private:
+	void					createControls();
+
+private:
+	UICTextEditImpl			uicNameTextEdit;
+	UICTextEditImpl			uicDescriptionTextEdit;
+	UICTextEditImpl			uicAboutTextEdit;
 };
 
-#endif // _ABOUTCURRENTCOVERDLG_H_
+#endif // _WINABOUTCURRENTCOVERDLG_H_
