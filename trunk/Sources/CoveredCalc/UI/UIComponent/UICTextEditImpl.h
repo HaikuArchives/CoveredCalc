@@ -24,14 +24,14 @@
  */
 
 /*!
-	@file		DefaultUICTextEdit.h
-	@brief		Definition of DefaultUICTextEdit class.
+	@file		UICTextEditImpl.h
+	@brief		Definition of UICTextEditImpl class.
 	@author		ICHIMIYA Hironori (Hiron)
 	@date		2008.05.28 created
 */
 
-#ifndef _DEFAULTUICTEXTEDIT_H_
-#define _DEFAULTUICTEXTEDIT_H_
+#ifndef _UICTEXTEDITIMPL_H_
+#define _UICTEXTEDITIMPL_H_
 
 #include "UICTextEdit.h"
 
@@ -39,16 +39,20 @@
 #include "WinTextControlAdapter.h"
 #elif defined (BEOS)
 #include "BeTextControlAdapter.h"
+#include "BeTextViewAdapter.h"
 #endif
 
 /**
- *	@brief	Default implementation of UICTextEdit interface.
+ *	@brief	 implementation of UICTextEditImpl interface.
  */
-class DefaultUICTextEdit : public UICTextEdit
+#if defined (BEOS)
+template <class DELEGATE_T, class INIT_PARAM_T>
+#endif
+class UICTextEditImpl : public UICTextEdit
 {
 public:
-								DefaultUICTextEdit() { }
-	virtual						~DefaultUICTextEdit() { }
+								UICTextEditImpl() { }
+	virtual						~UICTextEditImpl() { }
 	
 	virtual bool				IsEnabled() { return delegateObj.IsEnabled(); }
 	virtual void				Enable(bool isEnabled) { delegateObj.Enable(isEnabled); }
@@ -71,11 +75,16 @@ private:
 	WinTextControlAdapter		delegateObj;
 #elif defined (BEOS)
 public:
-	void						Init(BTextControl* view) { delegateObj.Init(view); }
-	BeTextControlAdapter*		GetRawAdapter() { return &delegateObj; }
+	void						Init(INIT_PARAM_T view) { delegateObj.Init(view); }
+	DELEGATE_T*					GetRawAdapter() { return &delegateObj; }
 private:
-	BeTextControlAdapter		delegateObj;
+	DELEGATE_T					delegateObj;
 #endif
 };
 
-#endif // _DEFAULTUICTEXTEDIT_H_
+#if defined (BEOS)
+typedef UICTextEditImpl<BeTextControlAdapter, BTextControl*>	UICTextEditControlImpl;
+typedef UICTextEditImpl<BeTextViewAdapter, BTextView*>			UICTextEditViewImpl;
+#endif
+
+#endif // _UICTEXTEDITIMPL_H_

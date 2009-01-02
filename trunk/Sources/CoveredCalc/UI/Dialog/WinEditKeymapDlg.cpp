@@ -89,12 +89,16 @@ void WinEditKeymapDlg::createControls()
 	MBCString label;
 	HWND hControl;
 
+	// set dialog title
+	SetWindowText(m_hWnd, stringLoader->LoadNativeString(NSID_EDIT_KEYMAP_TITLE).CString());
+
 	// "Name" label
 	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_EDIT_KEYMAP_NAME));
 	hControl = dcc.CreateStatic(ALITERAL("IDC_STATIC_NAME"), IDC_STATIC, label, WS_GROUP, 0, 0, 0);
 
 	// "Name" edit
 	hControl = dcc.CreateEdit(ALITERAL("IDC_EDIT_NAME"), IDC_EDIT_NAME, ALITERAL(""), 0, 0, 0, 0);
+	uicNameTextEdit.Init(hControl);
 
 	// "Function" group box
 	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_EDIT_KEYMAP_GROUP_FUNCTION));
@@ -106,6 +110,7 @@ void WinEditKeymapDlg::createControls()
 
 	// Function listbox
 	hControl = dcc.CreateListBox(ALITERAL("IDC_LIST_FUNCTION"), IDC_LIST_FUNCTION, WS_VSCROLL | LBS_NOTIFY, 0, 0, 0);
+	uicFunctionListBox.Init(hControl);
 
 	// "Current Key" label
 	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_EDIT_KEYMAP_CURRENT_KEY));
@@ -113,10 +118,12 @@ void WinEditKeymapDlg::createControls()
 
 	// "Current Key listbox
 	hControl = dcc.CreateListBox(ALITERAL("IDC_LIST_CURRENT_KEY"), IDC_LIST_CURRENT_KEY, WS_VSCROLL | LBS_NOTIFY, 0, 0, 0);
+	uicCurrentKeyListBox.Init(hControl);
 
 	// "Remove" button
 	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_EDIT_KEYMAP_REMOVE));
 	hControl = dcc.CreateButton(ALITERAL("IDC_REMOVE"), IDC_REMOVE, label, WS_GROUP, 0, 0, 0);
+	uicRemoveButton.Init(hControl);
 
 	// "Key" group box
 	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_EDIT_KEYMAP_GROUP_KEY));
@@ -128,6 +135,9 @@ void WinEditKeymapDlg::createControls()
 
 	// Key edit
 	hControl = dcc.CreateEdit(ALITERAL("IDC_EDIT_KEY"), IDC_EDIT_KEY, ALITERAL(""), 0, 0, 0, 0);
+	ctrlKeyInput.Init(keyNameDB);
+	ctrlKeyInput.Attach(hControl);
+	uicKeyInput.Init(&ctrlKeyInput);
 
 	// "Assigned Function" label
 	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_EDIT_KEYMAP_ASSIGNED_FUNCTION));
@@ -135,18 +145,22 @@ void WinEditKeymapDlg::createControls()
 
 	// Assigned function edit
 	hControl = dcc.CreateEdit(ALITERAL("IDC_EDIT_ASSIGNED_FUNCTION"), IDC_EDIT_ASSIGNED_FUNCTION, ALITERAL(""), ES_READONLY, 0, 0, 0);
+	uicAssignedFunctionTextEdit.Init(hControl);
 
 	// "Assign" button
 	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_EDIT_KEYMAP_ASSIGN));
 	hControl = dcc.CreateButton(ALITERAL("IDC_ASSIGN"), IDC_ASSIGN, label, WS_GROUP, 0, 0, 0);
+	uicAssignButton.Init(hControl);
 
 	// OK button
 	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_EDIT_KEYMAP_OK));
 	hControl = dcc.CreateButton(ALITERAL("IDOK"), IDOK, label, WS_GROUP | BS_DEFPUSHBUTTON, BS_PUSHBUTTON, 0, 0);
+	uicOkButton.Init(hControl);
 
 	// Cancel button
 	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_EDIT_KEYMAP_CANCEL));
 	hControl = dcc.CreateButton(ALITERAL("IDCANCEL"), IDCANCEL, label, 0, 0, 0, 0);
+	uicCancelButton.Init(hControl);
 }
 
 /**
@@ -164,26 +178,6 @@ LRESULT WinEditKeymapDlg::onInitDialog(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 	// create controls
 	createControls();
 
-	// set dialog title
-	NativeStringLoader* stringLoader = CoveredCalcApp::GetInstance();
-	SetWindowText(m_hWnd, stringLoader->LoadNativeString(NSID_EDIT_KEYMAP_TITLE).CString());
-
-	// initialize key-input control
-	HWND hEditKey = GetDlgItem(m_hWnd, IDC_EDIT_KEY);
-	ctrlKeyInput.Init(keyNameDB);
-	ctrlKeyInput.Attach(hEditKey);
-
-	// init control adapters
-	uicNameTextEdit.Init(GetDlgItem(m_hWnd, IDC_EDIT_NAME));
-	uicFunctionListBox.Init(GetDlgItem(m_hWnd, IDC_LIST_FUNCTION));
-	uicCurrentKeyListBox.Init(GetDlgItem(m_hWnd, IDC_LIST_CURRENT_KEY));
-	uicKeyInput.Init(&ctrlKeyInput);
-	uicAssignedFunctionTextEdit.Init(GetDlgItem(m_hWnd, IDC_EDIT_ASSIGNED_FUNCTION));
-	uicAssignButton.Init(GetDlgItem(m_hWnd, IDC_ASSIGN));
-	uicRemoveButton.Init(GetDlgItem(m_hWnd, IDC_REMOVE));
-	uicOkButton.Init(GetDlgItem(m_hWnd, IDOK));
-	uicCancelButton.Init(GetDlgItem(m_hWnd, IDCANCEL));
-	
 	// ready
 	readyToShow();
 

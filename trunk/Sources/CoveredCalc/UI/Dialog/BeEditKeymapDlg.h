@@ -35,10 +35,10 @@
 
 #include "BeDialog.h"
 #include "EditKeymapDlg.h"
-#include "DefaultUICTextEdit.h"
-#include "DefaultUICListBox.h"
-#include "DefaultUICButton.h"
-#include "DefaultUICKeyInput.h"
+#include "UICTextEditImpl.h"
+#include "UICListBoxImpl.h"
+#include "UICButtonImpl.h"
+#include "UICKeyInputImpl.h"
 
 /**
  *	@brief	Edit-Keymapping dialog on BeOS.
@@ -80,15 +80,15 @@ private:
 	bool						isDialogOK;			///< whether dialog is closed by OK button.
 	
 	// adapters
-	DefaultUICTextEdit			uicNameTextEdit;
-	DefaultUICListBox			uicFunctionListBox;
-	DefaultUICListBox			uicCurrentKeyListBox;
-	DefaultUICKeyInput			uicKeyInput;
-	DefaultUICTextEdit			uicAssignedFunctionTextEdit;
-	DefaultUICButton			uicAssignButton;
-	DefaultUICButton			uicRemoveButton;
-	DefaultUICButton			uicOkButton;
-	DefaultUICButton			uicCancelButton;
+	UICTextEditControlImpl		uicNameTextEdit;
+	UICListBoxImpl				uicFunctionListBox;
+	UICListBoxImpl				uicCurrentKeyListBox;
+	UICKeyInputImpl				uicKeyInput;
+	UICTextEditControlImpl		uicAssignedFunctionTextEdit;
+	UICButtonImpl				uicAssignButton;
+	UICButtonImpl				uicRemoveButton;
+	UICButtonImpl				uicOkButton;
+	UICButtonImpl				uicCancelButton;
 };
 
 #endif // _BEEDITKEYMAPDLG_H_

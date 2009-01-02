@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -37,6 +37,7 @@
 #include "UIController.h"
 #include "BeToolTipWindow.h"
 #include "BeKeyEventFilter.h"
+#include "CoverChangeEventHandler.h"
 
 class UIManager;
 class BeDialog;
@@ -50,7 +51,7 @@ class BPopUpMenu;
 	The view classes which use skins are derived from this class.
 */
 // ---------------------------------------------------------------------
-class BeSkinView : public BView, public UIController, public BeKeyEventHandler
+class BeSkinView : public BView, public UIController, public BeKeyEventHandler, public CoverChangeEventHandler
 {
 public:
 							BeSkinView(BRect frame, const char* name);
@@ -86,6 +87,10 @@ public:
 
 	// implementation of BeKeyEventHandler
 	virtual bool			HandleKeyEvent(const KeyEventParameter* parameter);
+
+	// CoverChangeEventHandler interface
+	virtual void			CoverDefChanged();
+	virtual void			CurrentCoverChanged();
 
 protected:
 	virtual UIManager*		createUIManager() = 0;

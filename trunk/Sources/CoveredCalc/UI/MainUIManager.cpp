@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -133,10 +133,6 @@ void MainUIManager::Create()
 
 	// read current skin
 	readSkin();
-	
-	// register CoverChangedEventHandler
-	CoverManager* manager = CoveredCalcApp::GetInstance()->GetCoverManager();
-	manager->RegisterCoverChangeEventHandler(this);
 }
 
 // ---------------------------------------------------------------------
@@ -165,27 +161,7 @@ void MainUIManager::Destroy()
 		ex->Delete();		
 	}
 
-	// unregister CoverChangedEventHandler
-	CoverManager* manager = app->GetCoverManager();
-	manager->UnregisterCoverChangeEventHandler(this);
-	
 	base::Destroy();
-}
-
-// ---------------------------------------------------------------------
-//! Called when cover definition is changed.
-// ---------------------------------------------------------------------
-void MainUIManager::CoverDefChanged()
-{
-	readSkin();
-}
-
-// ---------------------------------------------------------------------
-//! Called when current cover number is changed.
-// ---------------------------------------------------------------------
-void MainUIManager::CurrentCoverChanged()
-{
-	readSkin();
 }
 
 // ---------------------------------------------------------------------

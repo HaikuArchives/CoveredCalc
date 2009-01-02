@@ -63,7 +63,7 @@ enum
 	ID_COVERBROWSER_CLOSE			= 'bCls',
 	
 	// about current cover dialog
-	ID_ABOUTCURCOV_SETDATA			= 'acSd',
+	ID_ABOUTCURCOV_DO_UPDATE		= 'acUp',
 	
 	// preferences
 	ID_PREFERENCES					= 'Pref',

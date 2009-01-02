@@ -116,6 +116,8 @@ void BeAboutCurrentCoverDialog::createViews()
 	nameTextView->SetViewColor(viewColor);
 	nameTextView->SetWordWrap(false);
 	nameTextView->MakeEditable(false);
+
+	uicNameTextEdit.Init(nameTextView);
 	
 	// DescLabel
 	BStringView* descLabelView = new BStringView(dch.GetItemRect(ALITERAL("IDC_STATIC_DESCRIPTION"), ITEMNAME_WINDOW), ABOUT_CURCOV_DIALOG_VIEW_DESC_LABEL,
@@ -132,6 +134,8 @@ void BeAboutCurrentCoverDialog::createViews()
 	descTextView->SetViewColor(viewColor);
 	descTextView->SetWordWrap(false);
 	descTextView->MakeEditable(false);
+
+	uicDescriptionTextEdit.Init(descTextView);
 	
 	// AboutCoverLabel
 	BStringView* aboutCoverLabelView = new BStringView(dch.GetItemRect(ALITERAL("IDC_STATIC_ABOUT"), ITEMNAME_WINDOW), ABOUT_CURCOV_DIALOG_VIEW_ABOUT_COVER_LABEL,
@@ -157,6 +161,8 @@ void BeAboutCurrentCoverDialog::createViews()
 	aboutCoverTextView->SetWordWrap(false);
 	aboutCoverTextView->MakeEditable(false);
 	
+	uicAboutTextEdit.Init(aboutCoverTextView);
+
 	// OKButton
 	BButton* okButton = new BButton(dch.GetItemRect(ALITERAL("IDOK"), ITEMNAME_WINDOW), ABOUT_CURCOV_DIALOG_VIEW_OK,
 								nsl->LoadNativeString(NSID_ABOUT_COVER_OK).CString(), new BMessage(ID_DIALOG_OK));
@@ -221,66 +227,20 @@ void BeAboutCurrentCoverDialog::initDialog()
 	initialize();
 }
 
-// ---------------------------------------------------------------------
-//! Sets cover data to dialog.
-// ---------------------------------------------------------------------
-void BeAboutCurrentCoverDialog::setDataToDialog(
-	const CoverDef* coverDef	//!< data which is set to dialog.
-)
+/**
+ *	@brief	Updates data in the dialog.
+ */
+void BeAboutCurrentCoverDialog::update()
 {
 	if (Thread() == find_thread(NULL))
 	{
-		setDataToDialogInThisThread(coverDef);
+		base::update();
 	}
 	else
 	{
-		BMessage message(ID_ABOUTCURCOV_SETDATA);
-		message.AddPointer(ABOUT_CURCOV_SETDATA_PARAM_COVERDEF, coverDef);
-		
+		BMessage message(ID_ABOUTCURCOV_DO_UPDATE);
 		BMessage reply;
 		BMessenger(this).SendMessage(&message, &reply);		// wait until processed.
-	}
-}
-
-// ---------------------------------------------------------------------
-//! Sets cover data to dialog in this window's thread.
-// ---------------------------------------------------------------------
-void BeAboutCurrentCoverDialog::setDataToDialogInThisThread(
-	const CoverDef* coverDef	//!< data which is set to dialog.
-)
-{
-	MBCString mbcString;
-	BTextView* nameView = dynamic_cast<BTextView*>(FindView(ABOUT_CURCOV_DIALOG_VIEW_NAME_TEXT));
-	if (NULL != nameView)
-	{
-		mbcString.Empty();
-		if (NULL != coverDef)
-		{
-			UTF8Conv::ToMultiByte(mbcString, coverDef->GetTitle());
-		}
-		nameView->SetText(mbcString);
-	}
-	
-	BTextView* descView = dynamic_cast<BTextView*>(FindView(ABOUT_CURCOV_DIALOG_VIEW_DESC_TEXT));
-	if (NULL != descView)
-	{
-		mbcString.Empty();
-		if (NULL != coverDef)
-		{
-			UTF8Conv::ToMultiByte(mbcString, coverDef->GetDescription());
-		}	
-		descView->SetText(mbcString);
-	}
-	
-	BTextView* aboutView = dynamic_cast<BTextView*>(FindView(ABOUT_CURCOV_DIALOG_VIEW_ABOUT_COVER_TEXT));
-	if (NULL != aboutView)
-	{
-		mbcString.Empty();
-		if (NULL != coverDef)
-		{
-			UTF8Conv::ToMultiByteWithLineEnding(mbcString, coverDef->GetAbout());
-		}	
-		aboutView->SetText(mbcString);
 	}
 }
 
@@ -298,17 +258,18 @@ void BeAboutCurrentCoverDialog::MessageReceived(
 		case ID_DIALOG_OK:
 			PostMessage(B_QUIT_REQUESTED);
 			break;
-			
-		case ID_ABOUTCURCOV_SETDATA:
+		
+		case ID_ABOUTCURCOV_DO_UPDATE:
+			try
 			{
-				void* pointer = NULL;
-				if (B_OK == message->FindPointer(ABOUT_CURCOV_SETDATA_PARAM_COVERDEF, &pointer))
-				{
-					const CoverDef* coverDef = static_cast<CoverDef*>(pointer);
-					setDataToDialogInThisThread(coverDef);
-				}
-				message->SendReply(ID_PROCESSED);
+				base::update();
 			}
+			catch (...)
+			{
+				message->SendReply(ID_PROCESSED);
+				throw;
+			}
+			message->SendReply(ID_PROCESSED);
 			break;
 			
 		default:
