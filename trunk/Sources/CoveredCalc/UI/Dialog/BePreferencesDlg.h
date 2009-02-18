@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -58,17 +58,6 @@ protected:
 	virtual MessageBoxProvider*	getMessageBoxProvider();
 	virtual bool				showEditKeyMapDialog(bool isReadOnly, KeyMappings& keyMappings);
 	
-	virtual void				setLanguage(const LangFileInfoCollection& langFileInfos, const Path& currentLangFilePath
-#if defined(ZETA)
-										, bool isLocaleKitAvailable
-#endif
-								);
-	virtual	bool				getLanguage(Path& langFilePath
-#if defined(ZETA)
-										, bool& isLocaleKitAvailable
-#endif
-								);
-
 	virtual void				setKeyMapping(const KeyMappingsInfoPtrVector& keyMappingsInfos, const Path& currentKeyMappingPath);
 	virtual const PreferencesDlg::KeyMappingsInfo*	getKeyMapping(bool doErrorProcessing);
 	virtual void				enableEditKeyMapping(bool isEnabled);

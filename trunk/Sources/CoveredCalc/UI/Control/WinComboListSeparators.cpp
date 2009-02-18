@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -106,11 +106,47 @@ void WinComboListSeparators::RemoveSeparatorAt(SInt32 index)
 }
 
 /**
+ *	@brief	Returns true if separator exists at specified index.
+ *	@param[in]	index	index. (see AddSeparatorAt())
+ *	@return	true if exists.
+ */
+bool WinComboListSeparators::HasSeparatorAt(SInt32 index)
+{
+	std::vector<SInt32>::iterator it;
+	for (it = separatorIndexes.begin(); it != separatorIndexes.end(); it++)
+	{
+		if (*it == index)
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+/**
  *	@brief	Removes all separators.
  */
 void WinComboListSeparators::ClearAllSeparators()
 {
 	separatorIndexes.clear();
+}
+
+/**
+ *	@brief	Shifts separator indexes.
+ *	@param [in] baseIndex	All separator indexes greater than this index is updated.
+ *	@param [in] amount		shift amount. negative values are acceptable.
+ */
+void WinComboListSeparators::ShiftSeparatorIndex(SInt32 baseIndex, SInt32 amount)
+{
+	std::vector<SInt32>::iterator it;
+	for (it = separatorIndexes.begin(); it != separatorIndexes.end(); it++)
+	{
+		if (*it > baseIndex)
+		{
+			*it += amount;
+		}
+	}
 }
 
 /**

@@ -24,55 +24,39 @@
  */
 
 /*!
-	@file		WinComboListSeparators.h
-	@brief		Definition of WinComboListSeparators class
+	@file		WinSeparatorDDListBoxAdapter.h
+	@brief		Definition of WinSeparatorDDListBoxAdapter class.
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2008.2.24 created
+	@date		2009.01.08 created
 */
 
-#ifndef _WINCOMBOLISTSEPARATORS_H_
-#define _WINCOMBOLISTSEPARATORS_H_
+#ifndef _WINSEPARATORDDLISTBOXADAPTER_H_
+#define _WINSEPARATORDDLISTBOXADAPTER_H_
 
-#include <vector>
-#include "HrnWnd.h"
+#include "WinDropDownListBoxAdapter.h"
+#include "MBCString.h"
+
+class WinComboListSeparators;
 
 /**
- *	@brief	This class draws separator line on the listbox of specified combobox.
+ *	@brief	Adapter class of drop-down list box (one form of the combo box) which supports separators for Windows.
  */
-class WinComboListSeparators : public CHrnWnd
+class WinSeparatorDDListBoxAdapter : public WinDropDownListBoxAdapter
 {
 public:
-						WinComboListSeparators();
-	virtual				~WinComboListSeparators();
+							WinSeparatorDDListBoxAdapter();
+	virtual					~WinSeparatorDDListBoxAdapter();
 	
-	BOOL				Attach(HWND hComboBox);
-	void				Detach();
-
-	void				AddSeparatorAt(SInt32 index);
-	void				RemoveSeparatorAt(SInt32 index);
-	bool				HasSeparatorAt(SInt32 index);
-	void				ClearAllSeparators();
-	void				ShiftSeparatorIndex(SInt32 baseIndex, SInt32 amount);
-
-protected:
-	virtual LRESULT		wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
+	void					Init(HWND hControl, WinComboListSeparators* separators);
+	
+	virtual void			RemoveItem(SInt32 index);
+	virtual void			RemoveAllItem();
+	
+	void					SetSeparator(SInt32 index, bool isSet);
+	bool					HasSeparator(SInt32 index);
+	
 private:
-	class ListBox : public CHrnWnd
-	{
-	public:
-		void							SetContainer(const WinComboListSeparators* container);
-		void							DrawSeparators(HDC hDC);
-
-	protected:
-		virtual LRESULT					wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	private:
-		const WinComboListSeparators*	container;
-	};
-	friend class ListBox;
-
-	ListBox				listBox;
-	std::vector<SInt32>	separatorIndexes;
+	WinComboListSeparators* separators;	///< separator info object.
 };
 
-#endif // _WINCOMBOLISTSEPARATORS_H_
+#endif // _WINSEPARATORDDLISTBOXADAPTER_H_

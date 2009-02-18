@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -355,117 +355,6 @@ bool BePreferencesDlg::showEditKeyMapDialog(bool isReadOnly, KeyMappings& keyMap
 	delete_sem(semDialog);	
 	
 	return dlg->IsDialogClosedByOK();
-}
-
-/**
- *	@brief	compare function for sorting language item.
- */
-static int langFileInfoCompareFunc(const void* item1, const void* item2)
-{
-	const LangFileInfo* info1 = *static_cast<const LangFileInfo* const *>(item1);
-	const LangFileInfo* info2 = *static_cast<const LangFileInfo* const *>(item2);
-	
-	const MBCString& name1 = info1->GetLanguageName();
-	const MBCString& name2 = info2->GetLanguageName();
-	
-	return name1.Compare(name2);
-}
-
-/**
- *	@brief	Sets the content of language popup menu and update current selection.
- */
-void BePreferencesDlg::setLanguage(
-	const LangFileInfoCollection& langFileInfos,	///< collection of language popup menu item
-	const Path& currentLangFilePath					///< current selection
-#if defined(ZETA)
-	, bool isLocaleKitAvailable						///< whether uses locale kit
-#endif // defined(ZETA)
-)
-{
-	// make language infos.
-	langMenuItemInfo.MakeEmpty();
-	const LangFileInfo* selectedInfo = NULL;
-	SInt32 count = langFileInfos.GetCount();
-	SInt32 index;
-	for (index=0; index<count; index++)
-	{
-		const LangFileInfo& info = langFileInfos.GetAt(index);
-		langMenuItemInfo.AddItem(const_cast<LangFileInfo*>(&info));
-		
-		if (0 == info.GetPath().Compare(currentLangFilePath))
-		{
-			selectedInfo = &info;
-		}
-	}
-	langMenuItemInfo.SortItems(langFileInfoCompareFunc);
-	
-	// add to menu.
-#if defined(ZETA)
-	BMenuItem* menuItem = new BMenuItem(_T(PREFERENCES_DIALOG_LANGMENU_LOCALEKIT), NULL);
-	if (currentLangFilePath.IsEmpty() && isLocaleKitAvailable)
-	{
-		menuItem->SetMarked(true);
-		selectedInfo = NULL;
-	}
-	langMenu->AddItem(menuItem);
-#endif // defined(ZETA)
-	for (index=0; index<count; index++)
-	{
-		const LangFileInfo* info = static_cast<LangFileInfo*>(langMenuItemInfo.ItemAt(index));
-		BMenuItem* menuItem = new BMenuItem(info->GetLanguageName().CString(), NULL);
-		menuItem->SetMarked((info == selectedInfo) ? true : false);
-		langMenu->AddItem(menuItem);
-	}
-}
-
-/**
- *	@brief	Retrieves current language popup selection.
- *	@return	true if succeeded, otherwise false.
- *	@note	when failed, the error message is shown in this function.
- */
-bool BePreferencesDlg::getLanguage(
-	Path &langFilePath					///< (OUTPUT) language file path
-#if defined(ZETA)
-	, bool& isLocaleKitAvailable		///< (OUTPUT) whether uses locale kit
-#endif
-)
-{
-	BMenuItem* markedItem = langMenu->FindMarked();
-	if (NULL == markedItem)
-	{
-		CoveredCalcApp::GetInstance()->DoMessageBox(NSID_EMSG_INVALID_LANGUAGE,
-				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
-		return false;
-	}
-	int32 index = langMenu->IndexOf(markedItem);
-	if (index < 0 ||
-#if defined(ZETA)
-			index >= langMenuItemInfo.CountItems() + 1
-#else // !defined(ZETA)
-			index >= langMenuItemInfo.CountItems()
-#endif // defined(ZETA)	& !defined(ZETA)
-	)
-	{
-		CoveredCalcApp::GetInstance()->DoMessageBox(NSID_EMSG_GET_LANGUAGE,
-				MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);	
-		return false;		
-	}
-#if defined(ZETA)
-	if (0 == index)
-	{
-		langFilePath = Path();
-		isLocaleKitAvailable = true;
-		return true;
-	}
-	else
-	{
-		isLocaleKitAvailable = false;
-		index--;
-	}
-#endif // defined(ZETA)	
-	const LangFileInfo* info = static_cast<LangFileInfo*>(langMenuItemInfo.ItemAt(index));
-	langFilePath = info->GetPath();
-	return true;
 }
 
 typedef BeDataMenuItem<const PreferencesDlg::KeyMappingsInfo*> BeKMIMenuItem;

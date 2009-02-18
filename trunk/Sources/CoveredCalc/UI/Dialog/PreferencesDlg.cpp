@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -46,9 +46,11 @@
 #include "StorageUtils.h"
 #include "MessageFormatter.h"
 #include "StringID.h"
+#include "UICButton.h"
 
 #if defined (WIN32)
 #include "WinCoveredCalcApp.h"
+#include "UICSlider.h"
 #endif	// defined (WIN32)
 
 #if defined (BEOS)
@@ -64,6 +66,15 @@ const AChar STR_USER_KEYMAP_POSTFIX[] = ALITERAL(".cckxw");
 const AChar STR_USER_KEYMAP_POSTFIX[] = ALITERAL(".cckxb");
 #endif
 
+#if defined (WIN32)
+#define MIN_OPACITY				25
+#define MAX_OPACITY				255
+#define TICK_OPACITY			11
+#define MIN_EDGE_SMOOTHING		0
+#define MAX_EDGE_SMOOTHING		10
+#define TICK_EDGE_SMOOTHING		11
+#endif
+
 /**
  *	@brief	Constructor
  */
@@ -76,7 +87,6 @@ PreferencesDlg::PreferencesDlg()
  */
 PreferencesDlg::~PreferencesDlg()
 {
-	unloadKeyMappingsInfos();
 }
 
 /**
@@ -91,37 +101,44 @@ void PreferencesDlg::loadToDialog()
 
 	// opacity and edge-smoothing
 #if defined(WIN32)
-	setOpacity(appSettings->GetMainWindowOpacity());
-	setEdgeSmoothing(appSettings->GetMainWindowEdgeSmoothing());
+	UICSlider* opacitySlider = getOpacitySlider();
+	opacitySlider->SetMinValue(MIN_OPACITY);
+	opacitySlider->SetMaxValue(MAX_OPACITY);
+	opacitySlider->SetTickMarkCount(TICK_OPACITY);
+	opacitySlider->SetValue(appSettings->GetMainWindowOpacity());
+
+	UICSlider* edgeSmoothingSlider = getEdgeSmoothingSlider();
+	edgeSmoothingSlider->SetMinValue(MIN_EDGE_SMOOTHING);
+	edgeSmoothingSlider->SetMaxValue(MAX_EDGE_SMOOTHING);
+	edgeSmoothingSlider->SetTickMarkCount(TICK_EDGE_SMOOTHING);
+	edgeSmoothingSlider->SetValue(appSettings->GetMainWindowEdgeSmoothing());
+
 	WinCoveredCalcApp* winApp = static_cast<WinCoveredCalcApp*>(app);
 	const WinLayeredWindowAPI* lwApi = winApp->GetLayeredWindowAPI();
 	if (NULL != lwApi && lwApi->IsSupported_UpdateLayeredWindow())
 	{
-		enableOpacity(true);
-		enableEdgeSmoothing(true);
+		opacitySlider->Enable(true);
+		edgeSmoothingSlider->Enable(true);
 	}
 	else
 	{
-		enableOpacity(false);
-		enableEdgeSmoothing(false);
+		opacitySlider->Enable(false);
+		edgeSmoothingSlider->Enable(false);
 	}
 #endif
 
 	// language
 	const LangFileInfoCollection* langFileInfos = app->GetLangFileInfos();
-	ASSERT(NULL != langFileInfos);
-	if (NULL != langFileInfos)
-	{
-		setLanguage(*langFileInfos, app->MakeAbsoluteLangFilePath(appSettings->GetLanguageFilePath())
+	langSelectHelper.Init(getLanguageListBox());
+	langSelectHelper.SetToComponent(langFileInfos, app->MakeAbsoluteLangFilePath(appSettings->GetLanguageFilePath())
 #if defined(ZETA)
 				, CoveredCalcApp::GetInstance()->GetAppSettings()->IsLocaleKitAvailable()
 #endif // defined(ZETA)
-		);
-	}
+	);
 	
 	// key-mapping
-	loadKeyMappingsInfos();
-	setKeyMapping(keyMappingsInfos, appSettings->GetKeymapFilePath());
+	keymapSelectHelper.Init(getKeyMapListBox());
+	keymapSelectHelper.ReloadKeyMappingsInfos(appSettings->GetKeymapFilePath());
 }
 
 /**
@@ -137,8 +154,8 @@ bool PreferencesDlg::saveFromDialog()
 
 	// opacity and edge-smoothing
 #if defined(WIN32)
-	SInt32 opacity = getOpacity();
-	SInt32 edgeSmoothing = getEdgeSmoothing();
+	SInt32 opacity = getOpacitySlider()->GetValue();
+	SInt32 edgeSmoothing = getEdgeSmoothingSlider()->GetValue();
 #endif // defined(WIN32)	
 
 	// language
@@ -146,23 +163,52 @@ bool PreferencesDlg::saveFromDialog()
 #if defined(ZETA)
 	bool isLocaleKitAvailable = false;
 #endif // defined(ZETA)
-	if (!getLanguage(langFilePath
+	LangSelectHelper::CheckResult langCheckResult = langSelectHelper.GetFromComponent(langFilePath
 #if defined(ZETA)
 			, isLocaleKitAvailable
 #endif // defined(ZETA)
-		))
+	);
+	if (LangSelectHelper::Check_OK != langCheckResult)
 	{
-		return false;
+		if (LangSelectHelper::Check_GET_SELECTION == langCheckResult)
+		{
+			CoveredCalcApp::GetInstance()->DoMessageBox(NSID_EMSG_GET_LANGUAGE,
+					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);	
+		}
+		else if (LangSelectHelper::Check_INVALID_SELECTION == langCheckResult)
+		{
+			CoveredCalcApp::GetInstance()->DoMessageBox(NSID_EMSG_INVALID_LANGUAGE,
+					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+		}
+		else
+		{
+			ASSERT(false);
+		}
+		return false;		
 	}
 	
 	// key-mapping
-	Path keyMappingFilePath;
-	const KeyMappingsInfo* info = getKeyMapping(true);
-	if (NULL == info)
+	const KeymapSelectHelper::KeyMappingsInfo* keyMappingsInfo;
+	KeymapSelectHelper::CheckResult keymapCheckResult = keymapSelectHelper.GetCurrentKeymap(keyMappingsInfo);
+	if (KeymapSelectHelper::Check_OK != keymapCheckResult)
 	{
+		if (KeymapSelectHelper::Check_GET_SELECTION == keymapCheckResult)
+		{
+			CoveredCalcApp::GetInstance()->DoMessageBox(NSID_EMSG_GET_KEYMAPPINGS,
+					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);	
+		}
+		else if (KeymapSelectHelper::Check_INVALID_SELECTION == keymapCheckResult)
+		{
+			CoveredCalcApp::GetInstance()->DoMessageBox(NSID_EMSG_INVALID_KEYMAPPINGS,
+					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+		}
+		else
+		{
+			ASSERT(false);
+		}
 		return false;
 	}
-	keyMappingFilePath = info->keyMapFilePath;
+	const Path& keyMappingFilePath = keyMappingsInfo->keyMapFilePath;
 	
 	// set values to appSettings
 #if defined(WIN32)
@@ -183,171 +229,37 @@ bool PreferencesDlg::saveFromDialog()
 	return true;
 }
 
-class KeyMappingsInfoComparator
-{
-public:
-	bool operator()(PreferencesDlg::KeyMappingsInfo* first, PreferencesDlg::KeyMappingsInfo* second)
-	{
-		if (first->category > second->category)
-		{
-			return false;
-		}
-		else if (first->category < second->category)
-		{
-			return true;
-		}
-		else
-		{
-			return (0 > first->title.Compare(second->title));
-		}
-	}
-};
-
-/**
- *	@brief	Loads informations about installed key-mapping files.
- */
-void PreferencesDlg::loadKeyMappingsInfos()
-{
-	unloadKeyMappingsInfos();
-	
-	// load files in ${AppKeymaps} folder.
-	Path virtualAppKeymaps(ALITERAL("${") VPATH_APP_KEYMAPS ALITERAL("}"));
-	loadKeyMappingsInfosInFolder(virtualAppKeymaps, KMCategory_Application);
-	
-	// load files in ${UserKeymaps} folder.
-	Path virtualUserKeymaps(ALITERAL("${") VPATH_USER_KEYMAPS ALITERAL("}"));
-	loadKeyMappingsInfosInFolder(virtualUserKeymaps, KMCategory_User);
-	
-	// sort
-	std::sort(keyMappingsInfos.begin(), keyMappingsInfos.end(), KeyMappingsInfoComparator());	
-}
-
-/**
- *	@breif	Loads informations about installed key-mapping files in specified folder.
- *	@param[in]	virtualFolderPath	folder (in virtual path)
- *	@param[in]	category	category of loading informations.
- */
-void PreferencesDlg::loadKeyMappingsInfosInFolder(const Path& virtualFolderPath, PreferencesDlg::KMCategory category)
-{
-	Path folder = CoveredCalcApp::GetInstance()->ExpandVirtualPath(virtualFolderPath);
-
-#if defined (WIN32)
-	Path findPath = folder.Append(ALITERAL("*.cckxw"));
-	WIN32_FIND_DATA findData;
-	HANDLE hFind = ::FindFirstFile(findPath.GetPathString(), &findData);
-	if (INVALID_HANDLE_VALUE != hFind)
-	{
-		do
-		{
-			if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-			{
-				continue;
-			}
-			loadOneKeyMappingsInfo(folder.Append(findData.cFileName), virtualFolderPath.Append(findData.cFileName), category);
-		}
-		while (::FindNextFile(hFind, &findData));
-		::FindClose(hFind);
-	}
-#elif defined (BEOS)
-	BDirectory findDir(folder.GetPathString());
-	if (B_OK == findDir.InitCheck())
-	{
-		BEntry entry;
-		char filename[B_FILE_NAME_LENGTH];
-
-		findDir.Rewind();
-		while (B_NO_ERROR == findDir.GetNextEntry(&entry))
-		{
-			if (!entry.IsDirectory())
-			{
-				entry.GetName(filename);
-				SInt32 length = strlen(filename);
-				if (6 < length && 0 == strcmp(filename + length - 6, ALITERAL(".cckxb")))
-				{
-					BPath bpath;
-					entry.GetPath(&bpath);
-					Path keymapFilePath(bpath.Path());
-					loadOneKeyMappingsInfo(keymapFilePath, virtualFolderPath.Append(filename), category);
-				}
-			}
-		}
-	}
-#endif	
-}
-
-/**
- *	@brief	Loads and validates specified key-mapping file, and append it to keyMappingsInfos if it is valid.
- *	@param[in]	realKeymapFilePath		path of a key-mapping file (in real path)
- *	@param[in]	virtualKeymapFilePath	path of a key-mapping file (in virtual path)
- *	@param[in]	category	category of loading key-mapping.
- */
-void PreferencesDlg::loadOneKeyMappingsInfo(const Path& realKeymapFilePath, const Path& virtualKeymapFilePath, PreferencesDlg::KMCategory category)
-{
-	try
-	{
-		KeyMappings keyMappings;
-		keyMappings.Load(realKeymapFilePath);
-		UTF8String platform;
-		if (!keyMappings.GetPlatform(platform) || !CoveredCalcApp::GetInstance()->CheckPlatform(platform))
-		{
-			return;
-		}
-		
-		UTF8String utf8Title;
-		keyMappings.GetTitle(utf8Title);
-		
-		KeyMappingsInfo* info = new KeyMappingsInfo;
-		info->category = category;
-		UTF8Conv::ToMultiByte(info->title, utf8Title);
-		info->keyMapFilePath = virtualKeymapFilePath;
-		keyMappingsInfos.push_back(info);
-	}
-	catch (Exception* ex)
-	{
-		// ignore
-		ex->Delete();
-	}			
-}
-
-/**
- *	@brief	Unload informations about installed key-mapping files.
- */
-void PreferencesDlg::unloadKeyMappingsInfos()
-{
-	KeyMappingsInfoPtrVector::iterator ite;
-	for (ite = keyMappingsInfos.begin(); ite != keyMappingsInfos.end(); ite++)
-	{
-		KeyMappingsInfo* info = *ite;
-		delete info;
-	}
-	keyMappingsInfos.clear();
-}
-
 /**
  *	@brief	Called when key-mapping selection has been changed.
  */
 void PreferencesDlg::processKeyMappingSelectionChanged()
 {
-	const KeyMappingsInfo* currentInfo = getKeyMapping(false);
-	if (NULL == currentInfo || KMCategory_Invalid == currentInfo->category)
+	UICButton* editKeymapButton = getEditKeyMapButton();
+	UICButton* duplicateKeymapButton = getDuplicateKeyMapButton();
+	UICButton* deleteKeymapButton = getDeleteKeyMapButton();
+
+	const KeymapSelectHelper::KeyMappingsInfo* currentInfo;
+	KeymapSelectHelper::CheckResult keymapCheckResult = keymapSelectHelper.GetCurrentKeymap(currentInfo);
+	if (KeymapSelectHelper::Check_OK != keymapCheckResult ||
+		KeymapSelectHelper::KMCategory_Invalid == currentInfo->category)
 	{
-		enableEditKeyMapping(false);
-		enableDuplicateKeyMapping(false);
-		enableDeleteKeyMapping(false);
+		editKeymapButton->Enable(false);
+		duplicateKeymapButton->Enable(false);
+		deleteKeymapButton->Enable(false);
 		return;
 	}
 	
-	if (KMCategory_Application == currentInfo->category)
+	if (KeymapSelectHelper::KMCategory_Application == currentInfo->category)
 	{
-		enableEditKeyMapping(true);
-		enableDuplicateKeyMapping(true);
-		enableDeleteKeyMapping(false);
+		editKeymapButton->Enable(true);
+		duplicateKeymapButton->Enable(true);
+		deleteKeymapButton->Enable(false);
 	}
 	else
 	{
-		enableEditKeyMapping(true);
-		enableDuplicateKeyMapping(true);
-		enableDeleteKeyMapping(true);
+		editKeymapButton->Enable(true);
+		duplicateKeymapButton->Enable(true);
+		deleteKeymapButton->Enable(true);
 	}
 }
 
@@ -356,8 +268,9 @@ void PreferencesDlg::processKeyMappingSelectionChanged()
  */
 void PreferencesDlg::doEditKeyMapping()
 {
-	const KeyMappingsInfo* currentInfo = getKeyMapping(false);
-	if (NULL == currentInfo)
+	const KeymapSelectHelper::KeyMappingsInfo* currentInfo;
+	KeymapSelectHelper::CheckResult keymapCheckResult = keymapSelectHelper.GetCurrentKeymap(currentInfo);
+	if (KeymapSelectHelper::Check_OK != keymapCheckResult)
 	{
 		return;
 	}
@@ -370,7 +283,7 @@ void PreferencesDlg::doEditKeyMapping()
 		KeyMappings keyMappings;
 		keyMappings.Load(filePath);
 		
-		bool isReadOnly = (currentInfo->category == KMCategory_User) ? false : true;
+		bool isReadOnly = (currentInfo->category == KeymapSelectHelper::KMCategory_User) ? false : true;
 		if (showEditKeyMapDialog(isReadOnly, keyMappings))
 		{
 			if (!isReadOnly)
@@ -379,8 +292,7 @@ void PreferencesDlg::doEditKeyMapping()
 				keyMappings.Save(filePath);
 
 				// update UI
-				loadKeyMappingsInfos();
-				setKeyMapping(keyMappingsInfos, virtualPath);
+				keymapSelectHelper.ReloadKeyMappingsInfos(virtualPath);
 			}
 		}
 	}
@@ -396,8 +308,9 @@ void PreferencesDlg::doEditKeyMapping()
  */
 void PreferencesDlg::doDuplicateKeyMapping()
 {
-	const KeyMappingsInfo* currentInfo = getKeyMapping(false);
-	if (NULL == currentInfo)
+	const KeymapSelectHelper::KeyMappingsInfo* currentInfo;
+	KeymapSelectHelper::CheckResult keymapCheckResult = keymapSelectHelper.GetCurrentKeymap(currentInfo);
+	if (KeymapSelectHelper::Check_OK != keymapCheckResult)
 	{
 		return;
 	}
@@ -429,8 +342,7 @@ void PreferencesDlg::doDuplicateKeyMapping()
 		Path virtualPath = virtualUserKeymaps.Append(fileName);
 		
 		// update UI
-		loadKeyMappingsInfos();
-		setKeyMapping(keyMappingsInfos, virtualPath);
+		keymapSelectHelper.ReloadKeyMappingsInfos(virtualPath);
 	}
 	catch (Exception* ex)
 	{
@@ -483,21 +395,9 @@ Path PreferencesDlg::createUniqueUserKeyMappingFile(const Path& folderPath)
  */
 void PreferencesDlg::doDeleteKeyMapping()
 {
-	const KeyMappingsInfo* currentInfo = getKeyMapping(false);
-	if (NULL == currentInfo || KMCategory_User != currentInfo->category)
-	{
-		return;
-	}
-
-	UInt32 infosIndex;
-	for (infosIndex = 0; infosIndex < keyMappingsInfos.size(); infosIndex++)
-	{
-		if (keyMappingsInfos[infosIndex] == currentInfo)
-		{
-			break;
-		}
-	}
-	if (infosIndex >= keyMappingsInfos.size())
+	const KeymapSelectHelper::KeyMappingsInfo* currentInfo;
+	KeymapSelectHelper::CheckResult keymapCheckResult = keymapSelectHelper.GetCurrentKeymap(currentInfo);
+	if (KeymapSelectHelper::Check_OK != keymapCheckResult)
 	{
 		return;
 	}
@@ -540,13 +440,6 @@ void PreferencesDlg::doDeleteKeyMapping()
 			return;
 		}
 
-		keyMappingsInfos.erase(keyMappingsInfos.begin() + infosIndex);
-		if (keyMappingsInfos.size() <= infosIndex)
-		{
-			infosIndex = keyMappingsInfos.size() - 1;
-		}
-		setKeyMapping(keyMappingsInfos, keyMappingsInfos[infosIndex]->keyMapFilePath);
-
-		delete currentInfo;
+		keymapSelectHelper.DeleteFromList(currentInfo);
 	}
 }

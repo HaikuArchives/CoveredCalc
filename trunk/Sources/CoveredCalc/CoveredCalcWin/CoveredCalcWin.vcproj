@@ -694,6 +694,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\UI\UIComponent\WinDropDownListBoxAdapter.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\UI\UIComponent\WinKeyInputAdapter.cpp"
 						>
 					</File>
@@ -702,7 +706,15 @@
 						>
 					</File>
 					<File
+						RelativePath="..\UI\UIComponent\WinSeparatorDDListBoxAdapter.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\UI\UIComponent\WinTextControlAdapter.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\UIComponent\WinTrackbarAdapter.cpp"
 						>
 					</File>
 				</Filter>
@@ -715,6 +727,14 @@
 					</File>
 					<File
 						RelativePath="..\UI\Dialog\EditKeymapDlg.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\KeymapSelectHelper.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\LangSelectHelper.cpp"
 						>
 					</File>
 					<File
@@ -1344,7 +1364,27 @@
 						>
 					</File>
 					<File
+						RelativePath="..\UI\UIComponent\UICListBoxDDImpl.h"
+						>
+					</File>
+					<File
 						RelativePath="..\UI\UIComponent\UICListBoxImpl.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\UIComponent\UICSeparatorListBox.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\UIComponent\UICSeparatorListBoxDDImpl.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\UIComponent\UICSlider.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\UIComponent\UICSliderImpl.h"
 						>
 					</File>
 					<File
@@ -1360,6 +1400,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\UI\UIComponent\WinDropDownListBoxAdapter.h"
+						>
+					</File>
+					<File
 						RelativePath="..\UI\UIComponent\WinKeyInputAdapter.h"
 						>
 					</File>
@@ -1368,7 +1412,15 @@
 						>
 					</File>
 					<File
+						RelativePath="..\UI\UIComponent\WinSeparatorDDListBoxAdapter.h"
+						>
+					</File>
+					<File
 						RelativePath="..\UI\UIComponent\WinTextControlAdapter.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\UIComponent\WinTrackbarAdapter.h"
 						>
 					</File>
 				</Filter>
@@ -1381,6 +1433,14 @@
 					</File>
 					<File
 						RelativePath="..\UI\Dialog\EditKeymapDlg.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\KeymapSelectHelper.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\LangSelectHelper.h"
 						>
 					</File>
 					<File
