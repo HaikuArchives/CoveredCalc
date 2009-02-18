@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -36,6 +36,10 @@
 #include "WinDialog.h"
 #include "PreferencesDlg.h"
 #include "WinComboListSeparators.h"
+#include "UICSliderImpl.h"
+#include "UICListBoxDDImpl.h"
+#include "UICSeparatorListBoxDDImpl.h"
+#include "UICButtonImpl.h"
 
 /**
  *	@brief	設定ダイアログのクラスです。(Windows 版)
@@ -52,20 +56,13 @@ protected:
 	virtual MessageBoxProvider*		getMessageBoxProvider() { return this; }
 	virtual bool					showEditKeyMapDialog(bool isReadOnly, KeyMappings& keyMappings);
 	
-	virtual void					setLanguage(const LangFileInfoCollection& langFileInfos, const Path& currentLangFilePath);
-	virtual	bool					getLanguage(Path& langFilePath);
-	virtual void					setKeyMapping(const KeyMappingsInfoPtrVector& keyMappingsInfos, const Path& currentKeyMappingPath);
-	virtual const PreferencesDlg::KeyMappingsInfo*	getKeyMapping(bool doErrorProcessing);
-	virtual void					enableEditKeyMapping(bool isEnabled);
-	virtual void					enableDuplicateKeyMapping(bool isEnabled);
-	virtual void					enableDeleteKeyMapping(bool isEnabled);
-	
-	virtual void					setOpacity(SInt32 opacity);
-	virtual SInt32					getOpacity();
-	virtual void					enableOpacity(bool isEnabled);
-	virtual void					setEdgeSmoothing(SInt32 edgeSmoothing);
-	virtual SInt32					getEdgeSmoothing();
-	virtual void					enableEdgeSmoothing(bool isEnabled);
+	virtual UICSlider*				getOpacitySlider() { return &uicOpacitySlider; }
+	virtual UICSlider*				getEdgeSmoothingSlider() { return &uicEdgeSmoothingSlider; }
+	virtual UICListBox*				getLanguageListBox() { return &uicLanguageListBox; }
+	virtual UICSeparatorListBox*	getKeyMapListBox() { return &uicKeyMapListBox; }
+	virtual UICButton*				getEditKeyMapButton() { return &uicEditKeyMapButton; }
+	virtual UICButton*				getDuplicateKeyMapButton() { return &uicDuplicateKeyMapButton; }
+	virtual UICButton*				getDeleteKeyMapButton() { return &uicDeleteKeyMapButton; }
 
 private:
 	LRESULT							onInitDialog(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -78,6 +75,15 @@ private:
 private:
 	const LangFileInfoCollection*	langComboInfos;		///< 言語コンボボックスに格納されたアイテムの情報
 	WinComboListSeparators			keyMappingSeparators;	///< キーマッピングコンボボックスのセパレータ
+
+	// adapters
+	UICSliderImpl					uicOpacitySlider;
+	UICSliderImpl					uicEdgeSmoothingSlider;
+	UICListBoxDDImpl				uicLanguageListBox;
+	UICSeparatorListBoxDDImpl		uicKeyMapListBox;
+	UICButtonImpl					uicEditKeyMapButton;
+	UICButtonImpl					uicDuplicateKeyMapButton;
+	UICButtonImpl					uicDeleteKeyMapButton;
 };
 
 #endif // _WINPREFERENCESDLG_H_

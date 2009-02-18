@@ -24,55 +24,36 @@
  */
 
 /*!
-	@file		WinComboListSeparators.h
-	@brief		Definition of WinComboListSeparators class
+	@file		UICSlider.h
+	@brief		Definition of UICSlider interface.
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2008.2.24 created
+	@date		2009.01.03 created
 */
 
-#ifndef _WINCOMBOLISTSEPARATORS_H_
-#define _WINCOMBOLISTSEPARATORS_H_
-
-#include <vector>
-#include "HrnWnd.h"
+#ifndef _UICSLIDER_H_
+#define _UICSLIDER_H_
 
 /**
- *	@brief	This class draws separator line on the listbox of specified combobox.
+ *	@brief	Slider component interface.
  */
-class WinComboListSeparators : public CHrnWnd
+class UICSlider
 {
 public:
-						WinComboListSeparators();
-	virtual				~WinComboListSeparators();
+						UICSlider() { }
+	virtual				~UICSlider() { }
 	
-	BOOL				Attach(HWND hComboBox);
-	void				Detach();
-
-	void				AddSeparatorAt(SInt32 index);
-	void				RemoveSeparatorAt(SInt32 index);
-	bool				HasSeparatorAt(SInt32 index);
-	void				ClearAllSeparators();
-	void				ShiftSeparatorIndex(SInt32 baseIndex, SInt32 amount);
-
-protected:
-	virtual LRESULT		wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-private:
-	class ListBox : public CHrnWnd
-	{
-	public:
-		void							SetContainer(const WinComboListSeparators* container);
-		void							DrawSeparators(HDC hDC);
-
-	protected:
-		virtual LRESULT					wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	private:
-		const WinComboListSeparators*	container;
-	};
-	friend class ListBox;
-
-	ListBox				listBox;
-	std::vector<SInt32>	separatorIndexes;
+	virtual bool		IsEnabled() = 0;
+	virtual void		Enable(bool isEnabled) = 0;
+	
+	virtual void		MakeFocus() = 0;
+	
+	virtual void		SetMaxValue(SInt32 value) = 0;
+	virtual SInt32		GetMaxValue() = 0;
+	virtual void		SetMinValue(SInt32 value) = 0;
+	virtual SInt32		GetMinValue() = 0;
+	virtual void		SetValue(SInt32 value) = 0;
+	virtual SInt32		GetValue() = 0;
+	virtual void		SetTickMarkCount(SInt32 count) = 0;
 };
 
-#endif // _WINCOMBOLISTSEPARATORS_H_
+#endif // _UICSLIDER_H_

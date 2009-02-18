@@ -24,55 +24,34 @@
  */
 
 /*!
-	@file		WinComboListSeparators.h
-	@brief		Definition of WinComboListSeparators class
+	@file		WinTrackbarAdapter.h
+	@brief		Definition of WinTrackbarAdapter class.
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2008.2.24 created
+	@date		2009.01.03 created
 */
 
-#ifndef _WINCOMBOLISTSEPARATORS_H_
-#define _WINCOMBOLISTSEPARATORS_H_
+#ifndef _WINTRACKBARADAPTER_H_
+#define _WINTRACKBARADAPTER_H_
 
-#include <vector>
-#include "HrnWnd.h"
+#include "WinControlAdapter.h"
+#include "MBCString.h"
 
 /**
- *	@brief	This class draws separator line on the listbox of specified combobox.
+ *	@brief	Adapter class of TextEdit for Windows.
  */
-class WinComboListSeparators : public CHrnWnd
+class WinTrackbarAdapter : public WinControlAdapter
 {
 public:
-						WinComboListSeparators();
-	virtual				~WinComboListSeparators();
-	
-	BOOL				Attach(HWND hComboBox);
-	void				Detach();
+						WinTrackbarAdapter();
+	virtual				~WinTrackbarAdapter();
 
-	void				AddSeparatorAt(SInt32 index);
-	void				RemoveSeparatorAt(SInt32 index);
-	bool				HasSeparatorAt(SInt32 index);
-	void				ClearAllSeparators();
-	void				ShiftSeparatorIndex(SInt32 baseIndex, SInt32 amount);
-
-protected:
-	virtual LRESULT		wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-private:
-	class ListBox : public CHrnWnd
-	{
-	public:
-		void							SetContainer(const WinComboListSeparators* container);
-		void							DrawSeparators(HDC hDC);
-
-	protected:
-		virtual LRESULT					wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	private:
-		const WinComboListSeparators*	container;
-	};
-	friend class ListBox;
-
-	ListBox				listBox;
-	std::vector<SInt32>	separatorIndexes;
+	void				SetMaxValue(SInt32 value);
+	SInt32				GetMaxValue();
+	void				SetMinValue(SInt32 value);
+	SInt32				GetMinValue();
+	void				SetValue(SInt32 value);
+	SInt32				GetValue();
+	void				SetTickMarkCount(SInt32 count);
 };
 
-#endif // _WINCOMBOLISTSEPARATORS_H_
+#endif // _WINTRACKBARADAPTER_H_

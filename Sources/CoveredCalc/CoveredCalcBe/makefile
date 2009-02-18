@@ -1,6 +1,6 @@
 # CoveredCalc
 #
-# Copyright (c) 2004-2008 CoveredCalc Project Contributors
+# Copyright (c) 2004-2009 CoveredCalc Project Contributors
 # 
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -121,6 +121,8 @@ SRCS= \
 	../UI/Dialog/BeEditKeymapDlg.cpp \
 	../UI/Dialog/BePreferencesDlg.cpp \
 	../UI/Dialog/EditKeymapDlg.cpp \
+	../UI/Dialog/KeymapSelectHelper.cpp \
+	../UI/Dialog/LangSelectHelper.cpp \
 	../UI/Dialog/PreferencesDlg.cpp \
 	../UI/DialogUtility/BeDialogControlHelper.cpp \
 	../UI/DialogUtility/BeDialogManager.cpp \
