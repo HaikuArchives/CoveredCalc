@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -55,7 +55,7 @@ static const AChar	LangFileFolderName[] = ALITERAL("NLS");				///< the folder wh
 static const AChar	KeymapsFolderName[] = ALITERAL("Keymaps");			///< the folder which contains key-mapping files
 static const AChar	UserKeymapsFolderName[] = ALITERAL("UserKeymaps");	///< the folder which contains user-defined key-mapping files
 
-static const AChar STR_STRING_NOT_DEFINED[] = ALITERAL("[[The string \"%0:s%\" is not defined in the language file.]]");
+static const AChar STR_STRING_NOT_DEFINED[] = ALITERAL("[[%0:s%]]");
 
 // ---------------------------------------------------------------------
 //! Constructor
