@@ -43,6 +43,7 @@ public:
 	virtual				~WinControlAdapter();
 	
 	void				Init(HWND hControl);
+	HWND				GetWindowHandle() const { return hControl; }
 	
 	bool				IsEnabled();
 	void				Enable(bool isEnabled);

@@ -39,6 +39,8 @@
 #include "UTF8Conv.h"
 #include "Exception.h"
 #include "UICSeparatorListBox.h"
+#include "UICEventHandler.h"
+#include "UICEventCode.h"
 
 /**
  *	@brief	Constructor
@@ -46,6 +48,8 @@
 KeymapSelectHelper::KeymapSelectHelper()
 {
 	keymapListComponent = NULL;
+	componentID = -1;
+	uicEventHandler = NULL;
 }
 
 /**
@@ -59,10 +63,14 @@ KeymapSelectHelper::~KeymapSelectHelper()
 /**
  *	@brief	Initializes the object.
  *	@param[in]	keymapListComponent	target keymap list component in the dialog.
+ *	@param[in]	componentID			ID of the target keymap list component.
+ *	@param[in]	eventHandler		UIComponent event handler.
  */
-void KeymapSelectHelper::Init(UICSeparatorListBox* keymapListComponent)
+void KeymapSelectHelper::Init(UICSeparatorListBox* keymapListComponent, SInt32 componentID, UICEventHandler* uicEventHandler)
 {
 	this->keymapListComponent = keymapListComponent;
+	this->componentID = componentID;
+	this->uicEventHandler = uicEventHandler;
 }
 
 /**
@@ -139,7 +147,10 @@ void KeymapSelectHelper::ReloadKeyMappingsInfos(const Path& currentKeyMappingPat
 		}
 	}
 	keymapListComponent->SetSelectedItem(compSelectIndex);
-	//FIXME: processKeyMappingSelectionChanged
+	if (NULL != uicEventHandler)
+	{
+		uicEventHandler->HandleUICEvent(componentID, UICE_SelectionChanged, 0, NULL);
+	}
 }
 
 /**
@@ -271,7 +282,10 @@ void KeymapSelectHelper::DeleteFromList(const KeymapSelectHelper::KeyMappingsInf
 		infosIndex = keyMappingsInfos.size() - 1;
 	}
 	keymapListComponent->SetSelectedItem(infosIndex);
-	//FIXME: processKeyMappingSelectionChanged
+	if (NULL != uicEventHandler)
+	{
+		uicEventHandler->HandleUICEvent(componentID, UICE_SelectionChanged, 0, NULL);
+	}
 	delete deleteInfo;
 }
 
@@ -314,7 +328,10 @@ void KeymapSelectHelper::SetCurrentKeymap(const Path& currentKeyMappingPath)
 		compSelectIndex = invalidIndex;
 	}
 	keymapListComponent->SetSelectedItem(compSelectIndex);
-	//FIXME: processKeyMappingSelectionChanged
+	if (NULL != uicEventHandler)
+	{
+		uicEventHandler->HandleUICEvent(componentID, UICE_SelectionChanged, 0, NULL);
+	}
 }
 
 /**

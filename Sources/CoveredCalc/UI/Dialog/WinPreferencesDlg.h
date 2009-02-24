@@ -64,6 +64,8 @@ protected:
 	virtual UICButton*				getDuplicateKeyMapButton() { return &uicDuplicateKeyMapButton; }
 	virtual UICButton*				getDeleteKeyMapButton() { return &uicDeleteKeyMapButton; }
 
+	virtual void					closeDialog(bool isOK);
+
 private:
 	LRESULT							onInitDialog(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT							onCommand(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

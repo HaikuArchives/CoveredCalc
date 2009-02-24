@@ -47,6 +47,7 @@
 #include "MessageFormatter.h"
 #include "StringID.h"
 #include "UICButton.h"
+#include "UICEventCode.h"
 
 #if defined (WIN32)
 #include "WinCoveredCalcApp.h"
@@ -92,7 +93,7 @@ PreferencesDlg::~PreferencesDlg()
 /**
  *	@brief	Loads preferences data to this dialog.
  */
-void PreferencesDlg::loadToDialog()
+void PreferencesDlg::readyToShow()
 {
 	CoveredCalcApp* app = CoveredCalcApp::GetInstance();
 	ASSERT(NULL != app);
@@ -137,7 +138,7 @@ void PreferencesDlg::loadToDialog()
 	);
 	
 	// key-mapping
-	keymapSelectHelper.Init(getKeyMapListBox());
+	keymapSelectHelper.Init(getKeyMapListBox(), CID_KeyMapListBox, this);
 	keymapSelectHelper.ReloadKeyMappingsInfos(appSettings->GetKeymapFilePath());
 }
 
@@ -230,9 +231,32 @@ bool PreferencesDlg::saveFromDialog()
 }
 
 /**
+ *	@brief	Handles UIComponent event.
+ *	@param[in]	componentID	component ID
+ *	@param[in]	eventCode	event code
+ *	@param[in]	param1		parameter 1
+ *	@param[in]	param2		parameter 2
+ */
+void PreferencesDlg::HandleUICEvent(SInt32 componentID, int eventCode, SInt32 /* param1 */, void* /* param2 */)
+{
+#define HANDLE_EVENT(cid, evt, handler)		\
+	if (cid == componentID && evt == eventCode)	handler
+
+	HANDLE_EVENT(CID_KeyMapListBox,			UICE_SelectionChanged,		handleKeyMappingSelectionChanged());
+	HANDLE_EVENT(CID_EditKeyMapButton,		UICE_ButtonClicked,			handleEditKeyMappingButtonClicked());
+	HANDLE_EVENT(CID_DuplicateKeyMapButton,	UICE_ButtonClicked,			handleDuplicateKeyMappingButtonClicked());
+	HANDLE_EVENT(CID_DeleteKeyMapButton,	UICE_ButtonClicked,			handleDeleteKeyMappingButtonClicked());
+	HANDLE_EVENT(CID_OKButton,				UICE_ButtonClicked,			handleOK());
+	HANDLE_EVENT(CID_CancelButton,			UICE_ButtonClicked,			handleCancel());
+
+#undef HANDLE_EVENT
+}
+
+
+/**
  *	@brief	Called when key-mapping selection has been changed.
  */
-void PreferencesDlg::processKeyMappingSelectionChanged()
+void PreferencesDlg::handleKeyMappingSelectionChanged()
 {
 	UICButton* editKeymapButton = getEditKeyMapButton();
 	UICButton* duplicateKeymapButton = getDuplicateKeyMapButton();
@@ -266,7 +290,7 @@ void PreferencesDlg::processKeyMappingSelectionChanged()
 /**
  *	@brief	Shows a dialog which edit the current key-mapping.
  */
-void PreferencesDlg::doEditKeyMapping()
+void PreferencesDlg::handleEditKeyMappingButtonClicked()
 {
 	const KeymapSelectHelper::KeyMappingsInfo* currentInfo;
 	KeymapSelectHelper::CheckResult keymapCheckResult = keymapSelectHelper.GetCurrentKeymap(currentInfo);
@@ -306,7 +330,7 @@ void PreferencesDlg::doEditKeyMapping()
 /**
  *	@brief	Duplicates current key-mapping and select it.
  */
-void PreferencesDlg::doDuplicateKeyMapping()
+void PreferencesDlg::handleDuplicateKeyMappingButtonClicked()
 {
 	const KeymapSelectHelper::KeyMappingsInfo* currentInfo;
 	KeymapSelectHelper::CheckResult keymapCheckResult = keymapSelectHelper.GetCurrentKeymap(currentInfo);
@@ -393,7 +417,7 @@ Path PreferencesDlg::createUniqueUserKeyMappingFile(const Path& folderPath)
 /**
  *	@brief	Deletes current key-mapping.
  */
-void PreferencesDlg::doDeleteKeyMapping()
+void PreferencesDlg::handleDeleteKeyMappingButtonClicked()
 {
 	const KeymapSelectHelper::KeyMappingsInfo* currentInfo;
 	KeymapSelectHelper::CheckResult keymapCheckResult = keymapSelectHelper.GetCurrentKeymap(currentInfo);
@@ -442,4 +466,23 @@ void PreferencesDlg::doDeleteKeyMapping()
 
 		keymapSelectHelper.DeleteFromList(currentInfo);
 	}
+}
+
+/**
+ *	@brief	Called when OK button is clicked.
+ */
+void PreferencesDlg::handleOK()
+{
+	if (saveFromDialog())
+	{
+		closeDialog(true);
+	}
+}
+
+/**
+ *	@brief	Called when cancel button is clicked.
+ */
+void PreferencesDlg::handleCancel()
+{
+	closeDialog(false);
 }

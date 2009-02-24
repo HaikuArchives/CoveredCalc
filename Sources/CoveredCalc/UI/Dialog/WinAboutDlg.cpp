@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -123,6 +123,9 @@ void WinAboutDlg::createControls()
 	MBCString label;
 	HWND hControl;
 	
+	// set dialog title
+	SetWindowText(m_hWnd, stringLoader->LoadNativeString(NSID_ABOUT_TITLE).CString());
+
 	// "OK" button
 	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_ABOUT_OK));
 	hControl = dcc.CreateButton(ALITERAL("IDOK"), IDOK, label, WS_GROUP | BS_DEFPUSHBUTTON, BS_PUSHBUTTON, 0, 0);
@@ -159,11 +162,8 @@ LRESULT WinAboutDlg::onInitDialog(
 	// create controls
 	createControls();
 
-	// set dialog title
-	NativeStringLoader* stringLoader = CoveredCalcApp::GetInstance();
-	SetWindowText(m_hWnd, stringLoader->LoadNativeString(NSID_ABOUT_TITLE).CString());
-
-	// TODO: フォーカス
+	// set focus to OK button
+	SetFocus(GetDlgItem(m_hWnd, IDOK));
 
 	// 背景ブラシを作成
 	backBrush = ::CreateSolidBrush(BACK_COLOR);
@@ -191,7 +191,7 @@ LRESULT WinAboutDlg::onInitDialog(
 		SendMessage(iconImageWnd, STM_SETIMAGE, IMAGE_BITMAP, reinterpret_cast<LPARAM>(iconImage));
 	}
 	
-	return TRUE;
+	return FALSE;
 }
 
 // ---------------------------------------------------------------------

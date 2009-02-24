@@ -37,6 +37,7 @@
 #include "Path.h"
 #include "LangSelectHelper.h"
 #include "KeymapSelectHelper.h"
+#include "UICEventHandler.h"
 
 class LangFileInfoCollection;
 class MessageBoxProvider;
@@ -49,22 +50,16 @@ class UICButton;
 /**
  *	@brief	This is a base class of preferences dialog class.
  */
-class PreferencesDlg
+class PreferencesDlg : public UICEventHandler
 {
 public:
 									PreferencesDlg();
 	virtual							~PreferencesDlg();
-	
+
+	virtual void					HandleUICEvent(SInt32 componentID, int eventCode, SInt32 param1, void* param2);
+
 protected:
-	void							loadToDialog();
-	bool							saveFromDialog();
-	
-	void							processKeyMappingSelectionChanged();
-	void							doEditKeyMapping();
-	void							doDuplicateKeyMapping();
-	void							doDeleteKeyMapping();
-	
-	Path							createUniqueUserKeyMappingFile(const Path& folderPath);
+	void							readyToShow();
 
 protected:
 	/**
@@ -72,6 +67,21 @@ protected:
 	 *	@return	MessageBoxProvider object.
 	 */
 	virtual MessageBoxProvider*		getMessageBoxProvider() = 0;
+
+	enum ComponentID
+	{
+#if defined (WIN32)
+		CID_OpacitySlider,
+		CID_EdgeSmoothingSlider,
+#endif
+		CID_LanguageListBox,
+		CID_KeyMapListBox,
+		CID_EditKeyMapButton,
+		CID_DuplicateKeyMapButton,
+		CID_DeleteKeyMapButton,
+		CID_OKButton,
+		CID_CancelButton,
+	};
 
 #if defined (WIN32)
 	virtual UICSlider*				getOpacitySlider() = 0;
@@ -90,7 +100,23 @@ protected:
 	 *	@retval	true	user closes the dialog by OK button.
 	 *	@retval	false	user closes the dialog by Cancel button.
 	 */
-	virtual bool				showEditKeyMapDialog(bool isReadOnly, KeyMappings& keyMappings) = 0;
+	virtual bool					showEditKeyMapDialog(bool isReadOnly, KeyMappings& keyMappings) = 0;
+
+	/**
+	 *	@brief	Close this dialog.
+	 *	@param[in]	isOK	true if dialog is closing by OK button.
+	 */
+	virtual void					closeDialog(bool isOK) = 0;
+
+private:
+	void							handleKeyMappingSelectionChanged();
+	void							handleEditKeyMappingButtonClicked();
+	void							handleDuplicateKeyMappingButtonClicked();
+	void							handleDeleteKeyMappingButtonClicked();
+	void							handleOK();
+	void							handleCancel();
+	Path							createUniqueUserKeyMappingFile(const Path& folderPath);
+	bool							saveFromDialog();
 
 private:
 	LangSelectHelper			langSelectHelper;		///< "Language" component helper.
