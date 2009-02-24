@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -37,6 +37,7 @@
 #include "XMLLangFile.h"
 #include "StringID.h"
 #include "DialogID.h"
+#include "UICEventCode.h"
 
 ////////////////////////////////////////
 #define baseDialog	WinPseudoModalDialog
@@ -118,7 +119,7 @@ void WinEditKeymapDlg::createControls()
 
 	// "Current Key listbox
 	hControl = dcc.CreateListBox(ALITERAL("IDC_LIST_CURRENT_KEY"), IDC_LIST_CURRENT_KEY, WS_VSCROLL | LBS_NOTIFY, 0, 0, 0);
-	uicCurrentKeyListBox.Init(hControl);
+	uicCurrentKeysListBox.Init(hControl);
 
 	// "Remove" button
 	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_EDIT_KEYMAP_REMOVE));
@@ -220,7 +221,7 @@ LRESULT WinEditKeymapDlg::onCommand(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 		{
 			if (!uicNameTextEdit.GetRawAdapter()->IsModificationNotificationStopped())
 			{
-				processNameTextEditChanged();
+				HandleUICEvent(CID_NameTextEdit, UICE_TextChanged, 0, NULL);
 			}
 			isProcessed = true;
 		}
@@ -231,7 +232,7 @@ LRESULT WinEditKeymapDlg::onCommand(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 		{
 			if (!uicFunctionListBox.GetRawAdapter()->IsSelectionChangedNotificationStopped())
 			{
-				processFunctionListBoxSelectionChanged();
+				HandleUICEvent(CID_FunctionListBox, UICE_SelectionChanged, 0, NULL);
 			}
 			isProcessed = true;
 		}
@@ -240,9 +241,9 @@ LRESULT WinEditKeymapDlg::onCommand(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 	case IDC_LIST_CURRENT_KEY:
 		if (LBN_SELCHANGE == code)
 		{
-			if (!uicCurrentKeyListBox.GetRawAdapter()->IsSelectionChangedNotificationStopped())
+			if (!uicCurrentKeysListBox.GetRawAdapter()->IsSelectionChangedNotificationStopped())
 			{
-				processCurrentKeysListBoxSelectionChanged();
+				HandleUICEvent(CID_CurrentKeysListBox, UICE_SelectionChanged, 0, NULL);
 			}
 			isProcessed = true;
 		}
@@ -253,36 +254,30 @@ LRESULT WinEditKeymapDlg::onCommand(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 		{
 			if (!uicKeyInput.GetRawAdapter()->IsValueChangedNotificationStopped())
 			{
-				processKeyInputChanged();
+				HandleUICEvent(CID_KeyInput, UICE_TextChanged, 0, NULL);
 			}
 			isProcessed = true;
 		}
 		break;
 	
 	case IDC_ASSIGN:
-		processAssignButtonClicked();
+		HandleUICEvent(CID_AssignButton, UICE_ButtonClicked, 0, NULL);
 		isProcessed = true;
 		break;
 		
 	case IDC_REMOVE:
-		processRemoveButtonClicked();
+		HandleUICEvent(CID_RemoveButton, UICE_ButtonClicked, 0, NULL);
 		isProcessed = true;
 		break;
 	
 	case IDCANCEL:
-		if (!processCancel())
-		{
-			// do not pass this message to the base class's procedure.
-			isProcessed = true;
-		}
+		HandleUICEvent(CID_CancelButton, UICE_ButtonClicked, 0, NULL);
+		isProcessed = true;
 		break;
 
 	case IDOK:
-		if (!processOK())
-		{
-			// do not pass this message to the base class's procedure.
-			isProcessed = true;
-		}
+		HandleUICEvent(CID_OKButton, UICE_ButtonClicked, 0, NULL);
+		isProcessed = true;
 		break;
 	}
 	
@@ -294,4 +289,13 @@ LRESULT WinEditKeymapDlg::onCommand(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 	{
 		return baseDialog::wndProc(hWnd, uMsg, wParam, lParam);
 	}
+}
+
+/**
+ *	@brief	Close this dialog.
+ *	@param[in]	isOK	true if dialog is closing by OK button.
+ */
+void WinEditKeymapDlg::closeDialog(bool isOK)
+{
+	EndDialog((isOK) ? IDOK : IDCANCEL);
 }

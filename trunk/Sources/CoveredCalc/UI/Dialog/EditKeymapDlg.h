@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -35,6 +35,7 @@
 
 #include "MBCString.h"
 #include "KeyMappingManager.h"
+#include "UICEventHandler.h"
 
 class KeyNameDB;
 class KeyMappings;
@@ -48,7 +49,7 @@ class UICKeyInput;
 /**
  *	@brief	This is a base class of Edit-Keymapping dialog class.
  */
-class EditKeymapDlg
+class EditKeymapDlg : public UICEventHandler
 {
 public:
 								EditKeymapDlg();
@@ -59,16 +60,10 @@ public:
 	void						SetKeyMappings(KeyMappings* keyMappings);
 	KeyMappings*				GetKeyMappings() { return keyMappings; }
 
+	virtual void				HandleUICEvent(SInt32 componentID, int eventCode, SInt32 param1, void* param2);
+
 protected:
 	void						readyToShow();
-	void						processNameTextEditChanged();
-	void						processFunctionListBoxSelectionChanged();
-	void						processCurrentKeysListBoxSelectionChanged();
-	void						processKeyInputChanged();
-	void						processAssignButtonClicked();
-	void						processRemoveButtonClicked();
-	bool						processOK();
-	bool						processCancel();
 
 protected:
 	/**
@@ -76,6 +71,25 @@ protected:
 	 *	@return	MessageBoxProvider object.
 	 */
 	virtual MessageBoxProvider*	getMessageBoxProvider() = 0;
+
+	/**
+	 *	@brief	Close this dialog.
+	 *	@param[in]	isOK	true if dialog is closing by OK button.
+	 */
+	virtual void				closeDialog(bool isOK) = 0;
+
+	enum ComponentID
+	{
+		CID_NameTextEdit,
+		CID_FunctionListBox,
+		CID_CurrentKeysListBox,
+		CID_KeyInput,
+		CID_AssignedFunctionTextEdit,
+		CID_AssignButton,
+		CID_RemoveButton,
+		CID_OKButton,
+		CID_CancelButton,
+	};
 
 	virtual UICTextEdit*		getNameTextEdit() = 0;
 	virtual UICListBox*			getFunctionListBox() = 0;
@@ -88,6 +102,14 @@ protected:
 	virtual UICButton*			getCancelButton() = 0;
 
 private:
+	void						handleNameTextEditChanged();
+	void						handleFunctionListBoxSelectionChanged();
+	void						handleCurrentKeysListBoxSelectionChanged();
+	void						handleKeyInputChanged();
+	void						handleAssignButtonClicked();
+	void						handleRemoveButtonClicked();
+	void						handleOK();
+	void						handleCancel();
 	void						updateAssignButtonState();
 
 protected:

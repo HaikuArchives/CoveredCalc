@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -65,7 +65,7 @@ protected:
 	
 	virtual UICTextEdit*			getNameTextEdit()				{ return &uicNameTextEdit; }
 	virtual UICListBox*				getFunctionListBox()			{ return &uicFunctionListBox; }
-	virtual UICListBox*				getCurrentKeysListBox()			{ return &uicCurrentKeyListBox; }
+	virtual UICListBox*				getCurrentKeysListBox()			{ return &uicCurrentKeysListBox; }
 	virtual	UICKeyInput*			getKeyInput()					{ return &uicKeyInput; }
 	virtual UICTextEdit*			getAssignedFunctionTextEdit()	{ return &uicAssignedFunctionTextEdit; }
 	virtual UICButton*				getAssignButton()				{ return &uicAssignButton; }
@@ -73,13 +73,15 @@ protected:
 	virtual UICButton*				getOKButton()					{ return &uicOkButton; }
 	virtual UICButton*				getCancelButton()				{ return &uicCancelButton; }
 
+	virtual void					closeDialog(bool isOK);
+
 private:
 	WinKeyInputEdit					ctrlKeyInput;
 	
 	// adapters
 	UICTextEditImpl					uicNameTextEdit;
 	UICListBoxImpl					uicFunctionListBox;
-	UICListBoxImpl					uicCurrentKeyListBox;
+	UICListBoxImpl					uicCurrentKeysListBox;
 	UICKeyInputImpl					uicKeyInput;
 	UICTextEditImpl					uicAssignedFunctionTextEdit;
 	UICButtonImpl					uicAssignButton;

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -44,6 +44,7 @@
 #include "UICButton.h"
 #include "UICKeyInput.h"
 #include "StringID.h"
+#include "UICEventCode.h"
 
 EditKeymapDlg::FuncInfo EditKeymapDlg::funcInfo[] =
 {
@@ -211,9 +212,33 @@ private:
 };
 
 /**
+ *	@brief	Handles UIComponent event.
+ *	@param[in]	componentID	component ID
+ *	@param[in]	eventCode	event code
+ *	@param[in]	param1		parameter 1
+ *	@param[in]	param2		parameter 2
+ */
+void EditKeymapDlg::HandleUICEvent(SInt32 componentID, int eventCode, SInt32 /* param1 */, void* /* param2 */)
+{
+#define HANDLE_EVENT(cid, evt, handler)		\
+	if (cid == componentID && evt == eventCode)	handler
+
+	HANDLE_EVENT(CID_NameTextEdit,			UICE_TextChanged,		handleNameTextEditChanged());
+	HANDLE_EVENT(CID_FunctionListBox,		UICE_SelectionChanged,	handleFunctionListBoxSelectionChanged());
+	HANDLE_EVENT(CID_CurrentKeysListBox,	UICE_SelectionChanged,	handleCurrentKeysListBoxSelectionChanged());
+	HANDLE_EVENT(CID_KeyInput,				UICE_TextChanged,		handleKeyInputChanged());
+	HANDLE_EVENT(CID_AssignButton,			UICE_ButtonClicked,		handleAssignButtonClicked());
+	HANDLE_EVENT(CID_RemoveButton,			UICE_ButtonClicked,		handleRemoveButtonClicked());
+	HANDLE_EVENT(CID_OKButton,				UICE_ButtonClicked,		handleOK());
+	HANDLE_EVENT(CID_CancelButton,			UICE_ButtonClicked,		handleCancel());
+
+#undef HANDLE_EVENT
+}
+
+/**
  *	@brief	Called when the value of name text-edit is changed.
  */
-void EditKeymapDlg::processNameTextEditChanged()
+void EditKeymapDlg::handleNameTextEditChanged()
 {
 	isModified = true;
 }
@@ -221,7 +246,7 @@ void EditKeymapDlg::processNameTextEditChanged()
 /**
  *	@brief	Called when the selection of function listbox is changed.
  */
-void EditKeymapDlg::processFunctionListBoxSelectionChanged()
+void EditKeymapDlg::handleFunctionListBoxSelectionChanged()
 {
 	// enable/disable assign button
 	updateAssignButtonState();
@@ -243,7 +268,7 @@ void EditKeymapDlg::processFunctionListBoxSelectionChanged()
 				keyMappingManager.ForEachKey(funcInfo->keyFunc, &updater);
 			}
 			currentKeysList->StopSelectionChangedNotification(false);
-			processCurrentKeysListBoxSelectionChanged();
+			handleCurrentKeysListBoxSelectionChanged();
 		}
 	}
 }
@@ -251,7 +276,7 @@ void EditKeymapDlg::processFunctionListBoxSelectionChanged()
 /**
  *	@brief	Called when the selection of current keys listbox is changed.
  */
-void EditKeymapDlg::processCurrentKeysListBoxSelectionChanged()
+void EditKeymapDlg::handleCurrentKeysListBoxSelectionChanged()
 {
 	UICListBox* currentKeysList = getCurrentKeysListBox();
 	if (NULL != currentKeysList)
@@ -278,7 +303,7 @@ void EditKeymapDlg::processCurrentKeysListBoxSelectionChanged()
 				keyInput->StopValueChangedNotification(true);
 				keyInput->SetKeyEventParameter(*keyParam);
 				keyInput->StopValueChangedNotification(false);
-				processKeyInputChanged();
+				handleKeyInputChanged();
 			}
 		}
 	}
@@ -287,7 +312,7 @@ void EditKeymapDlg::processCurrentKeysListBoxSelectionChanged()
 /**
  *	@brief	Called when the value of key-input control is changed.
  */
-void EditKeymapDlg::processKeyInputChanged()
+void EditKeymapDlg::handleKeyInputChanged()
 {
 	// enable/disable assign button
 	updateAssignButtonState();
@@ -373,7 +398,7 @@ void EditKeymapDlg::updateAssignButtonState()
 /**
  *	@brief	Called when assign button is clicked.
  */
-void EditKeymapDlg::processAssignButtonClicked()
+void EditKeymapDlg::handleAssignButtonClicked()
 {
 	UICListBox* funcList = getFunctionListBox();
 	UICKeyInput* keyInput = getKeyInput();
@@ -412,15 +437,15 @@ void EditKeymapDlg::processAssignButtonClicked()
 	isModified = true;
 	
 	keyInput->StopValueChangedNotification(true);
-	processFunctionListBoxSelectionChanged();
+	handleFunctionListBoxSelectionChanged();
 	keyInput->StopValueChangedNotification(false);
-	processKeyInputChanged();
+	handleKeyInputChanged();
 }
 
 /**
  *	@brief	Called when remove button is clicked.
  */
-void EditKeymapDlg::processRemoveButtonClicked()
+void EditKeymapDlg::handleRemoveButtonClicked()
 {
 	UICListBox* funcList = getFunctionListBox();
 	UICListBox* currentKeysList = getCurrentKeysListBox();
@@ -453,19 +478,18 @@ void EditKeymapDlg::processRemoveButtonClicked()
 	{
 		keyInput->StopValueChangedNotification(true);
 	}
-	processFunctionListBoxSelectionChanged();
+	handleFunctionListBoxSelectionChanged();
 	if (NULL != keyInput)
 	{
 		keyInput->StopValueChangedNotification(false);
 	}
-	processKeyInputChanged();
+	handleKeyInputChanged();
 }
 
 /**
  *	@brief	Called when dialog is closing by Cancel button.
- *	@return false if stop closing.
  */
-bool EditKeymapDlg::processCancel()
+void EditKeymapDlg::handleCancel()
 {
 	if (isModified)
 	{
@@ -475,19 +499,21 @@ bool EditKeymapDlg::processCancel()
 			MessageBoxProvider::AlertType_Warning,
 			MessageBoxProvider::Button_No);
 
-		return MessageBoxProvider::Button_Yes == button;
+		if (MessageBoxProvider::Button_Yes == button)
+		{
+			closeDialog(false);
+		}
 	}
 	else
 	{
-		return true;
+		closeDialog(false);
 	}
 }
 
 /**
  *	@brief	Called when dialog is closing by OK button.
- *	@return false if stop closing.
  */
-bool EditKeymapDlg::processOK()
+void EditKeymapDlg::handleOK()
 {
 	MBCString name;
 	UICTextEdit* nameEdit = getNameTextEdit();
@@ -505,7 +531,7 @@ bool EditKeymapDlg::processOK()
 		{
 			nameEdit->MakeFocus();
 		}
-		return false;
+		return;
 	}
 	
 	// update keyMappings by keyMappingManager.
@@ -519,5 +545,5 @@ bool EditKeymapDlg::processOK()
 		keyMappingManager.WriteOut(keyMappings, KeyMappings::STR_CATEGORY_MAIN_WINDOW, &keyFunc);
 	}
 	
-	return true;
+	closeDialog(true);
 }

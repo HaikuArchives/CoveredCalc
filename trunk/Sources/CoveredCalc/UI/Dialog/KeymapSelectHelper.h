@@ -38,6 +38,7 @@
 #include "Path.h"
 
 class UICSeparatorListBox;
+class UICEventHandler;
 class KeyMappingsInfo;
 
 /**
@@ -69,7 +70,7 @@ public:
 									KeymapSelectHelper();
 	virtual							~KeymapSelectHelper();
 
-	void							Init(UICSeparatorListBox* keymapListComponent);
+	void							Init(UICSeparatorListBox* keymapListComponent, SInt32 componentID, UICEventHandler* uicEventHandler);
 	void							ReloadKeyMappingsInfos(const Path& currentKeyMappingPath);
 	void							DeleteFromList(const KeyMappingsInfo* info);
 	void							SetCurrentKeymap(const Path& currentKeyMappingPath);
@@ -92,6 +93,8 @@ private:
 
 private:
 	UICSeparatorListBox*			keymapListComponent;	///< combobox component
+	SInt32							componentID;			///< component ID
+	UICEventHandler*				uicEventHandler;		///< event handler
 	KeyMappingsInfoPtrVector		keyMappingsInfos;		///< installed key-mappings.
 };
 

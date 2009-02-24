@@ -1352,6 +1352,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\UI\UIComponent\UICEventCode.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\UIComponent\UICEventHandler.h"
+						>
+					</File>
+					<File
 						RelativePath="..\UI\UIComponent\UICKeyInput.h"
 						>
 					</File>

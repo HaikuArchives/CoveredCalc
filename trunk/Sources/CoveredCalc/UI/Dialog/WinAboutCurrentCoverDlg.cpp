@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -151,7 +151,7 @@ LRESULT WinAboutCurrentCoverDlg::onInitDialog(
 	LPARAM lParam		//!< additional initialization data
 )
 {
-	LRESULT ret = base::wndProc(hWnd, uMsg, wParam, lParam);
+	base::wndProc(hWnd, uMsg, wParam, lParam);
 
 	// create controls
 	createControls();
@@ -160,7 +160,7 @@ LRESULT WinAboutCurrentCoverDlg::onInitDialog(
 	SetFocus(GetDlgItem(m_hWnd, IDOK));
 
 	initialize();
-	return ret;
+	return FALSE;
 }
 
 // ---------------------------------------------------------------------

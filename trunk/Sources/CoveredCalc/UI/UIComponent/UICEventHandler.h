@@ -24,52 +24,25 @@
  */
 
 /*!
-	@file		AboutCurrentCoverDlg.h
-	@brief		Definition of AboutCurrentCoverDlg class
+	@file		UICEventHandler.h
+	@brief		Definition of UICEventHandler interface.
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2005.02.02 created
+	@date		2009.02.18 created
 */
 
-#ifndef _ABOUTCURRENTCOVERDLG_H_
-#define _ABOUTCURRENTCOVERDLG_H_
+#ifndef _UICEVENTHANDLER_H_
+#define _UICEVENTHANDLER_H_
 
-#include "CoverChangeEventHandler.h"
-
-class CoverDef;
-class UICTextEdit;
-
-// ---------------------------------------------------------------------
-//! This dialog shows informations about the current cover.
-// ---------------------------------------------------------------------
-class AboutCurrentCoverDlg : public CoverChangeEventHandler
+/**
+ *	@brief	Button component interface.
+ */
+class UICEventHandler
 {
 public:
-								AboutCurrentCoverDlg();
-	virtual						~AboutCurrentCoverDlg();
-
-	// implementations of CoverChangeEventHandler interface
-	virtual void				CoverDefChanged();
-	virtual void				CurrentCoverChanged();
-
-protected:
-	enum ComponentID
-	{
-		CID_NameTextEdit,
-		CID_DescriptionTextEdit,
-		CID_AboutTextEdit,
-	};
-
-	virtual UICTextEdit*		getNameTextEdit() = 0;
-	virtual UICTextEdit*		getDescriptionTextEdit() = 0;
-	virtual UICTextEdit*		getAboutTextEdit() = 0;
-
-protected:
-	void						initialize();
-	void						terminate();
-	virtual void				update();
-
-private:
-	void						setDataToDialog(const CoverDef* coverDef);
+						UICEventHandler() { }
+	virtual				~UICEventHandler() { }
+	
+	virtual void		HandleUICEvent(SInt32 componentID, int eventCode, SInt32 param1, void* param2) = 0;
 };
 
-#endif // _ABOUTCURRENTCOVERDLG_H_
+#endif // _UICEVENTHANDLER_H_

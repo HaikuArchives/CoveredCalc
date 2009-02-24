@@ -43,6 +43,7 @@
 #include "StringID.h"
 #include "WinDialogControlCreator.h"
 #include "DialogID.h"
+#include "UICEventCode.h"
 
 ////////////////////////////////////////
 #define baseDialog	WinDialog
@@ -262,9 +263,8 @@ LRESULT WinPreferencesDlg::onInitDialog(
 	// create controls
 	createControls();
 
-	// FIXME: フォーカス
+	readyToShow();
 
-	loadToDialog();
 	return TRUE;
 }
 
@@ -285,7 +285,7 @@ LRESULT WinPreferencesDlg::onCommand(
 	case IDC_CMB_KEYMAPPINGS:
 		if (CBN_SELCHANGE == HIWORD(wParam))
 		{
-			processKeyMappingSelectionChanged();
+			HandleUICEvent(CID_KeyMapListBox, UICE_SelectionChanged, 0, NULL);
 			return 0;
 		}
 		else
@@ -294,23 +294,23 @@ LRESULT WinPreferencesDlg::onCommand(
 		}
 		break;
 	case IDC_EDIT_KEYMAPPING:
-		doEditKeyMapping();
+		HandleUICEvent(CID_EditKeyMapButton, UICE_ButtonClicked, 0, NULL);
 		return 0;
 		break;
 	case IDC_DUPLICATE_KEYMAPPING:
-		doDuplicateKeyMapping();
+		HandleUICEvent(CID_DuplicateKeyMapButton, UICE_ButtonClicked, 0, NULL);
 		return 0;
 		break;
 	case IDC_DELETE_KEYMAPPING:
-		doDeleteKeyMapping();
+		HandleUICEvent(CID_DeleteKeyMapButton, UICE_ButtonClicked, 0, NULL);
 		return 0;
 		break;
 	case IDOK:
-		if (saveFromDialog())
-		{
-			EndDialog(hWnd, IDOK);
-			PostMessage(WinCoveredCalcApp::GetInstance()->GetMainWindow()->m_hWnd, WinSkinWindow::UM_REREAD_SKIN, 0, 0);
-		}
+		HandleUICEvent(CID_OKButton, UICE_ButtonClicked, 0, NULL);
+		return 0;
+		break;
+	case IDCANCEL:
+		HandleUICEvent(CID_CancelButton, UICE_ButtonClicked, 0, NULL);
 		return 0;
 		break;
 	default:
@@ -331,4 +331,18 @@ LRESULT WinPreferencesDlg::onDestroy(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 {
 	keyMappingSeparators.Detach();
 	return baseDialog::wndProc(hWnd, uMsg, wParam, lParam);
+}
+
+/**
+ *	@brief	Close this dialog.
+ *	@param[in]	isOK	true if dialog is closing by OK button.
+ */
+void WinPreferencesDlg::closeDialog(bool isOK)
+{
+	EndDialog(m_hWnd, (isOK) ? IDOK : IDCANCEL);
+
+	if (isOK)
+	{
+		PostMessage(WinCoveredCalcApp::GetInstance()->GetMainWindow()->m_hWnd, WinSkinWindow::UM_REREAD_SKIN, 0, 0);
+	}
 }
