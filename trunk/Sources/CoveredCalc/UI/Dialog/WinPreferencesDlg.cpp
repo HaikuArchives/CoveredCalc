@@ -55,7 +55,6 @@
  */
 WinPreferencesDlg::WinPreferencesDlg() : baseDialog(IDD_PREFERENCES)
 {
-	langComboInfos = NULL;
 }
 
 /**

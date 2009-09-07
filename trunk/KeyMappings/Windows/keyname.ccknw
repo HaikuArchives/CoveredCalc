@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <keyNames version="1" xmlns="http://hironytic.1st-shrine.net/schema/CoveredCalc-KeyNames">
 	<platform target="Windows"/>
 	<nameDef code="13">Pause</nameDef>

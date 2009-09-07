@@ -273,8 +273,11 @@ void BeListViewAdapter::StopSelectionChangedNotification(bool doStop)
 		if (0 == stoppedSelectionChangedNotificationCount)
 		{
 			BMessage* message = listView->SelectionMessage();
-			stoppedSelectionChangedCommand = message->what;
-			message->what = ID_NULL;
+			if (NULL != message)
+			{
+				stoppedSelectionChangedCommand = message->what;
+				message->what = ID_NULL;
+			}
 		}
 		stoppedSelectionChangedNotificationCount++;
 	}
@@ -284,8 +287,11 @@ void BeListViewAdapter::StopSelectionChangedNotification(bool doStop)
 		if (0 == stoppedSelectionChangedNotificationCount)
 		{
 			BMessage* message = listView->SelectionMessage();
-			message->what = stoppedSelectionChangedCommand;
-			stoppedSelectionChangedCommand = ID_NULL;
+			if (NULL != message)
+			{
+				message->what = stoppedSelectionChangedCommand;
+				stoppedSelectionChangedCommand = ID_NULL;
+			}
 		}
 	}
 }

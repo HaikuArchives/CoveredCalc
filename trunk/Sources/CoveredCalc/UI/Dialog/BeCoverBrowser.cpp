@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -47,6 +47,7 @@
 #include "ExceptionMessageUtils.h"
 #include "BeCoverBrowser.h"
 #include "BeDialogControlHelper.h"
+#include "UICEventCode.h"
 
 ////////////////////////////////////////
 #define baseWindow	BeDialog
@@ -119,7 +120,8 @@ void BeCoverBrowser::createViews()
 	coverList->AddColumn(new BStringColumn(nsl->LoadNativeString(NSID_COVER_BROWSER_COLUMN_DESCRIPTION), 200, 50, INT_MAX, B_TRUNCATE_END, B_ALIGN_LEFT), 1);	
 	coverList->SetColumnFlags(B_ALLOW_COLUMN_RESIZE);
 	coverList->SetSelectionMode(B_SINGLE_SELECTION_LIST);
-	coverList->SetInvocationMessage(new BMessage(ID_COVERBROWSER_APPLY));
+	coverList->SetInvocationMessage(new BMessage(ID_COVERBROWSER_INVOKE_ITEM));
+	uicCoverList.Init(coverList);
 	
 	// Reload
 	BButton* reloadButton = new BButton(dch.GetItemRect(ALITERAL("IDC_RELOAD"), ITEMNAME_WINDOW),
@@ -207,7 +209,7 @@ void BeCoverBrowser::initDialog()
 	// make the list and show it.
 	try
 	{
-		doUpdateList();
+		readyToShow();
 	}
 	catch (Exception* ex)
 	{
@@ -243,74 +245,6 @@ void BeCoverBrowser::GetUIRect(
 	rect.bottom = static_cast<SInt32>(frame.bottom + 1);
 }
 
-// ---------------------------------------------------------------------
-//! Clears the cover list.
-// ---------------------------------------------------------------------
-void BeCoverBrowser::clearListUI()
-{
-	coverList->Clear();
-}
-
-// ---------------------------------------------------------------------
-//! Each row in cover list.
-// ---------------------------------------------------------------------
-class BeCoverBrowserRow : public BRow
-{
-public:
-						BeCoverBrowserRow(float height = 16.0) : BRow(height), listItem(NULL) { }
-
-	void				SetData(CoverListItem* listItem)
-							{ this->listItem = listItem; }
-	CoverListItem*		GetData() const
-							{ return listItem; }
-
-private:
-	CoverListItem*		listItem;			///< list item attached with this row.
-};
-
-// ---------------------------------------------------------------------
-//! Set cover data to the cover list.
-// ---------------------------------------------------------------------
-void BeCoverBrowser::setDataToListUI()
-{
-	clearListUI();
-
-	MBCString text;
-	const CoverListVector* items = getListItems();
-	CoverListVector::const_iterator iterator;
-	for (iterator=items->begin(); iterator!=items->end(); iterator++)
-	{
-		CoverListItem* item = *iterator;
-		BeCoverBrowserRow* row = new BeCoverBrowserRow();
-		row->SetData(item);
-		UTF8Conv::ToMultiByte(text, item->GetTitle());
-		row->SetField(new BStringField(text), 0);
-		UTF8Conv::ToMultiByte(text, item->GetDescription());
-		row->SetField(new BStringField(text), 1);
-		coverList->AddRow(row);
-	}
-}
-
-// ---------------------------------------------------------------------
-//! Retrives selected item.
-/*!
-	@return selected item. (NULL when no item is selected)
-*/
-// ---------------------------------------------------------------------
-const CoverListItem* BeCoverBrowser::getSelectedItem()
-{
-	BRow* selectedRow = coverList->CurrentSelection();
-	BeCoverBrowserRow* cbRow = dynamic_cast<BeCoverBrowserRow*>(selectedRow);
-	if (NULL != cbRow)
-	{
-		return cbRow->GetData();
-	}
-	else
-	{
-		return NULL;
-	}
-}
-
 /**
  *	@brief	Really destroys this cover browser window.
  */
@@ -331,67 +265,22 @@ void BeCoverBrowser::MessageReceived(
 	{
 		switch (message->what)
 		{
+		case ID_COVERBROWSER_INVOKE_ITEM:
+			HandleUICEvent(CID_CoverList, UICE_ListItemInvoked, 0, NULL);
+			break;
 		case ID_COVERBROWSER_RELOAD:
-			onReload();
+			HandleUICEvent(CID_ReloadButton, UICE_ButtonClicked, 0, NULL);
 			break;
 		case ID_COVERBROWSER_APPLY:
-			onApply();
+			HandleUICEvent(CID_ApplyButton, UICE_ButtonClicked, 0, NULL);
 			break;
 		case ID_COVERBROWSER_CLOSE:
-			onClose();
+			HandleUICEvent(CID_CloseButton, UICE_ButtonClicked, 0, NULL);
 			break;
 		default:
 			baseWindow::MessageReceived(message);
 			break;
 		}
-	}
-	catch (Exception* ex)
-	{
-		ExceptionMessageUtils::DoExceptionMessageBox(CoveredCalcApp::GetInstance(), ex);
-		ex->Delete();		
-	}	
-}
-
-// ---------------------------------------------------------------------
-//! Called when 'reload' button is pressed.
-// ---------------------------------------------------------------------
-void BeCoverBrowser::onReload()
-{
-	try
-	{
-		doUpdateList();
-	}
-	catch (Exception* ex)
-	{
-		ExceptionMessageUtils::DoExceptionMessageBox(CoveredCalcApp::GetInstance(), ex);
-		ex->Delete();		
-	}
-}
-
-// ---------------------------------------------------------------------
-//! Called when 'apply' button is pressed.
-// ---------------------------------------------------------------------
-void BeCoverBrowser::onApply()
-{
-	try
-	{
-		doApplySelectedCover();
-	}
-	catch (Exception* ex)
-	{
-		ExceptionMessageUtils::DoExceptionMessageBox(CoveredCalcApp::GetInstance(), ex);
-		ex->Delete();		
-	}	
-}
-
-// ---------------------------------------------------------------------
-//! Called when 'close' button is pressed.
-// ---------------------------------------------------------------------
-void BeCoverBrowser::onClose()
-{
-	try
-	{
-		doClose();
 	}
 	catch (Exception* ex)
 	{
@@ -414,7 +303,7 @@ bool BeCoverBrowser::QuitRequested()
 	{
 		try
 		{
-			doClose();
+			HandleUICEvent(CID_CloseButton, UICE_ButtonClicked, 0, NULL);
 		}
 		catch (Exception* ex)
 		{

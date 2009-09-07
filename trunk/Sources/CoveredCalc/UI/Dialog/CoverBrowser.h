@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2007 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -24,57 +24,59 @@
  */
 
 /*!
-	@file		BeCoverBrowser.h
-	@brief		Definition of BeCoverBrowser class
+	@file		CoverBrowser.h
+	@brief		Definition of CoverBrowser class
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2004.09.12 created
+	@date		2004.3.11 created
 */
 
+#ifndef _COVERBROWSER_H_
+#define _COVERBROWSER_H_
 
-#ifndef _BECOVERBROWSER_H_
-#define _BECOVERBROWSER_H_
+#include "CoverListManager.h"
+#include "UICEventHandler.h"
 
-#include "BeDialog.h"
-#include "CoverBrowser.h"
-
-class BColumnListView;
+class UICMultiColumnList;
 
 // ---------------------------------------------------------------------
-//! Cover browser window on BeOS
+//! Cover browser window
 // ---------------------------------------------------------------------
-class BeCoverBrowser : public BeDialog, public CoverBrowser
+class CoverBrowser : public UICEventHandler
 {
 public:
-									BeCoverBrowser();
-	virtual							~BeCoverBrowser();
+									CoverBrowser();
+	virtual							~CoverBrowser();
 
-	virtual void					Quit();
-	
-	virtual void					GetUIRect(Rect32& rect) const;
+	void							SetCoversFolderPath(const Path& path)
+													{ this->coversFolderPath = path; }
+
+	virtual	void					GetUIRect(Rect32& rect) const = 0;
+	virtual void					HandleUICEvent(SInt32 componentID, int eventCode, SInt32 param1, void* param2);
 
 protected:
-	virtual void					MessageReceived(BMessage *message);
-	virtual	bool					QuitRequested();
-	
-protected:
-	virtual void					initDialog();
-	void							createViews();
-	virtual void					clearListUI();
-	virtual	void					setDataToListUI();
-	virtual const CoverListItem*	getSelectedItem();
+	Point32							getInitialLocation();
+	void							readyToShow();
+	void							onDestroy();
 
-#if defined (ZETA)
-	virtual void					languageChanged();
-#endif
+	enum ComponentID
+	{
+		CID_CoverList,
+		CID_ReloadButton,
+		CID_ApplyButton,
+		CID_CloseButton,
+	};
 
-private:
-	void							moveToInitialLocation();
-	void							onReload();
-	void							onApply();
-	void							onClose();
+	virtual UICMultiColumnList*		getCoverList() = 0;
 
 private:
-	BColumnListView*				coverList;			///< cover list
+	void							doUpdateList();
+	void							handleReloadButtonClicked();
+	void							handleApplyButtonClicked();
+	void							handleCloseButtonClicked();
+
+private:
+	CoverListManager				listManager;
+	Path							coversFolderPath;				//!< 'Covers' folder path
 };
 
-#endif // _BECOVERBROWSER_H_
+#endif // _COVERBROWSER_H_

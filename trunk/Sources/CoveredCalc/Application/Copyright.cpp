@@ -47,4 +47,4 @@ AChar ApplicationTitleString[] =
 #endif
 
 /// Copyright message - 1 which shown on About dialog.
-AChar CopyrightString1[] = ALITERAL("Copyright (C) 2004-2008 CoveredCalc Project Contributors.");
+AChar CopyrightString1[] = ALITERAL("Copyright (C) 2004-2009 CoveredCalc Project Contributors.");

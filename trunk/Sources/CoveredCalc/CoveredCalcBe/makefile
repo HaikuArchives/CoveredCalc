@@ -91,7 +91,6 @@ SRCS= \
 	../Storage/FileException.cpp \
 	../Storage/Path.cpp \
 	../UI/BeCCSAppearance.cpp \
-	../UI/BeCoverBrowser.cpp \
 	../UI/BeDeskbarPseudoWindow.cpp \
 	../UI/BeKeyEventFilter.cpp \
 	../UI/BeMainView.cpp \
@@ -100,7 +99,6 @@ SRCS= \
 	../UI/BeSkinView.cpp \
 	../UI/BeSkinWindow.cpp \
 	../UI/ButtonUITask.cpp \
-	../UI/CoverBrowser.cpp \
 	../UI/KeyMappingManager.cpp \
 	../UI/KeyNameDB.cpp \
 	../UI/MainUIManager.cpp \
@@ -117,9 +115,11 @@ SRCS= \
 	../UI/Dialog/AboutCurrentCoverDlg.cpp \
 	../UI/Dialog/BeAboutCurrentCoverDialog.cpp \
 	../UI/Dialog/BeAboutDialog.cpp \
+	../UI/Dialog/BeCoverBrowser.cpp \
 	../UI/Dialog/BeDialog.cpp \
 	../UI/Dialog/BeEditKeymapDlg.cpp \
 	../UI/Dialog/BePreferencesDlg.cpp \
+	../UI/Dialog/CoverBrowser.cpp \
 	../UI/Dialog/EditKeymapDlg.cpp \
 	../UI/Dialog/KeymapSelectHelper.cpp \
 	../UI/Dialog/LangSelectHelper.cpp \
@@ -127,10 +127,13 @@ SRCS= \
 	../UI/DialogUtility/BeDialogControlHelper.cpp \
 	../UI/DialogUtility/BeDialogManager.cpp \
 	../UI/DialogUtility/DialogLayout.cpp \
+	../UI/UIComponent/BeColumnListViewAdapter.cpp \
 	../UI/UIComponent/BeControlAdapter.cpp \
 	../UI/UIComponent/BeKeyInputAdapter.cpp \
 	../UI/UIComponent/BeLabeledControlAdapter.cpp \
 	../UI/UIComponent/BeListViewAdapter.cpp \
+	../UI/UIComponent/BeMenuFieldAdapter.cpp \
+	../UI/UIComponent/BeSeparatorMenuFieldAdapter.cpp \
 	../UI/UIComponent/BeTextControlAdapter.cpp \
 	../UI/UIComponent/BeTextViewAdapter.cpp \
 	../UI/UIComponent/BeViewAdapter.cpp \

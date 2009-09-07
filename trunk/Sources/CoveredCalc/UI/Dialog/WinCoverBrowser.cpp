@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -42,6 +42,7 @@
 #include "StringID.h"
 #include "WinDialogControlCreator.h"
 #include "DialogID.h"
+#include "UICEventCode.h"
 
 ////////////////////////////////////////
 #define baseWnd			WinDialog
@@ -101,87 +102,6 @@ void WinCoverBrowser::GetUIRect(
 		rect.right = winRect.right;
 		rect.bottom = winRect.bottom;
 	}
-}
-
-// ---------------------------------------------------------------------
-//! カバー一覧をクリアします。
-// ---------------------------------------------------------------------
-void WinCoverBrowser::clearListUI()
-{
-	HWND listWnd = ::GetDlgItem(m_hWnd, IDC_COVER_LIST);
-	if (NULL == listWnd)
-	{
-		return;
-	}
-
-	ListView_DeleteAllItems(listWnd);
-}
-
-// ---------------------------------------------------------------------
-//! 一覧データを UI に表示します。
-// ---------------------------------------------------------------------
-void WinCoverBrowser::setDataToListUI()
-{
-	HWND listWnd = ::GetDlgItem(m_hWnd, IDC_COVER_LIST);
-	if (NULL == listWnd)
-	{
-		return;
-	}
-	
-	clearListUI();
-	
-	LVITEM item;
-	ZeroMemory(&item, sizeof(item));
-	MBCString text;
-	const CoverListVector* items = getListItems();
-	CoverListVector::const_iterator iterator;
-	int index = 0;
-	for (iterator=items->begin(); iterator!=items->end(); iterator++)
-	{
-		// アイテムを挿入 (タイトルはここで挿入される)
-		UTF8Conv::ToMultiByte(text, (*iterator)->GetTitle());
-		item.mask = LVIF_TEXT | LVIF_PARAM;
-		item.iItem = index;
-		item.lParam = reinterpret_cast<LPARAM>(*iterator);
-		item.pszText = const_cast<LPTSTR>(text.CString());
-		int itemIndex = ListView_InsertItem(listWnd, &item);
-		
-		// 説明
-		UTF8Conv::ToMultiByte(text, (*iterator)->GetDescription());
-		ListView_SetItemText(listWnd, itemIndex, 1, const_cast<LPTSTR>(text.CString()));		
-	}
-}
-
-// ---------------------------------------------------------------------
-//! 選択されたアイテムを取得します。
-/*!
-	@return 選択されたアイテムのポインタ (NULL なら選択されてない)
-*/
-// ---------------------------------------------------------------------
-const CoverListItem* WinCoverBrowser::getSelectedItem()
-{
-	HWND listWnd = ::GetDlgItem(m_hWnd, IDC_COVER_LIST);
-	if (NULL == listWnd)
-	{
-		return NULL;
-	}
-
-	int selectedIndex = ListView_GetNextItem(listWnd, -1, LVIS_SELECTED);
-	if (-1 == selectedIndex)
-	{
-		return NULL;
-	}
-	
-	LVITEM item;
-	ZeroMemory(&item, sizeof(item));
-	item.mask = LVIF_PARAM;
-	item.iItem = selectedIndex;
-	if (!ListView_GetItem(listWnd, &item))
-	{
-		return NULL;
-	}
-	
-	return reinterpret_cast<const CoverListItem*>(item.lParam);
 }
 
 /**
@@ -245,6 +165,43 @@ LRESULT WinCoverBrowser::wndProc(
 }
 
 /**
+ *	@brief	Create cover list.
+ *	@param[in] dcc WinDialogControlCreator
+ */
+void WinCoverBrowser::createCoverListControl(WinDialogControlCreator& dcc)
+{
+	NativeStringLoader* stringLoader = CoveredCalcApp::GetInstance();
+
+	// create a control
+	HWND listWnd = dcc.CreateListView(ALITERAL("IDC_COVER_LIST"), IDC_COVER_LIST, LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | LVS_NOSORTHEADER, 0, 0, 0);
+	DWORD exStyle = ListView_GetExtendedListViewStyle(listWnd);
+	exStyle |= LVS_EX_FULLROWSELECT;
+	ListView_SetExtendedListViewStyle(listWnd, exStyle);
+
+	// add columns
+	MBCString columnName;
+	LVCOLUMN column;
+	ZeroMemory(&column, sizeof(column));
+	column.mask = LVCF_TEXT | LVCF_FMT;
+	column.fmt = LVCFMT_LEFT;
+	// -- name
+	columnName = stringLoader->LoadNativeString(NSID_COVER_BROWSER_COLUMN_NAME);
+	column.pszText = const_cast<LPTSTR>(columnName.CString());
+	ListView_InsertColumn(listWnd, 0, &column);
+	// -- description
+	columnName = stringLoader->LoadNativeString(NSID_COVER_BROWSER_COLUMN_DESCRIPTION);
+	column.pszText = const_cast<LPTSTR>(columnName.CString());
+	ListView_InsertColumn(listWnd, 1, &column);
+
+	// adjust column widths
+	ListView_SetColumnWidth(listWnd, 0, 150);						// name
+	ListView_SetColumnWidth(listWnd, 1, LVSCW_AUTOSIZE_USEHEADER);	// description
+
+	// bind to adaptor
+	uicCoverList.Init(listWnd);
+}
+
+/**
  *	@brief	Creates controls on dialog.
  */
 void WinCoverBrowser::createControls()
@@ -259,7 +216,7 @@ void WinCoverBrowser::createControls()
 	hControl = dcc.CreateStatic(ALITERAL("IDC_SELECT_COVER"), IDC_STATIC, label.CString(), WS_GROUP, 0, 0, 0);
 
 	// Cover list
-	hControl = dcc.CreateListView(ALITERAL("IDC_COVER_LIST"), IDC_COVER_LIST, LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | LVS_NOSORTHEADER, 0, 0, 0);
+	createCoverListControl(dcc);
 
 	// Reflesh button
 	label = XMLLangFile::ConvertAccessMnemonic(stringLoader->LoadNativeString(NSID_COVER_BROWSER_RELOAD));
@@ -319,48 +276,8 @@ LRESULT WinCoverBrowser::onInitDialog(
 	::GetWindowRect(m_hWnd, &rect);
 	::MoveWindow(m_hWnd, topLeft.x, topLeft.y, rect.right - rect.left, rect.bottom - rect.top, TRUE);
 
-	HWND listWnd = ::GetDlgItem(m_hWnd, IDC_COVER_LIST);
-	if (NULL != listWnd)
-	{
-		// スタイル設定
-		DWORD exStyle = ListView_GetExtendedListViewStyle(listWnd);
-		exStyle |= LVS_EX_FULLROWSELECT;
-		ListView_SetExtendedListViewStyle(listWnd, exStyle);
-	
-		// カラムを追加
-		MBCString columnName;
-		LVCOLUMN column;
-		ZeroMemory(&column, sizeof(column));
-		column.mask = LVCF_TEXT | LVCF_FMT;
-		column.fmt = LVCFMT_LEFT;
-		
-		// -- 名前
-		columnName = stringLoader->LoadNativeString(NSID_COVER_BROWSER_COLUMN_NAME);
-		column.pszText = const_cast<LPTSTR>(columnName.CString());
-		ListView_InsertColumn(listWnd, 0, &column);
-		
-		// -- 説明
-		columnName = stringLoader->LoadNativeString(NSID_COVER_BROWSER_COLUMN_DESCRIPTION);
-		column.pszText = const_cast<LPTSTR>(columnName.CString());
-		ListView_InsertColumn(listWnd, 1, &column);
+	readyToShow();
 
-		// カラム幅の調整
-		ListView_SetColumnWidth(listWnd, 0, 150);						// 名前
-		ListView_SetColumnWidth(listWnd, 1, LVSCW_AUTOSIZE_USEHEADER);	// 説明
-
-		// リストを作成して表示
-		try
-		{
-			doUpdateList();
-		}
-		catch (Exception* ex)
-		{
-			ExceptionMessageUtils::DoExceptionMessageBox(CoveredCalcApp::GetInstance(), ex);
-			ex->Delete();
-		}
-	}
-
-	// FIXME: ここで先頭のコントロールにフォーカスを与えて return FALSE
 	return TRUE;
 }
 
@@ -425,15 +342,7 @@ LRESULT WinCoverBrowser::onClose(
 	LPARAM /*lParam*/	//!< 利用しないパラメータ
 )
 {
-	try
-	{
-		doClose();
-	}
-	catch (Exception* ex)
-	{
-		ExceptionMessageUtils::DoExceptionMessageBox(CoveredCalcApp::GetInstance(), ex);
-		ex->Delete();
-	}
+	HandleUICEvent(CID_CloseButton, UICE_ButtonClicked, 0, NULL);
 	return 0;
 }
 
@@ -472,93 +381,21 @@ LRESULT WinCoverBrowser::onCommand(
 	switch (command)
 	{
 	case IDC_RELOAD:
-		return onCommandReload(hWnd, uMsg, wParam, lParam);
+		HandleUICEvent(CID_ReloadButton, UICE_ButtonClicked, 0, NULL);
+		return 0;
 		break;
 	case IDC_APPLY:
-		return onCommandApply(hWnd, uMsg, wParam, lParam);
+		HandleUICEvent(CID_ApplyButton, UICE_ButtonClicked, 0, NULL);
+		return 0;
 		break;
 	case IDCLOSE:
-		return onCommandClose(hWnd, uMsg, wParam, lParam);
+		HandleUICEvent(CID_CloseButton, UICE_ButtonClicked, 0, NULL);
+		return 0;
 		break;
 	default:
 		return baseWnd::wndProc(hWnd, uMsg, wParam, lParam);
 		break;
 	}
-}
-
-// ---------------------------------------------------------------------
-//! 一覧更新ボタンのハンドラ
-/*!
-	@retval 0 このメッセージを処理した
-*/
-// ---------------------------------------------------------------------
-LRESULT WinCoverBrowser::onCommandReload(
-	HWND /*hWnd*/,		//!< ウィンドウハンドル
-	UINT /*uMsg*/,		//!< WM_COMMAND
-	WPARAM /*wParam*/,	//!< 上位ワードが通知コード、下位ワードがコマンドID
-	LPARAM /*lParam*/	//!< このメッセージを送ったコントロールのハンドル
-)
-{
-	try
-	{
-		doUpdateList();
-	}
-	catch (Exception* ex)
-	{
-		ExceptionMessageUtils::DoExceptionMessageBox(CoveredCalcApp::GetInstance(), ex);
-		ex->Delete();
-	}
-	return 0;
-}
-
-// ---------------------------------------------------------------------
-//! 適用ボタンのハンドラ
-/*!
-	@retval 0 このメッセージを処理した
-*/
-// ---------------------------------------------------------------------
-LRESULT WinCoverBrowser::onCommandApply(
-	HWND /*hWnd*/,		//!< ウィンドウハンドル
-	UINT /*uMsg*/,		//!< WM_COMMAND
-	WPARAM /*wParam*/,	//!< 上位ワードが通知コード、下位ワードがコマンドID
-	LPARAM /*lParam*/	//!< このメッセージを送ったコントロールのハンドル
-)
-{
-	try
-	{
-		doApplySelectedCover();
-	}
-	catch (Exception* ex)
-	{
-		ExceptionMessageUtils::DoExceptionMessageBox(CoveredCalcApp::GetInstance(), ex);
-		ex->Delete();
-	}
-	return 0;
-}
-
-// ---------------------------------------------------------------------
-//! 閉じるボタンのハンドラ
-/*!
-	@retval 0 このメッセージを処理した
-*/
-// ---------------------------------------------------------------------
-LRESULT WinCoverBrowser::onCommandClose(
-	HWND /*hWnd*/,		//!< ウィンドウハンドル
-	UINT /*uMsg*/,		//!< WM_COMMAND
-	WPARAM /*wParam*/,	//!< 上位ワードが通知コード、下位ワードがコマンドID
-	LPARAM /*lParam*/	//!< このメッセージを送ったコントロールのハンドル
-)
-{
-	try
-	{
-		doClose();
-	}
-	catch (Exception* ex)
-	{
-		ExceptionMessageUtils::DoExceptionMessageBox(CoveredCalcApp::GetInstance(), ex);
-		ex->Delete();
-	}
-	return 0;
 }
 
 // ---------------------------------------------------------------------
@@ -580,34 +417,10 @@ LRESULT WinCoverBrowser::onNotify(
 	{
 		if (NM_DBLCLK == nmHdr->code)
 		{
-			return onCoverListNotifyDblClk(hWnd, uMsg, wParam, lParam);
+			HandleUICEvent(CID_CoverList, UICE_ListItemInvoked, 0, NULL);
+			return 0;
 		}
 	}
 	
 	return baseWnd::wndProc(hWnd, uMsg, wParam, lParam);
-}
-
-// ---------------------------------------------------------------------
-//! カバー一覧のダブルクリックハンドラ
-/*!
-	@return 戻り値に意味はない
-*/
-// ---------------------------------------------------------------------
-LRESULT WinCoverBrowser::onCoverListNotifyDblClk(
-	HWND /*hWnd*/,		//!< ウィンドウハンドル
-	UINT /*uMsg*/,		//!< WM_NOTIFY
-	WPARAM /*wParam*/,	//!< IDC_COVER_LIST
-	LPARAM /*lParam*/	//!< NMHDR 構造体へのポインタ
-)
-{
-	try
-	{
-		doApplySelectedCover();
-	}
-	catch (Exception* ex)
-	{
-		ExceptionMessageUtils::DoExceptionMessageBox(CoveredCalcApp::GetInstance(), ex);
-		ex->Delete();
-	}
-	return 0;	
 }

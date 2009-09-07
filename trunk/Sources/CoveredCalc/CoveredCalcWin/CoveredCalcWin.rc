@@ -73,7 +73,7 @@ BEGIN
             VALUE "FileDescription", "CoveredCalc"
             VALUE "FileVersion", "1.10.0+"
             VALUE "InternalName", "CoveredCalc"
-            VALUE "LegalCopyright", "Copyright (C) 2004-2008 CoveredCalc Project Contributors."
+            VALUE "LegalCopyright", "Copyright (C) 2004-2009 CoveredCalc Project Contributors."
             VALUE "OriginalFilename", "CoveredCalc.exe"
             VALUE "ProductName", "CoveredCalc"
             VALUE "ProductVersion", "1.10.0+"

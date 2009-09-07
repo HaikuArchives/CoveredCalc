@@ -591,10 +591,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Ui\CoverBrowser.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\UI\KeyMappingManager.cpp"
 					>
 				</File>
@@ -628,10 +624,6 @@
 				</File>
 				<File
 					RelativePath="..\Ui\WinBitmapDC.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Ui\WinCoverBrowser.cpp"
 					>
 				</File>
 				<File
@@ -706,6 +698,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\UI\UIComponent\WinListViewAdapter.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\UI\UIComponent\WinSeparatorDDListBoxAdapter.cpp"
 						>
 					</File>
@@ -723,6 +719,10 @@
 					>
 					<File
 						RelativePath="..\UI\Dialog\AboutCurrentCoverDlg.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\CoverBrowser.cpp"
 						>
 					</File>
 					<File
@@ -747,6 +747,10 @@
 					</File>
 					<File
 						RelativePath="..\UI\Dialog\WinAboutDlg.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\WinCoverBrowser.cpp"
 						>
 					</File>
 					<File
@@ -1193,10 +1197,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\UI\CoverBrowser.h"
-					>
-				</File>
-				<File
 					RelativePath="..\UI\KeyEventParameter.h"
 					>
 				</File>
@@ -1282,10 +1282,6 @@
 				</File>
 				<File
 					RelativePath="..\UI\WinCCSAppearance.h"
-					>
-				</File>
-				<File
-					RelativePath="..\UI\WinCoverBrowser.h"
 					>
 				</File>
 				<File
@@ -1380,6 +1376,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\UI\UIComponent\UICMultiColumnList.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\UIComponent\UICMultiColumnListImpl.h"
+						>
+					</File>
+					<File
 						RelativePath="..\UI\UIComponent\UICSeparatorListBox.h"
 						>
 					</File>
@@ -1420,6 +1424,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\UI\UIComponent\WinListViewAdapter.h"
+						>
+					</File>
+					<File
 						RelativePath="..\UI\UIComponent\WinSeparatorDDListBoxAdapter.h"
 						>
 					</File>
@@ -1437,6 +1445,10 @@
 					>
 					<File
 						RelativePath="..\UI\Dialog\AboutCurrentCoverDlg.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\CoverBrowser.h"
 						>
 					</File>
 					<File
@@ -1461,6 +1473,10 @@
 					</File>
 					<File
 						RelativePath="..\UI\Dialog\WinAboutDlg.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\WinCoverBrowser.h"
 						>
 					</File>
 					<File
