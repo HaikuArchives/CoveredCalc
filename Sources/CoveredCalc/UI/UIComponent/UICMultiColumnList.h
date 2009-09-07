@@ -24,21 +24,42 @@
  */
 
 /*!
-	@file		UICEventCode.h
-	@brief		Definition of UIComponent event code.
+	@file		UICMultiCulumnList.h
+	@brief		Definition of UICMultiCulumnList interface.
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2009.02.18 created
+	@date		2009.03.17 created
 */
 
-#ifndef _UICEVENTCODE_H_
-#define _UICEVENTCODE_H_
+#ifndef _UICMULTICOLUMNLIST_H_
+#define _UICMULTICOLUMNLIST_H_
 
-enum
+/**
+ *	@brief	Multi column list-box component interface.
+ */
+class UICMultiColumnList
 {
-	UICE_ButtonClicked = 0,		///< button is clicked
-	UICE_TextChanged,			///< text is changed
-	UICE_SelectionChanged,		///< selection is changed
-	UICE_ListItemInvoked,		///< list item is invoked
+public:
+						UICMultiColumnList() { }
+	virtual				~UICMultiColumnList() { }
+	
+	virtual bool		IsEnabled() = 0;
+	virtual void		Enable(bool isEnabled) = 0;
+	
+	virtual void		MakeFocus() = 0;
+	
+	virtual SInt32		GetCount() = 0;
+	virtual SInt32		AddItem(ConstAStr* texts, void* data) = 0;
+	virtual void		RemoveItem(SInt32 rowIndex) = 0;
+	virtual void		RemoveAllItem() = 0;
+	
+	virtual void		GetItemText(SInt32 rowIndex, SInt32 columnIndex, MBCString& text) = 0;
+	virtual void*		GetItemData(SInt32 rowIndex) = 0;
+	virtual void		SetItemData(SInt32 rowIndex, void* data) = 0;
+	
+	virtual SInt32		GetSelectedItem() = 0;
+	virtual void		SetSelectedItem(SInt32 rowIndex) = 0;
+
+	virtual void		StopSelectionChangedNotification(bool doStop) = 0;
 };
 
-#endif // _UICEVENTCODE_H_
+#endif // _UICMULTICOLUMNLIST_H_

@@ -1200,9 +1200,12 @@ void MainUIManager::DisplayDigitForm(
 //! Displays the error.
 // ---------------------------------------------------------------------
 void MainUIManager::DisplayError(
-	CalcCore::Error /*error*/	//!< error to display
+	CalcCore::Error error	//!< error to display
 )
 {
+	if (CalcCore::Error_None == error)
+		return;
+
 	AChar value[CalcCore::MAX_VALUE_STR];
 	UInt32 maxLength = calcCore.GetMaxDispLength();
 	ASSERT(maxLength < CalcCore::MAX_VALUE_STR);

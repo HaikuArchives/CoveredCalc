@@ -38,7 +38,7 @@
 #if defined (WIN32)
 #include "WinDropDownListBoxAdapter.h"
 #elif defined (BEOS)
-#include "FIXME.h"
+#include "BeMenuFieldAdapter.h"
 #endif
 
 /**
@@ -76,12 +76,11 @@ public:
 private:
 	WinDropDownListBoxAdapter	delegateObj;
 #elif defined (BEOS)
-//FIXME:
 public:
-	void						Init(BListView* view) { delegateObj.Init(view); }
-	BeListViewAdapter*			GetRawAdapter() { return &delegateObj; }
+	void						Init(BMenuField* view, uint32 selectedCommand) { delegateObj.Init(view, selectedCommand); }
+	BeMenuFieldAdapter*			GetRawAdapter() { return &delegateObj; }
 private:
-	BeListViewAdapter			delegateObj;
+	BeMenuFieldAdapter			delegateObj;
 #endif
 };
 

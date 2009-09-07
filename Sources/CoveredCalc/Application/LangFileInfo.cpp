@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -57,10 +57,6 @@ LangFileInfoCollection::~LangFileInfoCollection()
 
 /**
  *	@brief	Reads informations about language files in the specified folder.
- *
- *	[Windows] This function loads the information of Japanese resource
- *	which is not exist as a language file but is included in default resource
- *	of CoveredCalc.exe.
  */
 void LangFileInfoCollection::Load(
 	const Path& langFileFolder			///< language files folder.

@@ -38,7 +38,7 @@
 #if defined (WIN32)
 #include "WinSeparatorDDListBoxAdapter.h"
 #elif defined (BEOS)
-#include "FIXME.h"
+#include "BeSeparatorMenuFieldAdapter.h"
 #endif
 
 /**
@@ -79,12 +79,11 @@ public:
 private:
 	WinSeparatorDDListBoxAdapter	delegateObj;
 #elif defined (BEOS)
-//FIXME:
 public:
-	void						Init(BListView* view) { delegateObj.Init(view); }
-	BeListViewAdapter*			GetRawAdapter() { return &delegateObj; }
+	void						Init(BMenuField* view, uint32 selectedCommand) { delegateObj.Init(view, selectedCommand); }
+	BeSeparatorMenuFieldAdapter*	GetRawAdapter() { return &delegateObj; }
 private:
-	BeListViewAdapter			delegateObj;
+	BeSeparatorMenuFieldAdapter		delegateObj;
 #endif
 };
 

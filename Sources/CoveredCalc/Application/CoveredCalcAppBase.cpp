@@ -534,7 +534,7 @@ void CoveredCalcAppBase::loadKeyNameDB(const Path& keyNameDefFile)
  */
 void CoveredCalcAppBase::loadLangFile(const Path& path)
 {
-	// check if same language file has been already loaded.
+	// check if the language file is already loaded.
 	LoadedLangFilePtrVector::const_iterator itr;
 	for (itr = langFiles.begin(); itr != langFiles.end(); itr++)
 	{

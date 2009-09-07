@@ -44,6 +44,7 @@
 #include "StringID.h"
 #include "BeEditKeymapDlg.h"
 #include "BeDialogControlHelper.h"
+#include "UICEventCode.h"
 #if defined(ZETA)
 #include <locale/Locale.h>
 #endif // defined(ZETA)
@@ -92,7 +93,6 @@ BePreferencesDlg::BePreferencesDlg()
 				B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_MINIMIZABLE)
 {
 	langMenu = NULL;
-	keyMappingMenu = NULL;
 }
 
 /**
@@ -139,6 +139,7 @@ void BePreferencesDlg::createViews()
 	
 	langPopup->SetDivider(dch.GetItemPos(true, ALITERAL("IDC_CMB_LANGUAGE.divider"), ALITERAL("IDC_CMB_LANGUAGE.left")));
 	langPopup->SetAlignment(B_ALIGN_LEFT);
+	uicLanguageListBox.Init(langPopup, ID_NULL);
 	
 	// LangNotice
 	BRect frameRect = dch.GetItemRect(ALITERAL("IDC_STATIC_LANGUAGE_MESSAGE"), itemnameLangBox);
@@ -162,7 +163,7 @@ void BePreferencesDlg::createViews()
 	keyMappingBox->SetLabel(nsl->LoadNativeString(NSID_PREFERENCES_GROUP_KEYMAP));
 
 	// KeyMappingPopup
-	keyMappingMenu = new BMenu("");
+	BMenu* keyMappingMenu = new BMenu("");
 	keyMappingMenu->SetLabelFromMarked(true);
 	BMenuField* keyMappingPopup = new BMenuField(dch.GetItemRect(ALITERAL("IDC_CMB_KEYMAPPINGS"), itemnameKeyMappingBox), PREFERENCES_DIALOG_VIEW_KEYMAPPING_POPUP,
 										nsl->LoadNativeString(NSID_PREFERENCES_KEYMAP), keyMappingMenu);
@@ -170,21 +171,25 @@ void BePreferencesDlg::createViews()
 	
 	keyMappingPopup->SetDivider(dch.GetItemPos(true, ALITERAL("IDC_CMB_KEYMAPPINGS.divider"), ALITERAL("IDC_CMB_KEYMAPPINGS.left")));
 	keyMappingPopup->SetAlignment(B_ALIGN_LEFT);
+	uicKeyMapListBox.Init(keyMappingPopup, ID_PREF_KEYMAP_SELECTED);
 
 	// EditKeyMappingButton
 	BButton* editKeymapButton = new BButton(dch.GetItemRect(ALITERAL("IDC_EDIT_KEYMAPPING"), itemnameKeyMappingBox), PREFERENCES_DIALOG_VIEW_EDIT_KEYMAPPING_BUTTON,
 								nsl->LoadNativeString(NSID_PREFERENCES_EDIT_KEYMAP), new BMessage(ID_PREF_EDIT_KEYMAP));
 	keyMappingBox->AddChild(editKeymapButton);
+	uicEditKeyMapButton.Init(editKeymapButton);
 								
 	// DuplicateKeyMappingButton
 	BButton* dupKeymapButton = new BButton(dch.GetItemRect(ALITERAL("IDC_DUPLICATE_KEYMAPPING"), itemnameKeyMappingBox), PREFERENCES_DIALOG_VIEW_DUPLICATE_KEYMAPPING_BUTTON,
 								nsl->LoadNativeString(NSID_PREFERENCES_DUPLICATE_KEYMAP), new BMessage(ID_PREF_DUPLICATE_KEYMAP));
 	keyMappingBox->AddChild(dupKeymapButton);
+	uicDuplicateKeyMapButton.Init(dupKeymapButton);
 
 	// DeleteKeyMappingButton
 	BButton* delKeymapButton = new BButton(dch.GetItemRect(ALITERAL("IDC_DELETE_KEYMAPPING"), itemnameKeyMappingBox), PREFERENCES_DIALOG_VIEW_DELETE_KEYMAPPING_BUTTON,
 								nsl->LoadNativeString(NSID_PREFERENCES_DELETE_KEYMAP), new BMessage(ID_PREF_DELETE_KEYMAP));
 	keyMappingBox->AddChild(delKeymapButton);
+	uicDeleteKeyMapButton.Init(delKeymapButton);
 
 	// CancelButton
 	BButton* cancelButton = new BButton(dch.GetItemRect(ALITERAL("IDCANCEL"), ITEMNAME_WINDOW), PREFERENCES_DIALOG_VIEW_CANCEL,
@@ -302,7 +307,7 @@ void BePreferencesDlg::initDialog()
 	createViews();
 	moveToCenterOfScreen();
 	
-	loadToDialog();
+	readyToShow();
 }
 
 /**
@@ -357,125 +362,6 @@ bool BePreferencesDlg::showEditKeyMapDialog(bool isReadOnly, KeyMappings& keyMap
 	return dlg->IsDialogClosedByOK();
 }
 
-typedef BeDataMenuItem<const PreferencesDlg::KeyMappingsInfo*> BeKMIMenuItem;
-
-/**
- *	@brief	Sets key-mapping menu and current item.
- *	@param	keyMappingInfos			This collection contains informations about all key-mapping menu items.
- *	@param	currentKeyMappingPath	Current selection.
- *	@note	The keyMappingInfos object is valid until the next call of setKeyMapping, or until the dialog is closed.
- */
-void BePreferencesDlg::setKeyMapping(const KeyMappingsInfoPtrVector& keyMappingsInfos, const Path& currentKeyMappingPath)
-{
-	// clear menu
-	SInt32 oldCount = keyMappingMenu->CountItems();
-	SInt32 ox;
-	for (ox = oldCount - 1; ox >= 0; ox--)
-	{
-		BMenuItem* menuItem = keyMappingMenu->RemoveItem(ox);
-		delete menuItem;
-	}
-
-	// add to menu
-	KMCategory category = KMCategory_Invalid;
-	SInt32 count = keyMappingsInfos.size();
-	SInt32 index;
-	for (index = 0; index < count; index++)
-	{
-		const KeyMappingsInfo* info = keyMappingsInfos[index];
-		if (category != info->category)
-		{
-			if (KMCategory_Invalid != category)
-			{
-				keyMappingMenu->AddSeparatorItem();
-			}
-			category = info->category;
-		}
-		BeKMIMenuItem* menuItem = new BeKMIMenuItem(info->title.CString(), new BMessage(ID_PREF_KEYMAP_SELECTED));
-		menuItem->SetItemData(info);
-		menuItem->SetMarked(0 == info->keyMapFilePath.Compare(currentKeyMappingPath));
-		keyMappingMenu->AddItem(menuItem);
-	}
-	processKeyMappingSelectionChanged();
-}
-
-/**
- *	@brief	Retrieves current item of key-mapping menu.
- *	@param[in]	doErrorProcessing	if this parameter is true and an error has occured, the error message is shown in this function.
- *	@return pointer to key-mapping file info which is selected on key-mapping menu. NULL should be returned when an error has occured.
- */
-const PreferencesDlg::KeyMappingsInfo* BePreferencesDlg::getKeyMapping(bool doErrorProcessing)
-{
-	BMenuItem* markedItem = keyMappingMenu->FindMarked();
-	if (NULL == markedItem)
-	{
-		if (doErrorProcessing)
-		{
-			CoveredCalcApp::GetInstance()->DoMessageBox(NSID_EMSG_INVALID_KEYMAPPINGS,
-					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
-		}
-		return NULL;
-	}
-	
-	const KeyMappingsInfo* info = NULL;
-	BeKMIMenuItem* markedKMIItem = dynamic_cast<BeKMIMenuItem*>(markedItem);
-	if (NULL != markedKMIItem)
-	{
-		info = markedKMIItem->GetItemData();
-	}
-	
-	if (NULL == info)
-	{
-		if (doErrorProcessing)
-		{
-			CoveredCalcApp::GetInstance()->DoMessageBox(NSID_EMSG_GET_KEYMAPPINGS,
-					MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Stop);
-		}
-		return NULL;
-	}
-	
-	return info;
-}
-
-/**
- *	@brief	Enables or disables "Edit keymapping" button.
- *	@param	isEnabled	enables the control when true.
- */
-void BePreferencesDlg::enableEditKeyMapping(bool isEnabled)
-{
-	BButton* editKeymapButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_EDIT_KEYMAPPING_BUTTON));
-	if (NULL != editKeymapButton)
-	{
-		editKeymapButton->SetEnabled(isEnabled);
-	}
-}
-
-/**
- *	@brief	Enables or disables "Duplicate keymapping" button.
- *	@param	isEnabled	enables the control when true.
- */
-void BePreferencesDlg::enableDuplicateKeyMapping(bool isEnabled)
-{
-	BButton* dupKeymapButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_DUPLICATE_KEYMAPPING_BUTTON));
-	if (NULL != dupKeymapButton)
-	{
-		dupKeymapButton->SetEnabled(isEnabled);
-	}
-}
-
-/**
- *	@brief	Enables or disables "Delete keymapping" button.
- *	@param	isEnabled	enables the control when true.
- */
-void BePreferencesDlg::enableDeleteKeyMapping(bool isEnabled)
-{
-	BButton* delKeymapButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_DELETE_KEYMAPPING_BUTTON));
-	if (NULL != delKeymapButton)
-	{
-		delKeymapButton->SetEnabled(isEnabled);
-	}
-}
-
 /**
  *	@brief	Message handler.
  */
@@ -488,30 +374,27 @@ void BePreferencesDlg::MessageReceived(
 		switch (message->what)
 		{
 		case ID_PREF_KEYMAP_SELECTED:
-			processKeyMappingSelectionChanged();
+			HandleUICEvent(CID_KeyMapListBox, UICE_SelectionChanged, 0, NULL);
 			break;
 		
 		case ID_PREF_EDIT_KEYMAP:
-			doEditKeyMapping();
+			HandleUICEvent(CID_EditKeyMapButton, UICE_ButtonClicked, 0, NULL);
 			break;
 			
 		case ID_PREF_DUPLICATE_KEYMAP:
-			doDuplicateKeyMapping();
+			HandleUICEvent(CID_DuplicateKeyMapButton, UICE_ButtonClicked, 0, NULL);
 			break;
 		
 		case ID_PREF_DELETE_KEYMAP:
-			doDeleteKeyMapping();
+			HandleUICEvent(CID_DeleteKeyMapButton, UICE_ButtonClicked, 0, NULL);
 			break;
 		
 		case ID_DIALOG_OK:
-			if (saveFromDialog())
-			{
-				PostMessage(B_QUIT_REQUESTED);
-			}
+			HandleUICEvent(CID_OKButton, UICE_ButtonClicked, 0, NULL);
 			break;
 	
 		case ID_DIALOG_CANCEL:
-			PostMessage(B_QUIT_REQUESTED);
+			HandleUICEvent(CID_CancelButton, UICE_ButtonClicked, 0, NULL);
 			break;
 
 #if defined (ZETA)
@@ -540,4 +423,13 @@ void BePreferencesDlg::MessageReceived(
 		ExceptionMessageUtils::DoExceptionMessageBox(CoveredCalcApp::GetInstance(), ex);
 		ex->Delete();		
 	}	
+}
+
+/**
+ *	@brief	Close this dialog.
+ *	@param[in]	isOK	true if dialog is closing by OK button.
+ */
+void BePreferencesDlg::closeDialog(bool /* isOK */)
+{
+	PostMessage(B_QUIT_REQUESTED);
 }

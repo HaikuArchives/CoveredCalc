@@ -41,9 +41,9 @@
 #include "CommandID.h"
 #include "BeKeyInputEdit.h"
 #include "BeDialogControlHelper.h"
+#include "UICEventCode.h"
 #if defined(ZETA)
 #include <locale/Locale.h>
-#include "BeDataStringItem.h"
 #include "KeyNameDB.h"
 #endif // defined(ZETA)
 
@@ -413,43 +413,35 @@ void BeEditKeymapDlg::MessageReceived(
 		switch (message->what)
 		{
 		case ID_DIALOG_OK:
-			if (processOK())
-			{
-				isDialogOK = true;
-				PostMessage(B_QUIT_REQUESTED);
-			}
+			HandleUICEvent(CID_OKButton, UICE_ButtonClicked, 0, NULL);
 			break;
 			
 		case ID_DIALOG_CANCEL:
-			if (processCancel())
-			{
-				isDialogOK = false;
-				PostMessage(B_QUIT_REQUESTED);
-			}
+			HandleUICEvent(CID_CancelButton, UICE_ButtonClicked, 0, NULL);
 			break;
 		
 		case ID_EDITKEYMAP_FUNCTION_SELECTED:
-			processFunctionListBoxSelectionChanged();
+			HandleUICEvent(CID_FunctionListBox, UICE_SelectionChanged, 0, NULL);
 			break;
 		
 		case ID_EDITKEYMAP_CURRENT_KEY_SELECTED:
-			processCurrentKeysListBoxSelectionChanged();
+			HandleUICEvent(CID_CurrentKeysListBox, UICE_SelectionChanged, 0, NULL);
 			break;
 		
 		case ID_EDITKEYMAP_KEYINPUT_CHANGED:
-			processKeyInputChanged();
+			HandleUICEvent(CID_KeyInput, UICE_TextChanged, 0, NULL);
 			break;
 		
 		case ID_EDITKEYMAP_ASSIGN:
-			processAssignButtonClicked();
+			HandleUICEvent(CID_AssignButton, UICE_ButtonClicked, 0, NULL);
 			break;
 		
 		case ID_EDITKEYMAP_REMOVE:
-			processRemoveButtonClicked();
+			HandleUICEvent(CID_RemoveButton, UICE_ButtonClicked, 0, NULL);
 			break;
 		
 		case ID_EDITKEYMAP_NAME_MODIFIED:
-			processNameTextEditChanged();
+			HandleUICEvent(CID_NameTextEdit, UICE_TextChanged, 0, NULL);
 			break;
 		
 		default:
@@ -462,6 +454,16 @@ void BeEditKeymapDlg::MessageReceived(
 		ExceptionMessageUtils::DoExceptionMessageBox(CoveredCalcApp::GetInstance(), ex);
 		ex->Delete();		
 	}	
+}
+
+/**
+ *	@brief	Close this dialog.
+ *	@param[in]	isOK	true if dialog is closing by OK button.
+ */
+void BeEditKeymapDlg::closeDialog(bool isOK)
+{
+	isDialogOK = isOK;
+	PostMessage(B_QUIT_REQUESTED);
 }
 
 /**

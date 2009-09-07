@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -35,6 +35,9 @@
 
 #include "WinDialog.h"
 #include "CoverBrowser.h"
+#include "UICMultiColumnListImpl.h"
+
+class WinDialogControlCreator;
 
 // ---------------------------------------------------------------------
 //! カバーブラウザ for Windows
@@ -48,14 +51,13 @@ public:
 	virtual	void					GetUIRect(Rect32& rect) const;
 
 protected:
-	virtual void					clearListUI();
-	virtual void					setDataToListUI();
-	virtual const CoverListItem*	getSelectedItem();
-
 	virtual DWORD					getDialogStyle();
+	virtual UICMultiColumnList*		getCoverList() { return &uicCoverList; }
+
 	virtual LRESULT					wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
+	void							createCoverListControl(WinDialogControlCreator& dcc);
 	void							createControls();
 
 private:
@@ -67,15 +69,12 @@ private:
 	LRESULT							onDestroy(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT							onClose(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	
-	LRESULT							onCommandReload(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	LRESULT							onCommandApply(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	LRESULT							onCommandClose(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	
-	LRESULT							onCoverListNotifyDblClk(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
 private:
 	HICON							smallIcon;		///< カバーブラウザに表示するアイコン (小)
 	HICON							largeIcon;		///< カバーブラウザに表示するアイコン (大)
+
+	// adapters
+	UICMultiColumnListImpl			uicCoverList;
 };
 
 #endif // _WINCOVERBROWSER_H_

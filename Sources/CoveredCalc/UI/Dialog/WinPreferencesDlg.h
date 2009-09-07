@@ -75,7 +75,6 @@ private:
 	void							createControls();
 
 private:
-	const LangFileInfoCollection*	langComboInfos;		///< 言語コンボボックスに格納されたアイテムの情報
 	WinComboListSeparators			keyMappingSeparators;	///< キーマッピングコンボボックスのセパレータ
 
 	// adapters

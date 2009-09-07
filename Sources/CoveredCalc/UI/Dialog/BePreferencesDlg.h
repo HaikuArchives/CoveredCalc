@@ -36,6 +36,9 @@
 #include "BeDialog.h"
 #include "PreferencesDlg.h"
 #include <List.h>
+#include "UICListBoxDDImpl.h"
+#include "UICSeparatorListBoxDDImpl.h"
+#include "UICButtonImpl.h"
 
 class BMenu;
 
@@ -45,32 +48,40 @@ class BMenu;
 class BePreferencesDlg : public BeDialog, public PreferencesDlg
 {
 public:
-								BePreferencesDlg();
-	virtual						~BePreferencesDlg();
+									BePreferencesDlg();
+	virtual							~BePreferencesDlg();
 	
 protected:
-	virtual void				initDialog();
-	virtual void				MessageReceived(BMessage *message);
+	virtual void					initDialog();
+	virtual void					MessageReceived(BMessage *message);
 #if defined (ZETA)
-	virtual void				languageChanged();
+	virtual void					languageChanged();
 #endif
 
-	virtual MessageBoxProvider*	getMessageBoxProvider();
-	virtual bool				showEditKeyMapDialog(bool isReadOnly, KeyMappings& keyMappings);
+	virtual MessageBoxProvider*		getMessageBoxProvider();
+	virtual bool					showEditKeyMapDialog(bool isReadOnly, KeyMappings& keyMappings);
 	
-	virtual void				setKeyMapping(const KeyMappingsInfoPtrVector& keyMappingsInfos, const Path& currentKeyMappingPath);
-	virtual const PreferencesDlg::KeyMappingsInfo*	getKeyMapping(bool doErrorProcessing);
-	virtual void				enableEditKeyMapping(bool isEnabled);
-	virtual void				enableDuplicateKeyMapping(bool isEnabled);
-	virtual void				enableDeleteKeyMapping(bool isEnabled);
+	virtual UICListBox*				getLanguageListBox() { return &uicLanguageListBox; }
+	virtual UICSeparatorListBox*	getKeyMapListBox() { return &uicKeyMapListBox; }
+	virtual UICButton*				getEditKeyMapButton() { return &uicEditKeyMapButton; }
+	virtual UICButton*				getDuplicateKeyMapButton() { return &uicDuplicateKeyMapButton; }
+	virtual UICButton*				getDeleteKeyMapButton() { return &uicDeleteKeyMapButton; }
+	
+	virtual void					closeDialog(bool isOK);
+	
+private:
+	void							createViews();
 
 private:
-	void						createViews();
+	BMenu*							langMenu;			///< language popup menu
+	BList							langMenuItemInfo;	///< informations of each language popup menu item
 
-private:
-	BMenu*						langMenu;			///< language popup menu
-	BList						langMenuItemInfo;	///< informations of each language popup menu item
-	BMenu*						keyMappingMenu;		///< key-mapping popup menu
+	// adapters
+	UICListBoxDDImpl				uicLanguageListBox;
+	UICSeparatorListBoxDDImpl		uicKeyMapListBox;
+	UICButtonImpl					uicEditKeyMapButton;
+	UICButtonImpl					uicDuplicateKeyMapButton;
+	UICButtonImpl					uicDeleteKeyMapButton;
 };
 
 #endif // _BEPREFERENCESDLG_H_

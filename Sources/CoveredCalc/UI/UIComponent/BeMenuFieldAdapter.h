@@ -24,21 +24,55 @@
  */
 
 /*!
-	@file		UICEventCode.h
-	@brief		Definition of UIComponent event code.
+	@file		BeMenuFieldAdapter.h
+	@brief		Definition of BeMenuFieldAdapter class.
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2009.02.18 created
+	@date		2009.03.01 created
 */
 
-#ifndef _UICEVENTCODE_H_
-#define _UICEVENTCODE_H_
+#ifndef _BEMENUFIELDADAPTER_H_
+#define _BEMENUFIELDADAPTER_H_
 
-enum
+#include "BeViewAdapter.h"
+#include "MBCString.h"
+
+class BMenuField;
+
+/**
+ *	@brief	Adapter class of ListBox for BeOS.
+ */
+class BeMenuFieldAdapter : public BeViewAdapter
 {
-	UICE_ButtonClicked = 0,		///< button is clicked
-	UICE_TextChanged,			///< text is changed
-	UICE_SelectionChanged,		///< selection is changed
-	UICE_ListItemInvoked,		///< list item is invoked
+public:
+						BeMenuFieldAdapter();
+	virtual				~BeMenuFieldAdapter();
+	
+	virtual void		Init(BMenuField* menuField, uint32 selectedCommand);
+	
+	bool				IsEnabled();
+	void				Enable(bool doEnable);
+
+	virtual SInt32		GetCount();
+	virtual SInt32		AddItem(ConstAStr text, void* data);
+	virtual void		RemoveItem(SInt32 index);
+	virtual void		RemoveAllItem();
+	
+	virtual void		GetItemText(SInt32 index, MBCString& text);
+	virtual void*		GetItemData(SInt32 index);
+	virtual void		SetItemText(SInt32 index, ConstAStr text);
+	virtual void		SetItemData(SInt32 index, void* data);
+	
+	virtual SInt32		GetSelectedItem();
+	virtual void		SetSelectedItem(SInt32 index);
+
+			void		StopSelectionChangedNotification(bool doStop);
+
+protected:
+	BMenuField*			getMenuField();
+
+private:
+	uint32				selectedCommand;
+	SInt32				stoppedSelectionChangedNotificationCount;
 };
 
-#endif // _UICEVENTCODE_H_
+#endif // _BEMENUFIELDADAPTER_H_

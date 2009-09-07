@@ -72,6 +72,8 @@ protected:
 	virtual UICButton*			getOKButton()					{ return &uicOkButton; }
 	virtual UICButton*			getCancelButton()				{ return &uicCancelButton; }
 
+	virtual void				closeDialog(bool isOK);
+
 private:
 	void						createViews();
 

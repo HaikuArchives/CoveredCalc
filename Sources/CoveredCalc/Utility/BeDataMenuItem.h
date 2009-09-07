@@ -33,6 +33,8 @@
 #ifndef _BEDATAMENUITEM_H_
 #define _BEDATAMENUITEM_H_
 
+#include <MenuItem.h>
+
 /**
  * @brief	BMenuItem with an item data.
  * @note	The type DATATYPE must be a pointer type.

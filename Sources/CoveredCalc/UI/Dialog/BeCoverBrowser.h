@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -24,50 +24,57 @@
  */
 
 /*!
-	@file		CoverBrowser.h
-	@brief		Definition of CoverBrowser class
+	@file		BeCoverBrowser.h
+	@brief		Definition of BeCoverBrowser class
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2004.3.11 created
+	@date		2004.09.12 created
 */
 
-#ifndef _COVERBROWSER_H_
-#define _COVERBROWSER_H_
 
-#include "CoverListManager.h"
+#ifndef _BECOVERBROWSER_H_
+#define _BECOVERBROWSER_H_
+
+#include "BeDialog.h"
+#include "CoverBrowser.h"
+#include "UICMultiColumnListImpl.h"
+
+class BColumnListView;
 
 // ---------------------------------------------------------------------
-//! Cover browser window
+//! Cover browser window on BeOS
 // ---------------------------------------------------------------------
-class CoverBrowser
+class BeCoverBrowser : public BeDialog, public CoverBrowser
 {
 public:
-									CoverBrowser();
-	virtual							~CoverBrowser();
+									BeCoverBrowser();
+	virtual							~BeCoverBrowser();
 
-	void							SetCoversFolderPath(const Path& path)
-													{ this->coversFolderPath = path; }
-
-	// In fact, I want to make CoverBrowser implement full UIController interface.
-	virtual	void					GetUIRect(Rect32& rect) const = 0;
+	virtual void					Quit();
+	
+	virtual void					GetUIRect(Rect32& rect) const;
 
 protected:
-	Point32							getInitialLocation();
-	void							makeList();
-	const CoverListVector*			getListItems() const	{ return listManager.GetItems(); }
+	virtual void					MessageReceived(BMessage *message);
+	virtual	bool					QuitRequested();
 	
-	void							doUpdateList();
-	void							doApplySelectedCover();
-	void							doClose();
+protected:
+	virtual void					initDialog();
+	void							createViews();
 
-	void							onDestroy();
+	virtual UICMultiColumnList*		getCoverList() { return &uicCoverList; }
 
-	virtual void					clearListUI() = 0;
-	virtual void					setDataToListUI() = 0;
-	virtual const CoverListItem*	getSelectedItem() = 0;
+#if defined (ZETA)
+	virtual void					languageChanged();
+#endif
 
 private:
-	CoverListManager				listManager;
-	Path							coversFolderPath;				//!< 'Covers' folder path
+	void							moveToInitialLocation();
+
+private:
+	BColumnListView*				coverList;			///< cover list
+
+	// adapters
+	UICMultiColumnListImpl			uicCoverList;
 };
 
-#endif // _COVERBROWSER_H_
+#endif // _BECOVERBROWSER_H_

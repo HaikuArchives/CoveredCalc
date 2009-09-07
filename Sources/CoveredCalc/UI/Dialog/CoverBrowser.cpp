@@ -40,6 +40,9 @@
 #include "CoverBrowser.h"
 #include "Exception.h"
 #include "StringID.h"
+#include "UICMultiColumnList.h"
+#include "UTF8Conv.h"
+#include "UICEventCode.h"
 
 // ---------------------------------------------------------------------
 //! Constructor
@@ -64,13 +67,32 @@ Point32 CoverBrowser::getInitialLocation()
 	return settings->GetLastCoverBrowserPos();
 }
 
-// ---------------------------------------------------------------------
-//! Makes cover list
-// ---------------------------------------------------------------------
-void CoverBrowser::makeList()
+/**
+ *	@brief	Handles UIComponent event.
+ *	@param[in]	componentID	component ID
+ *	@param[in]	eventCode	event code
+ *	@param[in]	param1		parameter 1
+ *	@param[in]	param2		parameter 2
+ */
+void CoverBrowser::HandleUICEvent(SInt32 componentID, int eventCode, SInt32 /* param1 */, void* /* param2 */)
 {
-	clearListUI();
-	listManager.MakeList(coversFolderPath);
+#define HANDLE_EVENT(cid, evt, handler)		\
+	if (cid == componentID && evt == eventCode)	handler
+
+	HANDLE_EVENT(CID_CoverList,				UICE_ListItemInvoked,		handleApplyButtonClicked());
+	HANDLE_EVENT(CID_ReloadButton,			UICE_ButtonClicked,			handleReloadButtonClicked());
+	HANDLE_EVENT(CID_ApplyButton,			UICE_ButtonClicked,			handleApplyButtonClicked());
+	HANDLE_EVENT(CID_CloseButton,			UICE_ButtonClicked,			handleCloseButtonClicked());
+
+#undef HANDLE_EVENT
+}
+
+/**
+ *	@brief	called before showing dialog.
+ */
+void CoverBrowser::readyToShow()
+{
+	doUpdateList();
 }
 
 // ---------------------------------------------------------------------
@@ -81,16 +103,44 @@ void CoverBrowser::doUpdateList()
 	WaitingUIKeeper	waitingUIKeeper(CoveredCalcApp::GetInstance());
 	waitingUIKeeper.Start();
 
-	makeList();
-	setDataToListUI();
+	UICMultiColumnList* coverList = getCoverList();
+	coverList->RemoveAllItem();
+
+	listManager.MakeList(coversFolderPath);
+
+	MBCString title;
+	MBCString description;
+	const CoverListVector* items = listManager.GetItems();
+	CoverListVector::const_iterator iterator;
+	for (iterator=items->begin(); iterator!=items->end(); iterator++)
+	{
+		UTF8Conv::ToMultiByte(title, (*iterator)->GetTitle());
+		UTF8Conv::ToMultiByte(description, (*iterator)->GetDescription());
+		ConstAStr texts[2] = { title.CString(), description.CString() };
+		coverList->AddItem(texts, *iterator);
+	}
 }
 
-// ---------------------------------------------------------------------
-//! Applies the selected cover to main window.
-// ---------------------------------------------------------------------
-void CoverBrowser::doApplySelectedCover()
+/**
+ *	@brief	Called when reload button is clicked.
+ */
+void CoverBrowser::handleReloadButtonClicked()
 {
-	const CoverListItem* item = getSelectedItem();
+	doUpdateList();
+}
+
+/**
+ *	@brief	Called when apply button is clicked.
+ */
+void CoverBrowser::handleApplyButtonClicked()
+{
+	UICMultiColumnList* coverList = getCoverList();
+	SInt32 selectedIndex = coverList->GetSelectedItem();
+	if (selectedIndex < 0)
+	{
+		return;
+	}
+	const CoverListItem* item = static_cast<CoverListItem*>(coverList->GetItemData(selectedIndex));
 	if (NULL == item)
 	{
 		return;
@@ -108,10 +158,10 @@ void CoverBrowser::doApplySelectedCover()
 	}
 }
 
-// ---------------------------------------------------------------------
-//! Hides cover browser.
-// ---------------------------------------------------------------------
-void CoverBrowser::doClose()
+/**
+ *	@brief	Called when close button is clicked.
+ */
+void CoverBrowser::handleCloseButtonClicked()
 {
 	CoveredCalcApp::GetInstance()->ShowCoverBrowser(false);
 }

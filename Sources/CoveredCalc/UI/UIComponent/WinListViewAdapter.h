@@ -24,21 +24,47 @@
  */
 
 /*!
-	@file		UICEventCode.h
-	@brief		Definition of UIComponent event code.
+	@file		WinListViewAdapter.h
+	@brief		Definition of WinListViewAdapter class.
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2009.02.18 created
+	@date		2009.03.17 created
 */
 
-#ifndef _UICEVENTCODE_H_
-#define _UICEVENTCODE_H_
+#ifndef _WINLISTVIEWADAPTER_H_
+#define _WINLISTVIEWADAPTER_H_
 
-enum
+#include "WinControlAdapter.h"
+#include "MBCString.h"
+
+/**
+ *	@brief	Adapter class of ListBox for Windows.
+ */
+class WinListViewAdapter : public WinControlAdapter
 {
-	UICE_ButtonClicked = 0,		///< button is clicked
-	UICE_TextChanged,			///< text is changed
-	UICE_SelectionChanged,		///< selection is changed
-	UICE_ListItemInvoked,		///< list item is invoked
+public:
+						WinListViewAdapter();
+	virtual				~WinListViewAdapter();
+
+	void				Init(HWND hControl);
+
+	SInt32				GetCount();
+	SInt32				AddItem(ConstAStr* texts, void* data);
+	void				RemoveItem(SInt32 rowIndex);
+	void				RemoveAllItem();
+	
+	void				GetItemText(SInt32 rowIndex, SInt32 columnIndex, MBCString& text);
+	void*				GetItemData(SInt32 rowIndex);
+	void				SetItemData(SInt32 rowIndex, void* data);
+	
+	SInt32				GetSelectedItem();
+	void				SetSelectedItem(SInt32 rowIndex);
+
+	void				StopSelectionChangedNotification(bool doStop);
+	bool				IsSelectionChangedNotificationStopped() { return stoppedSelectionChangedNotificationCount > 0; }
+
+private:
+	SInt32				columnCount;		//<! column count
+	SInt32				stoppedSelectionChangedNotificationCount;
 };
 
-#endif // _UICEVENTCODE_H_
+#endif // _WINLISTVIEWADAPTER_H_

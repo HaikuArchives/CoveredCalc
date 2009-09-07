@@ -41,6 +41,11 @@
 #include "UICSeparatorListBox.h"
 #include "UICEventHandler.h"
 #include "UICEventCode.h"
+#if defined (BEOS)
+#include <Directory.h>
+#include <Entry.h>
+#include <Path.h>
+#endif // defubed(BEOS)
 
 /**
  *	@brief	Constructor
@@ -301,7 +306,7 @@ void KeymapSelectHelper::SetCurrentKeymap(const Path& currentKeyMappingPath)
 	SInt32 index;
 	for (index = 0; index < count; ++index)
 	{
-		const KeyMappingsInfo* info = static_cast<const KeyMappingsInfo*>(keymapListComponent->GetItemData(index));
+		const KeyMappingsInfo* info = static_cast<KeyMappingsInfo*>(keymapListComponent->GetItemData(index));
 		if (NULL == info)
 		{
 			invalidIndex = index;
@@ -347,7 +352,7 @@ KeymapSelectHelper::CheckResult	KeymapSelectHelper::GetCurrentKeymap(const KeyMa
 	{
 		return Check_GET_SELECTION;
 	}
-	const KeyMappingsInfo* info = static_cast<const KeyMappingsInfo*>(keymapListComponent->GetItemData(compSelectIndex));
+	const KeyMappingsInfo* info = static_cast<KeyMappingsInfo*>(keymapListComponent->GetItemData(compSelectIndex));
 	if (NULL == info)
 	{
 		return Check_INVALID_SELECTION;
