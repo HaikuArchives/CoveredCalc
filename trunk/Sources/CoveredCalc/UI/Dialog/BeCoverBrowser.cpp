@@ -60,12 +60,6 @@ static const char COVER_BROWSER_VIEW_APPLY_BUTTON[]		= "Apply";
 static const char COVER_BROWSER_VIEW_COVER_LIST[]		= "CoverList";
 static const char COVER_BROWSER_VIEW_COVER_LIST_LABEL[]	= "CoverListLabel";
 
-static const char STR_COVER_BROWSER[]	= "Cover Browser - CoveredCalc";
-static const char STR_SELECT_COVER[]	= "Select Cover:";
-static const char STR_REFRESH[]			= "Refresh";
-static const char STR_APPLY[]			= "Apply";
-static const char STR_CLOSE[]			= "Close";
-
 // ---------------------------------------------------------------------
 //! Constructor
 // ---------------------------------------------------------------------

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -111,9 +111,6 @@ public:
 							{ return keymapFilePath; }
 	void				SetKeymapFilePath(const Path& keymapFilePath)
 							{ this->keymapFilePath = keymapFilePath; }
-
-public:
-	static const Path	Value_LangFileBuiltIn;		///< this value is for built-in language file.
 
 private:
 	void				loadDefaultToMember();

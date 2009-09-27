@@ -44,6 +44,11 @@ class Path;
  */
 class LangSelectHelper
 {
+#if defined(ZETA)
+public:
+	static ConstAStr LANGMENU_LOCALEKIT;
+#endif // defined(ZETA)
+	
 public:
 	enum CheckResult
 	{

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -70,6 +70,7 @@ public:
 
 	void						GetLanguageName(MBCString& langName) const;
 	void						GetLanguageCode(MBCString& langCode) const;
+	void						GetBaseDefSource(MBCString& fileName) const;
 
 	bool						LoadString(ConstUTF8Str name, MBCString& message) const;
 	void						LoadDialogLayout(ConstUTF8Str name, DialogLayout& layout) const;
@@ -95,8 +96,9 @@ private:
 	NCDDocument*				document;			///< DOM tree.
 	NameToElementMap			dialogElementMap;	///< map to retrieve a dialog element from name.
 	NameToElementMap			stringElementMap;	///< map to retrieve a string element from name.
-	MBCString					langName;
-	MBCString					langCode;
+	MBCString					langName;			///< language name
+	MBCString					langCode;			///< language code
+	MBCString					baseDefSource;		///< baseDef source
 };
 
 #endif // _XMLLANGFILE_H_

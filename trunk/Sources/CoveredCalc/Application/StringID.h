@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -121,6 +121,13 @@ ConstUTF8Str ConvertStringID(SInt32 id);
 	STRING_ID(NSID_EDIT_KEYMAP_OK,						5410)
 	STRING_ID(NSID_EDIT_KEYMAP_CANCEL,					5411)
 
+	// Select language dialog
+	STRING_ID(NSID_SELECT_LANGUAGE_TITLE,				5500)
+	STRING_ID(NSID_SELECT_LANGUAGE_MESSAGE,				5501)
+	STRING_ID(NSID_SELECT_LANGUAGE_LANGUAGE,			5502)
+	STRING_ID(NSID_SELECT_LANGUAGE_OK,					5503)
+	STRING_ID(NSID_SELECT_LANGUAGE_CANCEL,				5504)
+
 	// messages
 	STRING_ID(NSID_APPNAME,								10000)
 	STRING_ID(NSID_KEYMAPPINGS_COPY, 					10003)
@@ -218,6 +225,7 @@ ConstUTF8Str ConvertStringID(SInt32 id);
 	STRING_ID(NSID_EMSG_LOAD_COMMANDLINE_LANGFILE,		19000)
 	STRING_ID(NSID_EMSG_LOAD_SETTING_LANGFILE,			19001)
 	STRING_ID(NSID_EMSG_LOAD_DEFAULT_LANGFILE,			19002)
+	STRING_ID(NSID_EMSG_LOAD_LANGFILE,					19003)
 
 
 #undef STRING_ID

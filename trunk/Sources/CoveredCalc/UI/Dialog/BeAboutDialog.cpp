@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -59,9 +59,6 @@ static const char ABOUT_DIALOG_VIEW_VERSION_LABEL[]		= "VersionLabel";
 static const char ABOUT_DIALOG_VIEW_COPYRIGHT_LABEL[]	= "CopyrightLabel";
 static const char ABOUT_DIALOG_VIEW_LOGO_ICON[]			= "LogoIcon";
 static const char ABOUT_DIALOG_VIEW_OK[]				= "OKButton";
-
-static const char STR_ABOUT_COVERED_CALC[]	= "About CoveredCalc";
-static const char STR_OK[]					= "OK";
 
 /**
  *	@brief	Constructor
@@ -171,7 +168,7 @@ void BeAboutDialog::languageChanged()
 	BButton* applyButton = dynamic_cast<BButton*>(FindView(ABOUT_DIALOG_VIEW_OK));
 	if (NULL != applyButton)
 	{
-		applyButton->SetLabel(nls->LoadNativeString(NSID_ABOUT_OK).CString());
+		applyButton->SetLabel(nsl->LoadNativeString(NSID_ABOUT_OK).CString());
 	}
 }
 #endif

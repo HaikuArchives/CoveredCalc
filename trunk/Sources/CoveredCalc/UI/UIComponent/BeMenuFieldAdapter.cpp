@@ -50,7 +50,10 @@ BeMenuFieldAdapter::BeMenuFieldAdapter()
  */
 BeMenuFieldAdapter::~BeMenuFieldAdapter()
 {
-	RemoveAllItem();
+	if (NULL != getMenuField())
+	{
+		RemoveAllItem();
+	}
 }
 
 /**

@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -53,6 +53,7 @@
 #include "UTF8Utils.h"
 #include "VirtualPathNames.h"
 #include "StringID.h"
+#include "BeSelectLanguageDlg.h"
 
 static const UTF8Char STR_PLATFORM_BEOS[] = "BeOS";			///< keymap platform for BeOS.
 static const UTF8Char STR_CATEGORY_MAIN_WINDOW[] = "MainWindow";	///< keymap category of main window.
@@ -323,7 +324,7 @@ void BeCoveredCalcApp::loadKeyMappingsOnInit()
  */
 MBCString BeCoveredCalcApp::LoadNativeString(SInt32 stringId)
 {
-	MBCString ret = CoveredCalcAppBase::LoadNativeString();
+	MBCString ret = CoveredCalcAppBase::LoadNativeString(stringId);
 	return ZetaLocaleString(ret.CString());
 }
 #endif
@@ -409,69 +410,111 @@ void BeCoveredCalcApp::ReadyToRun()
 	if (!langFileLoaded)
 	{
 		AppSettings* appSettings = GetAppSettings();
-		Path langFilePath = appSettings->GetLanguageFilePath();
-		if (!langFilePath.IsEmpty())
-		{
-			Path langFileFullPath = MakeAbsoluteLangFilePath(langFilePath);
-			if (!langFileFullPath.IsEmpty())
-			{
-				isBuiltIn = false;
-				try
-				{
-					loadLangFile(langFileFullPath);
-					langFileLoaded = true;
 #if defined(ZETA)
-					isLocaleKitAvailable = false;
-					GetAppSettings()->SetLocaleKitAvailable(false);
+		isLocaleKitAvailable = GetAppSettings()->IsLocaleKitAvailable();
+		if (isLocaleKitAvailable)
+		{
+			langFileLoaded = true;
+			Path langFilePath = appSettings->GetLanguageFilePath();
+			if (!langFilePath.IsEmpty())
+			{
+				langFilePath.Empty();
+				appSettings->SetLanguageFilePath(langFilePath);
+			}
+		}
+		else
 #endif // defined(ZETA)
-				}
-				catch (Exception* ex)
+		{
+			Path langFilePath = appSettings->GetLanguageFilePath();
+			if (!langFilePath.IsEmpty())
+			{
+				Path langFileFullPath = MakeAbsoluteLangFilePath(langFilePath);
+				if (!langFileFullPath.IsEmpty())
 				{
-					// 言語ファイルが読めません。
-					ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, NSID_EMSG_LOAD_SETTING_LANGFILE,
-																	MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
-					ex->Delete();
+					isBuiltIn = false;
+					try
+					{
+						loadLangFile(langFileFullPath);
+						langFileLoaded = true;
+#if defined(ZETA)
+						isLocaleKitAvailable = false;
+						GetAppSettings()->SetLocaleKitAvailable(false);
+#endif // defined(ZETA)
+					}
+					catch (Exception* ex)
+					{
+						// 言語ファイルが読めません。
+						ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, NSID_EMSG_LOAD_SETTING_LANGFILE,
+																		MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+						ex->Delete();
+					}
 				}
 			}
 		}
 	}
-	
+
 	if (!langFileLoaded)
 	{
-// FIXME: ユーザーにどの言語にするかを尋ねる？
-//        あと、ZETA の LocaleKit をどういう扱いにするか決める必要がある。
-#if 0
-		Path builtInLangFileFullPath = MakeAbsoluteLangFilePath(Path("enUS.cclxb"));
+		// ask user to select language.
+		bool isCanceled = true;
+		BeSelectLanguageDlg selectLangDlg;
 		try
 		{
-			loadLangFile(builtInLangFileFullPath);
-			langFileLoaded = true;
 #if defined(ZETA)
-			if (isBuiltIn)
+			selectLangDlg.SetRelativeLangFilePath(Path());
+			selectLangDlg.SetIsLocaleKitAvailable(true);
+#else
+			selectLangDlg.SetRelativeLangFilePath(Path(ALITERAL("enUS.cclxb")));
+#endif
+			selectLangDlg.Init();
+			SInt32 dlgResult = selectLangDlg.DoModal(NULL);
+			if (BeModalDialog::DlgResult_OK == dlgResult)
 			{
-				// もともと built-in だったのならLocakeKit利用の設定を読み込み
-				isLocaleKitAvailable = GetAppSettings()->IsLocaleKitAvailable();
+				isCanceled = false;
 			}
-			else
-			{
-				// もともと build-in じゃなかったのなら強制的にLocaleKit利用に設定
-				isLocaleKitAvailable = true;
-				GetAppSettings()->SetLocaleKitAvailable(true);
-			}
-#endif // defined(ZETA)
 		}
 		catch (Exception* ex)
 		{
-			// デフォルトの言語ファイルが読めません。
-			ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, NSID_EMSG_LOAD_DEFAULT_LANGFILE,
-															MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+			ExceptionMessageUtils::DoExceptionMessageBox(this, ex);
 			ex->Delete();
-			be_app->PostMessage(B_QUIT_REQUESTED, be_app);
-			return;
 		}
+		if (isCanceled)
+		{
+			be_app->PostMessage(B_QUIT_REQUESTED, be_app);
+			return;			
+		}
+		
+#if defined(ZETA)
+		isLocaleKitAvailable = false;
+		if (selectLangDlg.IsLocaleKitAvailable())
+		{
+			isLocaleKitAvailable = true;
+			GetAppSettings()->SetLocaleKitAvailable(true);
+			GetAppSettings()->SetLanguageFilePath(Path());
+		}
+		else
+#endif
+		{
+			Path langFilePath = selectLangDlg.GetRelativeLangFilePath();
+			Path langFileFullPath = MakeAbsoluteLangFilePath(langFilePath);
+			if (!langFileFullPath.IsEmpty())
+			{
+				try
+				{
+					loadLangFile(langFileFullPath);
+					langFileLoaded = true;
+					GetAppSettings()->SetLanguageFilePath(langFilePath);	
+				}
+				catch (Exception* ex)
+				{
+					ex->Delete();
 	
-		GetAppSettings()->SetLanguageFilePath(AppSettings::Value_LangFileBuiltIn);
-#endif // FIXME: ここまでどうするか決める
+					// 言語ファイルが読めません。
+					ExceptionMessageUtils::DoExceptionMessageBoxWithText(this, ex, NSID_EMSG_LOAD_SETTING_LANGFILE,
+																	MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
+				}
+			}
+		}
 	}
 
 	// キー定義名 DB のロード

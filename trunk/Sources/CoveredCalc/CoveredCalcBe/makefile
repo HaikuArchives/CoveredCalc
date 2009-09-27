@@ -118,12 +118,15 @@ SRCS= \
 	../UI/Dialog/BeCoverBrowser.cpp \
 	../UI/Dialog/BeDialog.cpp \
 	../UI/Dialog/BeEditKeymapDlg.cpp \
+	../UI/Dialog/BeModalDialog.cpp \
 	../UI/Dialog/BePreferencesDlg.cpp \
+	../UI/Dialog/BeSelectLanguageDlg.cpp \
 	../UI/Dialog/CoverBrowser.cpp \
 	../UI/Dialog/EditKeymapDlg.cpp \
 	../UI/Dialog/KeymapSelectHelper.cpp \
 	../UI/Dialog/LangSelectHelper.cpp \
 	../UI/Dialog/PreferencesDlg.cpp \
+	../UI/Dialog/SelectLanguageDlg.cpp \
 	../UI/DialogUtility/BeDialogControlHelper.cpp \
 	../UI/DialogUtility/BeDialogManager.cpp \
 	../UI/DialogUtility/DialogLayout.cpp \

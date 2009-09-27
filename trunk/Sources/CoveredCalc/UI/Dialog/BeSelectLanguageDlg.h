@@ -24,62 +24,68 @@
  */
 
 /*!
-	@file		BePreferencesDlg.h
-	@brief		Definition of BePreferencesDlg class
+	@file		BeSelectLanguageDlg.h
+	@brief		Definition of BeSelectLanguageDlg class
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2006.02.27 created
+	@date		2009.09.19 created
 */
 
-#ifndef _BEPREFERENCESDLG_H_
-#define _BEPREFERENCESDLG_H_
+#ifndef _BESELECTLANGUAGEDLG_H_
+#define _BESELECTLANGUAGEDLG_H_
 
-#include "BeDialog.h"
-#include "PreferencesDlg.h"
+#include "BeModalDialog.h"
+#include "SelectLanguageDlg.h"
 #include "UICListBoxDDImpl.h"
-#include "UICSeparatorListBoxDDImpl.h"
-#include "UICButtonImpl.h"
 
 class BMenu;
 
 /**
  *	@brief	Preferences dialog on BeOS.
  */
-class BePreferencesDlg : public BeDialog, public PreferencesDlg
+class BeSelectLanguageDlg : public BeModalDialog, public SelectLanguageDlg
 {
 public:
-									BePreferencesDlg();
-	virtual							~BePreferencesDlg();
+									BeSelectLanguageDlg();
+	virtual							~BeSelectLanguageDlg();
+
+	void							Init();
 	
 protected:
-	virtual void					initDialog();
-	virtual void					MessageReceived(BMessage *message);
-#if defined (ZETA)
-	virtual void					languageChanged();
-#endif
-
+	virtual ConstAStr				getSemaphoreName();
 	virtual MessageBoxProvider*		getMessageBoxProvider();
-	virtual bool					showEditKeyMapDialog(bool isReadOnly, KeyMappings& keyMappings);
 	
 	virtual UICListBox*				getLanguageListBox() { return &uicLanguageListBox; }
-	virtual UICSeparatorListBox*	getKeyMapListBox() { return &uicKeyMapListBox; }
-	virtual UICButton*				getEditKeyMapButton() { return &uicEditKeyMapButton; }
-	virtual UICButton*				getDuplicateKeyMapButton() { return &uicDuplicateKeyMapButton; }
-	virtual UICButton*				getDeleteKeyMapButton() { return &uicDeleteKeyMapButton; }
 	
 	virtual void					closeDialog(bool isOK);
 	
 private:
-	void							createViews();
-
-private:
-	BMenu*							langMenu;			///< language popup menu
-
 	// adapters
 	UICListBoxDDImpl				uicLanguageListBox;
-	UICSeparatorListBoxDDImpl		uicKeyMapListBox;
-	UICButtonImpl					uicEditKeyMapButton;
-	UICButtonImpl					uicDuplicateKeyMapButton;
-	UICButtonImpl					uicDeleteKeyMapButton;
+
+private:
+	class DialogWindow : public BeModalDialogWindow
+	{
+	public:
+									DialogWindow();
+		virtual						~DialogWindow();
+		
+		void						Init(BeSelectLanguageDlg* owner);
+
+	protected:
+		virtual void				initDialog();
+		virtual void				MessageReceived(BMessage *message);
+#if defined (ZETA)
+		virtual void				languageChanged();
+#endif
+
+	private:
+		void						createViews();
+	
+	private:
+		BeSelectLanguageDlg*		owner;
+		BMenu*						langMenu;			///< language popup menu
+	};
+	friend class DialogWindow;
 };
 
-#endif // _BEPREFERENCESDLG_H_
+#endif // _BESELECTLANGUAGEDLG_H_

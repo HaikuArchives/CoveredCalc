@@ -36,11 +36,18 @@
 #include <algorithm>
 #include "CoveredCalcApp.h"
 #include "UICListBox.h"
+#if defined(ZETA)
+#include <locale/Locale.h>
+#endif // defined(ZETA)
 
 #define INVALID_ITEM		(-1)
 #if defined(ZETA)
 #define ZETA_LOCALE_KIT		(-2)
 #endif
+
+#if defined(ZETA)
+ConstAStr LangSelectHelper::LANGMENU_LOCALEKIT = ALITERAL("Use ZETA's Locale Kit");
+#endif // defined(ZETA)
 
 /**
  *	@brief	Constructor
@@ -145,9 +152,7 @@ void LangSelectHelper::SetToComponent(const LangFileInfoCollection* langFileInfo
 #if defined(ZETA)
 		else if (ZETA_LOCALE_KIT == itemIndex)
 		{
-			// FIXME: 
-			NativeStringLoader* nsl = CoveredCalcApp::GetInstance();
-			itemLabel = nsl->LoadNativeString(PREFERENCES_DIALOG_LANGMENU_LOCALEKIT);
+			itemLabel = _T(LANGMENU_LOCALEKIT);
 		}
 #endif
 		else
@@ -194,7 +199,7 @@ LangSelectHelper::CheckResult LangSelectHelper::GetFromComponent(Path& outLangFi
 		return Check_INVALID_SELECTION;
 	}
 #if defined(ZETA)
-	else if (ZETA_LOCALE_KIT == itemIndex)
+	else if (ZETA_LOCALE_KIT == selectedIndex)
 	{
 		outLangFilePath = Path();
 		outIsLocaleKitAvailable = true;

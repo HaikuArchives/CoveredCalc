@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -186,28 +186,28 @@ void BeAboutCurrentCoverDialog::languageChanged()
 	BStringView* nameLabelView = dynamic_cast<BStringView*>(FindView(ABOUT_CURCOV_DIALOG_VIEW_NAME_LABEL));
 	if (NULL != nameLabelView)
 	{
-		nameLabelView->SetText(nls->LoadNativeString(NSID_ABOUT_COVER_NAME).CString());
+		nameLabelView->SetText(nsl->LoadNativeString(NSID_ABOUT_COVER_NAME).CString());
 	}		
 
 	// DescLabel
 	BStringView* descLabelView = dynamic_cast<BStringView*>(FindView(ABOUT_CURCOV_DIALOG_VIEW_DESC_LABEL));
 	if (NULL != descLabelView)
 	{
-		descLabelView->SetText(nls->LoadNativeString(NSID_ABOUT_COVER_DESCRIPTION).CString());
+		descLabelView->SetText(nsl->LoadNativeString(NSID_ABOUT_COVER_DESCRIPTION).CString());
 	}
 
 	// AboutCoverLabel
 	BStringView* aboutCoverLabelView = dynamic_cast<BStringView*>(FindView(ABOUT_CURCOV_DIALOG_VIEW_ABOUT_COVER_LABEL));
 	if (NULL != aboutCoverLabelView)
 	{
-		aboutCoverLabelView->SetText(nls->LoadNativeString(NSID_ABOUT_COVER_ABOUT).CString());
+		aboutCoverLabelView->SetText(nsl->LoadNativeString(NSID_ABOUT_COVER_ABOUT).CString());
 	}
 
 	// OKButton
 	BButton* okButton = dynamic_cast<BButton*>(FindView(ABOUT_CURCOV_DIALOG_VIEW_OK));
 	if (NULL != okButton)
 	{
-		okButton->SetLabel(nls->LoadNativeString(NSID_ABOUT_COVER_OK).CString());
+		okButton->SetLabel(nsl->LoadNativeString(NSID_ABOUT_COVER_OK).CString());
 	}
 }
 #endif

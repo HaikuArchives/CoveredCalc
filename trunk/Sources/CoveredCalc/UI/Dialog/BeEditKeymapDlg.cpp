@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -48,7 +48,7 @@
 #endif // defined(ZETA)
 
 ////////////////////////////////////////
-#define baseWindow	BeDialog
+#define baseWindow	BeModalDialogWindow
 #define base		EditKeymapDlg
 ////////////////////////////////////////
 
@@ -75,13 +75,7 @@ static const char EDITKEYMAP_DIALOG_VIEW_CANCEL[]				= "CancelButton";
  *	@brief	Constructor
  */
 BeEditKeymapDlg::BeEditKeymapDlg()
-	: BeDialog(IDD_EDIT_KEYMAP,
-				B_TITLED_WINDOW_LOOK,
-				B_MODAL_SUBSET_WINDOW_FEEL,
-				B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_MINIMIZABLE)
 {
-	semDialog = 0;
-	isDialogOK = false;
 }
 
 /**
@@ -92,9 +86,76 @@ BeEditKeymapDlg::~BeEditKeymapDlg()
 }
 
 /**
+ *	@brief	Initializes the object.
+ *	@param[in]	isReadOnly	true when read-only mode.
+ *	@param[in]	keyNameDB
+ */
+void BeEditKeymapDlg::Init(bool isReadOnly, const KeyNameDB* keyNameDB)
+{
+	base::Init(isReadOnly, keyNameDB);
+
+	DialogWindow* dlg = new DialogWindow();
+	dialogWindow = dlg;
+	dlg->Init(this);
+}
+
+/**
+ *	@brief Returns semaphore name
+ *	@return semaphore name
+ */
+ConstAStr BeEditKeymapDlg::getSemaphoreName()
+{
+	return "BeEditKeymapDlg";
+}
+
+/**
+ *	@brief	Returns MessageBoxProvider object.
+ *	@return	MessageBoxProvider object.
+ */
+MessageBoxProvider*	BeEditKeymapDlg::getMessageBoxProvider()
+{
+	return CoveredCalcApp::GetInstance();
+}
+
+/**
+ *	@brief	Close this dialog.
+ *	@param[in]	isOK	true if dialog is closing by OK button.
+ */
+void BeEditKeymapDlg::closeDialog(bool isOK)
+{
+	if (isOK)
+	{
+		dialogResult = BeModalDialog::DlgResult_OK;
+	}
+	else
+	{
+		dialogResult = BeModalDialog::DlgResult_Cancel;
+	}
+	dialogWindow->PostMessage(B_QUIT_REQUESTED);
+}
+
+/**
+ * @brief Constructor
+ */
+BeEditKeymapDlg::DialogWindow::DialogWindow()
+	: baseWindow(IDD_EDIT_KEYMAP,
+				B_TITLED_WINDOW_LOOK,
+				B_MODAL_SUBSET_WINDOW_FEEL,
+				B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_MINIMIZABLE)
+{
+}
+
+/**
+ * @brief Destructor
+ */
+BeEditKeymapDlg::DialogWindow::~DialogWindow()
+{
+}
+
+/**
  *	@brief	Creates child views.
  */
-void BeEditKeymapDlg::createViews()
+void BeEditKeymapDlg::DialogWindow::createViews()
 {
 	BeDialogControlHelper dch(getDialogLayout());
 	NativeStringLoader* nsl = CoveredCalcApp::GetInstance();
@@ -121,7 +182,7 @@ void BeEditKeymapDlg::createViews()
 	
 	nameText->SetDivider(dch.GetItemPos(true, ALITERAL("IDC_EDIT_NAME.divider"), ALITERAL("IDC_EDIT_NAME.left")));
 	nameText->SetModificationMessage(new BMessage(ID_EDITKEYMAP_NAME_MODIFIED));
-	uicNameTextEdit.Init(nameText);
+	owner->uicNameTextEdit.Init(nameText);
 	
 	// FunctionBox
 	MBCString itemnameFunctionBox = ALITERAL("IDC_GROUP_FUNCTION");
@@ -146,7 +207,7 @@ void BeEditKeymapDlg::createViews()
 	functionListScroller->SetViewColor(viewColor);
 	functionBox->AddChild(functionListScroller);
 	functionList->SetSelectionMessage(new BMessage(ID_EDITKEYMAP_FUNCTION_SELECTED));
-	uicFunctionListBox.Init(functionList);
+	owner->uicFunctionListBox.Init(functionList);
 	
 	// CurrentKeyLabel
 	BStringView* currentKeyLabel = new BStringView(dch.GetItemRect(ALITERAL("IDC_STATIC_CURRENT_KEY"), itemnameFunctionBox),
@@ -164,13 +225,13 @@ void BeEditKeymapDlg::createViews()
 	currentKeyListScroller->SetViewColor(viewColor);
 	functionBox->AddChild(currentKeyListScroller);
 	currentKeyList->SetSelectionMessage(new BMessage(ID_EDITKEYMAP_CURRENT_KEY_SELECTED));
-	uicCurrentKeyListBox.Init(currentKeyList);
+	owner->uicCurrentKeyListBox.Init(currentKeyList);
 	
 	// RemoveButton
 	BButton* removeButton = new BButton(dch.GetItemRect(ALITERAL("IDC_REMOVE"), ITEMNAME_WINDOW), EDITKEYMAP_DIALOG_VIEW_REMOVE_BUTTON,
 							nsl->LoadNativeString(NSID_EDIT_KEYMAP_REMOVE), new BMessage(ID_EDITKEYMAP_REMOVE));
 	baseView->AddChild(removeButton);
-	uicRemoveButton.Init(removeButton);
+	owner->uicRemoveButton.Init(removeButton);
 	
 	// KeyBox
 	MBCString itemnameKeyBox = ALITERAL("IDC_GROUP_KEY");
@@ -189,10 +250,10 @@ void BeEditKeymapDlg::createViews()
 							"", "", NULL);
 	keyBox->AddChild(keyInput);
 	
-	keyInput->Init(keyNameDB);
+	keyInput->Init(owner->keyNameDB);
 	keyInput->SetDivider(0.0);
 	keyInput->SetValueChangeMessage(new BMessage(ID_EDITKEYMAP_KEYINPUT_CHANGED));
-	uicKeyInput.Init(keyInput);
+	owner->uicKeyInput.Init(keyInput);
 	
 	// AssignedFuncLabel
 	BStringView* assignedFuncLabel = new BStringView(dch.GetItemRect(ALITERAL("IDC_STATIC_ASSIGNED_FUNCTION"), itemnameKeyBox),
@@ -206,19 +267,19 @@ void BeEditKeymapDlg::createViews()
 	
 	assignedFuncText->SetDivider(0.0);
 	assignedFuncText->TextView()->MakeEditable(false);
-	uicAssignedFunctionTextEdit.Init(assignedFuncText);
+	owner->uicAssignedFunctionTextEdit.Init(assignedFuncText);
 	
 	// AssignButton
 	BButton* assignButton = new BButton(dch.GetItemRect(ALITERAL("IDC_ASSIGN"), ITEMNAME_WINDOW), EDITKEYMAP_DIALOG_VIEW_ASSIGN_BUTTON,
 							nsl->LoadNativeString(NSID_EDIT_KEYMAP_ASSIGN), new BMessage(ID_EDITKEYMAP_ASSIGN));
 	baseView->AddChild(assignButton);
-	uicAssignButton.Init(assignButton);
+	owner->uicAssignButton.Init(assignButton);
 	
 	// CancelButton
 	BButton* cancelButton = new BButton(dch.GetItemRect(ALITERAL("IDCANCEL"), ITEMNAME_WINDOW), EDITKEYMAP_DIALOG_VIEW_CANCEL,
 								nsl->LoadNativeString(NSID_EDIT_KEYMAP_CANCEL), new BMessage(ID_DIALOG_CANCEL));
 	baseView->AddChild(cancelButton);
-	uicCancelButton.Init(cancelButton);
+	owner->uicCancelButton.Init(cancelButton);
 
 	// OKButton
 	BButton* okButton = new BButton(dch.GetItemRect(ALITERAL("IDOK"), ITEMNAME_WINDOW), EDITKEYMAP_DIALOG_VIEW_OK,
@@ -226,14 +287,14 @@ void BeEditKeymapDlg::createViews()
 	baseView->AddChild(okButton);
 	
 	SetDefaultButton(okButton);
-	uicOkButton.Init(okButton);
+	owner->uicOkButton.Init(okButton);
 }
 
 #if defined (ZETA)
 /**
  *	@brief	Called when language setting is changed by LocaleKit.
  */
-void BeEditKeymapDlg::languageChanged()
+void BeEditKeymapDlg::DialogWindow::languageChanged()
 {
 	NativeStringLoader* nsl = CoveredCalcApp::GetInstance();
 
@@ -265,7 +326,7 @@ void BeEditKeymapDlg::languageChanged()
 	BListView* functionList = dynamic_cast<BListView*>(FindView(EDITKEYMAP_DIALOG_VIEW_FUNCTION_LIST));
 	if (NULL != functionList)
 	{
-		BeListViewAdapter* functionListAdapter = uicFunctionListBox.GetRawAdapter();
+		BeListViewAdapter* functionListAdapter = owner->uicFunctionListBox.GetRawAdapter();
 		if (NULL != functionListAdapter)
 		{
 			SInt32 count = functionListAdapter->GetCount();
@@ -280,7 +341,6 @@ void BeEditKeymapDlg::languageChanged()
 	}
 	
 	// CurrentKeyLabel
-	item = dialogDesign->FindItem(EDITKEYMAP_DIALOG_VIEW_CURRENT_KEY_LABEL);
 	BStringView* currentKeyLabel = dynamic_cast<BStringView*>(FindView(EDITKEYMAP_DIALOG_VIEW_CURRENT_KEY_LABEL));
 	if (NULL != currentKeyLabel)
 	{
@@ -291,7 +351,7 @@ void BeEditKeymapDlg::languageChanged()
 	BListView* currentKeyList = dynamic_cast<BListView*>(FindView(EDITKEYMAP_DIALOG_VIEW_CURRENT_KEY_LIST));
 	if (NULL != currentKeyList)
 	{
-		BeListViewAdapter* currentKeyListAdapter = uicCurrentKeyListBox.GetRawAdapter();
+		BeListViewAdapter* currentKeyListAdapter = owner->uicCurrentKeyListBox.GetRawAdapter();
 		if (NULL != currentKeyListAdapter)
 		{
 			SInt32 count = currentKeyListAdapter->GetCount();
@@ -300,7 +360,7 @@ void BeEditKeymapDlg::languageChanged()
 			{
 				const KeyEventParameter* keyParam = static_cast<KeyEventParameter*>(currentKeyListAdapter->GetItemData(ix));
 				MBCString keyName;
-				keyNameDB->GetKeyName(keyParam, keyName);
+				owner->keyNameDB->GetKeyName(keyParam, keyName);
 				currentKeyListAdapter->SetItemText(ix, keyName);
 			}
 		}
@@ -329,7 +389,6 @@ void BeEditKeymapDlg::languageChanged()
 	}
 	
 	// AssignedFuncLabel
-	item = dialogDesign->FindItem(EDITKEYMAP_DIALOG_VIEW_ASSIGNED_FUNC_LABEL);
 	BStringView* assignedFuncLabel = dynamic_cast<BStringView*>(FindView(EDITKEYMAP_DIALOG_VIEW_ASSIGNED_FUNC_LABEL));
 	if (NULL != assignedFuncLabel)
 	{
@@ -337,10 +396,9 @@ void BeEditKeymapDlg::languageChanged()
 	}
 
 	// AssignedFuncText
-	processKeyInputChanged();
+	owner->HandleUICEvent(CID_KeyInput, UICE_TextChanged, 0, NULL);
 	
 	// AssignButton
-	item = dialogDesign->FindItem(EDITKEYMAP_DIALOG_VIEW_ASSIGN_BUTTON);
 	BButton* assignButton = dynamic_cast<BButton*>(FindView(EDITKEYMAP_DIALOG_VIEW_ASSIGN_BUTTON));
 	if (NULL != assignButton)
 	{
@@ -348,7 +406,6 @@ void BeEditKeymapDlg::languageChanged()
 	}
 	
 	// CancelButton
-	item = dialogDesign->FindItem(EDITKEYMAP_DIALOG_VIEW_CANCEL);
 	BButton* cancelButton = dynamic_cast<BButton*>(FindView(EDITKEYMAP_DIALOG_VIEW_CANCEL));
 	if (NULL != cancelButton)
 	{
@@ -356,7 +413,6 @@ void BeEditKeymapDlg::languageChanged()
 	}
 	
 	// OKButton
-	item = dialogDesign->FindItem(EDITKEYMAP_DIALOG_VIEW_OK);
 	BButton* okButton = dynamic_cast<BButton*>(FindView(EDITKEYMAP_DIALOG_VIEW_OK));
 	if (NULL != okButton)
 	{
@@ -367,44 +423,29 @@ void BeEditKeymapDlg::languageChanged()
 
 /**
  *	@brief	Initializes the object.
- *	@param[in]	parent		parent window, which is blocked while this dialog is shown.
- *	@param[in]	semDialog	this semaphore is released when dialog is closed.
- *	@param[in]	isReadOnly	true when read-only mode.
- *	@param[in]	keyNameDB
+ *	@param[in]	owner	BeEditKeymapDlg object
  */
-void BeEditKeymapDlg::Init(BWindow* parent, sem_id semDialog, bool isReadOnly, const KeyNameDB* keyNameDB)
+void BeEditKeymapDlg::DialogWindow::Init(BeEditKeymapDlg* owner)
 {
-	AddToSubset(parent);
-	this->semDialog = semDialog;
-
-	base::Init(isReadOnly, keyNameDB);
+	this->owner = owner;
 	baseWindow::Init();
 }
 
 /**
  *	@brief	Initializes the dialog.
  */
-void BeEditKeymapDlg::initDialog()
+void BeEditKeymapDlg::DialogWindow::initDialog()
 {	
 	createViews();
 	moveToCenterOfScreen();
-	
-	readyToShow();
-}
 
-/**
- *	@brief	Returns MessageBoxProvider object.
- *	@return	MessageBoxProvider object.
- */
-MessageBoxProvider*	BeEditKeymapDlg::getMessageBoxProvider()
-{
-	return CoveredCalcApp::GetInstance();
+	owner->readyToShow();
 }
 
 /**
  *	@brief	Message handler.
  */
-void BeEditKeymapDlg::MessageReceived(
+void BeEditKeymapDlg::DialogWindow::MessageReceived(
 	BMessage *message		//!< received message.
 )
 {
@@ -413,35 +454,35 @@ void BeEditKeymapDlg::MessageReceived(
 		switch (message->what)
 		{
 		case ID_DIALOG_OK:
-			HandleUICEvent(CID_OKButton, UICE_ButtonClicked, 0, NULL);
+			owner->HandleUICEvent(CID_OKButton, UICE_ButtonClicked, 0, NULL);
 			break;
 			
 		case ID_DIALOG_CANCEL:
-			HandleUICEvent(CID_CancelButton, UICE_ButtonClicked, 0, NULL);
+			owner->HandleUICEvent(CID_CancelButton, UICE_ButtonClicked, 0, NULL);
 			break;
 		
 		case ID_EDITKEYMAP_FUNCTION_SELECTED:
-			HandleUICEvent(CID_FunctionListBox, UICE_SelectionChanged, 0, NULL);
+			owner->HandleUICEvent(CID_FunctionListBox, UICE_SelectionChanged, 0, NULL);
 			break;
 		
 		case ID_EDITKEYMAP_CURRENT_KEY_SELECTED:
-			HandleUICEvent(CID_CurrentKeysListBox, UICE_SelectionChanged, 0, NULL);
+			owner->HandleUICEvent(CID_CurrentKeysListBox, UICE_SelectionChanged, 0, NULL);
 			break;
 		
 		case ID_EDITKEYMAP_KEYINPUT_CHANGED:
-			HandleUICEvent(CID_KeyInput, UICE_TextChanged, 0, NULL);
+			owner->HandleUICEvent(CID_KeyInput, UICE_TextChanged, 0, NULL);
 			break;
 		
 		case ID_EDITKEYMAP_ASSIGN:
-			HandleUICEvent(CID_AssignButton, UICE_ButtonClicked, 0, NULL);
+			owner->HandleUICEvent(CID_AssignButton, UICE_ButtonClicked, 0, NULL);
 			break;
 		
 		case ID_EDITKEYMAP_REMOVE:
-			HandleUICEvent(CID_RemoveButton, UICE_ButtonClicked, 0, NULL);
+			owner->HandleUICEvent(CID_RemoveButton, UICE_ButtonClicked, 0, NULL);
 			break;
 		
 		case ID_EDITKEYMAP_NAME_MODIFIED:
-			HandleUICEvent(CID_NameTextEdit, UICE_TextChanged, 0, NULL);
+			owner->HandleUICEvent(CID_NameTextEdit, UICE_TextChanged, 0, NULL);
 			break;
 		
 		default:
@@ -454,26 +495,4 @@ void BeEditKeymapDlg::MessageReceived(
 		ExceptionMessageUtils::DoExceptionMessageBox(CoveredCalcApp::GetInstance(), ex);
 		ex->Delete();		
 	}	
-}
-
-/**
- *	@brief	Close this dialog.
- *	@param[in]	isOK	true if dialog is closing by OK button.
- */
-void BeEditKeymapDlg::closeDialog(bool isOK)
-{
-	isDialogOK = isOK;
-	PostMessage(B_QUIT_REQUESTED);
-}
-
-/**
- *	@brief	Called when B_QUIT_REQUESTED message is received.
- */
-bool BeEditKeymapDlg::QuitRequested()
-{
-	if (semDialog >= 0)
-	{
-		release_sem(semDialog);
-	}
-	return baseWindow::QuitRequested();
 }
