@@ -742,6 +742,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\UI\Dialog\SelectLanguageDlg.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\UI\Dialog\WinAboutCurrentCoverDlg.cpp"
 						>
 					</File>
@@ -767,6 +771,10 @@
 					</File>
 					<File
 						RelativePath="..\UI\Dialog\WinPseudoModalDialog.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\WinSelectLanguageDlg.cpp"
 						>
 					</File>
 				</Filter>
@@ -1468,6 +1476,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\UI\Dialog\SelectLanguageDlg.h"
+						>
+					</File>
+					<File
 						RelativePath="..\UI\Dialog\WinAboutCurrentCoverDlg.h"
 						>
 					</File>
@@ -1493,6 +1505,10 @@
 					</File>
 					<File
 						RelativePath="..\UI\Dialog\WinPseudoModalDialog.h"
+						>
+					</File>
+					<File
+						RelativePath="..\UI\Dialog\WinSelectLanguageDlg.h"
 						>
 					</File>
 				</Filter>

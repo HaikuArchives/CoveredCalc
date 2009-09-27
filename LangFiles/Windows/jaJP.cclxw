@@ -6,7 +6,6 @@
 	<langCode>jaJP</langCode>
 	
 	<!-- dialog font -->
-	<dialogFont targetOSVer="2.6.*.*" charset="128" typeface="メイリオ" size="9" />
 	<dialogFont targetOSVer="*.*.*.*" charset="128" typeface="MS UI Gothic" size="9" />
 	
 	<!-- About dialog -->

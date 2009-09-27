@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -56,6 +56,7 @@ ConstUTF8Str ConvertDialogID(SInt32 id);
 	DIALOG_ID(IDD_ABOUT_COVER,		5002)
 	DIALOG_ID(IDD_PREFERENCES,		5003)
 	DIALOG_ID(IDD_EDIT_KEYMAP,		5004)
+	DIALOG_ID(IDD_SELECT_LANGUAGE,	5005)
 
 
 #undef DIALOG_ID

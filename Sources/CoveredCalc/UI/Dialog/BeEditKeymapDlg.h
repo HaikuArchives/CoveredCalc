@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -33,7 +33,7 @@
 #ifndef _BEEDITKEYMAPDLG_H_
 #define _BEEDITKEYMAPDLG_H_
 
-#include "BeDialog.h"
+#include "BeModalDialog.h"
 #include "EditKeymapDlg.h"
 #include "UICTextEditImpl.h"
 #include "UICListBoxImpl.h"
@@ -43,23 +43,16 @@
 /**
  *	@brief	Edit-Keymapping dialog on BeOS.
  */
-class BeEditKeymapDlg : public BeDialog, public EditKeymapDlg
+class BeEditKeymapDlg : public BeModalDialog, public EditKeymapDlg
 {
 public:
 								BeEditKeymapDlg();
 	virtual						~BeEditKeymapDlg();
 	
-	void						Init(BWindow* parent, sem_id semDialog, bool isReadOnly, const KeyNameDB* keyNameDB);
-	bool						IsDialogClosedByOK() { return isDialogOK; }
+	void						Init(bool isReadOnly, const KeyNameDB* keyNameDB);
 	
 protected:
-	virtual void				initDialog();
-	virtual void				MessageReceived(BMessage *message);
-	virtual bool				QuitRequested();
-#if defined (ZETA)
-	virtual void				languageChanged();
-#endif
-
+	virtual ConstAStr			getSemaphoreName();
 	virtual MessageBoxProvider*	getMessageBoxProvider();
 
 	virtual UICTextEdit*		getNameTextEdit()				{ return &uicNameTextEdit; }
@@ -75,12 +68,6 @@ protected:
 	virtual void				closeDialog(bool isOK);
 
 private:
-	void						createViews();
-
-private:
-	sem_id						semDialog;			///< this semaphore is released when dialog is closed.
-	bool						isDialogOK;			///< whether dialog is closed by OK button.
-	
 	// adapters
 	UICTextEditControlImpl		uicNameTextEdit;
 	UICListBoxImpl				uicFunctionListBox;
@@ -91,6 +78,30 @@ private:
 	UICButtonImpl				uicRemoveButton;
 	UICButtonImpl				uicOkButton;
 	UICButtonImpl				uicCancelButton;
+	
+private:
+	class DialogWindow : public BeModalDialogWindow
+	{
+	public:
+								DialogWindow();
+		virtual					~DialogWindow();
+		
+		void					Init(BeEditKeymapDlg* owner);
+		
+	protected:
+		virtual void			initDialog();
+		virtual void			MessageReceived(BMessage *message);
+#if defined (ZETA)
+		virtual void			languageChanged();
+#endif
+		
+	private:
+		void					createViews();
+	
+	private:
+		BeEditKeymapDlg*		owner;
+	};
+	friend class DialogWindow;
 };
 
 #endif // _BEEDITKEYMAPDLG_H_

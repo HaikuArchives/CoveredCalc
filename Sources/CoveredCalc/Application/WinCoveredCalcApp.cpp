@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -49,6 +49,7 @@
 #include "WinMessageFilter.h"
 #include "StringID.h"
 #include "MemoryException.h"
+#include "WinSelectLanguageDlg.h"
 
 static const UTF8Char STR_PLATFORM_WINDOWS[] = "Windows";	///< keymap platform for Windows.
 
@@ -557,6 +558,8 @@ void WinCoveredCalcApp::loadKeyMappingsOnInit()
 	if (keymapFile.IsEmpty())
 	{
 		// 設定になければデフォルト
+
+		// FIXME: ユーザに尋ねる？
 		
 		// トリック：
 		// 1.8.x まではカスタマイズがなくて日本語 JIS キーボードしかなかった。
@@ -709,43 +712,36 @@ BOOL WinCoveredCalcApp::initInstance()
 	
 	if (!langFileLoaded)
 	{
-		// 設定に保存されていなければ、ユーザーに問い合わせる？
-		// FIXME:
-#if 0
-		SInt32 langFileInfoIndex = autoSelectLangFile();
-		if (-1 != langFileInfoIndex)
+		// 設定に保存されていなければ、ユーザーに問い合わせる
+		WinSelectLanguageDlg selectLangDlg;
+		selectLangDlg.SetRelativeLangFilePath(Path(ALITERAL("enUS.cclxw")));
+		int dlgResult = selectLangDlg.DoModal(NULL);
+		if (IDOK != dlgResult)
 		{
-			const LangFileInfoCollection* infoCollection = GetLangFileInfos();
-			const LangFileInfo& info = infoCollection->GetAt(langFileInfoIndex);
-			if (!info.GetPath().IsEmpty())
-			{
-				try
-				{
-					loadLangFile(info.GetPath());
-					langFileLoaded = true;
-				}
-				catch (Exception* ex)
-				{
-					ex->Delete();
-				}
+			return FALSE;
+		}
 
-				if (langFileLoaded)
-				{
-					AppSettings* appSettings = GetAppSettings();
-					Path relativeLangFilePath = MakeRelativeLangFilePath(info.GetPath());
-					appSettings->SetLanguageFilePath(relativeLangFilePath);
-				}
+		Path langFilePath = selectLangDlg.GetRelativeLangFilePath();
+		Path langFileFullPath = MakeAbsoluteLangFilePath(langFilePath);
+		if (!langFileFullPath.IsEmpty())
+		{
+			try
+			{
+				loadLangFile(langFileFullPath);
+				langFileLoaded = true;
+				GetAppSettings()->SetLanguageFilePath(langFilePath);
+
+			}
+			catch (Exception* ex)
+			{
+				ex->Delete();
+
+				// 言語ファイルが読めません。
+				DoMessageBox(NSID_EMSG_LOAD_LANGFILE, MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Warning);
 			}
 		}
-#endif
 	}
 
-	// FIXME: ビルトインってのはないはずなのでどーにかせんといかん！
-	if (!langFileLoaded)
-	{
-		GetAppSettings()->SetLanguageFilePath(AppSettings::Value_LangFileBuiltIn);
-	}
-	
 	// キー定義名 DB のロード
 	loadKeyNameDB();
 	

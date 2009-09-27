@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -83,7 +83,16 @@ public:
 	virtual void							CurrentCoverChanged();	
 
 protected:
+	struct LoadedLangFile
+	{
+		Path				path;		///< path of the language file.
+		XMLLangFile			langFile;	///< language file object.
+	};
+	typedef std::vector<LoadedLangFile*>	LoadedLangFilePtrVector;
+
+protected:
 	virtual void							loadLangFile(const Path& path);
+	void									loadOneLangFile(const Path& path, LoadedLangFilePtrVector::iterator insertBeforePos);
 	void									loadSettings(const Path& settingFile);
 	void									loadCoverDef(const Path& basePath, const Path& relativeCoverDefPath, SInt32 coverNo);
 	bool									restoreByDefaultCoverDef();
@@ -112,14 +121,6 @@ protected:
 	
 	virtual Path							makeAbsoluteCoverDefPath(const Path& basePath, const Path& relativePath);
 	virtual Path							makeRelativeCoverDefPath(const Path& basePath, const Path& absolutePath);
-
-protected:
-	struct LoadedLangFile
-	{
-		Path				path;		///< path of the language file.
-		XMLLangFile			langFile;	///< language file object.
-	};
-	typedef std::vector<LoadedLangFile*>	LoadedLangFilePtrVector;
 
 protected:
 	AppSettings								appSettings;					//!< current application settings

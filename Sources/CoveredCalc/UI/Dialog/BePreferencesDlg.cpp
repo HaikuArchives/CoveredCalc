@@ -34,12 +34,9 @@
 #include "BePreferencesDlg.h"
 #include <InterfaceKit.h>
 #include "CommandID.h"
-#include "LangFileInfo.h"
 #include "CoveredCalcApp.h"
 #include "Exception.h"
 #include "ExceptionMessageUtils.h"
-#include "BeDataMenuItem.h"
-#include "BeCoveredCalcApp.h"
 #include "DialogID.h"
 #include "StringID.h"
 #include "BeEditKeymapDlg.h"
@@ -68,21 +65,6 @@ static const char PREFERENCES_DIALOG_VIEW_DELETE_KEYMAPPING_BUTTON[] = "DeleteKe
 static const char PREFERENCES_DIALOG_VIEW_OK[]					= "OKButton";
 static const char PREFERENCES_DIALOG_VIEW_CANCEL[]				= "CancelButton";
 
-#if defined(ZETA)
-static const char PREFERENCES_DIALOG_LANGMENU_LOCALEKIT[]	= "Use ZETA's Locale Kit";
-#endif // defined(ZETA)
-
-static const char STR_PREFERENCES[]		= "Preferences";
-static const char STR_LANGUAGE_BOX[]	= "Language";
-static const char STR_LANGUAGE[]		= "Language:";
-static const char STR_LANG_NOTICE[]		= "Change of language will take effect after you restart CoveredCalc application.";
-static const char STR_KEYMAPPING_BOX[]	= "Keymap";
-static const char STR_KEYMAPPING[]		= "Keymap:";
-static const char STR_EDIT[]			= "Edit";
-static const char STR_DUPLICATE[]		= "Duplicate";
-static const char STR_DELETE[]			= "Delete";
-static const char STR_CANCEL[]			= "Cancel";
-static const char STR_OK[]				= "OK";
 
 /**
  *	@brief	Constructor
@@ -216,16 +198,13 @@ void BePreferencesDlg::languageChanged()
 	SetTitle(nsl->LoadNativeString(NSID_PREFERENCES_TITLE));
 
 	// LangBox	
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_LANG_BOX);
 	BBox* langBox = dynamic_cast<BBox*>(FindView(PREFERENCES_DIALOG_VIEW_LANG_BOX));
 	if (NULL != langBox)
 	{
 		langBox->SetLabel(nsl->LoadNativeString(NSID_PREFERENCES_GROUP_LANGUAGE));
-		langBox->SetLabel(LT(item->GetLabel(STR_LANGUAGE_BOX)));
 	}
 	
 	// LangPopup
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_LANG_POPUP);
 	BMenuField* langPopup = dynamic_cast<BMenuField*>(FindView(PREFERENCES_DIALOG_VIEW_LANG_POPUP));
 	if (NULL != langPopup)
 	{
@@ -233,7 +212,6 @@ void BePreferencesDlg::languageChanged()
 	}
 	
 	// LangNotice
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_LANG_NOTICE);
 	BTextView* langNotice = dynamic_cast<BTextView*>(FindView(PREFERENCES_DIALOG_VIEW_LANG_NOTICE));
 	if (NULL != langNotice)
 	{
@@ -241,7 +219,6 @@ void BePreferencesDlg::languageChanged()
 	}
 	
 	// KeyMappingBox
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_KEYMAPPING_BOX);
 	BBox* keyMappingBox = dynamic_cast<BBox*>(FindView(PREFERENCES_DIALOG_VIEW_KEYMAPPING_BOX));
 	if (NULL != keyMappingBox)
 	{
@@ -249,7 +226,6 @@ void BePreferencesDlg::languageChanged()
 	}
 	
 	// KeyMappingPopup
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_KEYMAPPING_POPUP);
 	BMenuField* keyMappingPopup = dynamic_cast<BMenuField*>(FindView(PREFERENCES_DIALOG_VIEW_KEYMAPPING_POPUP));
 	if (NULL != keyMappingPopup)
 	{
@@ -257,7 +233,6 @@ void BePreferencesDlg::languageChanged()
 	}
 
 	// EditKeyMappingButton
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_EDIT_KEYMAPPING_BUTTON);
 	BButton* editKeymapButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_EDIT_KEYMAPPING_BUTTON));
 	if (NULL != editKeymapButton)
 	{
@@ -265,7 +240,6 @@ void BePreferencesDlg::languageChanged()
 	}
 	
 	// DuplicateKeyMappingButton
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_DUPLICATE_KEYMAPPING_BUTTON);
 	BButton* dupKeymapButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_DUPLICATE_KEYMAPPING_BUTTON));
 	if (NULL != dupKeymapButton)
 	{
@@ -273,7 +247,6 @@ void BePreferencesDlg::languageChanged()
 	}
 
 	// DeleteKeyMappingButton
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_DELETE_KEYMAPPING_BUTTON);
 	BButton* delKeymapButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_DELETE_KEYMAPPING_BUTTON));
 	if (NULL != delKeymapButton)
 	{
@@ -281,7 +254,6 @@ void BePreferencesDlg::languageChanged()
 	}
 	
 	// CancelButton
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_CANCEL);
 	BButton* cancelButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_CANCEL));
 	if (NULL != cancelButton)
 	{
@@ -289,7 +261,6 @@ void BePreferencesDlg::languageChanged()
 	}
 	
 	// OKButton
-	item = dialogDesign->FindItem(PREFERENCES_DIALOG_VIEW_OK);
 	BButton* okButton = dynamic_cast<BButton*>(FindView(PREFERENCES_DIALOG_VIEW_OK));
 	if (NULL != okButton)
 	{
@@ -319,47 +290,26 @@ MessageBoxProvider*	BePreferencesDlg::getMessageBoxProvider()
 	return CoveredCalcApp::GetInstance();
 }
 
+/**
+ *	@brief	Shows "Edit Keyboard" dialog and wait until it is closed.
+ *	@param[in]		isReadOnly	true when read-only mode.
+ *	@param[in,out]	keyMappings	Key-mappings definition.
+ *	@retval	true	user closes the dialog by OK button.
+ *	@retval	false	user closes the dialog by Cancel button.
+ */
 bool BePreferencesDlg::showEditKeyMapDialog(bool isReadOnly, KeyMappings& keyMappings)
 {
-	sem_id semDialog = create_sem(0, "BeEditKeymapDlg");
-	if (semDialog < B_NO_ERROR)
+	BeEditKeymapDlg dlg;
+	dlg.SetKeyMappings(&keyMappings);
+	dlg.Init(isReadOnly, CoveredCalcApp::GetInstance()->GetKeyNameDB());
+	if (BeModalDialog::DlgResult_OK == dlg.DoModal(this))
+	{
+		return true;
+	}
+	else
 	{
 		return false;
 	}
-
-	BeEditKeymapDlg* dlg;
-	try
-	{
-		dlg = new BeEditKeymapDlg();
-		dlg->SetKeyMappings(&keyMappings);
-		try
-		{
-			dlg->Init(this, semDialog, isReadOnly, CoveredCalcApp::GetInstance()->GetKeyNameDB());
-		}
-		catch (...)
-		{
-			delete dlg;
-			throw;
-		}
-		dlg->Show();
-		
-		status_t acquireResult;
-		do
-		{
-			acquireResult = acquire_sem_etc(semDialog, 1, B_RELATIVE_TIMEOUT, MODAL_POLLING_WAIT);
-			UpdateIfNeeded();
-		}
-		while (B_NO_ERROR != acquireResult);
-	}
-	catch (...)
-	{
-		delete_sem(semDialog);
-		throw;
-	}
-
-	delete_sem(semDialog);	
-	
-	return dlg->IsDialogClosedByOK();
 }
 
 /**
@@ -399,10 +349,13 @@ void BePreferencesDlg::MessageReceived(
 
 #if defined (ZETA)
 		case B_LANGUAGE_CHANGED:
+			// always use locake kit to show "Use LocakeKit" item label.
+			// note that languageChanged() is called only when current setting
+			// is "Use LocaleKit". so do here.
 			if (NULL != langMenu && langMenu->CountItems() > 0)
 			{
 				BMenuItem* menuItem = langMenu->ItemAt(0);
-				menuItem->SetLabel(_T(PREFERENCES_DIALOG_LANGMENU_LOCALEKIT));
+				menuItem->SetLabel(_T(LangSelectHelper::LANGMENU_LOCALEKIT));
 				if (menuItem->IsMarked())
 				{
 					menuItem->SetMarked(false);
@@ -412,7 +365,7 @@ void BePreferencesDlg::MessageReceived(
 			baseWindow::MessageReceived(message);
 			break;
 #endif
-			
+
 		default:
 			baseWindow::MessageReceived(message);
 			break;

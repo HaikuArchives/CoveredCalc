@@ -33,7 +33,6 @@
 #include "Prefix.h"
 #include "WinPreferencesDlg.h"
 #include <vector>
-#include "resource.h"
 #include "Exception.h"
 #include "ExceptionMessageUtils.h"
 #include "CoveredCalcApp.h"

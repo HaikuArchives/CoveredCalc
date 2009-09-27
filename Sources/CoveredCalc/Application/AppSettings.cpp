@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -63,8 +63,6 @@ static UTF8Char	Tag_CoveredCalcSettings[]		= "coveredcalcSettings";
 	static UTF8Char	Key_UseLocaleKit[]				= "useLocaleKit";
 #endif	// defined(ZETA)
 	static UTF8Char	Key_KeymapPath[]				= "keymapFile";
-
-const Path AppSettings::Value_LangFileBuiltIn(ALITERAL("#Built-In#"));
 
 // ---------------------------------------------------------------------
 //! Constructor

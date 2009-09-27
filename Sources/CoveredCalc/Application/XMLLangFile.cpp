@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -111,6 +111,9 @@ void XMLLangFile::Unload()
 		document->release();
 		document = NULL;
 	}
+	langName.Empty();
+	langCode.Empty();
+	baseDefSource.Empty();
 	isReady = false;
 }
 
@@ -203,6 +206,12 @@ void XMLLangFile::makeTables()
 				UTF8String value;
 				DOMUtils::ReadTextNode(element, true, value);
 				UTF8Conv::ToMultiByte(langCode, value);
+			}
+			else if (0 == UTF8Utils::UTF8StrCmp(nodeName, TypeConv::AsUTF8("baseDef")))
+			{
+				UTF8String value;
+				element->getAttribute(TypeConv::AsUTF8("src"), value);
+				UTF8Conv::ToMultiByte(baseDefSource, value);
 			}
 		}
 		node = node->getNextSibling();
@@ -350,6 +359,20 @@ void XMLLangFile::GetLanguageCode(MBCString& langCode) const
 		return;
 	}
 	langCode = this->langCode;
+}
+
+/**
+ *	@brief		Returns baseDef source file name.
+ *	@param[out]	fileName	file name is returned.
+ */
+void XMLLangFile::GetBaseDefSource(MBCString& fileName) const
+{
+	if (!isReady)
+	{
+		fileName.Empty();
+		return;
+	}
+	fileName = this->baseDefSource;
 }
 
 #if defined (WIN32)

@@ -400,6 +400,55 @@
 	<string name="NSID_EDIT_KEYMAP_ASSIGN">Assign</string>
 	<string name="NSID_EDIT_KEYMAP_OK">OK</string>
 	<string name="NSID_EDIT_KEYMAP_CANCEL">Cancel</string>
+
+	<!-- Select Language dialog -->
+	<dialog name="IDD_SELECT_LANGUAGE">
+		<!-- Window -->
+		<position name="Window.left" value="0" />
+		<position name="Window.top" value="0" />
+		<position name="Window.right" offset-from="Content.right" value="7" />
+		<position name="Window.bottom" offset-from="Content.bottom" value="7" />
+		
+		<!-- Content -->
+		<position name="Content.left" offset-from="Window.left" value="7" />
+		<position name="Content.top" offset-from="Window.top" value="7" />
+		<position name="Content.right" offset-from="IDC_CMB_LANGUAGE.right" value="0" />
+		<position name="Content.bottom" offset-from="IDOK.bottom" value="0" />
+		
+		<!-- Eye-catch Message -->
+		<position name="IDC_STATIC_MESSAGE.left" offset-from="Content.left" value="0" />
+		<position name="IDC_STATIC_MESSAGE.top" offset-from="Content.top" value="0" />
+		<position name="IDC_STATIC_MESSAGE.right" offset-from="Content.right" value="0" />
+		<position name="IDC_STATIC_MESSAGE.bottom" offset-from="IDC_STATIC_MESSAGE.top" value="8" />
+		
+		<position name="LanguageItem.left" offset-from="IDC_CMB_LANGUAGE.left" value="50" />
+		
+		<!-- "Language" combo box -->
+		<position name="IDC_CMB_LANGUAGE.left" offset-from="Content.left" value="0" />
+		<position name="IDC_CMB_LANGUAGE.top" offset-from="IDC_STATIC_MESSAGE.bottom" value="8" />
+		<position name="IDC_CMB_LANGUAGE.right" offset-from="IDC_CMB_LANGUAGE.left" value="140" />
+		<position name="IDC_CMB_LANGUAGE.bottom" offset-from="IDC_CMB_LANGUAGE.top" value="12" />
+		<position name="IDC_CMB_LANGUAGE.divider" offset-from="LanguageItem.left" value="0" />
+		
+		<position name="BelowButtons.top" offset-from="IDC_CMB_LANGUAGE.bottom" value="8" />
+		
+		<!-- "Cancel" button -->
+		<position name="IDCANCEL.left" offset-from="IDCANCEL.right" value="-50" />
+		<position name="IDCANCEL.top" offset-from="BelowButtons.top" value="0" />
+		<position name="IDCANCEL.right" offset-from="IDOK.left" value="-4" />
+		<position name="IDCANCEL.bottom" offset-from="IDCANCEL.top" value="14" />
+
+		<!-- "OK" button -->
+		<position name="IDOK.left" offset-from="IDOK.right" value="-50" />
+		<position name="IDOK.top" offset-from="BelowButtons.top" value="0" />
+		<position name="IDOK.right" offset-from="Content.right" value="0" />
+		<position name="IDOK.bottom" offset-from="IDOK.top" value="14" />		
+	</dialog>
+	<string name="NSID_SELECT_LANGUAGE_TITLE">CoveredCalc</string>
+	<string name="NSID_SELECT_LANGUAGE_MESSAGE">Select your language.</string>
+	<string name="NSID_SELECT_LANGUAGE_LANGUAGE">Language:</string>
+	<string name="NSID_SELECT_LANGUAGE_OK">OK</string>
+	<string name="NSID_SELECT_LANGUAGE_CANCEL">Cancel</string>
 	
 	<!-- menu items -->
 	<!-- main context menu -->

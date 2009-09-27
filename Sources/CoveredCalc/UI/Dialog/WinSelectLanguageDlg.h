@@ -24,27 +24,46 @@
  */
 
 /*!
-	@file		Copyright.cpp
-	@brief		Copyright strings
+	@file		WinSelectLanguageDlg.h
+	@brief		Definition of WinSelectLanguageDlg class
 	@author		ICHIMIYA Hironori (Hiron)
-	@date		2005.07.12 created
+	@date		2009.9.13 created
 */
 
-#include "Prefix.h"
+#ifndef _WINSELECTLANGUAGEDLG_H_
+#define _WINSELECTLANGUAGEDLG_H_
 
-/// Applitation title
-AChar ApplicationTitleString[] =
-#if defined (WIN32)
-	ALITERAL("CoveredCalc for Windows");
-#elif defined (BEOS)
- #if defined (ZETA)
-	ALITERAL("CoveredCalc for ZETA");
- #else
- 	ALITERAL("CoveredCalc for BeOS");
- #endif
-#else
-	ALITERAL("CoveredCalc")
-#endif
+#include "WinDialog.h"
+#include "SelectLanguageDlg.h"
+#include "UICListBoxDDImpl.h"
 
-/// Copyright message - 1 which shown on About dialog.
-AChar CopyrightString1[] = ALITERAL("Copyright (C) 2004-2009 CoveredCalc Project Contributors.");
+/**
+ *	@brief "select-language" dialog (for Windows)
+ */
+class WinSelectLanguageDlg : public WinDialog, public SelectLanguageDlg
+{
+public:
+									WinSelectLanguageDlg();
+	virtual							~WinSelectLanguageDlg();
+	
+protected:
+	virtual LRESULT					wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+	virtual MessageBoxProvider*		getMessageBoxProvider() { return this; }
+
+	virtual UICListBox*				getLanguageListBox() { return &uicLanguageListBox; }
+	virtual void					closeDialog(bool isOK);
+
+private:
+	LRESULT							onInitDialog(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT							onCommand(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+private:
+	void							createControls();
+
+private:
+	// adapters
+	UICListBoxDDImpl				uicLanguageListBox;
+};
+
+#endif // _WINSELECTLANGUAGEDLG_H_

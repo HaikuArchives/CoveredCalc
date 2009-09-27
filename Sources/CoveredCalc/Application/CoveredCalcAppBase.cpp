@@ -141,7 +141,7 @@ Path CoveredCalcAppBase::MakeRelativeLangFilePath(
 	Path ret;
 	if (absolutePath.IsEmpty())
 	{
-		ret = AppSettings::Value_LangFileBuiltIn;
+		ret.Empty();
 	}
 	else
 	{
@@ -160,7 +160,7 @@ Path CoveredCalcAppBase::MakeAbsoluteLangFilePath(
 )
 {
 	Path ret;
-	if (0 == relativePath.Compare(AppSettings::Value_LangFileBuiltIn))
+	if (relativePath.IsEmpty())
 	{
 		ret.Empty();
 	}
@@ -534,6 +534,21 @@ void CoveredCalcAppBase::loadKeyNameDB(const Path& keyNameDefFile)
  */
 void CoveredCalcAppBase::loadLangFile(const Path& path)
 {
+	loadOneLangFile(path, langFiles.end());
+
+	int count = langFiles.size();
+	if (0 < count)
+	{
+		LoadedLangFile* llf = langFiles[count - 1];
+
+		MBCString langCode;
+		llf->langFile.GetLanguageCode(langCode);
+		setCurrentLanguageCode(langCode);
+	}
+}
+
+void CoveredCalcAppBase::loadOneLangFile(const Path& path, LoadedLangFilePtrVector::iterator insertBeforePos)
+{
 	// check if the language file is already loaded.
 	LoadedLangFilePtrVector::const_iterator itr;
 	for (itr = langFiles.begin(); itr != langFiles.end(); itr++)
@@ -550,18 +565,26 @@ void CoveredCalcAppBase::loadLangFile(const Path& path)
 	{
 		llf->path = path;
 		llf->langFile.Load(path);
-
-		MBCString langCode;
-		llf->langFile.GetLanguageCode(langCode);
-		setCurrentLanguageCode(langCode);
 	}
 	catch (Exception*)
 	{
 		delete llf;
 		throw;
 	}
-	langFiles.push_back(llf);
+	LoadedLangFilePtrVector::iterator insertedPos = langFiles.insert(insertBeforePos, llf);
+	MBCString baseDefSource;
+	llf->langFile.GetBaseDefSource(baseDefSource);
+	if (!baseDefSource.IsEmpty())
+	{
+			Path basePath(baseDefSource.CString());
+			Path baseFullPath = MakeAbsoluteLangFilePath(basePath);
+			if (!baseFullPath.IsEmpty())
+			{
+				loadOneLangFile(baseFullPath, insertedPos);
+			}
+	}
 }
+
 
 /**
  *	@brief	Loads native string
@@ -581,6 +604,9 @@ MBCString CoveredCalcAppBase::loadNativeStringSub(SInt32 stringId)
 		break;
 	case NSID_EMSG_LOAD_DEFAULT_LANGFILE:
 		return ALITERAL("Failed to load the default language file.");
+		break;
+	case NSID_EMSG_LOAD_LANGFILE:
+		return ALITERAL("Failed to load the language file.");
 		break;
 	default:
 		ConstUTF8Str name = ConvertStringID(stringId);	
