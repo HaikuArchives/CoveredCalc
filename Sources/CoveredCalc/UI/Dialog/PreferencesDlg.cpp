@@ -81,6 +81,9 @@ const AChar STR_USER_KEYMAP_POSTFIX[] = ALITERAL(".cckxb");
  */
 PreferencesDlg::PreferencesDlg()
 {
+#if defined(WIN32)
+	opacityOrEdgeSmoothingChangedFlag = false;
+#endif
 }
 
 /**
@@ -213,16 +216,38 @@ bool PreferencesDlg::saveFromDialog()
 	
 	// set values to appSettings
 #if defined(WIN32)
-	appSettings->SetMainWindowOpacity(opacity);
-	appSettings->SetMainWindowEdgeSmoothing(edgeSmoothing);
-#endif // defined(WIN32)	
-	appSettings->SetLanguageFilePath(app->MakeRelativeLangFilePath(langFilePath));
+	opacityOrEdgeSmoothingChangedFlag = false;
+	if (appSettings->GetMainWindowOpacity() != opacity)
+	{
+		appSettings->SetMainWindowOpacity(opacity);
+		opacityOrEdgeSmoothingChangedFlag = true;
+	}
+	if (appSettings->GetMainWindowEdgeSmoothing() != edgeSmoothing)
+	{
+		appSettings->SetMainWindowEdgeSmoothing(edgeSmoothing);
+		opacityOrEdgeSmoothingChangedFlag = true;
+	}
+#endif // defined(WIN32)
+	bool languageChangedFlag = false;
+	Path relativeLangFilePath = app->MakeRelativeLangFilePath(langFilePath);
+	if (0 != relativeLangFilePath.Compare(appSettings->GetLanguageFilePath()))
+	{
+		languageChangedFlag = true;
+		appSettings->SetLanguageFilePath(relativeLangFilePath);
+	}
 #if defined(ZETA)
 	appSettings->SetLocaleKitAvailable(isLocaleKitAvailable);
 #endif // defined(ZETA)
 	appSettings->SetKeymapFilePath(keyMappingFilePath);
 
 	appSettings->Save();
+
+	if (languageChangedFlag)
+	{
+		// restart CoveredCalc to apply language setting
+		CoveredCalcApp::GetInstance()->DoMessageBox(NSID_IMSG_RESTART_FOR_LANG_CHANGE,
+			MessageBoxProvider::ButtonType_OK, MessageBoxProvider::AlertType_Information);
+	}
 
 	// load key-mapping again.
 	app->LoadKeyMappings(app->ExpandVirtualPath(keyMappingFilePath));

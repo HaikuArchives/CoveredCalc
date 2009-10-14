@@ -714,10 +714,19 @@ BOOL WinCoveredCalcApp::initInstance()
 	{
 		// 設定に保存されていなければ、ユーザーに問い合わせる
 		WinSelectLanguageDlg selectLangDlg;
-		selectLangDlg.SetRelativeLangFilePath(Path(ALITERAL("enUS.cclxw")));
-		int dlgResult = selectLangDlg.DoModal(NULL);
-		if (IDOK != dlgResult)
+		try
 		{
+			selectLangDlg.SetRelativeLangFilePath(Path(ALITERAL("enUS.cclxw")));
+			int dlgResult = selectLangDlg.DoModal(NULL);
+			if (IDOK != dlgResult)
+			{
+				return FALSE;
+			}
+		}
+		catch (Exception* ex)
+		{
+			ExceptionMessageUtils::DoExceptionMessageBox(this, ex);
+			ex->Delete();
 			return FALSE;
 		}
 
