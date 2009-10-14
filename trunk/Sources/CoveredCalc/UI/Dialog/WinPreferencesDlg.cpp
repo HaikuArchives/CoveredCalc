@@ -339,7 +339,7 @@ void WinPreferencesDlg::closeDialog(bool isOK)
 {
 	EndDialog(m_hWnd, (isOK) ? IDOK : IDCANCEL);
 
-	if (isOK)
+	if (isOK && isOpacityOrEdgeSmoothingChanged())
 	{
 		PostMessage(WinCoveredCalcApp::GetInstance()->GetMainWindow()->m_hWnd, WinSkinWindow::UM_REREAD_SKIN, 0, 0);
 	}

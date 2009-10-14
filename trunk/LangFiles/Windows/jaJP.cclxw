@@ -131,6 +131,7 @@
 	<string name="NSID_MAIN_WINDOW_KEYFUNC_ABOUT">バージョン情報</string>
 	
 	<!-- messages -->
+	<string name="NSID_IMSG_RESTART_FOR_LANG_CHANGE">言語の変更を反映するには CoveredCalc を手動で再起動してください。</string>
 	<string name="NSID_QMSG_EDITED_KEYMAP_DISCARDING">行った変更をすべて破棄します。よろしいですか？</string>
 	<string name="NSID_EMSG_EMPTY_KEYMAP_NAME">キーマップ名を入力してください。</string>
 	<string name="NSID_EMSG_DELETE_KEYMAPPINGS_IN_USE">キーマップ "%0:s%" は現在使用中のため削除できません。&#10;&#10;ヒント：&#10;このキーマップを削除するには、いったん他のキーマップを選択して&#10; [OK] ボタンでこのダイアログを閉じてください。</string>

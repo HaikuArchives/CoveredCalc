@@ -60,6 +60,9 @@ public:
 
 protected:
 	void							readyToShow();
+#if defined (WIN32)
+	bool							isOpacityOrEdgeSmoothingChanged() const { return opacityOrEdgeSmoothingChangedFlag; }
+#endif
 
 protected:
 	/**
@@ -119,8 +122,11 @@ private:
 	bool							saveFromDialog();
 
 private:
-	LangSelectHelper			langSelectHelper;		///< "Language" component helper.
-	KeymapSelectHelper			keymapSelectHelper;		///< "Keymap" component helper.
+	LangSelectHelper				langSelectHelper;		///< "Language" component helper.
+	KeymapSelectHelper				keymapSelectHelper;		///< "Keymap" component helper.
+#if defined (WIN32)
+	bool							opacityOrEdgeSmoothingChangedFlag;	///< whether "Opacity" or "Edge Smoothing" value is changed
+#endif
 };
 
 #endif // _PREFERENCESDLG_H_

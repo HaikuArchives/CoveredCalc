@@ -606,6 +606,7 @@
 	<string name="NSID_MAIN_WINDOW_KEYFUNC_ABOUT">About CoveredCalc</string>
 	
 	<!-- messages -->
+	<string name="NSID_IMSG_RESTART_FOR_LANG_CHANGE">言語の変更を反映するには CoveredCalc を手動で再起動してください。</string>
 	<string name="NSID_QMSG_EDITED_KEYMAP_DISCARDING">Are you sure you want to discard all your changes?</string>
 	<string name="NSID_EMSG_EMPTY_KEYMAP_NAME">Enter keymap name.</string>
 	<string name="NSID_EMSG_DELETE_KEYMAPPINGS_IN_USE">Active keymap: "%0:s%"&#10;&#10;Hint:&#10;To delete this keymap, select another keymap&#10;and close this window by clicking [OK].</string>
