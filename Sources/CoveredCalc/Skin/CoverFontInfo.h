@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -57,20 +57,22 @@ public:
 	void				SetWidth(SInt32 width)					{ this->width = width; }
 	void				SetHeight(SInt32 height)				{ this->height = height; }
 	void				SetCharSpace(SInt32 charSpace)			{ this->charSpace = charSpace; }
-	void				SetTransparentColor(ColorValue color)	{ this->transparentColor = color; }
+	void				SetTransparentColor(ColorValue color);
+	void				UnsetTransparentColor();
 
 	Type				GetType() const							{ return type; }
 	SInt32				GetWidth() const						{ return width; }
 	SInt32				GetHeight() const						{ return height; }
 	SInt32				GetCharSpace() const					{ return charSpace; }
-	ColorValue			GetTransparentColor() const				{ return transparentColor; }	
+	const ColorValue*	GetTransparentColor() const;
 	
 private:
 	Type				type;				//!< type of information
 	SInt32				width;				//!< width of one character in the font in pixel unit
 	SInt32				height;				//!< height of one character in the font in pixel unit
 	SInt32				charSpace;			//!< horizontal space between two characters
-	ColorValue			transparentColor;	//!< transparent color	
+	ColorValue			transparentColor;	//!< transparent color
+	bool				isTransparentColorSpecified;	//!< whether transparentColor is specified or not.
 };
 
 #endif // _COVERFONTINFO_H_

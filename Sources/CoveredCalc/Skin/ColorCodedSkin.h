@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -56,7 +56,7 @@ public:
 	};
 
 	enum {
-		BlendRatio_Max = 256	///< blend ratio runs from 0 through this value.
+		BlendRatio_Max = 255	///< blend ratio runs from 0 through this value.
 	};
 
 						ColorCodedSkin();
@@ -72,11 +72,9 @@ public:
 	void				ClipSkinRegion(ColorValue transparentColor);
 	void				UnclipSkinRegion();
 	void				UpdateWholeAppearance(SInt32 skinNo);
-	void				UpdateWholeAppearance(SInt32 skinNo, ColorValue transparentColor);
 	void				UpdatePartAppearance(SInt32 areaID, SInt32 skinNo);
 	void				UpdatePartAppearanceWithBlend(SInt32 areaID, SInt32 skinNo1, SInt32 skinNo2, UInt32 ratio);
-	void				DrawImage(const Point32& drawPt, SInt32 imageNo, const Rect32& imageRect);
-	void				DrawImage(const Point32& drawPt, SInt32 imageNo, const Rect32& imageRect, ColorValue transparentColor);
+	void				DrawImage(const Point32& drawPt, SInt32 imageNo, const Rect32& imageRect, const ColorValue* transparentColor);
 
 	bool				GetAreaRect(SInt32 areaID, Rect32& areaRect);
 
