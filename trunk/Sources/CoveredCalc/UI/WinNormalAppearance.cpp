@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -240,14 +240,13 @@ void WinNormalAppearance::UnclipSkinRegion()
 }
 
 // ---------------------------------------------------------------------
-//! 色マップ上の指定された色に対応する部分を描画します。
+//! 色マップ上の指定された色に対応する部分を更新します。
 // ---------------------------------------------------------------------
-void WinNormalAppearance::DrawSkinByColor(
-	const Point32& drawPoint,		//!< 描画先の左上座標
+void WinNormalAppearance::UpdateMapArea(
+	const Rect32& skinRect,			//!< 処理対象の領域
 	const DIBitmap* mapBitmap,		//!< 色マップ用ビットマップ
-	const DIBitmap* skinBitmap,		//!< 描画元スキン用ビットマップ
 	ColorValue color,				//!< 色
-	const Rect32& skinRect			//!< 描画元の描画する領域
+	const DIBitmap* skinBitmap		//!< 描画元スキン用ビットマップ
 )
 {
 	if (!dibitmapDC.IsCreated())
@@ -263,8 +262,8 @@ void WinNormalAppearance::DrawSkinByColor(
 	SInt32 posY;
 	for (posY=skinRect.top; posY<=skinRect.bottom; posY++)
 	{
-		Byte* line = bitmap->GetBitsLineAddress(posY - skinRect.top + drawPoint.y);
-		line += 3 * drawPoint.x;
+		Byte* line = bitmap->GetBitsLineAddress(posY);
+		line += 3 * skinRect.left;
 		skinColorLookup.InitLocation(skinRect.left, posY);
 		mapColorLookup.InitLocation(skinRect.left, posY);
 		SInt32 posX;
@@ -281,27 +280,26 @@ void WinNormalAppearance::DrawSkinByColor(
 		}
 	}
 	
+	Point32 drawPoint = { skinRect.left, skinRect.top };
 	invalidateRect(drawPoint, skinRect);
 }
 
 /**
  *	@brief	色マップ上の指定された色に対応する部分を
  *			2 つのスキン用ビットマップで混合した色で描画します。
- *	@param	drawPoint	描画先の左上座標
+ *	@param	skinRect	処理対象の領域
  *	@param	mapBitmap	色マップ用ビットマップ
+ *	@param	color		色
  *	@param	skinBitmap1	描画元スキン用ビットマップ1
  *	@param	skinBitmap2	描画元スキン用ビットマップ2
- *	@param	color		色
- *	@param	skinRect	描画元の描画する領域
  *	@para,	ratio		混合率 (0～ColorCodedSkin::BlendRatio_Max)
  */
-void WinNormalAppearance::DrawBlendSkinByColor(
-	const Point32& drawPoint,
+void WinNormalAppearance::UpdateMapAreaWithBlend(
+	const Rect32& skinRect,
 	const DIBitmap* mapBitmap,
+	ColorValue color,
 	const DIBitmap* skinBitmap1,
 	const DIBitmap* skinBitmap2,
-	ColorValue color,
-	const Rect32& skinRect,
 	UInt32 ratio
 )
 {
@@ -319,8 +317,8 @@ void WinNormalAppearance::DrawBlendSkinByColor(
 	SInt32 posY;
 	for (posY=skinRect.top; posY<=skinRect.bottom; posY++)
 	{
-		Byte* line = bitmap->GetBitsLineAddress(posY - skinRect.top + drawPoint.y);
-		line += 3 * drawPoint.x;
+		Byte* line = bitmap->GetBitsLineAddress(posY);
+		line += 3 * skinRect.left;
 		skinColorLookup1.InitLocation(skinRect.left, posY);
 		skinColorLookup2.InitLocation(skinRect.left, posY);
 		mapColorLookup.InitLocation(skinRect.left, posY);
@@ -339,6 +337,7 @@ void WinNormalAppearance::DrawBlendSkinByColor(
 		}
 	}
 	
+	Point32 drawPoint = { skinRect.left, skinRect.top };
 	invalidateRect(drawPoint, skinRect);
 }
 
@@ -346,10 +345,9 @@ void WinNormalAppearance::DrawBlendSkinByColor(
 // ---------------------------------------------------------------------
 //! 指定された矩形のスキンを描画します。
 // ---------------------------------------------------------------------
-void WinNormalAppearance::CopySkin(
-	const Point32& drawPoint,		//!< 描画先の左上座標
-	const DIBitmap* skinBitmap,		//!< 描画元スキン用ビットマップ
-	const Rect32& skinRect			//!< 描画元の描画する領域
+void WinNormalAppearance::UpdateRect(
+	const Rect32& skinRect,			//!< 描画する矩形
+	const DIBitmap* skinBitmap		//!< 描画元スキン用ビットマップ
 )
 {
 	if (!dibitmapDC.IsCreated())
@@ -362,13 +360,13 @@ void WinNormalAppearance::CopySkin(
 	DIBColorLookup skinColorLookup(skinBitmap);
 	
 	SInt32 posY;
-	for (posY=skinRect.top; posY<=skinRect.bottom; posY++)
+	for (posY = skinRect.top; posY <= skinRect.bottom; ++posY)
 	{
-		Byte* line = bitmap->GetBitsLineAddress(posY - skinRect.top + drawPoint.y);
-		line += 3 * drawPoint.x;
+		Byte* line = bitmap->GetBitsLineAddress(posY);
+		line += 3 * skinRect.left;
 		skinColorLookup.InitLocation(skinRect.left, posY);
 		SInt32 posX;
-		for (posX=skinRect.left; posX<=skinRect.right; posX++)
+		for (posX = skinRect.left; posX <= skinRect.right; ++posX)
 		{
 			ColorValue skinColor = skinColorLookup.LookupNextColor();
 			line[0] = skinColor.blueValue;
@@ -378,17 +376,23 @@ void WinNormalAppearance::CopySkin(
 		}
 	}
 
+	Point32 drawPoint = { skinRect.left, skinRect.top };
 	invalidateRect(drawPoint, skinRect);
 }
 
-// ---------------------------------------------------------------------
-//! 指定された矩形のスキンを描画します。ただし透明色に指定された色のピクセルはコピーしません。
-// ---------------------------------------------------------------------
-void WinNormalAppearance::CopySkin(
-	const Point32& drawPoint,		//!< 描画先の左上座標
-	const DIBitmap* skinBitmap,		//!< 描画元スキン用ビットマップ
-	const Rect32& skinRect,			//!< 描画元の描画する領域
-	ColorValue transparentColor		//!< 透明色
+/**
+ * @brief Overpaint a rectangle of specified bitmap to specified position.
+ * @param[in] drawPoint upperleft position of the appearance
+ * @param[in] sourceBitmap source bitmap image
+ * @param[in] sourceRect rectangle of source bitmap
+ * @param[in] transparentColor this color in source bitmap is not painted.
+ *              specify NULL when not to use it.
+ */
+void WinNormalAppearance::OverpaintImage(
+	const Point32& drawPoint,
+	const DIBitmap* sourceBitmap,
+	const Rect32& sourceRect,
+	const ColorValue* transparentColor
 )
 {
 	if (!dibitmapDC.IsCreated())
@@ -398,29 +402,30 @@ void WinNormalAppearance::CopySkin(
 	}
 
 	DIBitmap* bitmap = dibitmapDC.GetDIB();
-	DIBColorLookup skinColorLookup(skinBitmap);
+	DIBColorLookup skinColorLookup(sourceBitmap);
 	
 	SInt32 posY;
-	for (posY=skinRect.top; posY<=skinRect.bottom; posY++)
+	for (posY = sourceRect.top; posY <= sourceRect.bottom; ++posY)
 	{
-		Byte* line = bitmap->GetBitsLineAddress(posY - skinRect.top + drawPoint.y);
+		Byte* line = bitmap->GetBitsLineAddress(posY - sourceRect.top + drawPoint.y);
 		line += 3 * drawPoint.x;
-		skinColorLookup.InitLocation(skinRect.left, posY);
+		skinColorLookup.InitLocation(sourceRect.left, posY);
 		SInt32 posX;
-		for (posX=skinRect.left; posX<=skinRect.right; posX++)
+		for (posX = sourceRect.left; posX <= sourceRect.right; ++posX)
 		{
-			ColorValue skinColor = skinColorLookup.LookupNextColor();
-			if (skinColor != transparentColor)
+			ColorValue sourceColor = skinColorLookup.LookupNextColor();
+			if (NULL == transparentColor || sourceColor != *transparentColor)
 			{
-				line[0] = skinColor.blueValue;
-				line[1] = skinColor.greenValue;
-				line[2] = skinColor.redValue;
+				UInt32 alpha = static_cast<UInt32>(sourceColor.alphaValue);
+				line[0] = static_cast<Byte>(((255 - alpha) * line[0] + alpha * sourceColor.blueValue) / 255);
+				line[1] = static_cast<Byte>(((255 - alpha) * line[1] + alpha * sourceColor.greenValue) / 255);
+				line[2] = static_cast<Byte>(((255 - alpha) * line[2] + alpha * sourceColor.redValue) / 255);
 			}
 			line += 3;
 		}
 	}
 
-	invalidateRect(drawPoint, skinRect);
+	invalidateRect(drawPoint, sourceRect);
 }
 
 // ---------------------------------------------------------------------

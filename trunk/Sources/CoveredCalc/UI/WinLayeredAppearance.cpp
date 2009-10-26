@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -365,14 +365,13 @@ void WinLayeredAppearance::UnclipSkinRegion()
 }
 
 // ---------------------------------------------------------------------
-//! 色マップ上の指定された色に対応する部分を描画します。
+//! 色マップ上の指定された色に対応する部分を更新します。
 // ---------------------------------------------------------------------
-void WinLayeredAppearance::DrawSkinByColor(
-	const Point32& drawPoint,		//!< 描画先の左上座標
+void WinLayeredAppearance::UpdateMapArea(
+	const Rect32& skinRect,			//!< 処理対象の領域
 	const DIBitmap* mapBitmap,		//!< 色マップ用ビットマップ
-	const DIBitmap* skinBitmap,		//!< 描画元スキン用ビットマップ
 	ColorValue color,				//!< 色
-	const Rect32& skinRect			//!< 描画元の描画する領域
+	const DIBitmap* skinBitmap		//!< 描画元スキン用ビットマップ
 )
 {
 	if (!dibitmapDC.IsCreated())
@@ -388,8 +387,8 @@ void WinLayeredAppearance::DrawSkinByColor(
 	SInt32 posY;
 	for (posY=skinRect.top; posY<=skinRect.bottom; posY++)
 	{
-		Byte* line = bitmap->GetBitsLineAddress(posY - skinRect.top + drawPoint.y);
-		line += 4 * drawPoint.x;
+		Byte* line = bitmap->GetBitsLineAddress(posY);
+		line += 4 * skinRect.left;
 		skinColorLookup.InitLocation(skinRect.left, posY);
 		mapColorLookup.InitLocation(skinRect.left, posY);
 		SInt32 posX;
@@ -401,7 +400,7 @@ void WinLayeredAppearance::DrawSkinByColor(
 				UInt32 alpha = static_cast<UInt32>(skinColor.alphaValue);
 				if (NULL != pixelWeights)
 				{
-					alpha = alpha * pixelWeights[width * (posY - skinRect.top + drawPoint.y) + (posX - skinRect.left + drawPoint.x)] / 255;
+					alpha = alpha * pixelWeights[width * posY + posX] / 255;
 				}
 				line[0] = static_cast<Byte>(static_cast<UInt32>(skinColor.blueValue) * alpha / 255);
 				line[1] = static_cast<Byte>(static_cast<UInt32>(skinColor.greenValue) * alpha / 255);
@@ -418,21 +417,19 @@ void WinLayeredAppearance::DrawSkinByColor(
 /**
  *	@brief	色マップ上の指定された色に対応する部分を
  *			2 つのスキン用ビットマップで混合した色で描画します。
- *	@param	drawPoint	描画先の左上座標
+ *	@param	skinRect	処理対象の領域
  *	@param	mapBitmap	色マップ用ビットマップ
+ *	@param	color		色
  *	@param	skinBitmap1	描画元スキン用ビットマップ1
  *	@param	skinBitmap2	描画元スキン用ビットマップ2
- *	@param	color		色
- *	@param	skinRect	描画元の描画する領域
  *	@para,	ratio		混合率 (0～ColorCodedSkin::BlendRatio_Max)
  */
-void WinLayeredAppearance::DrawBlendSkinByColor(
-	const Point32& drawPoint,
+void WinLayeredAppearance::UpdateMapAreaWithBlend(
+	const Rect32& skinRect,
 	const DIBitmap* mapBitmap,
+	ColorValue color,
 	const DIBitmap* skinBitmap1,
 	const DIBitmap* skinBitmap2,
-	ColorValue color,
-	const Rect32& skinRect,
 	UInt32 ratio
 )
 {
@@ -450,8 +447,8 @@ void WinLayeredAppearance::DrawBlendSkinByColor(
 	SInt32 posY;
 	for (posY=skinRect.top; posY<=skinRect.bottom; posY++)
 	{
-		Byte* line = bitmap->GetBitsLineAddress(posY - skinRect.top + drawPoint.y);
-		line += 4 * drawPoint.x;
+		Byte* line = bitmap->GetBitsLineAddress(posY);
+		line += 4 * skinRect.left;
 		skinColorLookup1.InitLocation(skinRect.left, posY);
 		skinColorLookup2.InitLocation(skinRect.left, posY);
 		mapColorLookup.InitLocation(skinRect.left, posY);
@@ -468,7 +465,7 @@ void WinLayeredAppearance::DrawBlendSkinByColor(
 				UInt32 alpha = (skinColor1.alphaValue * ratio + skinColor2.alphaValue * (ColorCodedSkin::BlendRatio_Max - ratio)) / ColorCodedSkin::BlendRatio_Max;
 				if (NULL != pixelWeights)
 				{
-					alpha = alpha * pixelWeights[width * (posY - skinRect.top + drawPoint.y) + (posX - skinRect.left + drawPoint.x)] / 255;
+					alpha = alpha * pixelWeights[width * posY + posX] / 255;
 				}
 				line[0] = static_cast<Byte>(blue * alpha / 255);
 				line[1] = static_cast<Byte>(green * alpha / 255);
@@ -486,10 +483,9 @@ void WinLayeredAppearance::DrawBlendSkinByColor(
 // ---------------------------------------------------------------------
 //! 指定された矩形のスキンを描画します。
 // ---------------------------------------------------------------------
-void WinLayeredAppearance::CopySkin(
-	const Point32& drawPoint,		//!< 描画先の左上座標
-	const DIBitmap* skinBitmap,		//!< 描画元スキン用ビットマップ
-	const Rect32& skinRect			//!< 描画元の描画する領域
+void WinLayeredAppearance::UpdateRect(
+	const Rect32& skinRect,			//!< 描画する矩形
+	const DIBitmap* skinBitmap		//!< 描画元スキン用ビットマップ
 )
 {
 	if (!dibitmapDC.IsCreated())
@@ -502,19 +498,19 @@ void WinLayeredAppearance::CopySkin(
 	DIBColorLookup skinColorLookup(skinBitmap);
 	
 	SInt32 posY;
-	for (posY=skinRect.top; posY<=skinRect.bottom; posY++)
+	for (posY = skinRect.top; posY <= skinRect.bottom; ++posY)
 	{
-		Byte* line = bitmap->GetBitsLineAddress(posY - skinRect.top + drawPoint.y);
-		line += 4 * drawPoint.x;
+		Byte* line = bitmap->GetBitsLineAddress(posY);
+		line += 4 * skinRect.left;
 		skinColorLookup.InitLocation(skinRect.left, posY);
 		SInt32 posX;
-		for (posX=skinRect.left; posX<=skinRect.right; posX++)
+		for (posX = skinRect.left; posX <= skinRect.right; ++posX)
 		{
 			ColorValue skinColor = skinColorLookup.LookupNextColor();
 			UInt32 alpha = static_cast<UInt32>(skinColor.alphaValue);
 			if (NULL != pixelWeights)
 			{
-				alpha = alpha * pixelWeights[width * (posY - skinRect.top + drawPoint.y) + (posX - skinRect.left + drawPoint.x)] / 255;
+				alpha = alpha * pixelWeights[width * posY + posX] / 255;
 			}
 			line[0] = static_cast<Byte>(static_cast<UInt32>(skinColor.blueValue) * alpha / 255);
 			line[1] = static_cast<Byte>(static_cast<UInt32>(skinColor.greenValue) * alpha / 255);
@@ -527,14 +523,19 @@ void WinLayeredAppearance::CopySkin(
 	updateLayeredWindow();
 }
 
-// ---------------------------------------------------------------------
-//! 指定された矩形のスキンを描画します。ただし透明色に指定された色のピクセルはコピーしません。
-// ---------------------------------------------------------------------
-void WinLayeredAppearance::CopySkin(
-	const Point32& drawPoint,		//!< 描画先の左上座標
-	const DIBitmap* skinBitmap,		//!< 描画元スキン用ビットマップ
-	const Rect32& skinRect,			//!< 描画元の描画する領域
-	ColorValue transparentColor		//!< 透明色
+/**
+ * @brief Overpaint a rectangle of specified bitmap to specified position.
+ * @param[in] drawPoint upperleft position of the appearance
+ * @param[in] sourceBitmap source bitmap image
+ * @param[in] sourceRect rectangle of source bitmap
+ * @param[in] transparentColor this color in source bitmap is not painted.
+ *              specify NULL when not to use it.
+ */
+void WinLayeredAppearance::OverpaintImage(
+	const Point32& drawPoint,
+	const DIBitmap* sourceBitmap,
+	const Rect32& sourceRect,
+	const ColorValue* transparentColor
 )
 {
 	if (!dibitmapDC.IsCreated())
@@ -544,29 +545,80 @@ void WinLayeredAppearance::CopySkin(
 	}
 
 	DIBitmap* bitmap = dibitmapDC.GetDIB();
-	DIBColorLookup skinColorLookup(skinBitmap);
+	DIBColorLookup sourceColorLookup(sourceBitmap);
 	
 	SInt32 posY;
-	for (posY=skinRect.top; posY<=skinRect.bottom; posY++)
+	for (posY = sourceRect.top; posY <= sourceRect.bottom; ++posY)
 	{
-		Byte* line = bitmap->GetBitsLineAddress(posY - skinRect.top + drawPoint.y);
+		Byte* line = bitmap->GetBitsLineAddress(posY - sourceRect.top + drawPoint.y);
 		line += 4 * drawPoint.x;
-		skinColorLookup.InitLocation(skinRect.left, posY);
+		sourceColorLookup.InitLocation(sourceRect.left, posY);
 		SInt32 posX;
-		for (posX=skinRect.left; posX<=skinRect.right; posX++)
+		for (posX = sourceRect.left; posX <= sourceRect.right; ++posX)
 		{
-			ColorValue skinColor = skinColorLookup.LookupNextColor();
-			if (skinColor != transparentColor)
+			ColorValue sourceColor = sourceColorLookup.LookupNextColor();
+			if (NULL == transparentColor || sourceColor != *transparentColor)
 			{
-				UInt32 alpha = static_cast<UInt32>(skinColor.alphaValue);
-				if (NULL != pixelWeights)
+				UInt32 alphaDest = line[3];
+				UInt32 alphaSource = static_cast<UInt32>(sourceColor.alphaValue);
+				UInt32 pxWeight = (NULL == pixelWeights) ? 255 : pixelWeights[width * (posY - sourceRect.top + drawPoint.y) + (posX - sourceRect.left + drawPoint.x)];
+				if (0 == pxWeight)
 				{
-					alpha = alpha * pixelWeights[width * (posY - skinRect.top + drawPoint.y) + (posX - skinRect.left + drawPoint.x)] / 255;
+					alphaDest = 0;
 				}
-				line[0] = static_cast<Byte>(static_cast<UInt32>(skinColor.blueValue) * alpha / 255);
-				line[1] = static_cast<Byte>(static_cast<UInt32>(skinColor.greenValue) * alpha / 255);
-				line[2] = static_cast<Byte>(static_cast<UInt32>(skinColor.redValue) * alpha / 255);
-				line[3] = static_cast<Byte>(alpha);
+				else
+				{
+					alphaDest = alphaDest * 255 / pxWeight; 
+				}
+
+				UInt32 alphaNew255 = (255 * 255) - (255 - alphaSource) * (255 - alphaDest);	// = 255 * alphaNew
+				UInt32 colorDestFactor = (255 - alphaSource) * alphaDest;
+				UInt32 colorSourceFactor = 255 * alphaSource;
+				line[0] = static_cast<Byte>((colorDestFactor * static_cast<UInt32>(line[0]) + colorSourceFactor * static_cast<UInt32>(sourceColor.blueValue)) / alphaNew255);
+				line[1] = static_cast<Byte>((colorDestFactor * static_cast<UInt32>(line[1]) + colorSourceFactor * static_cast<UInt32>(sourceColor.greenValue)) / alphaNew255);
+				line[2] = static_cast<Byte>((colorDestFactor * static_cast<UInt32>(line[2]) + colorSourceFactor * static_cast<UInt32>(sourceColor.redValue)) / alphaNew255);
+				line[3] = static_cast<Byte>((alphaNew255 * pxWeight) / (255 * 255));
+
+				/* formula above is derived by following:
+				 * let Od = opacity of destination (0..1), Cd = color element of destination (0..255),
+				 * and Cb = color element of background
+				 * then destination color element is
+				 *     (1 - Od) * Cb   +   Od * Cb
+				 * when overpaints source pixel, where Os = opacity of source and Cs = color element of source,
+				 * it changes to 
+				 *     (1 - Os) * ((1 - Od) * Cb   +   Od * Cb)   +    Os * Cs
+				 *   = (1 - Os) * (1 - Od) * Cb    +   (1 - Os) * Od * Cd + Os * Cs
+				 *   = (1 - On) * Cb    +    On * Cn     (where On = new opacity, Cn = new color element)
+				 * hence 
+				 *     (1 - Os) * (1 - Od) = (1 - On)
+				 *                             => On = 1 - (1 - Os) * (1 - Od)
+				 *     (1 - Os) * Od * Cd + Os * Cs = On * Cn
+				 *                             => Cn = ((1 - Os) * Od * Cd + Os * Cs) / On
+				 *
+				 * actually the opacity is represented as an alpha value (0..255),
+				 *  Od = Ad / 255,    Os = As / 255      (where Ad = alpha value of destination, As = that of source)
+				 * then On is
+				 *  On = 1  -  (1 - As / 255) * (1 - Ad / 255)
+				 *     = ((255 * 255) - (255 - As) * (255 - Ad)) / (255 * 255)
+				 *     = An / 255                        (where An = new alpha value)
+				 *
+				 *       (1 - As / 255) * (Ad / 255) * Cd + (As / 255) * Cs
+				 *  Cn = ---------------------------------------------------
+				 *       (255 * 255 - (255 - As) * (255 - Ad)) / (255 * 255)
+				 *
+				 *     = .... which is transformed to ....
+				 *
+				 *       (255 - As) * Ad * Cd   +   255 * As * Cs
+				 *     = -----------------------------------------
+				 *         (255 * 255) - (255 - As) * (255 - Ad)
+				 *
+				 *  now let alphaNew255 = 255 * 255 - (255 - As) * (255 - Ad),
+				 *          colorDestFactor = (255 - As) * Ad, and
+				 *          colorSourceFactor = 255 * As
+				 *  then
+				 *   An = alphaNew255 / 255
+				 *   Cn = (colorDestFactor * Cd  + colorSourceFactor * Cs)  /  alphaNew255
+				 */      
 			}
 			line += 4;
 		}

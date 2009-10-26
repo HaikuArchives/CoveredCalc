@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -816,7 +816,7 @@ CoverMainWindowInfo* CoverDefParser::parseTagWindowMain(
 			getAttrValue(childNode, TypeConv::AsUTF8("width"), widthValue, true);
 			getAttrValue(childNode, TypeConv::AsUTF8("height"), heightValue, true);
 			getAttrValue(childNode, TypeConv::AsUTF8("charSpace"), charSpaceValue, true);
-			getAttrValue(childNode, TypeConv::AsUTF8("transparentColor"), transparentColorValue, true);
+			bool isTransparentColorSpecified = getAttrValue(childNode, TypeConv::AsUTF8("transparentColor"), transparentColorValue, false);
 			
 			CoverFontInfo::Type fontType;
 			if (0 == UTF8Utils::UTF8StrCmpI(typeValue, TypeConv::AsUTF8("number")))
@@ -835,7 +835,14 @@ CoverMainWindowInfo* CoverDefParser::parseTagWindowMain(
 				newFontInfo->SetWidth(atoi(TypeConv::AsASCII(widthValue)));
 				newFontInfo->SetHeight(atoi(TypeConv::AsASCII(heightValue)));
 				newFontInfo->SetCharSpace(atoi(TypeConv::AsASCII(charSpaceValue)));
-				newFontInfo->SetTransparentColor(parseColorString(transparentColorValue));				
+				if (isTransparentColorSpecified)
+				{
+					newFontInfo->SetTransparentColor(parseColorString(transparentColorValue));
+				}
+				else
+				{
+					newFontInfo->UnsetTransparentColor();
+				}
 			}
 			catch (...)
 			{

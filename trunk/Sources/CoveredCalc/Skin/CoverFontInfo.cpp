@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -42,6 +42,7 @@ CoverFontInfo::CoverFontInfo() : transparentColor(0, 0, 0)
 	width = 0;
 	height = 0;
 	charSpace = 0;
+	isTransparentColorSpecified = false;
 }
 
 // ---------------------------------------------------------------------
@@ -50,3 +51,37 @@ CoverFontInfo::CoverFontInfo() : transparentColor(0, 0, 0)
 CoverFontInfo::~CoverFontInfo()
 {
 }
+
+/**
+ * @brief Sets transparent color.
+ * @param[in] color transparent color
+ */
+void CoverFontInfo::SetTransparentColor(ColorValue color)
+{
+	this->transparentColor = color;
+	this->isTransparentColorSpecified = true;
+}
+
+/**
+ * @brief Unsets transparent color.
+ */
+void CoverFontInfo::UnsetTransparentColor()
+{
+	this->isTransparentColorSpecified = false;
+}
+
+/**
+ * @brief Retrieves transaparent color.
+ * @return pointer to transparent color, or NULL if not specified.
+ */
+const ColorValue* CoverFontInfo::GetTransparentColor() const
+{
+	if (isTransparentColorSpecified)
+	{
+		return &transparentColor;
+	}
+	else
+	{
+		return NULL;
+	}
+}	

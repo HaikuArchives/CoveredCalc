@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -53,10 +53,10 @@ public:
 	virtual void		ChangeSkinSize(SInt32 width, SInt32 height) = 0;
 	virtual void		ClipSkinRegion(const DIBitmap* mapBitmap, ColorValue transparentColor) = 0;
 	virtual void		UnclipSkinRegion() = 0;
-	virtual	void		DrawSkinByColor(const Point32& drawPoint, const DIBitmap* mapBitmap, const DIBitmap* skinBitmap, ColorValue color, const Rect32& skinRect) = 0;
-	virtual void		DrawBlendSkinByColor(const Point32& drawPoint, const DIBitmap* mapBitmap, const DIBitmap* skinBitmap1, const DIBitmap* skinBitmap2, ColorValue color, const Rect32& skinRect, UInt32 ratio) = 0;
-	virtual	void		CopySkin(const Point32& drawPoint, const DIBitmap* skinBitmap, const Rect32& skinRect) = 0;
-	virtual	void		CopySkin(const Point32& drawPoint, const DIBitmap* skinBitmap, const Rect32& skinRect, ColorValue transparentColor) = 0;
+	virtual	void		UpdateMapArea(const Rect32& areaRect, const DIBitmap* mapBitmap, ColorValue color, const DIBitmap* skinBitmap) = 0;
+	virtual void		UpdateMapAreaWithBlend(const Rect32& areaRect, const DIBitmap* mapBitmap, ColorValue color, const DIBitmap* skinBitmap1, const DIBitmap* skinBitmap2, UInt32 ratio) = 0;
+	virtual	void		UpdateRect(const Rect32& skinRect, const DIBitmap* skinBitmap) = 0;
+	virtual void		OverpaintImage(const Point32& drawPoint, const DIBitmap* sourceBitmap, const Rect32& sourceRect, const ColorValue* transparentColor) = 0;
 };
 
 #endif // _COLORCODEDSKINAPPEARANCE_H_

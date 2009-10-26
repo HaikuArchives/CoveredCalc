@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2007 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -178,14 +178,13 @@ void BeCCSAppearance::UnclipSkinRegion()
 }
 
 // ---------------------------------------------------------------------
-//! Draws the corresponding part of specified color.
+//! Updates the corresponding area of specified color in map.
 // ---------------------------------------------------------------------
-void BeCCSAppearance::DrawSkinByColor(
-	const Point32& drawPoint,		//!< upper-left coordinates of target.
+void BeCCSAppearance::UpdateMapArea(
+	const Rect32& skinRect,			//!< rectangle which will be drawn.
 	const DIBitmap* mapBitmap,		//!< color mapped bitmap.
-	const DIBitmap* skinBitmap,		//!< source skin bitmap.
 	ColorValue color,				//!< the color in color map
-	const Rect32& skinRect			//!< source skin rectangle which will be drawn.
+	const DIBitmap* skinBitmap		//!< source skin bitmap.
 )
 {
 	DIBColorLookup mapColorLookup(mapBitmap);
@@ -194,8 +193,8 @@ void BeCCSAppearance::DrawSkinByColor(
 	SInt32 posY;
 	for (posY=skinRect.top; posY<=skinRect.bottom; posY++)
 	{
-		Byte* line = getBitsLineAddress(posY - skinRect.top + drawPoint.y);
-		line += 4 * drawPoint.x;
+		Byte* line = getBitsLineAddress(posY);
+		line += 4 * skinRect.left;
 		skinColorLookup.InitLocation(skinRect.left, posY);
 		SInt32 posX;
 		for (posX=skinRect.left; posX<=skinRect.right; posX++)
@@ -212,19 +211,20 @@ void BeCCSAppearance::DrawSkinByColor(
 		}
 	}
 	
+	Point32 drawPoint = { skinRect.left, skinRect.top };
 	invalidateRect(drawPoint, skinRect);
 }
 
 /**
- *	@brief	Draws the correspinding part of specified color, blending two skin bitmaps with specified blending ratio.
+ *	@brief	Updates the correspinding area of specified color in map,
+ *			blending two skin bitmaps with specified blending ratio.
  */
-void BeCCSAppearance::DrawBlendSkinByColor(
-	const Point32& drawPoint,		///< upper-left coordinates of target.
+void BeCCSAppearance::UpdateMapAreaWithBlend(
+	const Rect32& skinRect,			///< rectangle which will be drawn
 	const DIBitmap* mapBitmap,		///< color mapped bitmap.
+	ColorValue color,				///< the color in color map
 	const DIBitmap* skinBitmap1,	///< source skin bitmap #1
 	const DIBitmap* skinBitmap2,	///< source skin bitmap #2
-	ColorValue color,				///< the color in color map
-	const Rect32& skinRect,			///< source skin rectangle which will be drawn
 	UInt32 ratio					///< blending ratio (from 0 to ColorCodedSkin::BlendRatio_Max)
 )
 {
@@ -235,8 +235,8 @@ void BeCCSAppearance::DrawBlendSkinByColor(
 	SInt32 posY;
 	for (posY=skinRect.top; posY<=skinRect.bottom; posY++)
 	{
-		Byte* line = getBitsLineAddress(posY - skinRect.top + drawPoint.y);
-		line += 4 * drawPoint.x;
+		Byte* line = getBitsLineAddress(posY);
+		line += 4 * skinRect.left;
 		skinColorLookup1.InitLocation(skinRect.left, posY);
 		skinColorLookup2.InitLocation(skinRect.left, posY);
 		SInt32 posX;
@@ -255,28 +255,28 @@ void BeCCSAppearance::DrawBlendSkinByColor(
 		}
 	}
 	
+	Point32 drawPoint = { skinRect.left, skinRect.top };
 	invalidateRect(drawPoint, skinRect);
 }
 
 // ---------------------------------------------------------------------
 //! Draws the corresponding part of specified rectangle.
 // ---------------------------------------------------------------------
-void BeCCSAppearance::CopySkin(
-	const Point32& drawPoint,		//!< upper-left coordinates of target.
-	const DIBitmap* skinBitmap,		//!< source skin bitmap.
-	const Rect32& skinRect			//!< source skin rectangle which will be drawn.
+void BeCCSAppearance::UpdateRect(
+	const Rect32& skinRect,			//!< rectangle to draw in.
+	const DIBitmap* skinBitmap		//!< source skin bitmap.
 )
 {
 	DIBColorLookup skinColorLookup(skinBitmap);
 	
 	SInt32 posY;
-	for (posY=skinRect.top; posY<=skinRect.bottom; posY++)
+	for (posY = skinRect.top; posY <= skinRect.bottom; ++posY)
 	{
-		Byte* line = getBitsLineAddress(posY - skinRect.top + drawPoint.y);
-		line += 4 * drawPoint.x;
+		Byte* line = getBitsLineAddress(posY);
+		line += 4 * skinRect.left;
 		skinColorLookup.InitLocation(skinRect.left, posY);
 		SInt32 posX;
-		for (posX=skinRect.left; posX<=skinRect.right; posX++)
+		for (posX = skinRect.left; posX <= skinRect.right; ++posX)
 		{
 			ColorValue skinColor = skinColorLookup.LookupNextColor();
 			line[0] = skinColor.blueValue;
@@ -287,43 +287,50 @@ void BeCCSAppearance::CopySkin(
 		}
 	}
 
+	Point32 drawPoint = { skinRect.left, skinRect.top };
 	invalidateRect(drawPoint, skinRect);
 }
 
-// ---------------------------------------------------------------------
-//! Draws the corresponding part of specified rectangle except pixels which color is specified color.
-// ---------------------------------------------------------------------
-void BeCCSAppearance::CopySkin(
-	const Point32& drawPoint,		//!< upper-left coordinates of target.
-	const DIBitmap* skinBitmap,		//!< source skin bitmap.
-	const Rect32& skinRect,			//!< source skin rectangle which will be drawn.
-	ColorValue transparentColor		//!< transparent color.
+/**
+ * @brief Overpaint a rectangle of specified bitmap to specified position.
+ * @param[in] drawPoint upperleft position of the appearance
+ * @param[in] sourceBitmap source bitmap image
+ * @param[in] sourceRect rectangle of source bitmap
+ * @param[in] transparentColor this color in source bitmap is not painted.
+ *              specify NULL when not to use it.
+ */
+void BeCCSAppearance::OverpaintImage(
+	const Point32& drawPoint,
+	const DIBitmap* sourceBitmap,
+	const Rect32& sourceRect,
+	const ColorValue* transparentColor
 )
 {
-	DIBColorLookup skinColorLookup(skinBitmap);
+	DIBColorLookup skinColorLookup(sourceBitmap);
 	
 	SInt32 posY;
-	for (posY=skinRect.top; posY<=skinRect.bottom; posY++)
+	for (posY = sourceRect.top; posY <= sourceRect.bottom; ++posY)
 	{
-		Byte* line = getBitsLineAddress(posY - skinRect.top + drawPoint.y);
+		Byte* line = getBitsLineAddress(posY - sourceRect.top + drawPoint.y);
 		line += 4 * drawPoint.x;
-		skinColorLookup.InitLocation(skinRect.left, posY);
+		skinColorLookup.InitLocation(sourceRect.left, posY);
 		SInt32 posX;
-		for (posX=skinRect.left; posX<=skinRect.right; posX++)
+		for (posX = sourceRect.left; posX <= sourceRect.right; posX++)
 		{
-			ColorValue skinColor = skinColorLookup.LookupNextColor();
-			if (skinColor != transparentColor)
+			ColorValue sourceColor = skinColorLookup.LookupNextColor();
+			if (NULL == transparentColor || sourceColor != *transparentColor)
 			{
-				line[0] = skinColor.blueValue;
-				line[1] = skinColor.greenValue;
-				line[2] = skinColor.redValue;
+				UInt32 alpha = static_cast<UInt32>(sourceColor.alphaValue);
+				line[0] = static_cast<Byte>(((255 - alpha) * line[0] + alpha * sourceColor.blueValue) / 255);
+				line[1] = static_cast<Byte>(((255 - alpha) * line[1] + alpha * sourceColor.greenValue) / 255);
+				line[2] = static_cast<Byte>(((255 - alpha) * line[2] + alpha * sourceColor.redValue) / 255);
 				line[3] = 255;
 			}
 			line += 4;
 		}
 	}
 
-	invalidateRect(drawPoint, skinRect);
+	invalidateRect(drawPoint, sourceRect);
 }
 
 // ---------------------------------------------------------------------

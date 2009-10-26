@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2009 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -338,27 +338,8 @@ void ColorCodedSkin::UpdateWholeAppearance(
 		return;
 	}
 	
-	Point32 drawPoint = {0, 0};
 	Rect32 skinRect = {0, 0, mapBitmap->GetWidth() - 1, mapBitmap->GetHeight() - 1 };
-	appearance->CopySkin(drawPoint, (*stateSkins)[skinNo], skinRect);
-}
-
-// ---------------------------------------------------------------------
-//! Updates whole appearance with transparent color using specified state of skin.
-// ---------------------------------------------------------------------
-void ColorCodedSkin::UpdateWholeAppearance(
-	SInt32 skinNo,					//!< specifies which state of bitmap to use.
-	ColorValue transparentColor		//!< transparent color
-)
-{
-	if (NULL == appearance)
-	{
-		return;
-	}
-	
-	Point32 drawPoint = {0, 0};
-	Rect32 skinRect = {0, 0, mapBitmap->GetWidth() - 1, mapBitmap->GetHeight() - 1 };
-	appearance->CopySkin(drawPoint, (*stateSkins)[skinNo], skinRect, transparentColor);
+	appearance->UpdateRect(skinRect, (*stateSkins)[skinNo]);
 }
 
 // ---------------------------------------------------------------------
@@ -381,9 +362,8 @@ void ColorCodedSkin::UpdatePartAppearance(
 		return;
 	}
 	
-	const Rect32& skinRect = iteAreaInfo->second.minRect;
-	Point32 drawPoint = { skinRect.left, skinRect.top };
-	appearance->DrawSkinByColor(drawPoint, mapBitmap, (*stateSkins)[skinNo], iteAreaInfo->second.color, skinRect);
+	const Rect32& areaRect = iteAreaInfo->second.minRect;
+	appearance->UpdateMapArea(areaRect, mapBitmap, iteAreaInfo->second.color, (*stateSkins)[skinNo]);
 }
 
 /**
@@ -424,28 +404,9 @@ void ColorCodedSkin::UpdatePartAppearanceWithBlend(
 			return;
 		}
 		
-		const Rect32& skinRect = iteAreaInfo->second.minRect;
-		Point32 drawPoint = { skinRect.left, skinRect.top };
-		appearance->DrawBlendSkinByColor(drawPoint, mapBitmap, (*stateSkins)[skinNo1], (*stateSkins)[skinNo2], iteAreaInfo->second.color, skinRect, ratio);
+		const Rect32& areaRect = iteAreaInfo->second.minRect;
+		appearance->UpdateMapAreaWithBlend(areaRect, mapBitmap, iteAreaInfo->second.color, (*stateSkins)[skinNo1], (*stateSkins)[skinNo2], ratio);
 	}
-}
-
-// ---------------------------------------------------------------------
-//! Draws specified image of skin.
-// ---------------------------------------------------------------------
-void ColorCodedSkin::DrawImage(
-	const Point32& drawPt,		//!< top-left position of the appearance.
-	SInt32 imageNo,				//!< which image of bitmap to use.
-								/*!< image bitmap is specified in otherImages parameter at Init(). */
-	const Rect32& imageRect		//!< rectangle in image
-)
-{
-	if (NULL == appearance)
-	{
-		return;
-	}
-	
-	appearance->CopySkin(drawPt, (*otherImages)[imageNo], imageRect);
 }
 
 // ---------------------------------------------------------------------
@@ -456,7 +417,7 @@ void ColorCodedSkin::DrawImage(
 	SInt32 imageNo,					//!< which image of bitmap to use.
 									/*!< image bitmap is specified in otherImages parameter at Init(). */
 	const Rect32& imageRect,		//!< rectangle in image
-	ColorValue transparentColor		//!< transparent color
+	const ColorValue* transparentColor		//!< transparent color (if it is not used, specify NULL)
 )
 {
 	if (NULL == appearance)
@@ -464,5 +425,5 @@ void ColorCodedSkin::DrawImage(
 		return;
 	}
 	
-	appearance->CopySkin(drawPt, (*otherImages)[imageNo], imageRect, transparentColor);
+	appearance->OverpaintImage(drawPt, (*otherImages)[imageNo], imageRect, transparentColor);
 }
