@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <localeDef version="7" xmlns="http://hironytic.1st-shrine.net/schema/CoveredCalc-LocaleDefinition">
 	<platform target="Windows"/>
 	
@@ -6,6 +6,7 @@
 	<langCode>jaJP</langCode>
 	
 	<!-- dialog font -->
+	<dialogFont targetOSVer="2.6.1.*" charset="128" typeface="Meiryo UI" size="9" />
 	<dialogFont targetOSVer="*.*.*.*" charset="128" typeface="MS UI Gothic" size="9" />
 	
 	<!-- About dialog -->
