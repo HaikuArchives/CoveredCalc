@@ -1,7 +1,7 @@
 /*
  * CoveredCalc
  *
- * Copyright (c) 2004-2008 CoveredCalc Project Contributors
+ * Copyright (c) 2004-2010 CoveredCalc Project Contributors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -347,7 +347,11 @@ void CalcCore::valueToStringUInt(
 	SInt32 base			///< base number
 ) const
 {
-	memset(str, ' ', maxDispLength);
+	UInt32 ix;
+	for (ix = 0; ix < maxDispLength; ++ix)
+	{
+		str[ix] = ALITERAL(' ');
+	}
 	AChar* curPos = str + maxDispLength;
 	*curPos = ALITERAL('\0');
 	curPos--;
